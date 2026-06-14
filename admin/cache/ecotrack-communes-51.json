@@ -1,0 +1,38 @@
+[
+    {
+        "nom": "Besbes",
+        "wilaya_id": 51,
+        "code_postal": "5103",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chaiba",
+        "wilaya_id": 51,
+        "code_postal": "5106",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Doucen",
+        "wilaya_id": 51,
+        "code_postal": "5105",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Djellal",
+        "wilaya_id": 51,
+        "code_postal": "5101",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ras El Miad",
+        "wilaya_id": 51,
+        "code_postal": "5102",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Khaled",
+        "wilaya_id": 51,
+        "code_postal": "5104",
+        "has_stop_desk": 0
+    }
+]

@@ -1,0 +1,74 @@
+[
+    {
+        "nom": "Ain Berda",
+        "wilaya_id": 23,
+        "code_postal": "2309",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Annaba",
+        "wilaya_id": 23,
+        "code_postal": "2301",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Berrahel",
+        "wilaya_id": 23,
+        "code_postal": "2302",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chetaibi",
+        "wilaya_id": 23,
+        "code_postal": "2310",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cheurfa",
+        "wilaya_id": 23,
+        "code_postal": "2307",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Bouni",
+        "wilaya_id": 23,
+        "code_postal": "2305",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "El Hadjar",
+        "wilaya_id": 23,
+        "code_postal": "2303",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Eulma",
+        "wilaya_id": 23,
+        "code_postal": "2304",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued El Aneb",
+        "wilaya_id": 23,
+        "code_postal": "2306",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Seraidi",
+        "wilaya_id": 23,
+        "code_postal": "2308",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Amar",
+        "wilaya_id": 23,
+        "code_postal": "2311",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Treat",
+        "wilaya_id": 23,
+        "code_postal": "2312",
+        "has_stop_desk": 0
+    }
+]

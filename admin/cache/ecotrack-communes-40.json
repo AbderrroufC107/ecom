@@ -1,0 +1,128 @@
+[
+    {
+        "nom": "Ain Touila",
+        "wilaya_id": 40,
+        "code_postal": "4006",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Babar",
+        "wilaya_id": 40,
+        "code_postal": "4013",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Baghai",
+        "wilaya_id": 40,
+        "code_postal": "4004",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouhmama",
+        "wilaya_id": 40,
+        "code_postal": "4008",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chelia",
+        "wilaya_id": 40,
+        "code_postal": "4021",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cherchar",
+        "wilaya_id": 40,
+        "code_postal": "4011",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djellal",
+        "wilaya_id": 40,
+        "code_postal": "4012",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hamma",
+        "wilaya_id": 40,
+        "code_postal": "4005",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Mahmal",
+        "wilaya_id": 40,
+        "code_postal": "4017",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Oueldja",
+        "wilaya_id": 40,
+        "code_postal": "4009",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ensigha",
+        "wilaya_id": 40,
+        "code_postal": "4015",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kais",
+        "wilaya_id": 40,
+        "code_postal": "4003",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khenchela",
+        "wilaya_id": 40,
+        "code_postal": "4001",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Khirane",
+        "wilaya_id": 40,
+        "code_postal": "4020",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'sara",
+        "wilaya_id": 40,
+        "code_postal": "4018",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'toussa",
+        "wilaya_id": 40,
+        "code_postal": "4002",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Rechache",
+        "wilaya_id": 40,
+        "code_postal": "4016",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Remila",
+        "wilaya_id": 40,
+        "code_postal": "4010",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamza",
+        "wilaya_id": 40,
+        "code_postal": "4014",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taouzianat",
+        "wilaya_id": 40,
+        "code_postal": "4007",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Yabous",
+        "wilaya_id": 40,
+        "code_postal": "4019",
+        "has_stop_desk": 0
+    }
+]

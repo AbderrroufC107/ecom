@@ -1,0 +1,74 @@
+[
+    {
+        "nom": "Ain Abid",
+        "wilaya_id": 25,
+        "code_postal": "2507",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Smara",
+        "wilaya_id": 25,
+        "code_postal": "2510",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Badis",
+        "wilaya_id": 25,
+        "code_postal": "2503",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Hamidene",
+        "wilaya_id": 25,
+        "code_postal": "2508",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Constantine",
+        "wilaya_id": 25,
+        "code_postal": "2501",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Didouche Mourad",
+        "wilaya_id": 25,
+        "code_postal": "2505",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Khroub",
+        "wilaya_id": 25,
+        "code_postal": "2506",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Hamma Bouziane",
+        "wilaya_id": 25,
+        "code_postal": "2502",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ibn Ziad",
+        "wilaya_id": 25,
+        "code_postal": "2512",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Messaoud Boujeriou",
+        "wilaya_id": 25,
+        "code_postal": "2511",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Rahmouni",
+        "wilaya_id": 25,
+        "code_postal": "2509",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zighoud Youcef",
+        "wilaya_id": 25,
+        "code_postal": "2504",
+        "has_stop_desk": 0
+    }
+]

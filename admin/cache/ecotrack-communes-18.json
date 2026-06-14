@@ -1,0 +1,170 @@
+[
+    {
+        "nom": "Bordj Tahar",
+        "wilaya_id": 18,
+        "code_postal": "1826",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boudria Beniyadjis",
+        "wilaya_id": 18,
+        "code_postal": "1822",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouraoui Belhadef",
+        "wilaya_id": 18,
+        "code_postal": "1816",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boussif Ouled Askeur",
+        "wilaya_id": 18,
+        "code_postal": "1819",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chahna",
+        "wilaya_id": 18,
+        "code_postal": "1808",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chekfa",
+        "wilaya_id": 18,
+        "code_postal": "1807",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djemaa Beni Habibi",
+        "wilaya_id": 18,
+        "code_postal": "1825",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djimla",
+        "wilaya_id": 18,
+        "code_postal": "1817",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ancer",
+        "wilaya_id": 18,
+        "code_postal": "1812",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Aouana",
+        "wilaya_id": 18,
+        "code_postal": "1803",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kennar Nouchfi",
+        "wilaya_id": 18,
+        "code_postal": "1820",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Milia",
+        "wilaya_id": 18,
+        "code_postal": "1809",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Emir Abdelkader",
+        "wilaya_id": 18,
+        "code_postal": "1806",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Erraguene",
+        "wilaya_id": 18,
+        "code_postal": "1802",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ghebala",
+        "wilaya_id": 18,
+        "code_postal": "1815",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Jijel",
+        "wilaya_id": 18,
+        "code_postal": "1801",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Khiri Oued Adjoul",
+        "wilaya_id": 18,
+        "code_postal": "1823",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kouas",
+        "wilaya_id": 18,
+        "code_postal": "1814",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oudjana",
+        "wilaya_id": 18,
+        "code_postal": "1828",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Rabah",
+        "wilaya_id": 18,
+        "code_postal": "1827",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Yahia Khadrouch",
+        "wilaya_id": 18,
+        "code_postal": "1821",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Selma Benziada",
+        "wilaya_id": 18,
+        "code_postal": "1818",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Settara",
+        "wilaya_id": 18,
+        "code_postal": "1811",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Abdelaziz",
+        "wilaya_id": 18,
+        "code_postal": "1813",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Marouf",
+        "wilaya_id": 18,
+        "code_postal": "1810",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taher",
+        "wilaya_id": 18,
+        "code_postal": "1805",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Texena",
+        "wilaya_id": 18,
+        "code_postal": "1824",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ziama Mansouria",
+        "wilaya_id": 18,
+        "code_postal": "1804",
+        "has_stop_desk": 0
+    }
+]

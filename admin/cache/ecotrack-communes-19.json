@@ -1,0 +1,362 @@
+[
+    {
+        "nom": "Ain Abessa",
+        "wilaya_id": 19,
+        "code_postal": "1914",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Arnat",
+        "wilaya_id": 19,
+        "code_postal": "1926",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Azel",
+        "wilaya_id": 19,
+        "code_postal": "1940",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain El Kebira",
+        "wilaya_id": 19,
+        "code_postal": "1902",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Lahdjar",
+        "wilaya_id": 19,
+        "code_postal": "1918",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Legradj",
+        "wilaya_id": 19,
+        "code_postal": "1913",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Oulmane",
+        "wilaya_id": 19,
+        "code_postal": "1928",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ain Roua",
+        "wilaya_id": 19,
+        "code_postal": "1906",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Sebt",
+        "wilaya_id": 19,
+        "code_postal": "1949",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Naoual Mezada",
+        "wilaya_id": 19,
+        "code_postal": "1951",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Tizi",
+        "wilaya_id": 19,
+        "code_postal": "1954",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Amoucha",
+        "wilaya_id": 19,
+        "code_postal": "1927",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Babor",
+        "wilaya_id": 19,
+        "code_postal": "1916",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bazer Sakra",
+        "wilaya_id": 19,
+        "code_postal": "1931",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beidha Bordj",
+        "wilaya_id": 19,
+        "code_postal": "1929",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bellaa",
+        "wilaya_id": 19,
+        "code_postal": "1925",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Aziz",
+        "wilaya_id": 19,
+        "code_postal": "1903",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Chebana",
+        "wilaya_id": 19,
+        "code_postal": "1909",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Fouda",
+        "wilaya_id": 19,
+        "code_postal": "1944",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Mouhli",
+        "wilaya_id": 19,
+        "code_postal": "1946",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Ouartilane",
+        "wilaya_id": 19,
+        "code_postal": "1922",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Oussine",
+        "wilaya_id": 19,
+        "code_postal": "1953",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir El Arch",
+        "wilaya_id": 19,
+        "code_postal": "1908",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Haddada",
+        "wilaya_id": 19,
+        "code_postal": "1934",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouandas",
+        "wilaya_id": 19,
+        "code_postal": "1930",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bougaa",
+        "wilaya_id": 19,
+        "code_postal": "1943",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bousselam",
+        "wilaya_id": 19,
+        "code_postal": "1919",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boutaleb",
+        "wilaya_id": 19,
+        "code_postal": "1905",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dehamcha",
+        "wilaya_id": 19,
+        "code_postal": "1915",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djemila",
+        "wilaya_id": 19,
+        "code_postal": "1921",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Draa Kebila",
+        "wilaya_id": 19,
+        "code_postal": "1907",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Eulma",
+        "wilaya_id": 19,
+        "code_postal": "1920",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "El Ouldja",
+        "wilaya_id": 19,
+        "code_postal": "1959",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ouricia",
+        "wilaya_id": 19,
+        "code_postal": "1937",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guellal",
+        "wilaya_id": 19,
+        "code_postal": "1948",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guelta Zerka",
+        "wilaya_id": 19,
+        "code_postal": "1956",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guenzet",
+        "wilaya_id": 19,
+        "code_postal": "1941",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guidjel",
+        "wilaya_id": 19,
+        "code_postal": "1917",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Hamam Soukhna",
+        "wilaya_id": 19,
+        "code_postal": "1932",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hamma",
+        "wilaya_id": 19,
+        "code_postal": "1911",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hammam Guergour",
+        "wilaya_id": 19,
+        "code_postal": "1950",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Harbil",
+        "wilaya_id": 19,
+        "code_postal": "1936",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksar El Abtal",
+        "wilaya_id": 19,
+        "code_postal": "1952",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maaouia",
+        "wilaya_id": 19,
+        "code_postal": "1912",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maouaklane",
+        "wilaya_id": 19,
+        "code_postal": "1955",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mezloug",
+        "wilaya_id": 19,
+        "code_postal": "1933",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued El Barad",
+        "wilaya_id": 19,
+        "code_postal": "1957",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Addouane",
+        "wilaya_id": 19,
+        "code_postal": "1924",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Sabor",
+        "wilaya_id": 19,
+        "code_postal": "1947",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Si Ahmed",
+        "wilaya_id": 19,
+        "code_postal": "1904",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Tebben",
+        "wilaya_id": 19,
+        "code_postal": "1910",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rosfa",
+        "wilaya_id": 19,
+        "code_postal": "1923",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Salah Bey",
+        "wilaya_id": 19,
+        "code_postal": "1939",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Serdj El Ghoul",
+        "wilaya_id": 19,
+        "code_postal": "1935",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Setif",
+        "wilaya_id": 19,
+        "code_postal": "1901",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Tachouda",
+        "wilaya_id": 19,
+        "code_postal": "1945",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tala Ifacene",
+        "wilaya_id": 19,
+        "code_postal": "1942",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taya",
+        "wilaya_id": 19,
+        "code_postal": "1958",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tella",
+        "wilaya_id": 19,
+        "code_postal": "1960",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tizi N'bechar",
+        "wilaya_id": 19,
+        "code_postal": "1938",
+        "has_stop_desk": 0
+    }
+]

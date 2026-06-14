@@ -1,0 +1,170 @@
+[
+    {
+        "nom": "Aghlal",
+        "wilaya_id": 46,
+        "code_postal": "4607",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain El Arbaa",
+        "wilaya_id": 46,
+        "code_postal": "4609",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Kihal",
+        "wilaya_id": 46,
+        "code_postal": "4603",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Temouchent",
+        "wilaya_id": 46,
+        "code_postal": "4601",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ain Tolba",
+        "wilaya_id": 46,
+        "code_postal": "4618",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Aoubellil",
+        "wilaya_id": 46,
+        "code_postal": "4613",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Saf",
+        "wilaya_id": 46,
+        "code_postal": "4623",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouzedjar",
+        "wilaya_id": 46,
+        "code_postal": "4605",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chaabat El Ham",
+        "wilaya_id": 46,
+        "code_postal": "4602",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chentouf",
+        "wilaya_id": 46,
+        "code_postal": "4611",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Amria",
+        "wilaya_id": 46,
+        "code_postal": "4619",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Malah",
+        "wilaya_id": 46,
+        "code_postal": "4614",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Messaid",
+        "wilaya_id": 46,
+        "code_postal": "4628",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Emir Abdelkader",
+        "wilaya_id": 46,
+        "code_postal": "4627",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hammam Bouhadjar",
+        "wilaya_id": 46,
+        "code_postal": "4604",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassasna",
+        "wilaya_id": 46,
+        "code_postal": "4621",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi El Ghella",
+        "wilaya_id": 46,
+        "code_postal": "4620",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Berkeche",
+        "wilaya_id": 46,
+        "code_postal": "4606",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Sebbah",
+        "wilaya_id": 46,
+        "code_postal": "4616",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Boudjemaa",
+        "wilaya_id": 46,
+        "code_postal": "4617",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Kihal",
+        "wilaya_id": 46,
+        "code_postal": "4622",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oulhaca El Gheraba",
+        "wilaya_id": 46,
+        "code_postal": "4625",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ben Adda",
+        "wilaya_id": 46,
+        "code_postal": "4612",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Boumediene",
+        "wilaya_id": 46,
+        "code_postal": "4615",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ouriache",
+        "wilaya_id": 46,
+        "code_postal": "4626",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Safi",
+        "wilaya_id": 46,
+        "code_postal": "4624",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamzoura",
+        "wilaya_id": 46,
+        "code_postal": "4610",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Terga",
+        "wilaya_id": 46,
+        "code_postal": "4608",
+        "has_stop_desk": 0
+    }
+]

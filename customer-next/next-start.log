@@ -1,0 +1,14 @@
+
+> ecom-customer-next@1.0.0 start
+> node --openssl-legacy-provider ./node_modules/next/dist/bin/next start
+
+ready - started server on 0.0.0.0:3000, url: http://localhost:3000
+info  - Loaded env from C:\xampp\htdocs\ecom\customer-next\.env.local
+Error: معرف المنتج غير صحيح.
+    at readJson (C:\xampp\htdocs\ecom\customer-next\.next\server\chunks\668.js:164:11)
+    at process.processTicksAndRejections (node:internal/process/task_queues:103:5)
+    at async getServerSideProps (C:\xampp\htdocs\ecom\customer-next\.next\server\pages\landing_page.js:34:16)
+    at async Object.renderToHTML (C:\xampp\htdocs\ecom\customer-next\node_modules\next\dist\server\render.js:428:24)
+    at async doRender (C:\xampp\htdocs\ecom\customer-next\node_modules\next\dist\server\next-server.js:1149:38)
+    at async C:\xampp\htdocs\ecom\customer-next\node_modules\next\dist\server\next-server.js:1241:28
+    at async C:\xampp\htdocs\ecom\customer-next\node_modules\next\dist\server\response-cache.js:64:36

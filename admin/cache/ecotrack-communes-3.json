@@ -1,0 +1,146 @@
+[
+    {
+        "nom": "Aflou",
+        "wilaya_id": 3,
+        "code_postal": "319",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ain Madhi",
+        "wilaya_id": 3,
+        "code_postal": "307",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Sidi Ali",
+        "wilaya_id": 3,
+        "code_postal": "311",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beidha",
+        "wilaya_id": 3,
+        "code_postal": "312",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benacer Benchohra",
+        "wilaya_id": 3,
+        "code_postal": "303",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Brida",
+        "wilaya_id": 3,
+        "code_postal": "313",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Assafia",
+        "wilaya_id": 3,
+        "code_postal": "320",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ghicha",
+        "wilaya_id": 3,
+        "code_postal": "314",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Haouaita",
+        "wilaya_id": 3,
+        "code_postal": "323",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Gueltat Sidi Saad",
+        "wilaya_id": 3,
+        "code_postal": "310",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hadj Mechri",
+        "wilaya_id": 3,
+        "code_postal": "315",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Delaa",
+        "wilaya_id": 3,
+        "code_postal": "305",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi R'mel",
+        "wilaya_id": 3,
+        "code_postal": "306",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kheneg",
+        "wilaya_id": 3,
+        "code_postal": "309",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksar El Hirane",
+        "wilaya_id": 3,
+        "code_postal": "302",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Laghouat",
+        "wilaya_id": 3,
+        "code_postal": "301",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Oued M'zi",
+        "wilaya_id": 3,
+        "code_postal": "322",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Morra",
+        "wilaya_id": 3,
+        "code_postal": "321",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sebgag",
+        "wilaya_id": 3,
+        "code_postal": "316",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Bouzid",
+        "wilaya_id": 3,
+        "code_postal": "324",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Makhlouf",
+        "wilaya_id": 3,
+        "code_postal": "304",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tadjemout",
+        "wilaya_id": 3,
+        "code_postal": "308",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tadjrouna",
+        "wilaya_id": 3,
+        "code_postal": "318",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taouiala",
+        "wilaya_id": 3,
+        "code_postal": "317",
+        "has_stop_desk": 0
+    }
+]

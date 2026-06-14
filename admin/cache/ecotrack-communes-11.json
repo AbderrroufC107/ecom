@@ -1,0 +1,32 @@
+[
+    {
+        "nom": "Abalessa",
+        "wilaya_id": 11,
+        "code_postal": "1102",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Amguel",
+        "wilaya_id": 11,
+        "code_postal": "1109",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Idles",
+        "wilaya_id": 11,
+        "code_postal": "1105",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamanrasset",
+        "wilaya_id": 11,
+        "code_postal": "1101",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Tazrouk",
+        "wilaya_id": 11,
+        "code_postal": "1106",
+        "has_stop_desk": 0
+    }
+]

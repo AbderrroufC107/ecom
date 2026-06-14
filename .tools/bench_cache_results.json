@@ -1,0 +1,65 @@
+{
+    "timestamp": "2026-06-03 11:55:37",
+    "results": {
+        "Admin Dashboard": {
+            "cold_time": 56.74,
+            "warm_times": [
+                26.05,
+                32.7,
+                18.45
+            ],
+            "avg_warm_time": 25.73,
+            "improvement_pct": 54.7
+        },
+        "Admin Home": {
+            "cold_time": 36.19,
+            "warm_times": [
+                30.68,
+                30.89,
+                28.63
+            ],
+            "avg_warm_time": 30.07,
+            "improvement_pct": 16.9
+        },
+        "Recovery Dashboard": {
+            "cold_time": 1.75,
+            "warm_times": [
+                1.58,
+                2.22,
+                1.47
+            ],
+            "avg_warm_time": 1.76,
+            "improvement_pct": -0.6
+        },
+        "Store Dashboard": {
+            "cold_time": 16.51,
+            "warm_times": [
+                14.66,
+                30.63,
+                27.03
+            ],
+            "avg_warm_time": 24.11,
+            "improvement_pct": -46
+        },
+        "System Health": {
+            "cold_time": 33.32,
+            "warm_times": [
+                31.94,
+                42.63,
+                33.75
+            ],
+            "avg_warm_time": 36.11,
+            "improvement_pct": -8.4
+        },
+        "Staff Dashboard": {
+            "cold_time": 11.19,
+            "warm_times": [
+                9.88,
+                20.02,
+                7.85
+            ],
+            "avg_warm_time": 12.58,
+            "improvement_pct": -12.4
+        }
+    }
+}

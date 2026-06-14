@@ -1,0 +1,194 @@
+[
+    {
+        "nom": "Ahmed Rachedi",
+        "wilaya_id": 43,
+        "code_postal": "4311",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Beida Harriche",
+        "wilaya_id": 43,
+        "code_postal": "4330",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Mellouk",
+        "wilaya_id": 43,
+        "code_postal": "4305",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Tine",
+        "wilaya_id": 43,
+        "code_postal": "4325",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Amira Arres",
+        "wilaya_id": 43,
+        "code_postal": "4322",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benyahia Abderrahmane",
+        "wilaya_id": 43,
+        "code_postal": "4309",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouhatem",
+        "wilaya_id": 43,
+        "code_postal": "4314",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chelghoum Laid",
+        "wilaya_id": 43,
+        "code_postal": "4303",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Chigara",
+        "wilaya_id": 43,
+        "code_postal": "4332",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Derrahi Bousselah",
+        "wilaya_id": 43,
+        "code_postal": "4320",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Mechira",
+        "wilaya_id": 43,
+        "code_postal": "4326",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Elayadi Barbes",
+        "wilaya_id": 43,
+        "code_postal": "4329",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ferdjioua",
+        "wilaya_id": 43,
+        "code_postal": "4302",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Grarem Gouga",
+        "wilaya_id": 43,
+        "code_postal": "4317",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hamala",
+        "wilaya_id": 43,
+        "code_postal": "4324",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mila",
+        "wilaya_id": 43,
+        "code_postal": "4301",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Minar Zarza",
+        "wilaya_id": 43,
+        "code_postal": "4321",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Athmenia",
+        "wilaya_id": 43,
+        "code_postal": "4304",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Endja",
+        "wilaya_id": 43,
+        "code_postal": "4310",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Seguen",
+        "wilaya_id": 43,
+        "code_postal": "4307",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Khalouf",
+        "wilaya_id": 43,
+        "code_postal": "4312",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rouached",
+        "wilaya_id": 43,
+        "code_postal": "4315",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Khelifa",
+        "wilaya_id": 43,
+        "code_postal": "4327",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Merouane",
+        "wilaya_id": 43,
+        "code_postal": "4318",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tadjenanet",
+        "wilaya_id": 43,
+        "code_postal": "4308",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Tassadane Haddada",
+        "wilaya_id": 43,
+        "code_postal": "4319",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Teleghma",
+        "wilaya_id": 43,
+        "code_postal": "4306",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Terrai Bainem",
+        "wilaya_id": 43,
+        "code_postal": "4323",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tessala",
+        "wilaya_id": 43,
+        "code_postal": "4316",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tiberguent",
+        "wilaya_id": 43,
+        "code_postal": "4313",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Yahia Beniguecha",
+        "wilaya_id": 43,
+        "code_postal": "4331",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zeghaia",
+        "wilaya_id": 43,
+        "code_postal": "4328",
+        "has_stop_desk": 0
+    }
+]

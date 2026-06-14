@@ -1,0 +1,31 @@
+<?xml version="1.0"?>
+<ruleset name="Ecom Standard">
+    <description>Ecom Coding Standards</description>
+
+    <file>admin/inc/modules</file>
+    <file>admin/inc/store.php</file>
+    <file>admin/inc/autoload.php</file>
+
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <exclude-pattern>*/tmp/*</exclude-pattern>
+
+    <arg name="colors"/>
+    <arg value="p"/>
+
+    <rule ref="PSR12">
+        <exclude name="PSR1.Methods.CamelCapsMethodName"/>
+    </rule>
+
+    <rule ref="Generic.Arrays.DisallowLongArraySyntax"/>
+
+    <rule ref="Generic.Commenting.Todo">
+        <type>warning</type>
+    </rule>
+
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="150"/>
+            <property name="absoluteLineLimit" value="200"/>
+        </properties>
+    </rule>
+</ruleset>

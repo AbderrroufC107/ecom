@@ -1,0 +1,88 @@
+<?php
+require_once('inc/config.php');
+require_once('inc/functions.php');
+
+$settings = ecotrack_normalize_settings(front_get_settings($pdo));
+
+$sql = "
+    SELECT id, ecotrack_tracking, ecotrack_remote_status 
+    FROM tbl_order 
+    WHERE ecotrack_tracking IS NOT NULL 
+      AND ecotrack_tracking != '' 
+      AND ecotrack_remote_time IS NULL
+    LIMIT 500
+";
+
+$stmt = $pdo->prepare($sql);
+$stmt->execute();
+$orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+if (empty($orders)) {
+    die("No active trackings to sync for time.");
+}
+
+$trackings = [];
+$orders_map = [];
+foreach ($orders as $o) {
+    $trackings[] = trim($o['ecotrack_tracking']);
+    $orders_map[trim($o['ecotrack_tracking'])] = $o['id'];
+}
+
+$chunks = array_chunk($trackings, 20);
+$synced_count = 0;
+
+foreach ($chunks as $chunk) {
+    $query = ['trackings' => $chunk];
+    $request = ecotrack_api_request($pdo, $settings, 'GET', '/api/v1/get/trackings/info', $query, null, 'bearer');
+
+    if (!empty($request['success']) && !empty($request['json'])) {
+        $data_items = [];
+        if (isset($request['json']['results']) && is_array($request['json']['results'])) {
+            $data_items = $request['json']['results'];
+        } else {
+            foreach ($request['json'] as $k => $v) {
+                if ($k !== 'success' && $k !== 'message' && is_array($v)) {
+                    $data_items[$k] = $v;
+                }
+            }
+        }
+
+        foreach ($data_items as $tracking_number => $data) {
+            if (!isset($orders_map[$tracking_number])) continue;
+            
+            $order_id = $orders_map[$tracking_number];
+            $latest_status = '';
+            $latest_time = null;
+            
+            if (is_array($data) && !empty($data['history']) && is_array($data['history'])) {
+                $latest = end($data['history']);
+                if (!empty($latest['status'])) {
+                    if (!empty($data['current_status'])) {
+                        $latest_status = trim((string)$data['current_status']);
+                    } else {
+                        $latest_status = trim((string)$latest['status']);
+                    }
+                    if (!empty($latest['date']) && !empty($latest['time'])) {
+                        $latest_time = $latest['date'] . ' ' . $latest['time'];
+                    }
+                }
+            } elseif (is_array($data) && !empty($data['current_status'])) {
+                $latest_status = trim((string)$data['current_status']);
+            } elseif (is_string($data)) {
+                $latest_status = trim($data);
+            } elseif (is_array($data) && !empty($data['status'])) {
+                $latest_status = trim((string)$data['status']);
+            }
+            
+            if ($latest_status !== '') {
+                $pdo->prepare("UPDATE tbl_order SET ecotrack_remote_status = ?, ecotrack_remote_time = ? WHERE id = ? LIMIT 1")
+                    ->execute([$latest_status, $latest_time, $order_id]);
+                $synced_count++;
+            }
+        }
+    } else {
+        echo "Failed chunk: " . json_encode($request) . "\n";
+    }
+}
+
+echo "Synced $synced_count orders.\n";

@@ -1,0 +1,14 @@
+[
+    {
+        "nom": "Oum El Assel",
+        "wilaya_id": 37,
+        "code_postal": "3702",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tindouf",
+        "wilaya_id": 37,
+        "code_postal": "3701",
+        "has_stop_desk": 1
+    }
+]

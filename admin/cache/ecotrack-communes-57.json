@@ -1,0 +1,50 @@
+[
+    {
+        "nom": "Djamaa",
+        "wilaya_id": 57,
+        "code_postal": "5706",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El M'ghair",
+        "wilaya_id": 57,
+        "code_postal": "5701",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mrara",
+        "wilaya_id": 57,
+        "code_postal": "5703",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum Touyour",
+        "wilaya_id": 57,
+        "code_postal": "5707",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Amrane",
+        "wilaya_id": 57,
+        "code_postal": "5708",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Khelil",
+        "wilaya_id": 57,
+        "code_postal": "5704",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Still",
+        "wilaya_id": 57,
+        "code_postal": "5702",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tenedla",
+        "wilaya_id": 57,
+        "code_postal": "5705",
+        "has_stop_desk": 0
+    }
+]

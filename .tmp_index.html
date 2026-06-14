@@ -1,0 +1,1278 @@
+﻿<!-- This is main configuration File -->
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+
+	<!-- Meta Tags -->
+	<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8"/>
+	<meta charset="utf-8">
+
+	<!-- Favicon -->
+	<link rel="icon" type="image/png" href="assets/uploads/favicon.jpeg">
+
+	<!-- Stylesheets -->
+	<link rel="stylesheet" href="assets/css/bootstrap.min.css">
+	<link rel="stylesheet" href="assets/css/font-awesome.min.css">
+	<link rel="stylesheet" href="assets/css/owl.carousel.min.css">
+	<link rel="stylesheet" href="assets/css/owl.theme.default.min.css">
+    <link rel="stylesheet" href="assets/css/magnific-popup.css">
+    <link rel="stylesheet" href="assets/css/rating.css">
+	<link rel="stylesheet" href="assets/css/spacing.css">
+	<link rel="stylesheet" href="assets/css/bootstrap-touch-slider.css">
+	<link rel="stylesheet" href="assets/css/animate.min.css">
+	<link rel="stylesheet" href="assets/css/tree-menu.css">
+	<link rel="stylesheet" href="assets/css/select2.min.css">
+	<link rel="stylesheet" href="assets/css/main.css">
+	<link rel="stylesheet" href="assets/css/responsive.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+	<!-- JavaScript -->
+	<script src="https://code.jquery.com/jquery-3.6.0.min.js "></script>
+		<script src="assets/js/bootstrap.min.js"></script>
+
+		
+	
+	
+
+
+
+<style>
+.badge {
+    padding: 5px 10px;
+    border-radius: 3px;
+    font-size: 12px;
+}
+.badge-warning {
+    background: #ffc107;
+    color: #000;
+}
+.badge-info {
+    background: #17a2b8;
+    color: #fff;
+}
+.badge-primary {
+    background: #007bff;
+    color: #fff;
+}
+.badge-success {
+    background: #28a745;
+    color: #fff;
+}
+.badge-danger {
+    background: #dc3545;
+    color: #fff;
+}
+
+/* تنسيقات جديدة لروابط تسجيل الدخول وإنشاء الحساب */
+.header .right ul li a {
+    display: inline-flex;
+    align-items: Center;
+    padding: 8px 15px;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    font-weight: 600;
+    margin: 0 5px;
+}
+
+/* تنسيقات جديدة لعرض معلومات المستخدم */
+.user-profile {
+    display: flex;
+    align-items: center;
+    background: #f8f9fa;
+    padding: 8px 15px;
+    border-radius: 12px;
+    border: 2px solid #7c3aed;
+    margin: 0 5px;
+    transition: all 0.3s ease;
+}
+
+.user-profile:hover {
+    background: #7c3aed;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.2);
+}
+
+.user-profile:hover .user-name,
+.user-profile:hover .user-icon {
+    color: #fff;
+}
+
+.user-icon {
+    color: #7c3aed;
+    font-size: 1.2rem;
+    margin-left: 8px;
+    transition: all 0.3s ease;
+}
+
+.user-name {
+    color: #333;
+    font-weight: 600;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+}
+
+.dashboard-link {
+    display: inline-flex;
+    align-items: center;
+    padding: 8px 15px;
+    border-radius: 8px;
+    background: #7c3aed;
+    color: #fff;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    margin: 0 5px;
+}
+
+.dashboard-link:hover {
+    background: #6d28d9;
+    color: #fff;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(124, 58, 237, 0.3);
+    text-decoration: none;
+}
+
+.dashboard-link i {
+    margin-left: 8px;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .user-profile {
+        padding: 6px 12px;
+    }
+    
+    .user-name {
+        font-size: 0.9rem;
+    }
+    
+    .dashboard-link {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+</style>
+
+<link rel="stylesheet" href="assets/css/index-pro.css">
+</head>
+<body class="index-pro">
+
+<div id="fb-root"></div>
+<script>(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.10&appId=323620764400430";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));</script><!--
+<div id="preloader">
+	<div id="status"></div>
+</div>-->
+
+<!-- top bar -->
+<div class="top">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-sm-6 col-xs-12">
+				<div class="left">
+					<ul>
+						<li><i class="fa fa-phone"></i> 0561735105</li>
+						<li><i class="fa fa-envelope-o"></i> boomstore@outlook.fr</li>
+					</ul>
+				</div>
+			</div>
+			<div class="col-md-6 col-sm-6 col-xs-12">
+				<div class="right">
+					<ul>
+																				<li><a href="https://www.facebook.com/#"><i class="fa fa-facebook"></i></a></li>
+																												<li><a href="https://www.instagram.com/#"><i class="fa fa-instagram"></i></a></li>
+																												<li><a href="https://www.instagram.com/#"><i class=""></i></a></li>
+																												<li><a href="https://www.whatsapp.com/#"><i class="fa fa-whatsapp"></i></a></li>
+																			</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="header">
+	<div class="container">
+		<div class="row inner">
+			<div class="col-md-4 logo">
+				<a href="index.php"><img src="assets/uploads/logo.jpeg" alt="logo image"></a>
+			</div>
+			
+			<div class="col-md-5 right">
+				<ul>
+					
+
+				</ul>
+			</div>
+			<div class="col-md-3 search-area">
+				<form class="navbar-form navbar-left" role="search" action="search-result.php" method="get">
+					<input type="hidden" name="_csrf" value="cf8010e3be81e960963605f4cc125922" />					<div class="form-group">
+						<input type="text" class="form-control search-top" placeholder="Search Product" name="search_text">
+					</div>
+					<button type="submit" class="btn btn-danger">Search</button>
+				</form>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="nav">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 pl_0 pr_0">
+				<div class="menu-container">
+					<div class="menu">
+						<ul>
+							<li><a href="index.php">Homme</a></li>
+							
+															<li><a href="product-category.php?id=1&type=top-category">Men</a>
+									<ul>
+																					<li><a href="product-category.php?id=1&type=mid-category">Men Accessories</a>
+												<ul>
+																											<li><a href="product-category.php?id=1&type=end-category">Headwear </a></li>
+																												<li><a href="product-category.php?id=2&type=end-category">Sunglasses</a></li>
+																												<li><a href="product-category.php?id=3&type=end-category">Watches</a></li>
+																												<li><a href="product-category.php?id=57&type=end-category">Belts</a></li>
+																												<li><a href="product-category.php?id=58&type=end-category">Multipacks</a></li>
+																												<li><a href="product-category.php?id=59&type=end-category">Other Accessories</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=2&type=mid-category">Men's Shoes</a>
+												<ul>
+																											<li><a href="product-category.php?id=4&type=end-category">Sandals</a></li>
+																												<li><a href="product-category.php?id=5&type=end-category">Boots</a></li>
+																												<li><a href="product-category.php?id=11&type=end-category">Sports Shoes</a></li>
+																												<li><a href="product-category.php?id=25&type=end-category">Casual Shoes</a></li>
+																												<li><a href="product-category.php?id=56&type=end-category">Formal Shoes</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=8&type=mid-category">Bottoms</a>
+												<ul>
+																											<li><a href="product-category.php?id=16&type=end-category">Pants</a></li>
+																												<li><a href="product-category.php?id=17&type=end-category">Jeans</a></li>
+																												<li><a href="product-category.php?id=18&type=end-category">Joggers</a></li>
+																												<li><a href="product-category.php?id=19&type=end-category">Shorts</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=9&type=mid-category">T-shirts & Shirts</a>
+												<ul>
+																											<li><a href="product-category.php?id=20&type=end-category">T-shirts</a></li>
+																												<li><a href="product-category.php?id=21&type=end-category">Casual Shirts</a></li>
+																												<li><a href="product-category.php?id=22&type=end-category">Formal Shirts</a></li>
+																												<li><a href="product-category.php?id=23&type=end-category">Polo Shirts</a></li>
+																												<li><a href="product-category.php?id=24&type=end-category">Vests</a></li>
+																										</ul>
+											</li>
+																				</ul>
+								</li>
+																<li><a href="product-category.php?id=2&type=top-category">Women</a>
+									<ul>
+																					<li><a href="product-category.php?id=3&type=mid-category">Beauty Products</a>
+												<ul>
+																											<li><a href="product-category.php?id=6&type=end-category">Tops</a></li>
+																												<li><a href="product-category.php?id=7&type=end-category">T-Shirt</a></li>
+																												<li><a href="product-category.php?id=39&type=end-category">Fragrance</a></li>
+																												<li><a href="product-category.php?id=40&type=end-category">Skincare</a></li>
+																												<li><a href="product-category.php?id=41&type=end-category">Hair Care</a></li>
+																												<li><a href="product-category.php?id=43&type=end-category">Eyes Care</a></li>
+																												<li><a href="product-category.php?id=44&type=end-category">Lips</a></li>
+																												<li><a href="product-category.php?id=45&type=end-category">Face Care</a></li>
+																												<li><a href="product-category.php?id=46&type=end-category">Gift Sets</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=4&type=mid-category">Accessories</a>
+												<ul>
+																											<li><a href="product-category.php?id=8&type=end-category">Watches</a></li>
+																												<li><a href="product-category.php?id=9&type=end-category">Sunglasses</a></li>
+																												<li><a href="product-category.php?id=42&type=end-category">Jewellery</a></li>
+																												<li><a href="product-category.php?id=47&type=end-category">Scarves & Headwear</a></li>
+																												<li><a href="product-category.php?id=48&type=end-category">Multipacks</a></li>
+																												<li><a href="product-category.php?id=49&type=end-category">Other Accessories</a></li>
+																												<li><a href="product-category.php?id=60&type=end-category">Bags</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=6&type=mid-category">Shoes</a>
+												<ul>
+																											<li><a href="product-category.php?id=12&type=end-category">Sandals</a></li>
+																												<li><a href="product-category.php?id=13&type=end-category">Flat Shoes</a></li>
+																												<li><a href="product-category.php?id=50&type=end-category">Pumps</a></li>
+																												<li><a href="product-category.php?id=51&type=end-category">Sneakers</a></li>
+																												<li><a href="product-category.php?id=52&type=end-category">Sports Shoes</a></li>
+																												<li><a href="product-category.php?id=53&type=end-category">Boots</a></li>
+																												<li><a href="product-category.php?id=54&type=end-category">Comfort Shoes</a></li>
+																												<li><a href="product-category.php?id=55&type=end-category">Slippers & Casual Shoes</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=7&type=mid-category">Clothing</a>
+												<ul>
+																											<li><a href="product-category.php?id=14&type=end-category">Hoodies</a></li>
+																												<li><a href="product-category.php?id=15&type=end-category">Coats & Jackets</a></li>
+																												<li><a href="product-category.php?id=32&type=end-category">Dresses</a></li>
+																												<li><a href="product-category.php?id=33&type=end-category">Tops</a></li>
+																												<li><a href="product-category.php?id=34&type=end-category">T-Shirts & Vests</a></li>
+																												<li><a href="product-category.php?id=35&type=end-category">Pants & Leggings</a></li>
+																												<li><a href="product-category.php?id=36&type=end-category">Sportswear</a></li>
+																												<li><a href="product-category.php?id=37&type=end-category">Plus Size Clothing</a></li>
+																												<li><a href="product-category.php?id=38&type=end-category">Socks & Hosiery</a></li>
+																										</ul>
+											</li>
+																				</ul>
+								</li>
+																<li><a href="product-category.php?id=3&type=top-category">Kids</a>
+									<ul>
+																					<li><a href="product-category.php?id=10&type=mid-category">Clothing</a>
+												<ul>
+																											<li><a href="product-category.php?id=26&type=end-category">Boys</a></li>
+																												<li><a href="product-category.php?id=27&type=end-category">Girls</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=11&type=mid-category">Shoes</a>
+												<ul>
+																											<li><a href="product-category.php?id=28&type=end-category">Boys</a></li>
+																												<li><a href="product-category.php?id=29&type=end-category">Girls</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=12&type=mid-category">Accessories</a>
+												<ul>
+																											<li><a href="product-category.php?id=30&type=end-category">Boys</a></li>
+																												<li><a href="product-category.php?id=31&type=end-category">Girls</a></li>
+																										</ul>
+											</li>
+																				</ul>
+								</li>
+																<li><a href="product-category.php?id=4&type=top-category">Electronics</a>
+									<ul>
+																					<li><a href="product-category.php?id=14&type=mid-category">Electronic Items</a>
+												<ul>
+																											<li><a href="product-category.php?id=61&type=end-category">Cell Phone and Accessories</a></li>
+																												<li><a href="product-category.php?id=62&type=end-category">Headphones</a></li>
+																												<li><a href="product-category.php?id=63&type=end-category">Security and Surveillance</a></li>
+																												<li><a href="product-category.php?id=64&type=end-category">Television and Video</a></li>
+																												<li><a href="product-category.php?id=65&type=end-category">GPS and Navigation</a></li>
+																												<li><a href="product-category.php?id=66&type=end-category">Home Audio</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=15&type=mid-category">Computers</a>
+												<ul>
+																											<li><a href="product-category.php?id=67&type=end-category">Computer Components</a></li>
+																												<li><a href="product-category.php?id=68&type=end-category">Computers and Tablets</a></li>
+																												<li><a href="product-category.php?id=69&type=end-category">Laptop Accessories</a></li>
+																												<li><a href="product-category.php?id=70&type=end-category">Printer and Monitors</a></li>
+																												<li><a href="product-category.php?id=71&type=end-category">External Components</a></li>
+																												<li><a href="product-category.php?id=72&type=end-category">Networking Products</a></li>
+																										</ul>
+											</li>
+																				</ul>
+								</li>
+																<li><a href="product-category.php?id=5&type=top-category">Health and Household</a>
+									<ul>
+																					<li><a href="product-category.php?id=16&type=mid-category">Health</a>
+												<ul>
+																											<li><a href="product-category.php?id=73&type=end-category">Medical Supplies and Equipment</a></li>
+																												<li><a href="product-category.php?id=74&type=end-category">Oral Care</a></li>
+																												<li><a href="product-category.php?id=75&type=end-category">Vision Care</a></li>
+																												<li><a href="product-category.php?id=76&type=end-category">Vitamins and Dietary Supplements</a></li>
+																										</ul>
+											</li>
+																						<li><a href="product-category.php?id=17&type=mid-category">Household</a>
+												<ul>
+																											<li><a href="product-category.php?id=77&type=end-category">Baby and Child Care</a></li>
+																												<li><a href="product-category.php?id=78&type=end-category">Household Supplies</a></li>
+																												<li><a href="product-category.php?id=79&type=end-category">Stationery and Gift Wrapping Supplies</a></li>
+																										</ul>
+											</li>
+																				</ul>
+								</li>
+																<li><a href="product-category.php?id=7&type=top-category">Electromenge</a>
+									<ul>
+																					<li><a href="product-category.php?id=19&type=mid-category">Mixeur</a>
+												<ul>
+																											<li><a href="product-category.php?id=81&type=end-category">ElecMix</a></li>
+																										</ul>
+											</li>
+																				</ul>
+								</li>
+								
+							
+							
+							<li><a href="about.php">About Us</a></li>
+							<li><a href="faq.php">FAQ</a></li>
+							<li><a href="contact.php">Contact Us</a></li>
+						</ul>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<div class="home-pro">
+    <div class="cart-overlay" id="cartOverlay"></div>
+    <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+        <div class="cart-head">
+            <h3>سلة المشتريات</h3>
+            <button type="button" class="cart-close" id="cartClose" aria-label="إغلاق">×</button>
+        </div>
+        <div class="cart-body" id="cartItems"></div>
+        <div class="cart-footer">
+            <div class="cart-total">المجموع: <span id="cartTotal">0</span> دج</div>
+            <div class="cart-actions">
+                <button type="button" class="pro-btn-outline" id="cartClear">إفراغ السلة</button>
+<button type="button" class="pro-btn" data-close-cart>متابعة التسوق</button>
+            </div>
+        </div>
+    </aside>
+    <button class="cart-fab" type="button" data-open-cart aria-label="سلة المشتريات">
+        <i class="fa fa-shopping-cart"></i>
+        <span class="cart-count">0</span>
+    </button>
+    <header class="pro-header">
+        <div class="container">
+            <div class="pro-header-inner">
+                <a class="pro-logo" href="index.php">
+                    <img src="assets/uploads/logo.jpeg" alt="Logo">
+                </a>
+                <form class="pro-search" action="search-result.php" method="get">
+                    <input type="hidden" name="_csrf" value="cf8010e3be81e960963605f4cc125922" />                    <input type="text" name="search_text" placeholder="&#1575;&#1576;&#1581;&#1579; &#1593;&#1606; &#1605;&#1606;&#1578;&#1580;">
+                    <button type="submit">&#1576;&#1581;&#1579;</button>
+                </form>
+                <div class="pro-header-actions">
+                    <button type="button" class="pro-btn-outline pro-cart-btn" data-open-cart>
+                        <i class="fa fa-shopping-cart"></i>
+                        <span>&#1575;&#1604;&#1587;&#1604;&#1577;</span>
+                        <span class="cart-count">0</span>
+                    </button>
+                </div>
+            </div>
+                            <nav class="pro-chip-nav">
+                                            <a class="pro-chip" href="product-category.php?id=1&type=top-category">
+                            Men                        </a>
+                                            <a class="pro-chip" href="product-category.php?id=2&type=top-category">
+                            Women                        </a>
+                                            <a class="pro-chip" href="product-category.php?id=3&type=top-category">
+                            Kids                        </a>
+                                            <a class="pro-chip" href="product-category.php?id=4&type=top-category">
+                            Electronics                        </a>
+                                            <a class="pro-chip" href="product-category.php?id=5&type=top-category">
+                            Health and Household                        </a>
+                                            <a class="pro-chip" href="product-category.php?id=7&type=top-category">
+                            Electromenge                        </a>
+                                    </nav>
+                    </div>
+    </header>
+
+    <section class="hero-pro">
+        <div class="container">
+            <div class="hero-grid">
+                <div class="hero-copy">
+                    <span class="hero-badge">تجربة تسوق بلمسة ذهبية</span>
+                    <h1 class="hero-title">Welcome To Our Ecommerce Website</h1>
+                    <p class="hero-subtitle">Lorem ipsum dolor sit amet, an labores explicari qui, eu nostrum copiosae argumentum has. Latine propriae quo no, unum ridens expetenda id sit, <br />
+at usu eius eligendi singulis. Sea ocurreret principes ne. At nonumy aperiri pri, nam quodsi copiosae intellegebat et, ex deserunt euripidis usu. </p>
+                    <div class="hero-actions">
+                        <a class="pro-btn" href="#products">تسوق الآن</a>
+                                                    <a class="pro-btn-outline" href="#" target="_blank">Read More</a>
+                                                <button type="button" class="pro-btn-outline" data-open-cart>
+                            <i class="fa fa-shopping-cart"></i>
+                            <span>سلة المشتريات</span>
+                            <span class="cart-count">0</span>
+                        </button>
+                    </div>
+                    <div class="hero-stats">
+                        <div class="stat-card"><strong>+500</strong><span>عميل راضٍ</span></div>
+                        <div class="stat-card"><strong>24/7</strong><span>دعم سريع</span></div>
+                        <div class="stat-card"><strong>سريع</strong><span>توصيل للمنزل</span></div>
+                    </div>
+                </div>
+                <div class="hero-media">
+                                            <div class="hero-carousel" id="heroCarousel">
+                            <div class="hero-carousel-track">
+                                                                                                        <div class="hero-carousel-slide">
+                                                                                <div class="hero-shot" style="background-image:url('assets/uploads/slider-1.png');"></div>
+                                                                                    <div class="hero-slide-content pos-center">
+                                                <div class="hero-slide-card">
+                                                                                                            <h3>من هنا تبدأ الفخامة</h3>
+                                                                                                                                                                <p>أحصل على أحدث المنتجات بأسعار جد مغربة</p>
+                                                                                                                                                                <a class="pro-btn" href="https://boomstore.store/buy-now.php?id=117">أطلب منتجك الآن</a>
+                                                                                                    </div>
+                                            </div>
+                                                                            </div>
+                                                                                                        <div class="hero-carousel-slide">
+                                                                                <div class="hero-shot" style="background-image:url('assets/uploads/slider-.png');"></div>
+                                                                                    <div class="hero-slide-content pos-center">
+                                                <div class="hero-slide-card">
+                                                                                                            <h3>من هنا تبدأ الفخامة</h3>
+                                                                                                                                                                <p>أحصل على أحدث المنتجات بأسعار جد مغربة</p>
+                                                                                                                                                                <a class="pro-btn" href="https://boomstore.store/buy-now.php?id=117">أطلب منتجك الآن</a>
+                                                                                                    </div>
+                                            </div>
+                                                                            </div>
+                                                            </div>
+                            <button type="button" class="hero-carousel-btn hero-carousel-prev" data-hero-prev aria-label="Previous slide">
+                                <i class="fa fa-angle-left"></i>
+                            </button>
+                            <button type="button" class="hero-carousel-btn hero-carousel-next" data-hero-next aria-label="Next slide">
+                                <i class="fa fa-angle-right"></i>
+                            </button>
+                            <div class="hero-carousel-dots">
+                                                                    <button type="button" class="hero-carousel-dot active" data-hero-dot="0" aria-label="Slide 1"></button>
+                                                                    <button type="button" class="hero-carousel-dot" data-hero-dot="1" aria-label="Slide 2"></button>
+                                                            </div>
+                        </div>
+                                    </div>
+                </div>
+            </div>
+    </section>
+
+            <section class="trust-pro">
+            <div class="container">
+                <div class="trust-grid">
+                                            <div class="trust-card">
+                                                            <img src="assets/uploads/service-5.png" alt="سهولة الاسترجاع">
+                                                        <h4>سهولة الاسترجاع</h4>
+                            <p>إرجاع أي منتج</p>
+                        </div>
+                                            <div class="trust-card">
+                                                            <img src="assets/uploads/service-6.png" alt="التوصيل متوفر لـ 58 ولاية">
+                                                        <h4>التوصيل متوفر لـ 58 ولاية</h4>
+                            <p>سرعة التوصيل لجميع الولايات ببلدياتهم</p>
+                        </div>
+                                            <div class="trust-card">
+                                                            <img src="assets/uploads/service-7.png" alt="سرعة التوصيل">
+                                                        <h4>سرعة التوصيل</h4>
+                            <p>سرعة التوصيل لا تتعدى يومين كأقصى تقدير</p>
+                        </div>
+                                            <div class="trust-card">
+                                                            <img src="assets/uploads/service-8.png" alt="ضمان استعادة الاموال">
+                                                        <h4>ضمان استعادة الاموال</h4>
+                            <p>نحن نضمن لك رضاكم عن الجودة.</p>
+                        </div>
+                                    </div>
+            </div>
+        </section>
+    
+    
+            <section class="pro-section">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <h2>Latest Products</h2>
+                        <p>Our list of recently added products</p>
+                    </div>
+                </div>
+                <div class="product-grid">
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/landing-1-1769011445.png);"></div>
+                            <div class="product-body">
+                                <h3>رحاية توابل وقهوة Sayona – 300 واط</h3>
+                                <div class="product-price">
+                                    <span>2,500 دج</span>
+                                                                            <del>2,500 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=wzBHR49d0%2FJm7wFlIE%2BN7nlhQ2F3ZmFjMEN0Q1IyYUhDOTc2ZGc9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="126"
+                                        data-name="رحاية توابل وقهوة Sayona – 300 واط"
+                                        data-price="2500"
+                                        data-photo="assets/uploads/landing-1-1769011445.png"
+                                        data-url="landing_page.php?id=wzBHR49d0%2FJm7wFlIE%2BN7nlhQ2F3ZmFjMEN0Q1IyYUhDOTc2ZGc9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1758278506.jpg);"></div>
+                            <div class="product-body">
+                                <h3>ساعة ذكية لحماية طفلك – Smart Watch 2030</h3>
+                                <div class="product-price">
+                                    <span>2,200 دج</span>
+                                                                            <del>2,200 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=PeQlxJjoBFeUoVuiH3Ad3mdpM0Q2TEJRT2kvVG5CKzRod1cyMVE9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="125"
+                                        data-name="ساعة ذكية لحماية طفلك – Smart Watch 2030"
+                                        data-price="2200"
+                                        data-photo="assets/uploads/product-featured-1758278506.jpg"
+                                        data-url="landing_page.php?id=PeQlxJjoBFeUoVuiH3Ad3mdpM0Q2TEJRT2kvVG5CKzRod1cyMVE9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1756291310.jpg);"></div>
+                            <div class="product-body">
+                                <h3>ساعة ذكية لحماية طفلك – Smart Watch 2030</h3>
+                                <div class="product-price">
+                                    <span>1,800 دج</span>
+                                                                            <del>1,950 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=nGkZ2vsioa9liIVjhP6vETVwTTd0MDBiU2pNd2FKYk9LVEtMZGc9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="124"
+                                        data-name="ساعة ذكية لحماية طفلك – Smart Watch 2030"
+                                        data-price="1800"
+                                        data-photo="assets/uploads/product-featured-1756291310.jpg"
+                                        data-url="landing_page.php?id=nGkZ2vsioa9liIVjhP6vETVwTTd0MDBiU2pNd2FKYk9LVEtMZGc9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1755874260.jpg);"></div>
+                            <div class="product-body">
+                                <h3>حقيبة الباندا</h3>
+                                <div class="product-price">
+                                    <span>1,900 دج</span>
+                                                                            <del>1,900 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=%2FXixWPUrGMYf8jUCywlNFkJjRzV4dWNIdmszVm9jVCsrTllTaGc9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="123"
+                                        data-name="حقيبة الباندا"
+                                        data-price="1900"
+                                        data-photo="assets/uploads/product-featured-1755874260.jpg"
+                                        data-url="landing_page.php?id=%2FXixWPUrGMYf8jUCywlNFkJjRzV4dWNIdmszVm9jVCsrTllTaGc9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1754310960.jpg);"></div>
+                            <div class="product-body">
+                                <h3>ساعة ذكية لحماية طفلك – Smart Watch 2030</h3>
+                                <div class="product-price">
+                                    <span>1,800 دج</span>
+                                                                            <del>1,950 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=nXqC7fG0%2Bwkn45Pd%2BC0GLWF1UC9LQnIwYkhERDM0NTB5ZGRUQnc9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="122"
+                                        data-name="ساعة ذكية لحماية طفلك – Smart Watch 2030"
+                                        data-price="1800"
+                                        data-photo="assets/uploads/product-featured-1754310960.jpg"
+                                        data-url="landing_page.php?id=nXqC7fG0%2Bwkn45Pd%2BC0GLWF1UC9LQnIwYkhERDM0NTB5ZGRUQnc9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1752226381.png);"></div>
+                            <div class="product-body">
+                                <h3>ساعة +  سماعة W28 Pro Max Spécial</h3>
+                                <div class="product-price">
+                                    <span>1,600 دج</span>
+                                                                            <del>1,690 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=URD3vCcqq5jxxorahHZpTUdwNkVLaWNBNDk1SWc0VjhvWHhmSXc9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="120"
+                                        data-name="ساعة +  سماعة W28 Pro Max Spécial"
+                                        data-price="1600"
+                                        data-photo="assets/uploads/product-featured-1752226381.png"
+                                        data-url="landing_page.php?id=URD3vCcqq5jxxorahHZpTUdwNkVLaWNBNDk1SWc0VjhvWHhmSXc9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                    </div>
+            </div>
+        </section>
+    
+            <section class="pro-section">
+            <div class="container">
+                <div class="section-head">
+                    <div>
+                        <h2>Popular Products</h2>
+                        <p>Popular products based on customer&#039;s choice</p>
+                    </div>
+                </div>
+                <div class="product-grid">
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1750439011.png);"></div>
+                            <div class="product-body">
+                                <h3>🔥 قارورة الموسم – رفيقتك في الصيف والشتاء! 🔥</h3>
+                                <div class="product-price">
+                                    <span>2,000 دج</span>
+                                                                            <del>2,500 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=wWRb45fZwsmUhyJEgg%2BWn2NmeVZmODR2QlIyazRvMDJXZDBpc1E9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="118"
+                                        data-name="🔥 قارورة الموسم – رفيقتك في الصيف والشتاء! 🔥"
+                                        data-price="2000"
+                                        data-photo="assets/uploads/product-featured-1750439011.png"
+                                        data-url="landing_page.php?id=wWRb45fZwsmUhyJEgg%2BWn2NmeVZmODR2QlIyazRvMDJXZDBpc1E9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1752226381.png);"></div>
+                            <div class="product-body">
+                                <h3>ساعة +  سماعة W28 Pro Max Spécial</h3>
+                                <div class="product-price">
+                                    <span>1,600 دج</span>
+                                                                            <del>1,690 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=0NC26pgJyZiuLWOIH9OzVlhZNGlxRU5pdHl3aHVwcUMvWjVvTUE9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="120"
+                                        data-name="ساعة +  سماعة W28 Pro Max Spécial"
+                                        data-price="1600"
+                                        data-photo="assets/uploads/product-featured-1752226381.png"
+                                        data-url="landing_page.php?id=0NC26pgJyZiuLWOIH9OzVlhZNGlxRU5pdHl3aHVwcUMvWjVvTUE9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1754310960.jpg);"></div>
+                            <div class="product-body">
+                                <h3>ساعة ذكية لحماية طفلك – Smart Watch 2030</h3>
+                                <div class="product-price">
+                                    <span>1,800 دج</span>
+                                                                            <del>1,950 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=2v9p%2FqbjMJYyxJpWIQ43EStKSVJtdU45REhwVDZvbmduczQ5d2c9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="122"
+                                        data-name="ساعة ذكية لحماية طفلك – Smart Watch 2030"
+                                        data-price="1800"
+                                        data-photo="assets/uploads/product-featured-1754310960.jpg"
+                                        data-url="landing_page.php?id=2v9p%2FqbjMJYyxJpWIQ43EStKSVJtdU45REhwVDZvbmduczQ5d2c9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1755874260.jpg);"></div>
+                            <div class="product-body">
+                                <h3>حقيبة الباندا</h3>
+                                <div class="product-price">
+                                    <span>1,900 دج</span>
+                                                                            <del>1,900 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=cl08peGjSunDnm0svP2CQzN0aTVEM2x1RWZidnA1c3hUR3A0eXc9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="123"
+                                        data-name="حقيبة الباندا"
+                                        data-price="1900"
+                                        data-photo="assets/uploads/product-featured-1755874260.jpg"
+                                        data-url="landing_page.php?id=cl08peGjSunDnm0svP2CQzN0aTVEM2x1RWZidnA1c3hUR3A0eXc9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1756291310.jpg);"></div>
+                            <div class="product-body">
+                                <h3>ساعة ذكية لحماية طفلك – Smart Watch 2030</h3>
+                                <div class="product-price">
+                                    <span>1,800 دج</span>
+                                                                            <del>1,950 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=fSbgY37cD%2BcgX8mNWOG2rWx2Y1BRQk9oL1BPeDk5aENkZGI3Y0E9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="124"
+                                        data-name="ساعة ذكية لحماية طفلك – Smart Watch 2030"
+                                        data-price="1800"
+                                        data-photo="assets/uploads/product-featured-1756291310.jpg"
+                                        data-url="landing_page.php?id=fSbgY37cD%2BcgX8mNWOG2rWx2Y1BRQk9oL1BPeDk5aENkZGI3Y0E9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/product-featured-1758278506.jpg);"></div>
+                            <div class="product-body">
+                                <h3>ساعة ذكية لحماية طفلك – Smart Watch 2030</h3>
+                                <div class="product-price">
+                                    <span>2,200 دج</span>
+                                                                            <del>2,200 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=dISvzSx6PcrEywlnJZCWNkhtRGtsMWhCSWlCalpxSWdvekcvV1E9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="125"
+                                        data-name="ساعة ذكية لحماية طفلك – Smart Watch 2030"
+                                        data-price="2200"
+                                        data-photo="assets/uploads/product-featured-1758278506.jpg"
+                                        data-url="landing_page.php?id=dISvzSx6PcrEywlnJZCWNkhtRGtsMWhCSWlCalpxSWdvekcvV1E9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                                                    <div class="product-card">
+                            <div class="product-media" style="background-image:url(assets/uploads/landing-1-1769011445.png);"></div>
+                            <div class="product-body">
+                                <h3>رحاية توابل وقهوة Sayona – 300 واط</h3>
+                                <div class="product-price">
+                                    <span>2,500 دج</span>
+                                                                            <del>2,500 دج</del>
+                                                                    </div>
+                                <div class="product-actions">
+                                    <a class="pro-btn-dark" href="landing_page.php?id=577%2FB2E0gSI778z%2BkU3b50lTd0NYNWxsNktIRlN2c0d0QysrelE9PQ%3D%3D">عرض المنتج</a>
+                                    <button type="button" class="pro-btn" data-add-cart
+                                        data-id="126"
+                                        data-name="رحاية توابل وقهوة Sayona – 300 واط"
+                                        data-price="2500"
+                                        data-photo="assets/uploads/landing-1-1769011445.png"
+                                        data-url="landing_page.php?id=577%2FB2E0gSI778z%2BkU3b50lTd0NYNWxsNktIRlN2c0d0QysrelE9PQ%3D%3D">
+                                        أضف للسلة
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                                    </div>
+            </div>
+        </section>
+    
+            <section class="pro-callout">
+            <div class="container">
+                <div class="callout-card">
+                                            <img src="assets/uploads/cta.jpg" alt="Welcome To Our Ecommerce Website">
+                                        <div class="callout-body">
+                                                    <h3>Welcome To Our Ecommerce Website</h3>
+                                                                            <p>Lorem ipsum dolor sit amet, an labores explicari qui, eu nostrum copiosae argumentum has. Latine propriae quo no, unum ridens expetenda id sit, <br />
+at usu eius eligendi singulis. Sea ocurreret principes ne. At nonumy aperiri pri, nam quodsi copiosae intellegebat et, ex deserunt euripidis usu. </p>
+                                                                            <a class="pro-btn" href="#" target="_blank">Read More</a>
+                                            </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+<script>
+(function () {
+    const cartKey = 'ecom_cart_v1';
+    const cartDrawer = document.getElementById('cartDrawer');
+    const cartOverlay = document.getElementById('cartOverlay');
+    const cartItems = document.getElementById('cartItems');
+    const cartTotal = document.getElementById('cartTotal');
+    const cartCountEls = document.querySelectorAll('.cart-count');
+    const openButtons = document.querySelectorAll('[data-open-cart]');
+    const closeButtons = document.querySelectorAll('[data-close-cart]');
+    const clearButton = document.getElementById('cartClear');
+    const closeButton = document.getElementById('cartClose');
+
+    function readCart() {
+        try {
+            const stored = localStorage.getItem(cartKey);
+            return stored ? JSON.parse(stored) : [];
+        } catch (e) {
+            return [];
+        }
+    }
+
+    function saveCart(items) {
+        localStorage.setItem(cartKey, JSON.stringify(items));
+    }
+
+    function formatPrice(value) {
+        const numberValue = Number(value) || 0;
+        return new Intl.NumberFormat('fr-DZ').format(numberValue);
+    }
+
+    function escapeHtml(value) {
+        return String(value)
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/\"/g, '&quot;')
+            .replace(/'/g, '&#39;');
+    }
+
+    function updateBadge(count) {
+        cartCountEls.forEach(el => {
+            el.textContent = count;
+        });
+    }
+
+    function openCart() {
+        if (!cartDrawer || !cartOverlay) {
+            return;
+        }
+        cartDrawer.classList.add('open');
+        cartOverlay.classList.add('show');
+        document.body.classList.add('cart-open');
+    }
+
+    function closeCart() {
+        if (!cartDrawer || !cartOverlay) {
+            return;
+        }
+        cartDrawer.classList.remove('open');
+        cartOverlay.classList.remove('show');
+        document.body.classList.remove('cart-open');
+    }
+
+    function renderCart() {
+        if (!cartItems || !cartTotal) {
+            return;
+        }
+        const items = readCart();
+        updateBadge(items.reduce((sum, item) => sum + item.qty, 0));
+        if (!items.length) {
+            cartItems.innerHTML = '<div class="cart-empty">السلة فارغة حالياً.</div>';
+            cartTotal.textContent = '0';
+            return;
+        }
+        let total = 0;
+        cartItems.innerHTML = items.map(item => {
+            const itemTotal = (Number(item.price) || 0) * item.qty;
+            total += itemTotal;
+            const safeName = escapeHtml(item.name);
+            const safeUrl = item.url ? escapeHtml(item.url) : '';
+            return `
+                <div class="cart-item" data-id="${item.id}">
+                    <img src="${item.photo}" alt="${safeName}">
+                    <div>
+                        <h4>${safeName}</h4>
+                        <div class="cart-meta">${formatPrice(item.price)} دج</div>
+                        <div class="cart-qty">
+                            <button type="button" data-step="-1">-</button>
+                            <input type="number" min="1" value="${item.qty}" class="cart-qty-input" />
+                            <button type="button" data-step="1">+</button>
+                        </div>
+                        <button type="button" class="cart-remove" data-remove="${item.id}">حذف</button>
+                        ${safeUrl ? `<div class="cart-meta"><a href="${safeUrl}">عرض المنتج</a></div>` : ''}
+                    </div>
+                </div>
+            `;
+        }).join('');
+        cartTotal.textContent = formatPrice(total);
+    }
+
+    function initHeroCarousel() {
+        const carousel = document.getElementById('heroCarousel');
+        if (!carousel) {
+            return;
+        }
+        const track = carousel.querySelector('.hero-carousel-track');
+        const slides = Array.from(carousel.querySelectorAll('.hero-carousel-slide'));
+        const dots = Array.from(carousel.querySelectorAll('[data-hero-dot]'));
+        const prevBtn = carousel.querySelector('[data-hero-prev]');
+        const nextBtn = carousel.querySelector('[data-hero-next]');
+        if (!track || slides.length === 0) {
+            return;
+        }
+
+        let index = 0;
+        let timer = null;
+        let slideWidth = carousel.clientWidth || carousel.getBoundingClientRect().width;
+        const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        function updateDots() {
+            dots.forEach((dot, dotIndex) => {
+                if (dotIndex === index) {
+                    dot.classList.add('active');
+                } else {
+                    dot.classList.remove('active');
+                }
+            });
+        }
+
+        function goTo(newIndex, immediate) {
+            index = (newIndex + slides.length) % slides.length;
+            slideWidth = carousel.clientWidth || carousel.getBoundingClientRect().width;
+            if (immediate) {
+                track.style.transition = 'none';
+            }
+            track.style.transform = `translateX(-${index * slideWidth}px)`;
+            updateDots();
+            if (immediate) {
+                requestAnimationFrame(() => {
+                    track.style.transition = '';
+                });
+            }
+        }
+
+        function nextSlide() {
+            goTo(index + 1);
+        }
+
+        function prevSlide() {
+            goTo(index - 1);
+        }
+
+        function stopAuto() {
+            if (timer) {
+                clearInterval(timer);
+                timer = null;
+            }
+        }
+
+        function startAuto() {
+            if (reduceMotion || slides.length < 2) {
+                return;
+            }
+            stopAuto();
+            timer = setInterval(nextSlide, 5500);
+        }
+
+        function restartAuto() {
+            stopAuto();
+            startAuto();
+        }
+
+        if (slides.length < 2) {
+            if (prevBtn) prevBtn.style.display = 'none';
+            if (nextBtn) nextBtn.style.display = 'none';
+            if (dots.length) {
+                dots.forEach(dot => {
+                    dot.style.display = 'none';
+                });
+            }
+        }
+
+        if (prevBtn) {
+            prevBtn.addEventListener('click', function () {
+                prevSlide();
+                restartAuto();
+            });
+        }
+
+        if (nextBtn) {
+            nextBtn.addEventListener('click', function () {
+                nextSlide();
+                restartAuto();
+            });
+        }
+
+        dots.forEach(dot => {
+            dot.addEventListener('click', function () {
+                const targetIndex = parseInt(dot.getAttribute('data-hero-dot'), 10);
+                if (!Number.isNaN(targetIndex)) {
+                    goTo(targetIndex);
+                    restartAuto();
+                }
+            });
+        });
+
+        window.addEventListener('resize', function () {
+            goTo(index, true);
+        });
+
+        carousel.addEventListener('mouseenter', stopAuto);
+        carousel.addEventListener('mouseleave', startAuto);
+        carousel.addEventListener('focusin', stopAuto);
+        carousel.addEventListener('focusout', startAuto);
+        carousel.addEventListener('touchstart', stopAuto, { passive: true });
+        carousel.addEventListener('touchend', startAuto);
+
+        goTo(0, true);
+        startAuto();
+    }
+
+    function addToCart(payload) {
+        const items = readCart();
+        const existing = items.find(item => item.id === payload.id);
+        if (existing) {
+            existing.qty += 1;
+        } else {
+            items.push({
+                id: payload.id,
+                name: payload.name,
+                price: payload.price,
+                photo: payload.photo,
+                url: payload.url,
+                qty: 1
+            });
+        }
+        saveCart(items);
+        renderCart();
+        openCart();
+    }
+
+    document.querySelectorAll('[data-add-cart]').forEach(btn => {
+        btn.addEventListener('click', function () {
+            addToCart({
+                id: this.getAttribute('data-id'),
+                name: this.getAttribute('data-name'),
+                price: this.getAttribute('data-price'),
+                photo: this.getAttribute('data-photo'),
+                url: this.getAttribute('data-url')
+            });
+        });
+    });
+
+    if (cartItems) {
+        cartItems.addEventListener('click', function (event) {
+            const removeButton = event.target.closest('[data-remove]');
+            if (removeButton) {
+                const items = readCart().filter(item => item.id !== removeButton.getAttribute('data-remove'));
+                saveCart(items);
+                renderCart();
+                return;
+            }
+            const stepButton = event.target.closest('[data-step]');
+            if (stepButton) {
+                const parentItem = event.target.closest('.cart-item');
+                if (!parentItem) {
+                    return;
+                }
+                const id = parentItem.getAttribute('data-id');
+                const step = parseInt(stepButton.getAttribute('data-step'), 10);
+                const items = readCart();
+                const target = items.find(item => item.id === id);
+                if (target) {
+                    target.qty = Math.max(1, target.qty + step);
+                    saveCart(items);
+                    renderCart();
+                }
+            }
+        });
+
+        cartItems.addEventListener('change', function (event) {
+            if (!event.target.classList.contains('cart-qty-input')) {
+                return;
+            }
+            const parentItem = event.target.closest('.cart-item');
+            if (!parentItem) {
+                return;
+            }
+            const id = parentItem.getAttribute('data-id');
+            const value = Math.max(1, parseInt(event.target.value, 10) || 1);
+            const items = readCart();
+            const target = items.find(item => item.id === id);
+            if (target) {
+                target.qty = value;
+                saveCart(items);
+                renderCart();
+            }
+        });
+    }
+
+    openButtons.forEach(btn => btn.addEventListener('click', openCart));
+    closeButtons.forEach(btn => btn.addEventListener('click', closeCart));
+    if (cartOverlay) {
+        cartOverlay.addEventListener('click', closeCart);
+    }
+    if (closeButton) {
+        closeButton.addEventListener('click', closeCart);
+    }
+    if (clearButton) {
+        clearButton.addEventListener('click', function () {
+            saveCart([]);
+            renderCart();
+        });
+    }
+
+    renderCart();
+    initHeroCarousel();
+})();
+</script>
+
+
+
+<section class="home-newsletter">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-6 col-md-offset-3">
+				<div class="single">
+									</div>
+				</form>
+			</div>
+		</div>
+	</div>
+</section>
+
+
+
+
+<div class="footer-bottom">
+	<div class="container">
+		<div class="row">
+			<div class="col-md-12 copyright">
+				Copyright Â© 2025 - Boom Store			</div>
+		</div>
+	</div>
+</div>
+
+
+<a href="#" class="scrollup">
+	<i class="fa fa-angle-up"></i>
+</a>
+
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js "></script>
+<script src="assets/js/bootstrap.min.js"></script>
+<script src="https://js.stripe.com/v2/"></script>
+<script src="assets/js/megamenu.js"></script>
+<script src="assets/js/owl.carousel.min.js"></script>
+<script src="assets/js/owl.animate.js"></script>
+<script src="assets/js/jquery.magnific-popup.min.js"></script>
+<script src="assets/js/rating.js"></script>
+<script src="assets/js/jquery.touchSwipe.min.js"></script>
+<script src="assets/js/bootstrap-touch-slider.js"></script>
+<script src="assets/js/select2.full.min.js"></script>
+<script src="assets/js/custom.js"></script>
+<script>
+	function confirmDelete()
+	{
+	    return confirm("Sure you want to delete this data?");
+	}
+	
+
+
+	$(document).on('submit', '#stripe_form', function () {
+        // createToken returns immediately - the supplied callback submits the form if there are no errors
+        $('#submit-button').prop("disabled", true);
+        $("#msg-container").hide();
+        Stripe.card.createToken({
+            number: $('.card-number').val(),
+            cvc: $('.card-cvc').val(),
+            exp_month: $('.card-expiry-month').val(),
+            exp_year: $('.card-expiry-year').val()
+            // name: $('.card-holder-name').val()
+        }, stripeResponseHandler);
+        return false;
+    });
+    Stripe.setPublishableKey('pk_test_0SwMWadgu8DwmEcPdUPRsZ7b');
+    function stripeResponseHandler(status, response) {
+        if (response.error) {
+            $('#submit-button').prop("disabled", false);
+            $("#msg-container").html('<div style="color: red;border: 1px solid;margin: 10px 0px;padding: 5px;"><strong>Error:</strong> ' + response.error.message + '</div>');
+            $("#msg-container").show();
+        } else {
+            var form$ = $("#stripe_form");
+            var token = response['id'];
+            form$.append("<input type='hidden' name='stripeToken' value='" + token + "' />");
+            form$.get(0).submit();
+        }
+    }
+</script>
+
+
+</body>
+</html>

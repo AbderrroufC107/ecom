@@ -1,0 +1,80 @@
+[
+    {
+        "nom": "Benaceur",
+        "wilaya_id": 55,
+        "code_postal": "5510",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Blidet Amor",
+        "wilaya_id": 55,
+        "code_postal": "5502",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Alia",
+        "wilaya_id": 55,
+        "code_postal": "5513",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hadjira",
+        "wilaya_id": 55,
+        "code_postal": "5507",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Megarine",
+        "wilaya_id": 55,
+        "code_postal": "5512",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mnaguer",
+        "wilaya_id": 55,
+        "code_postal": "5511",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Nezla",
+        "wilaya_id": 55,
+        "code_postal": "5504",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Slimane",
+        "wilaya_id": 55,
+        "code_postal": "5506",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taibet",
+        "wilaya_id": 55,
+        "code_postal": "5508",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tebesbest",
+        "wilaya_id": 55,
+        "code_postal": "5503",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Temacine",
+        "wilaya_id": 55,
+        "code_postal": "5509",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Touggourt",
+        "wilaya_id": 55,
+        "code_postal": "5501",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Zaouia El Abidia",
+        "wilaya_id": 55,
+        "code_postal": "5505",
+        "has_stop_desk": 0
+    }
+]

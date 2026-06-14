@@ -1,0 +1,304 @@
+{
+    "timestamp": "2026-06-03 08:48:16",
+    "php_version": "8.2.12",
+    "tests": [
+        {
+            "name": "bcrypt: password_verify() present in login.php",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "bcrypt: MD5 backward-compatible migration path present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "bcrypt: password_hash() used for rehashing",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "CSRF: Token validation on POST requests in header.php",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "CSRF: csrf_field() helper function exists",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "CSRF: Token generation uses random_bytes(32)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "CSRF: No MD5 usage in CSRF_Protect.php",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Session: session_regenerate_id() found 4x across login files (\u22654 expected)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Session: Cookie hardening directives found (5\/5)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Security Headers: 5\/5 found in admin header.php",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Security Headers: 4\/4 found in staff header.php",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "XSS: No raw $_POST echoes remain in 4\/4 checked files",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Upload: MIME validation, getimagesize(), 10MB limit all present (3\/3)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Debug Files: All 31 debug files removed from production tree",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API Keys: validate() checks status='active' (revoked keys rejected)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API Keys: Expiry enforcement in validate()",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API Keys: IP whitelist enforcement present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Super-Admin: password_verify() used instead of plaintext comparison",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Super-Admin: password_hash() with PASSWORD_DEFAULT for migration",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Auth: 2 pages may lack session check",
+            "status": "WARN",
+            "detail": "get-end-category.php, get-mid-category.php"
+        },
+        {
+            "name": "Auth: admin\/logout.php destroys session",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Auth: admin\/logout.php unsets session variables",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Auth: staff\/logout.php destroys session",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Auth: super-admin\/logout.php destroys session",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Auth: Brute-force protection active on all 3 login portals (admin, staff, super-admin)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Tenant: StoreRepository has 3 store-scoped query clauses",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Tenant: StoreService authenticates with store_id context",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Tenant: QueueService scoped by store_id",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Tenant: BackupService scoped by store_id",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Tenant: ApiKeyService scoped by store_id",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "DB: Average query latency: 0.06ms",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "DB: 74 tables found",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "DB: Engine InnoDB: 71 tables",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "DB: Engine MyISAM: 3 tables",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "DB: 183 total indexes across all tables",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "DB: 5 tables with auto_increment",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "PHP: File read throughput: 10872 reads\/sec",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Queue: Retry logic present in QueueWorker",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Queue: Backoff\/delay logic present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Queue: Failed job handling present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Queue: QueueHealth monitoring class exists",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Backup: Backup creation function exists",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Backup: Restore function exists (execute\/restore)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Backup: Integrity check in restore",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Backup: Retention policy service exists",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API: 19 functions across 6 API endpoint files",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API: Rate limiting enforced via isRateLimited()",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API: Hourly rate limits configured",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API: Daily rate limits configured",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API: Error handling (try\/catch) present in endpoints",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "API: Input validation (trim\/intval\/filter_var) present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Recovery: 6\/6 sub-status types in recovery_engine.php",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Recovery: Risk scoring logic present (recovery_engine_update_risk_score)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Recovery: Blacklist logic present (recovery_engine_auto_blacklist)",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Recovery: Task creation and resolution functions present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Recovery: Telegram\/notification integration present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Ecotrack: 6\/6 integration functions present",
+            "status": "PASS",
+            "detail": ""
+        },
+        {
+            "name": "Ecotrack: Retry\/error handling logic present",
+            "status": "PASS",
+            "detail": ""
+        }
+    ],
+    "summary": {
+        "passed": 57,
+        "failed": 0,
+        "warnings": 1,
+        "total": 58
+    },
+    "score": 98.3,
+    "certified": true
+}

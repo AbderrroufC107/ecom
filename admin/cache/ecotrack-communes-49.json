@@ -1,0 +1,62 @@
+[
+    {
+        "nom": "Aougrout",
+        "wilaya_id": 49,
+        "code_postal": "4908",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Charouine",
+        "wilaya_id": 49,
+        "code_postal": "4902",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Deldoul",
+        "wilaya_id": 49,
+        "code_postal": "4906",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksar Kaddour",
+        "wilaya_id": 49,
+        "code_postal": "4903",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Metarfa",
+        "wilaya_id": 49,
+        "code_postal": "4907",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Aissa",
+        "wilaya_id": 49,
+        "code_postal": "4910",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Said",
+        "wilaya_id": 49,
+        "code_postal": "4904",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Talmine",
+        "wilaya_id": 49,
+        "code_postal": "4909",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Timimoun",
+        "wilaya_id": 49,
+        "code_postal": "4901",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Tinerkouk",
+        "wilaya_id": 49,
+        "code_postal": "4905",
+        "has_stop_desk": 0
+    }
+]

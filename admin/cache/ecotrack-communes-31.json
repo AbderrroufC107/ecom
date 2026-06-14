@@ -1,0 +1,158 @@
+[
+    {
+        "nom": "Ain Biya",
+        "wilaya_id": 31,
+        "code_postal": "3126",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Kerma",
+        "wilaya_id": 31,
+        "code_postal": "3125",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Turk",
+        "wilaya_id": 31,
+        "code_postal": "3109",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Arzew",
+        "wilaya_id": 31,
+        "code_postal": "3106",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ben Freha",
+        "wilaya_id": 31,
+        "code_postal": "3120",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bethioua",
+        "wilaya_id": 31,
+        "code_postal": "3107",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir El Djir",
+        "wilaya_id": 31,
+        "code_postal": "3103",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Boufatis",
+        "wilaya_id": 31,
+        "code_postal": "3114",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bousfer",
+        "wilaya_id": 31,
+        "code_postal": "3116",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boutlelis",
+        "wilaya_id": 31,
+        "code_postal": "3124",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ancar",
+        "wilaya_id": 31,
+        "code_postal": "3110",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Braya",
+        "wilaya_id": 31,
+        "code_postal": "3118",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kerma",
+        "wilaya_id": 31,
+        "code_postal": "3117",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Es Senia",
+        "wilaya_id": 31,
+        "code_postal": "3105",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Gdyel",
+        "wilaya_id": 31,
+        "code_postal": "3102",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Ben Okba",
+        "wilaya_id": 31,
+        "code_postal": "3119",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Bounif",
+        "wilaya_id": 31,
+        "code_postal": "3104",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Mefsoukh",
+        "wilaya_id": 31,
+        "code_postal": "3121",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Marsat El Hadjadj",
+        "wilaya_id": 31,
+        "code_postal": "3108",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mers El Kebir",
+        "wilaya_id": 31,
+        "code_postal": "3115",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Messerghin",
+        "wilaya_id": 31,
+        "code_postal": "3123",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oran",
+        "wilaya_id": 31,
+        "code_postal": "3101",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Oued Tlelat",
+        "wilaya_id": 31,
+        "code_postal": "3111",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ben Yebka",
+        "wilaya_id": 31,
+        "code_postal": "3122",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Chami",
+        "wilaya_id": 31,
+        "code_postal": "3113",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tafraoui",
+        "wilaya_id": 31,
+        "code_postal": "3112",
+        "has_stop_desk": 0
+    }
+]

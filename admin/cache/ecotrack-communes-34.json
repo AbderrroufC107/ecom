@@ -1,0 +1,206 @@
+[
+    {
+        "nom": "Ain Taghrout",
+        "wilaya_id": 34,
+        "code_postal": "3408",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Tesra",
+        "wilaya_id": 34,
+        "code_postal": "3430",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Belimour",
+        "wilaya_id": 34,
+        "code_postal": "3412",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Daoud",
+        "wilaya_id": 34,
+        "code_postal": "3406",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Kasdali",
+        "wilaya_id": 34,
+        "code_postal": "3431",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bordj Bou Arreridj",
+        "wilaya_id": 34,
+        "code_postal": "3401",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bordj Ghdir",
+        "wilaya_id": 34,
+        "code_postal": "3409",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bordj Zemora",
+        "wilaya_id": 34,
+        "code_postal": "3403",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Colla",
+        "wilaya_id": 34,
+        "code_postal": "3425",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djaafra",
+        "wilaya_id": 34,
+        "code_postal": "3415",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ach",
+        "wilaya_id": 34,
+        "code_postal": "3427",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Achir",
+        "wilaya_id": 34,
+        "code_postal": "3407",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Anseur",
+        "wilaya_id": 34,
+        "code_postal": "3428",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hamadia",
+        "wilaya_id": 34,
+        "code_postal": "3411",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El M'hir",
+        "wilaya_id": 34,
+        "code_postal": "3405",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Main",
+        "wilaya_id": 34,
+        "code_postal": "3416",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ghilassa",
+        "wilaya_id": 34,
+        "code_postal": "3432",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Haraza",
+        "wilaya_id": 34,
+        "code_postal": "3434",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hasnaoua",
+        "wilaya_id": 34,
+        "code_postal": "3419",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khelil",
+        "wilaya_id": 34,
+        "code_postal": "3420",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksour",
+        "wilaya_id": 34,
+        "code_postal": "3422",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mansoura",
+        "wilaya_id": 34,
+        "code_postal": "3404",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Medjana",
+        "wilaya_id": 34,
+        "code_postal": "3413",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Brahem",
+        "wilaya_id": 34,
+        "code_postal": "3417",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Dahmane",
+        "wilaya_id": 34,
+        "code_postal": "3418",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Sidi Brahim",
+        "wilaya_id": 34,
+        "code_postal": "3423",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rabta",
+        "wilaya_id": 34,
+        "code_postal": "3433",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ras El Oued",
+        "wilaya_id": 34,
+        "code_postal": "3402",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Embarek",
+        "wilaya_id": 34,
+        "code_postal": "3410",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tafreg",
+        "wilaya_id": 34,
+        "code_postal": "3424",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taglait",
+        "wilaya_id": 34,
+        "code_postal": "3421",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Teniet En Nasr",
+        "wilaya_id": 34,
+        "code_postal": "3414",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tesmart",
+        "wilaya_id": 34,
+        "code_postal": "3429",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tixter",
+        "wilaya_id": 34,
+        "code_postal": "3426",
+        "has_stop_desk": 0
+    }
+]

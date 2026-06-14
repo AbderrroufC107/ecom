@@ -1,0 +1,194 @@
+[
+    {
+        "nom": "Afir",
+        "wilaya_id": 35,
+        "code_postal": "3503",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ammal",
+        "wilaya_id": 35,
+        "code_postal": "3524",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Baghlia",
+        "wilaya_id": 35,
+        "code_postal": "3505",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Choud",
+        "wilaya_id": 35,
+        "code_postal": "3522",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Amrane",
+        "wilaya_id": 35,
+        "code_postal": "3525",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bordj Menaiel",
+        "wilaya_id": 35,
+        "code_postal": "3504",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Boudouaou",
+        "wilaya_id": 35,
+        "code_postal": "3502",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boudouaou El Bahri",
+        "wilaya_id": 35,
+        "code_postal": "3527",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boumerdes",
+        "wilaya_id": 35,
+        "code_postal": "3501",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bouzegza Keddara",
+        "wilaya_id": 35,
+        "code_postal": "3519",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chabet El Ameur",
+        "wilaya_id": 35,
+        "code_postal": "3513",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Corso",
+        "wilaya_id": 35,
+        "code_postal": "3516",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dellys",
+        "wilaya_id": 35,
+        "code_postal": "3523",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Djinet",
+        "wilaya_id": 35,
+        "code_postal": "3508",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kharrouba",
+        "wilaya_id": 35,
+        "code_postal": "3532",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hammedi",
+        "wilaya_id": 35,
+        "code_postal": "3530",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Isser",
+        "wilaya_id": 35,
+        "code_postal": "3509",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khemis El Khechna",
+        "wilaya_id": 35,
+        "code_postal": "3531",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Larbatache",
+        "wilaya_id": 35,
+        "code_postal": "3518",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Leghata",
+        "wilaya_id": 35,
+        "code_postal": "3529",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Naciria",
+        "wilaya_id": 35,
+        "code_postal": "3507",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Aissa",
+        "wilaya_id": 35,
+        "code_postal": "3521",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Hedadj",
+        "wilaya_id": 35,
+        "code_postal": "3528",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Moussa",
+        "wilaya_id": 35,
+        "code_postal": "3517",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Si Mustapha",
+        "wilaya_id": 35,
+        "code_postal": "3511",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Daoud",
+        "wilaya_id": 35,
+        "code_postal": "3506",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souk El Haad",
+        "wilaya_id": 35,
+        "code_postal": "3526",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taourga",
+        "wilaya_id": 35,
+        "code_postal": "3520",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Thenia",
+        "wilaya_id": 35,
+        "code_postal": "3514",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tidjelabine",
+        "wilaya_id": 35,
+        "code_postal": "3512",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Timezrit",
+        "wilaya_id": 35,
+        "code_postal": "3515",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zemmouri",
+        "wilaya_id": 35,
+        "code_postal": "3510",
+        "has_stop_desk": 0
+    }
+]

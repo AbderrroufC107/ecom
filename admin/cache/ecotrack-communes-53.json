@@ -1,0 +1,20 @@
+[
+    {
+        "nom": "Foggaret Azzaouia",
+        "wilaya_id": 53,
+        "code_postal": "5303",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "In Ghar",
+        "wilaya_id": 53,
+        "code_postal": "5302",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "In Salah",
+        "wilaya_id": 53,
+        "code_postal": "5301",
+        "has_stop_desk": 1
+    }
+]

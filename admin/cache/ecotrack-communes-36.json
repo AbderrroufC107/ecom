@@ -1,0 +1,146 @@
+[
+    {
+        "nom": "Ain El Assel",
+        "wilaya_id": 36,
+        "code_postal": "3606",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Kerma",
+        "wilaya_id": 36,
+        "code_postal": "3621",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Asfour",
+        "wilaya_id": 36,
+        "code_postal": "3617",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben M Hidi",
+        "wilaya_id": 36,
+        "code_postal": "3603",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Berrihane",
+        "wilaya_id": 36,
+        "code_postal": "3610",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Besbes",
+        "wilaya_id": 36,
+        "code_postal": "3616",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bougous",
+        "wilaya_id": 36,
+        "code_postal": "3604",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouhadjar",
+        "wilaya_id": 36,
+        "code_postal": "3602",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouteldja",
+        "wilaya_id": 36,
+        "code_postal": "3608",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chebaita Mokhtar",
+        "wilaya_id": 36,
+        "code_postal": "3615",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chefia",
+        "wilaya_id": 36,
+        "code_postal": "3612",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chihani",
+        "wilaya_id": 36,
+        "code_postal": "3614",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Drean",
+        "wilaya_id": 36,
+        "code_postal": "3613",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Echatt",
+        "wilaya_id": 36,
+        "code_postal": "3618",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Aioun",
+        "wilaya_id": 36,
+        "code_postal": "3607",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kala",
+        "wilaya_id": 36,
+        "code_postal": "3605",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Tarf",
+        "wilaya_id": 36,
+        "code_postal": "3601",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Hammam Beni Salah",
+        "wilaya_id": 36,
+        "code_postal": "3623",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Lac Des Oiseaux",
+        "wilaya_id": 36,
+        "code_postal": "3611",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Zitoun",
+        "wilaya_id": 36,
+        "code_postal": "3622",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Raml Souk",
+        "wilaya_id": 36,
+        "code_postal": "3624",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souarekh",
+        "wilaya_id": 36,
+        "code_postal": "3609",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zerizer",
+        "wilaya_id": 36,
+        "code_postal": "3619",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zitouna",
+        "wilaya_id": 36,
+        "code_postal": "3620",
+        "has_stop_desk": 0
+    }
+]

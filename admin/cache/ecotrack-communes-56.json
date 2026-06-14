@@ -1,0 +1,14 @@
+[
+    {
+        "nom": "Bordj El Haouasse",
+        "wilaya_id": 56,
+        "code_postal": "5602",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djanet",
+        "wilaya_id": 56,
+        "code_postal": "5601",
+        "has_stop_desk": 1
+    }
+]

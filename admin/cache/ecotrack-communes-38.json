@@ -1,0 +1,134 @@
+[
+    {
+        "nom": "Ammari",
+        "wilaya_id": 38,
+        "code_postal": "3813",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Chaib",
+        "wilaya_id": 38,
+        "code_postal": "3805",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Lahcene",
+        "wilaya_id": 38,
+        "code_postal": "3822",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bordj Bounaama",
+        "wilaya_id": 38,
+        "code_postal": "3802",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bordj El Emir Abdelkader",
+        "wilaya_id": 38,
+        "code_postal": "3809",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bou Caid",
+        "wilaya_id": 38,
+        "code_postal": "3821",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khemisti",
+        "wilaya_id": 38,
+        "code_postal": "3811",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Larbaa",
+        "wilaya_id": 38,
+        "code_postal": "3816",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Lardjem",
+        "wilaya_id": 38,
+        "code_postal": "3806",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Layoune",
+        "wilaya_id": 38,
+        "code_postal": "3810",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Lazharia",
+        "wilaya_id": 38,
+        "code_postal": "3804",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maacem",
+        "wilaya_id": 38,
+        "code_postal": "3817",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Melaab",
+        "wilaya_id": 38,
+        "code_postal": "3807",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Bessem",
+        "wilaya_id": 38,
+        "code_postal": "3812",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Abed",
+        "wilaya_id": 38,
+        "code_postal": "3818",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Boutouchent",
+        "wilaya_id": 38,
+        "code_postal": "3815",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Lantri",
+        "wilaya_id": 38,
+        "code_postal": "3808",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Slimane",
+        "wilaya_id": 38,
+        "code_postal": "3820",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamellalet",
+        "wilaya_id": 38,
+        "code_postal": "3819",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Theniet El Had",
+        "wilaya_id": 38,
+        "code_postal": "3803",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tissemsilt",
+        "wilaya_id": 38,
+        "code_postal": "3801",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Youssoufia",
+        "wilaya_id": 38,
+        "code_postal": "3814",
+        "has_stop_desk": 0
+    }
+]

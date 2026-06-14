@@ -1,0 +1,175 @@
+{
+    "timestamp": "2026-06-03 09:27:15",
+    "results": [
+        {
+            "label": "Order Details",
+            "url": "\/admin\/order-details.php?id=1",
+            "http_code": 500,
+            "total_time_ms": 1183.25,
+            "ttfb_ms": 1181.76,
+            "body_size": 13669,
+            "redirect_count": 1,
+            "error": ""
+        },
+        {
+            "label": "Orders List",
+            "url": "\/admin\/order.php",
+            "http_code": 500,
+            "total_time_ms": 1080.17,
+            "ttfb_ms": 1079.56,
+            "body_size": 12751,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Queue Dashboard",
+            "url": "\/admin\/queue-dashboard.php",
+            "http_code": 200,
+            "total_time_ms": 464.43,
+            "ttfb_ms": 463.97,
+            "body_size": 24332,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "System Health",
+            "url": "\/admin\/system-health.php",
+            "http_code": 200,
+            "total_time_ms": 314.63,
+            "ttfb_ms": 314.21,
+            "body_size": 29385,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Store Dashboard",
+            "url": "\/admin\/store-dashboard.php",
+            "http_code": 200,
+            "total_time_ms": 235.73,
+            "ttfb_ms": 235.3,
+            "body_size": 24333,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Employee Details",
+            "url": "\/admin\/employee-details.php?id=1",
+            "http_code": 200,
+            "total_time_ms": 232.23,
+            "ttfb_ms": 231.38,
+            "body_size": 35693,
+            "redirect_count": 1,
+            "error": ""
+        },
+        {
+            "label": "Commission Settings",
+            "url": "\/admin\/commission-settings.php",
+            "http_code": 200,
+            "total_time_ms": 232.11,
+            "ttfb_ms": 231.67,
+            "body_size": 31890,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Employees List",
+            "url": "\/admin\/employees.php",
+            "http_code": 200,
+            "total_time_ms": 158.75,
+            "ttfb_ms": 158.32,
+            "body_size": 34785,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Performance Settings",
+            "url": "\/admin\/performance-settings.php",
+            "http_code": 200,
+            "total_time_ms": 89.14,
+            "ttfb_ms": 88.74,
+            "body_size": 30469,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Products List",
+            "url": "\/admin\/product.php",
+            "http_code": 200,
+            "total_time_ms": 87.53,
+            "ttfb_ms": 87.12,
+            "body_size": 27197,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Customers List",
+            "url": "\/admin\/customer.php",
+            "http_code": 200,
+            "total_time_ms": 87.48,
+            "ttfb_ms": 86.95,
+            "body_size": 27706,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Admin Home",
+            "url": "\/admin\/index.php",
+            "http_code": 200,
+            "total_time_ms": 56.24,
+            "ttfb_ms": 55.64,
+            "body_size": 69034,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Admin Dashboard",
+            "url": "\/admin\/store.php",
+            "http_code": 200,
+            "total_time_ms": 35.52,
+            "ttfb_ms": 35.12,
+            "body_size": 43267,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Audit Log",
+            "url": "\/admin\/audit-log.php",
+            "http_code": 200,
+            "total_time_ms": 31.63,
+            "ttfb_ms": 31.26,
+            "body_size": 36440,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Employee Ranking",
+            "url": "\/admin\/employee-ranking.php",
+            "http_code": 200,
+            "total_time_ms": 27.82,
+            "ttfb_ms": 27.33,
+            "body_size": 27561,
+            "redirect_count": 0,
+            "error": ""
+        },
+        {
+            "label": "Recovery Dashboard",
+            "url": "\/admin\/recovery-dashboard.php",
+            "http_code": 404,
+            "total_time_ms": 1.97,
+            "ttfb_ms": 1.96,
+            "body_size": 295,
+            "redirect_count": 0,
+            "error": ""
+        }
+    ],
+    "summary": {
+        "total_pages": 16,
+        "over_5s": 0,
+        "over_2s": 0,
+        "over_1s": 2,
+        "under_1s": 14,
+        "avg_time": 269.91,
+        "max_time": 1183.25,
+        "min_time": 1.97
+    }
+}

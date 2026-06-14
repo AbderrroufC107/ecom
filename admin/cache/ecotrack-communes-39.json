@@ -1,0 +1,134 @@
+[
+    {
+        "nom": "Bayadha",
+        "wilaya_id": 39,
+        "code_postal": "3904",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Guecha",
+        "wilaya_id": 39,
+        "code_postal": "3919",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Debila",
+        "wilaya_id": 39,
+        "code_postal": "3911",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Douar El Maa",
+        "wilaya_id": 39,
+        "code_postal": "3915",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ogla",
+        "wilaya_id": 39,
+        "code_postal": "3925",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Oued",
+        "wilaya_id": 39,
+        "code_postal": "3901",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Guemar",
+        "wilaya_id": 39,
+        "code_postal": "3906",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hamraia",
+        "wilaya_id": 39,
+        "code_postal": "3909",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassani Abdelkrim",
+        "wilaya_id": 39,
+        "code_postal": "3912",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Khalifa",
+        "wilaya_id": 39,
+        "code_postal": "3913",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kouinine",
+        "wilaya_id": 39,
+        "code_postal": "3907",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Magrane",
+        "wilaya_id": 39,
+        "code_postal": "3918",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mih Ouansa",
+        "wilaya_id": 39,
+        "code_postal": "3926",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Nakhla",
+        "wilaya_id": 39,
+        "code_postal": "3905",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued El Alenda",
+        "wilaya_id": 39,
+        "code_postal": "3903",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ourmes",
+        "wilaya_id": 39,
+        "code_postal": "3920",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Reguiba",
+        "wilaya_id": 39,
+        "code_postal": "3908",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Robbah",
+        "wilaya_id": 39,
+        "code_postal": "3902",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Aoun",
+        "wilaya_id": 39,
+        "code_postal": "3916",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taghzout",
+        "wilaya_id": 39,
+        "code_postal": "3910",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taleb Larbi",
+        "wilaya_id": 39,
+        "code_postal": "3914",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Trifaoui",
+        "wilaya_id": 39,
+        "code_postal": "3917",
+        "has_stop_desk": 0
+    }
+]

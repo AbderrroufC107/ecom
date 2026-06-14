@@ -1,0 +1,218 @@
+[
+    {
+        "nom": "Ain Chouhada",
+        "wilaya_id": 17,
+        "code_postal": "1723",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain El Ibel",
+        "wilaya_id": 17,
+        "code_postal": "1730",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Fekka",
+        "wilaya_id": 17,
+        "code_postal": "1735",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Maabed",
+        "wilaya_id": 17,
+        "code_postal": "1705",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Oussera",
+        "wilaya_id": 17,
+        "code_postal": "1731",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Amourah",
+        "wilaya_id": 17,
+        "code_postal": "1734",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benhar",
+        "wilaya_id": 17,
+        "code_postal": "1732",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benyagoub",
+        "wilaya_id": 17,
+        "code_postal": "1727",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Birine",
+        "wilaya_id": 17,
+        "code_postal": "1708",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouira Lahdab",
+        "wilaya_id": 17,
+        "code_postal": "1709",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Charef",
+        "wilaya_id": 17,
+        "code_postal": "1726",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dar Chioukh",
+        "wilaya_id": 17,
+        "code_postal": "1725",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Deldoul",
+        "wilaya_id": 17,
+        "code_postal": "1729",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djelfa",
+        "wilaya_id": 17,
+        "code_postal": "1701",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Douis",
+        "wilaya_id": 17,
+        "code_postal": "1715",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Guedid",
+        "wilaya_id": 17,
+        "code_postal": "1703",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Idrissia",
+        "wilaya_id": 17,
+        "code_postal": "1714",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Khemis",
+        "wilaya_id": 17,
+        "code_postal": "1711",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Faidh El Botma",
+        "wilaya_id": 17,
+        "code_postal": "1707",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guernini",
+        "wilaya_id": 17,
+        "code_postal": "1721",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guettara",
+        "wilaya_id": 17,
+        "code_postal": "1718",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Had Sahary",
+        "wilaya_id": 17,
+        "code_postal": "1720",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Bahbah",
+        "wilaya_id": 17,
+        "code_postal": "1704",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi El Euch",
+        "wilaya_id": 17,
+        "code_postal": "1716",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Fedoul",
+        "wilaya_id": 17,
+        "code_postal": "1733",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M Liliha",
+        "wilaya_id": 17,
+        "code_postal": "1713",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Messaad",
+        "wilaya_id": 17,
+        "code_postal": "1717",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Moudjebara",
+        "wilaya_id": 17,
+        "code_postal": "1702",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum Laadham",
+        "wilaya_id": 17,
+        "code_postal": "1724",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sed Rahal",
+        "wilaya_id": 17,
+        "code_postal": "1706",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Selmana",
+        "wilaya_id": 17,
+        "code_postal": "1722",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Baizid",
+        "wilaya_id": 17,
+        "code_postal": "1712",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ladjel",
+        "wilaya_id": 17,
+        "code_postal": "1719",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tadmit",
+        "wilaya_id": 17,
+        "code_postal": "1736",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zaafrane",
+        "wilaya_id": 17,
+        "code_postal": "1728",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zaccar",
+        "wilaya_id": 17,
+        "code_postal": "1710",
+        "has_stop_desk": 0
+    }
+]

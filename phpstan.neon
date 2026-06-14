@@ -1,0 +1,21 @@
+parameters:
+    level: 5
+    paths:
+        - admin/inc/modules
+        - admin/inc/store.php
+        - admin/inc/autoload.php
+    excludePaths:
+        - vendor
+    tmpDir: tmp/phpstan
+    checkGenericClassInNonGenericObjectType: false
+    checkMissingIterableValueType: false
+    reportUnmatchedIgnoredErrors: false
+    ignoreErrors:
+        - '#Call to function defined\(\)#'
+        - '#Constant .* not found#'
+        - '#Unsafe usage of new static\(\)#'
+
+services:
+    - class: PHPStan\Rules\Comparison\ImpossibleCheckTypeMethodCallRule
+      tags:
+          - phpstan.rules.rule

@@ -1,0 +1,164 @@
+[
+    {
+        "nom": "Ain Naga",
+        "wilaya_id": 7,
+        "code_postal": "714",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Zaatout",
+        "wilaya_id": 7,
+        "code_postal": "718",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Biskra",
+        "wilaya_id": 7,
+        "code_postal": "701",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bordj Ben Azzouz",
+        "wilaya_id": 7,
+        "code_postal": "727",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouchagroun",
+        "wilaya_id": 7,
+        "code_postal": "729",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Branis",
+        "wilaya_id": 7,
+        "code_postal": "703",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chetma",
+        "wilaya_id": 7,
+        "code_postal": "704",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djemorah",
+        "wilaya_id": 7,
+        "code_postal": "720",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Feidh",
+        "wilaya_id": 7,
+        "code_postal": "716",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ghrous",
+        "wilaya_id": 7,
+        "code_postal": "731",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hadjab",
+        "wilaya_id": 7,
+        "code_postal": "732",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Haouch",
+        "wilaya_id": 7,
+        "code_postal": "713",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kantara",
+        "wilaya_id": 7,
+        "code_postal": "717",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Outaya",
+        "wilaya_id": 7,
+        "code_postal": "719",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Foughala",
+        "wilaya_id": 7,
+        "code_postal": "726",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khenguet Sidi Nadji",
+        "wilaya_id": 7,
+        "code_postal": "733",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Lichana",
+        "wilaya_id": 7,
+        "code_postal": "723",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Lioua",
+        "wilaya_id": 7,
+        "code_postal": "722",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'chouneche",
+        "wilaya_id": 7,
+        "code_postal": "712",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'lili",
+        "wilaya_id": 7,
+        "code_postal": "725",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mekhadma",
+        "wilaya_id": 7,
+        "code_postal": "730",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Meziraa",
+        "wilaya_id": 7,
+        "code_postal": "728",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oumache",
+        "wilaya_id": 7,
+        "code_postal": "702",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ourlal",
+        "wilaya_id": 7,
+        "code_postal": "724",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Okba",
+        "wilaya_id": 7,
+        "code_postal": "711",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tolga",
+        "wilaya_id": 7,
+        "code_postal": "721",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zeribet El Oued",
+        "wilaya_id": 7,
+        "code_postal": "715",
+        "has_stop_desk": 0
+    }
+]

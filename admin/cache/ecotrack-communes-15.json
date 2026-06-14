@@ -1,0 +1,410 @@
+[
+    {
+        "nom": "Abi Youcef",
+        "wilaya_id": 15,
+        "code_postal": "1531",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Aghribs",
+        "wilaya_id": 15,
+        "code_postal": "1553",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Agouni Gueghrane",
+        "wilaya_id": 15,
+        "code_postal": "1561",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain El Hammam",
+        "wilaya_id": 15,
+        "code_postal": "1502",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Zaouia",
+        "wilaya_id": 15,
+        "code_postal": "1525",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Aggouacha",
+        "wilaya_id": 15,
+        "code_postal": "1535",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Bouaddou",
+        "wilaya_id": 15,
+        "code_postal": "1565",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Boumehdi",
+        "wilaya_id": 15,
+        "code_postal": "1530",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Chafaa",
+        "wilaya_id": 15,
+        "code_postal": "1513",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Khellili",
+        "wilaya_id": 15,
+        "code_postal": "1558",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Mahmoud",
+        "wilaya_id": 15,
+        "code_postal": "1528",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Oumalou",
+        "wilaya_id": 15,
+        "code_postal": "1542",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Toudert",
+        "wilaya_id": 15,
+        "code_postal": "1567",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Yahia",
+        "wilaya_id": 15,
+        "code_postal": "1527",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Yahia Moussa",
+        "wilaya_id": 15,
+        "code_postal": "1556",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Akbil",
+        "wilaya_id": 15,
+        "code_postal": "1503",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Akerrou",
+        "wilaya_id": 15,
+        "code_postal": "1544",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Assi Youcef",
+        "wilaya_id": 15,
+        "code_postal": "1566",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Azazga",
+        "wilaya_id": 15,
+        "code_postal": "1518",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Azeffoun",
+        "wilaya_id": 15,
+        "code_postal": "1537",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Aissi",
+        "wilaya_id": 15,
+        "code_postal": "1515",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Douala",
+        "wilaya_id": 15,
+        "code_postal": "1532",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Yenni",
+        "wilaya_id": 15,
+        "code_postal": "1552",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Zikki",
+        "wilaya_id": 15,
+        "code_postal": "1546",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Zmenzer",
+        "wilaya_id": 15,
+        "code_postal": "1516",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boghni",
+        "wilaya_id": 15,
+        "code_postal": "1540",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boudjima",
+        "wilaya_id": 15,
+        "code_postal": "1555",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bounouh",
+        "wilaya_id": 15,
+        "code_postal": "1512",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouzeguene",
+        "wilaya_id": 15,
+        "code_postal": "1534",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djebel Aissa Mimoun",
+        "wilaya_id": 15,
+        "code_postal": "1539",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Draa Ben Khedda",
+        "wilaya_id": 15,
+        "code_postal": "1547",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Draa El Mizan",
+        "wilaya_id": 15,
+        "code_postal": "1510",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Freha",
+        "wilaya_id": 15,
+        "code_postal": "1504",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Frikat",
+        "wilaya_id": 15,
+        "code_postal": "1514",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Iboudrarene",
+        "wilaya_id": 15,
+        "code_postal": "1560",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Idjeur",
+        "wilaya_id": 15,
+        "code_postal": "1549",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Iferhounene",
+        "wilaya_id": 15,
+        "code_postal": "1517",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ifigha",
+        "wilaya_id": 15,
+        "code_postal": "1541",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Iflissen",
+        "wilaya_id": 15,
+        "code_postal": "1554",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Illilten",
+        "wilaya_id": 15,
+        "code_postal": "1533",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Illoula Oumalou",
+        "wilaya_id": 15,
+        "code_postal": "1519",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Imsouhal",
+        "wilaya_id": 15,
+        "code_postal": "1563",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Irdjen",
+        "wilaya_id": 15,
+        "code_postal": "1507",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Larba Nath Irathen",
+        "wilaya_id": 15,
+        "code_postal": "1521",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Larbaa Nath Irathen",
+        "wilaya_id": 15,
+        "code_postal": "1568",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'kira",
+        "wilaya_id": 15,
+        "code_postal": "1526",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maatkas",
+        "wilaya_id": 15,
+        "code_postal": "1529",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Makouda",
+        "wilaya_id": 15,
+        "code_postal": "1509",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mechtras",
+        "wilaya_id": 15,
+        "code_postal": "1506",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mekla",
+        "wilaya_id": 15,
+        "code_postal": "1550",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mizrana",
+        "wilaya_id": 15,
+        "code_postal": "1562",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouacif",
+        "wilaya_id": 15,
+        "code_postal": "1548",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouadhias",
+        "wilaya_id": 15,
+        "code_postal": "1536",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouaguenoune",
+        "wilaya_id": 15,
+        "code_postal": "1524",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Naamane",
+        "wilaya_id": 15,
+        "code_postal": "1559",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souamaa",
+        "wilaya_id": 15,
+        "code_postal": "1505",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souk El Thenine",
+        "wilaya_id": 15,
+        "code_postal": "1557",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tadmait",
+        "wilaya_id": 15,
+        "code_postal": "1564",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tigzirt",
+        "wilaya_id": 15,
+        "code_postal": "1538",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Timizart",
+        "wilaya_id": 15,
+        "code_postal": "1508",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tirmitine",
+        "wilaya_id": 15,
+        "code_postal": "1543",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tizi Ghenif",
+        "wilaya_id": 15,
+        "code_postal": "1511",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tizi N'tleta",
+        "wilaya_id": 15,
+        "code_postal": "1551",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tizi Ouzou",
+        "wilaya_id": 15,
+        "code_postal": "1501",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Tizi Rached",
+        "wilaya_id": 15,
+        "code_postal": "1522",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Yakourene",
+        "wilaya_id": 15,
+        "code_postal": "1520",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Yatafene",
+        "wilaya_id": 15,
+        "code_postal": "1545",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zekri",
+        "wilaya_id": 15,
+        "code_postal": "1523",
+        "has_stop_desk": 0
+    }
+]

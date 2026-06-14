@@ -1,0 +1,14 @@
+[
+    {
+        "nom": "Bordj Badji Mokhtar",
+        "wilaya_id": 50,
+        "code_postal": "5001",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Timiaouine",
+        "wilaya_id": 50,
+        "code_postal": "5002",
+        "has_stop_desk": 0
+    }
+]

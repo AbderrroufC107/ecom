@@ -1,0 +1,212 @@
+[
+    {
+        "nom": "Abou El Hassan",
+        "wilaya_id": 2,
+        "code_postal": "222",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Merane",
+        "wilaya_id": 2,
+        "code_postal": "232",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benairia",
+        "wilaya_id": 2,
+        "code_postal": "203",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Bouattab",
+        "wilaya_id": 2,
+        "code_postal": "235",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Haoua",
+        "wilaya_id": 2,
+        "code_postal": "207",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Rached",
+        "wilaya_id": 2,
+        "code_postal": "213",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boukadir",
+        "wilaya_id": 2,
+        "code_postal": "212",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouzeghaia",
+        "wilaya_id": 2,
+        "code_postal": "231",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Breira",
+        "wilaya_id": 2,
+        "code_postal": "234",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chettia",
+        "wilaya_id": 2,
+        "code_postal": "224",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chlef",
+        "wilaya_id": 2,
+        "code_postal": "201",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Dahra",
+        "wilaya_id": 2,
+        "code_postal": "217",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hadjadj",
+        "wilaya_id": 2,
+        "code_postal": "227",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Karimia",
+        "wilaya_id": 2,
+        "code_postal": "204",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Marsa",
+        "wilaya_id": 2,
+        "code_postal": "223",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Harchoun",
+        "wilaya_id": 2,
+        "code_postal": "209",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Herenfa",
+        "wilaya_id": 2,
+        "code_postal": "215",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Labiod Medjadja",
+        "wilaya_id": 2,
+        "code_postal": "228",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Moussadek",
+        "wilaya_id": 2,
+        "code_postal": "226",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Fodda",
+        "wilaya_id": 2,
+        "code_postal": "229",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Goussine",
+        "wilaya_id": 2,
+        "code_postal": "216",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Sly",
+        "wilaya_id": 2,
+        "code_postal": "221",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Abbes",
+        "wilaya_id": 2,
+        "code_postal": "218",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Ben Abdelkader",
+        "wilaya_id": 2,
+        "code_postal": "230",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Fares",
+        "wilaya_id": 2,
+        "code_postal": "210",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum Drou",
+        "wilaya_id": 2,
+        "code_postal": "233",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sendjas",
+        "wilaya_id": 2,
+        "code_postal": "219",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Abderrahmane",
+        "wilaya_id": 2,
+        "code_postal": "225",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Akkacha",
+        "wilaya_id": 2,
+        "code_postal": "211",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sobha",
+        "wilaya_id": 2,
+        "code_postal": "208",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tadjena",
+        "wilaya_id": 2,
+        "code_postal": "205",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Talassa",
+        "wilaya_id": 2,
+        "code_postal": "214",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taougrite",
+        "wilaya_id": 2,
+        "code_postal": "206",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tenes",
+        "wilaya_id": 2,
+        "code_postal": "202",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Zeboudja",
+        "wilaya_id": 2,
+        "code_postal": "220",
+        "has_stop_desk": 0
+    }
+]

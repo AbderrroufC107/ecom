@@ -1,0 +1,230 @@
+[
+    {
+        "nom": "Ain Rahma",
+        "wilaya_id": 48,
+        "code_postal": "4824",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Tarek",
+        "wilaya_id": 48,
+        "code_postal": "4819",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ammi Moussa",
+        "wilaya_id": 48,
+        "code_postal": "4811",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Belaassel Bouzagza",
+        "wilaya_id": 48,
+        "code_postal": "4803",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bendaoud",
+        "wilaya_id": 48,
+        "code_postal": "4835",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Dergoun",
+        "wilaya_id": 48,
+        "code_postal": "4813",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Zentis",
+        "wilaya_id": 48,
+        "code_postal": "4830",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dar Ben Abdelah",
+        "wilaya_id": 48,
+        "code_postal": "4832",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djidiouia",
+        "wilaya_id": 48,
+        "code_postal": "4814",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Guettar",
+        "wilaya_id": 48,
+        "code_postal": "4815",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El H'madna",
+        "wilaya_id": 48,
+        "code_postal": "4807",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hassi",
+        "wilaya_id": 48,
+        "code_postal": "4833",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Matmar",
+        "wilaya_id": 48,
+        "code_postal": "4817",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ouldja",
+        "wilaya_id": 48,
+        "code_postal": "4836",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Had Echkalla",
+        "wilaya_id": 48,
+        "code_postal": "4834",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hamri",
+        "wilaya_id": 48,
+        "code_postal": "4816",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kalaa",
+        "wilaya_id": 48,
+        "code_postal": "4823",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Lahlef",
+        "wilaya_id": 48,
+        "code_postal": "4829",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mazouna",
+        "wilaya_id": 48,
+        "code_postal": "4822",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mediouna",
+        "wilaya_id": 48,
+        "code_postal": "4809",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mendes",
+        "wilaya_id": 48,
+        "code_postal": "4828",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Merdja Sidi Abed",
+        "wilaya_id": 48,
+        "code_postal": "4837",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouarizane",
+        "wilaya_id": 48,
+        "code_postal": "4821",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued El Djemaa",
+        "wilaya_id": 48,
+        "code_postal": "4826",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Essalem",
+        "wilaya_id": 48,
+        "code_postal": "4820",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Rhiou",
+        "wilaya_id": 48,
+        "code_postal": "4802",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Aiche",
+        "wilaya_id": 48,
+        "code_postal": "4805",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Sidi Mihoub",
+        "wilaya_id": 48,
+        "code_postal": "4838",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ramka",
+        "wilaya_id": 48,
+        "code_postal": "4827",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Relizane",
+        "wilaya_id": 48,
+        "code_postal": "4801",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Sidi Khettab",
+        "wilaya_id": 48,
+        "code_postal": "4810",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Lazreg",
+        "wilaya_id": 48,
+        "code_postal": "4806",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi M'hamed Benali",
+        "wilaya_id": 48,
+        "code_postal": "4808",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi M'hamed Benaouda",
+        "wilaya_id": 48,
+        "code_postal": "4818",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Saada",
+        "wilaya_id": 48,
+        "code_postal": "4804",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souk El Had",
+        "wilaya_id": 48,
+        "code_postal": "4831",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Yellel",
+        "wilaya_id": 48,
+        "code_postal": "4825",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zemmoura",
+        "wilaya_id": 48,
+        "code_postal": "4812",
+        "has_stop_desk": 0
+    }
+]

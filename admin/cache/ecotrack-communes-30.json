@@ -1,0 +1,50 @@
+[
+    {
+        "nom": "Ain Beida",
+        "wilaya_id": 30,
+        "code_postal": "3002",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Borma",
+        "wilaya_id": 30,
+        "code_postal": "3021",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Ben Abdellah",
+        "wilaya_id": 30,
+        "code_postal": "3012",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Messaoud",
+        "wilaya_id": 30,
+        "code_postal": "3004",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "N'goussa",
+        "wilaya_id": 30,
+        "code_postal": "3003",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouargla",
+        "wilaya_id": 30,
+        "code_postal": "3001",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Rouissat",
+        "wilaya_id": 30,
+        "code_postal": "3005",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Khouiled",
+        "wilaya_id": 30,
+        "code_postal": "3011",
+        "has_stop_desk": 0
+    }
+]

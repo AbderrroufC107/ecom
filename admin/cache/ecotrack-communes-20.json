@@ -1,0 +1,98 @@
+[
+    {
+        "nom": "Ain El Hadjar",
+        "wilaya_id": 20,
+        "code_postal": "2003",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Sekhouna",
+        "wilaya_id": 20,
+        "code_postal": "2013",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Soltane",
+        "wilaya_id": 20,
+        "code_postal": "2016",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Doui Thabet",
+        "wilaya_id": 20,
+        "code_postal": "2002",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hassasna",
+        "wilaya_id": 20,
+        "code_postal": "2010",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hounet",
+        "wilaya_id": 20,
+        "code_postal": "2007",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maamora",
+        "wilaya_id": 20,
+        "code_postal": "2011",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Moulay Larbi",
+        "wilaya_id": 20,
+        "code_postal": "2005",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Brahim",
+        "wilaya_id": 20,
+        "code_postal": "2014",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Khaled",
+        "wilaya_id": 20,
+        "code_postal": "2004",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Saida",
+        "wilaya_id": 20,
+        "code_postal": "2001",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Sidi Ahmed",
+        "wilaya_id": 20,
+        "code_postal": "2012",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Amar",
+        "wilaya_id": 20,
+        "code_postal": "2008",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Boubekeur",
+        "wilaya_id": 20,
+        "code_postal": "2009",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tircine",
+        "wilaya_id": 20,
+        "code_postal": "2015",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Youb",
+        "wilaya_id": 20,
+        "code_postal": "2006",
+        "has_stop_desk": 0
+    }
+]

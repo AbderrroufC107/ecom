@@ -1,0 +1,152 @@
+[
+    {
+        "nom": "Ain Romana",
+        "wilaya_id": 9,
+        "code_postal": "924",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Mered",
+        "wilaya_id": 9,
+        "code_postal": "921",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Tamou",
+        "wilaya_id": 9,
+        "code_postal": "919",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benkhelil",
+        "wilaya_id": 9,
+        "code_postal": "910",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Blida",
+        "wilaya_id": 9,
+        "code_postal": "901",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bouarfa",
+        "wilaya_id": 9,
+        "code_postal": "920",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boufarik",
+        "wilaya_id": 9,
+        "code_postal": "916",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bougara",
+        "wilaya_id": 9,
+        "code_postal": "922",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouinan",
+        "wilaya_id": 9,
+        "code_postal": "903",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chebli",
+        "wilaya_id": 9,
+        "code_postal": "902",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chiffa",
+        "wilaya_id": 9,
+        "code_postal": "908",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chrea",
+        "wilaya_id": 9,
+        "code_postal": "906",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djebabra",
+        "wilaya_id": 9,
+        "code_postal": "925",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Affroun",
+        "wilaya_id": 9,
+        "code_postal": "907",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guerrouaou",
+        "wilaya_id": 9,
+        "code_postal": "923",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hammam Melouane",
+        "wilaya_id": 9,
+        "code_postal": "909",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Larbaa",
+        "wilaya_id": 9,
+        "code_postal": "917",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Meftah",
+        "wilaya_id": 9,
+        "code_postal": "914",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mouzaia",
+        "wilaya_id": 9,
+        "code_postal": "912",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Djer",
+        "wilaya_id": 9,
+        "code_postal": "918",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued El Alleug",
+        "wilaya_id": 9,
+        "code_postal": "904",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Slama",
+        "wilaya_id": 9,
+        "code_postal": "915",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Yaich",
+        "wilaya_id": 9,
+        "code_postal": "905",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Souhane",
+        "wilaya_id": 9,
+        "code_postal": "913",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souma",
+        "wilaya_id": 9,
+        "code_postal": "911",
+        "has_stop_desk": 0
+    }
+]

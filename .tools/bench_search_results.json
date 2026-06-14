@@ -1,0 +1,110 @@
+{
+    "timestamp": "2026-06-03 11:55:57",
+    "table_sizes": {
+        "tbl_customer": 4,
+        "tbl_product": 1,
+        "tbl_order": 185
+    },
+    "results": {
+        "Customer Name (common)": {
+            "table": "tbl_customer",
+            "column": "full_name",
+            "term": "a",
+            "total_rows_in_table": 4,
+            "like_term_pct": {
+                "time_ms": 0.1729,
+                "rows": 0,
+                "success": false
+            },
+            "like_prefix": {
+                "time_ms": -1,
+                "rows": 0
+            },
+            "fulltext": {
+                "time_ms": -1,
+                "rows": 0,
+                "status": "NO_FT_INDEX"
+            },
+            "exact_match": {
+                "time_ms": -1,
+                "rows": 0
+            }
+        },
+        "Customer Name (rare)": {
+            "table": "tbl_customer",
+            "column": "full_name",
+            "term": "z",
+            "total_rows_in_table": 4,
+            "like_term_pct": {
+                "time_ms": 0.1302,
+                "rows": 0,
+                "success": false
+            },
+            "like_prefix": {
+                "time_ms": -1,
+                "rows": 0
+            },
+            "fulltext": {
+                "time_ms": -1,
+                "rows": 0,
+                "status": "NO_FT_INDEX"
+            },
+            "exact_match": {
+                "time_ms": -1,
+                "rows": 0
+            }
+        },
+        "Product Name (common)": {
+            "table": "tbl_product",
+            "column": "p_name",
+            "term": "a",
+            "total_rows_in_table": 1,
+            "like_term_pct": {
+                "time_ms": 0.2151,
+                "rows": 0,
+                "success": true
+            },
+            "like_prefix": {
+                "time_ms": 0.2029,
+                "rows": 0
+            },
+            "fulltext": {
+                "time_ms": -1,
+                "rows": 0,
+                "status": "NO_FT_INDEX"
+            },
+            "exact_match": {
+                "time_ms": 0.1781,
+                "rows": 0
+            }
+        },
+        "Product Name (rare)": {
+            "table": "tbl_product",
+            "column": "p_name",
+            "term": "z",
+            "total_rows_in_table": 1,
+            "like_term_pct": {
+                "time_ms": 0.1609,
+                "rows": 0,
+                "success": true
+            },
+            "like_prefix": {
+                "time_ms": 0.155,
+                "rows": 0
+            },
+            "fulltext": {
+                "time_ms": -1,
+                "rows": 0,
+                "status": "NO_FT_INDEX"
+            },
+            "exact_match": {
+                "time_ms": 0.1481,
+                "rows": 0
+            }
+        }
+    },
+    "bulk": {
+        "100_like_pct": 0.0125,
+        "100_prefix": 0.0086
+    }
+}

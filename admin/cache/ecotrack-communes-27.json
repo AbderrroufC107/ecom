@@ -1,0 +1,194 @@
+[
+    {
+        "nom": "Achaacha",
+        "wilaya_id": 27,
+        "code_postal": "2717",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Boudinar",
+        "wilaya_id": 27,
+        "code_postal": "2728",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Nouissy",
+        "wilaya_id": 27,
+        "code_postal": "2705",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Sidi Cherif",
+        "wilaya_id": 27,
+        "code_postal": "2721",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Tedles",
+        "wilaya_id": 27,
+        "code_postal": "2707",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benabdelmalek Ramdane",
+        "wilaya_id": 27,
+        "code_postal": "2713",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouguirat",
+        "wilaya_id": 27,
+        "code_postal": "2719",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Fornaka",
+        "wilaya_id": 27,
+        "code_postal": "2703",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hadjadj",
+        "wilaya_id": 27,
+        "code_postal": "2714",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassi Mameche",
+        "wilaya_id": 27,
+        "code_postal": "2706",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hassiane",
+        "wilaya_id": 27,
+        "code_postal": "2732",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khadra",
+        "wilaya_id": 27,
+        "code_postal": "2718",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kheir Eddine",
+        "wilaya_id": 27,
+        "code_postal": "2711",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mansourah",
+        "wilaya_id": 27,
+        "code_postal": "2723",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mazagran",
+        "wilaya_id": 27,
+        "code_postal": "2727",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mesra",
+        "wilaya_id": 27,
+        "code_postal": "2722",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mostaganem",
+        "wilaya_id": 27,
+        "code_postal": "2701",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Nekmaria",
+        "wilaya_id": 27,
+        "code_postal": "2715",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued El Kheir",
+        "wilaya_id": 27,
+        "code_postal": "2709",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Boughalem",
+        "wilaya_id": 27,
+        "code_postal": "2725",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Maalah",
+        "wilaya_id": 27,
+        "code_postal": "2726",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Safsaf",
+        "wilaya_id": 27,
+        "code_postal": "2730",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sayada",
+        "wilaya_id": 27,
+        "code_postal": "2702",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ali",
+        "wilaya_id": 27,
+        "code_postal": "2712",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Belaattar",
+        "wilaya_id": 27,
+        "code_postal": "2710",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Lakhdar",
+        "wilaya_id": 27,
+        "code_postal": "2716",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Sirat",
+        "wilaya_id": 27,
+        "code_postal": "2720",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souaflia",
+        "wilaya_id": 27,
+        "code_postal": "2724",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sour",
+        "wilaya_id": 27,
+        "code_postal": "2708",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Stidia",
+        "wilaya_id": 27,
+        "code_postal": "2704",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tazgait",
+        "wilaya_id": 27,
+        "code_postal": "2729",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Touahria",
+        "wilaya_id": 27,
+        "code_postal": "2731",
+        "has_stop_desk": 0
+    }
+]

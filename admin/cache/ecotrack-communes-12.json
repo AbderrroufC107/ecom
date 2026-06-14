@@ -1,0 +1,170 @@
+[
+    {
+        "nom": "Ain Zerga",
+        "wilaya_id": 12,
+        "code_postal": "1223",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bedjene",
+        "wilaya_id": 12,
+        "code_postal": "1226",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bekkaria",
+        "wilaya_id": 12,
+        "code_postal": "1217",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Dheheb",
+        "wilaya_id": 12,
+        "code_postal": "1214",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir El Ater",
+        "wilaya_id": 12,
+        "code_postal": "1202",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Mokkadem",
+        "wilaya_id": 12,
+        "code_postal": "1210",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boukhadra",
+        "wilaya_id": 12,
+        "code_postal": "1218",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boulhaf Dyr",
+        "wilaya_id": 12,
+        "code_postal": "1225",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cheria",
+        "wilaya_id": 12,
+        "code_postal": "1203",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Aouinet",
+        "wilaya_id": 12,
+        "code_postal": "1205",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Houidjbet",
+        "wilaya_id": 12,
+        "code_postal": "1206",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kouif",
+        "wilaya_id": 12,
+        "code_postal": "1211",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Malabiod",
+        "wilaya_id": 12,
+        "code_postal": "1220",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Meridj",
+        "wilaya_id": 12,
+        "code_postal": "1224",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Mezeraa",
+        "wilaya_id": 12,
+        "code_postal": "1227",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ogla",
+        "wilaya_id": 12,
+        "code_postal": "1213",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ogla El Malha",
+        "wilaya_id": 12,
+        "code_postal": "1215",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ferkane",
+        "wilaya_id": 12,
+        "code_postal": "1228",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guorriguer",
+        "wilaya_id": 12,
+        "code_postal": "1216",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hammamet",
+        "wilaya_id": 12,
+        "code_postal": "1208",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Morssot",
+        "wilaya_id": 12,
+        "code_postal": "1212",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Negrine",
+        "wilaya_id": 12,
+        "code_postal": "1209",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouenza",
+        "wilaya_id": 12,
+        "code_postal": "1219",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum Ali",
+        "wilaya_id": 12,
+        "code_postal": "1221",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Saf Saf El Ouesra",
+        "wilaya_id": 12,
+        "code_postal": "1207",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Stah Guentis",
+        "wilaya_id": 12,
+        "code_postal": "1204",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tebessa",
+        "wilaya_id": 12,
+        "code_postal": "1201",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Telidjen",
+        "wilaya_id": 12,
+        "code_postal": "1222",
+        "has_stop_desk": 0
+    }
+]

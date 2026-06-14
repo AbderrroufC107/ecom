@@ -1,0 +1,344 @@
+[
+    {
+        "nom": "Ain Benian",
+        "wilaya_id": 16,
+        "code_postal": "1657",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Taya",
+        "wilaya_id": 16,
+        "code_postal": "1641",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Alger Centre",
+        "wilaya_id": 16,
+        "code_postal": "1601",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bab El Oued",
+        "wilaya_id": 16,
+        "code_postal": "1605",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bab Ezzouar",
+        "wilaya_id": 16,
+        "code_postal": "1621",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Baba Hesen",
+        "wilaya_id": 16,
+        "code_postal": "1647",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bachedjerah",
+        "wilaya_id": 16,
+        "code_postal": "1619",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bains Romains",
+        "wilaya_id": 16,
+        "code_postal": "1624",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Baraki",
+        "wilaya_id": 16,
+        "code_postal": "1614",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ben Aknoun",
+        "wilaya_id": 16,
+        "code_postal": "1622",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Messous",
+        "wilaya_id": 16,
+        "code_postal": "1632",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Mourad Rais",
+        "wilaya_id": 16,
+        "code_postal": "1609",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bir Touta",
+        "wilaya_id": 16,
+        "code_postal": "1636",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Birkhadem",
+        "wilaya_id": 16,
+        "code_postal": "1612",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bologhine Ibnou Ziri",
+        "wilaya_id": 16,
+        "code_postal": "1606",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bordj El Bahri",
+        "wilaya_id": 16,
+        "code_postal": "1642",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bordj El Kiffan",
+        "wilaya_id": 16,
+        "code_postal": "1630",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bourouba",
+        "wilaya_id": 16,
+        "code_postal": "1616",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouzareah",
+        "wilaya_id": 16,
+        "code_postal": "1611",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Casbah",
+        "wilaya_id": 16,
+        "code_postal": "1607",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cheraga",
+        "wilaya_id": 16,
+        "code_postal": "1652",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Dar El Beida",
+        "wilaya_id": 16,
+        "code_postal": "1620",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dely Ibrahim",
+        "wilaya_id": 16,
+        "code_postal": "1623",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djasr Kasentina",
+        "wilaya_id": 16,
+        "code_postal": "1626",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Douira",
+        "wilaya_id": 16,
+        "code_postal": "1648",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Draria",
+        "wilaya_id": 16,
+        "code_postal": "1649",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Achour",
+        "wilaya_id": 16,
+        "code_postal": "1654",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Biar",
+        "wilaya_id": 16,
+        "code_postal": "1610",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Harrach",
+        "wilaya_id": 16,
+        "code_postal": "1613",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Madania",
+        "wilaya_id": 16,
+        "code_postal": "1603",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Magharia",
+        "wilaya_id": 16,
+        "code_postal": "1631",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Merssa",
+        "wilaya_id": 16,
+        "code_postal": "1643",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Mouradia",
+        "wilaya_id": 16,
+        "code_postal": "1627",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Herraoua",
+        "wilaya_id": 16,
+        "code_postal": "1639",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hussein Dey",
+        "wilaya_id": 16,
+        "code_postal": "1617",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hydra",
+        "wilaya_id": 16,
+        "code_postal": "1628",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kheraisia",
+        "wilaya_id": 16,
+        "code_postal": "1656",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kouba",
+        "wilaya_id": 16,
+        "code_postal": "1618",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Les Eucalyptus",
+        "wilaya_id": 16,
+        "code_postal": "1633",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maalma",
+        "wilaya_id": 16,
+        "code_postal": "1646",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mohamed Belouzdad",
+        "wilaya_id": 16,
+        "code_postal": "1604",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mohammadia",
+        "wilaya_id": 16,
+        "code_postal": "1629",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Koriche",
+        "wilaya_id": 16,
+        "code_postal": "1608",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Smar",
+        "wilaya_id": 16,
+        "code_postal": "1615",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Chebel",
+        "wilaya_id": 16,
+        "code_postal": "1635",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Fayet",
+        "wilaya_id": 16,
+        "code_postal": "1651",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rahmania",
+        "wilaya_id": 16,
+        "code_postal": "1650",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rais Hamidou",
+        "wilaya_id": 16,
+        "code_postal": "1625",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Reghaia",
+        "wilaya_id": 16,
+        "code_postal": "1640",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Rouiba",
+        "wilaya_id": 16,
+        "code_postal": "1638",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sehaoula",
+        "wilaya_id": 16,
+        "code_postal": "1645",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Setaouali",
+        "wilaya_id": 16,
+        "code_postal": "1653",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi M'hamed",
+        "wilaya_id": 16,
+        "code_postal": "1602",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Moussa",
+        "wilaya_id": 16,
+        "code_postal": "1637",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souidania",
+        "wilaya_id": 16,
+        "code_postal": "1655",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tessala El Merdja",
+        "wilaya_id": 16,
+        "code_postal": "1634",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zeralda",
+        "wilaya_id": 16,
+        "code_postal": "1644",
+        "has_stop_desk": 1
+    }
+]

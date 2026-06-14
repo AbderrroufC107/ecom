@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>WebSocket Test - E-Com</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #1a1a2e; color: #eee; padding: 20px; }
+        h1 { color: #e94560; margin-bottom: 15px; }
+        .container { max-width: 900px; margin: 0 auto; }
+
+        .panel { background: #16213e; border: 1px solid #0f3460; border-radius: 10px; padding: 20px; margin-bottom: 15px; }
+        .panel h2 { color: #e94560; margin-bottom: 12px; font-size: 16px; }
+
+        .status { padding: 10px 16px; border-radius: 8px; font-weight: bold; margin-bottom: 15px; display: inline-block; }
+        .status.connected { background: #1b4332; color: #52b788; }
+        .status.disconnected { background: #5c1a1a; color: #e94560; }
+        .status.connecting { background: #5c4a1a; color: #e9c46a; }
+
+        .log { background: #0d1117; border: 1px solid #30363d; border-radius: 8px; padding: 12px; height: 300px; overflow-y: auto; font-family: 'Cascadia Code', 'Fira Code', monospace; font-size: 13px; line-height: 1.6; }
+        .log .info { color: #58a6ff; }
+        .log .success { color: #3fb950; }
+        .log .error { color: #f85149; }
+        .log .send { color: #d2a8ff; }
+        .log .recv { color: #79c0ff; }
+        .log .time { color: #8b949e; }
+
+        .btn-row { display: flex; gap: 10px; margin-bottom: 15px; flex-wrap: wrap; }
+        button {
+            padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer;
+            font-weight: bold; font-size: 14px; transition: all 0.2s;
+        }
+        button:hover { transform: translateY(-1px); }
+        .btn-connect { background: #3fb950; color: #fff; }
+        .btn-disconnect { background: #f85149; color: #fff; }
+        .btn-ping { background: #58a6ff; color: #fff; }
+        .btn-broadcast { background: #d2a8ff; color: #000; }
+        .btn-clear { background: #30363d; color: #eee; }
+        .btn-test { background: #e94560; color: #fff; }
+
+        input, textarea {
+            padding: 10px 14px; border: 1px solid #30363d; border-radius: 8px;
+            background: #0d1117; color: #eee; font-size: 14px; width: 100%; margin-bottom: 10px;
+            font-family: 'Cascadia Code', 'Fira Code', monospace;
+        }
+        textarea { height: 80px; resize: vertical; }
+
+        .stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; }
+        .stat { background: #0d1117; border-radius: 8px; padding: 12px; text-align: center; }
+        .stat .label { font-size: 12px; color: #8b949e; margin-bottom: 4px; }
+        .stat .value { font-size: 24px; font-weight: bold; color: #58a6ff; }
+
+        .test-result { padding: 10px 14px; border-radius: 8px; margin-top: 10px; display: none; }
+        .test-result.pass { display: block; background: #1b4332; color: #52b788; border: 1px solid #3fb950; }
+        .test-result.fail { display: block; background: #5c1a1a; color: #e94560; border: 1px solid #f85149; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>WebSocket Test Panel</h1>
+
+        <div class="btn-row">
+            <button class="btn-connect" onclick="wsConnect()">Connect</button>
+            <button class="btn-disconnect" onclick="wsDisconnect()">Disconnect</button>
+            <button class="btn-ping" onclick="wsSendPing()">Ping</button>
+            <button class="btn-broadcast" onclick="triggerServerBroadcast()">Broadcast (PHP)</button>
+            <button class="btn-test" onclick="runAllTests()">Run All Tests</button>
+            <button class="btn-clear" onclick="clearLog()">Clear Log</button>
+        </div>
+
+        <div class="panel">
+            <h2>Status</h2>
+            <span id="status" class="status disconnected">Disconnected</span>
+            <div class="stats">
+                <div class="stat"><div class="label">Messages Sent</div><div class="value" id="sent">0</div></div>
+                <div class="stat"><div class="label">Messages Received</div><div class="value" id="received">0</div></div>
+                <div class="stat"><div class="label">Uptime (s)</div><div class="value" id="uptime">0</div></div>
+                <div class="stat"><div class="label">Latency (ms)</div><div class="value" id="latency">-</div></div>
+            </div>
+        </div>
+
+        <div class="panel">
+            <h2>Send Custom Message</h2>
+            <textarea id="customMsg" placeholder='{"type":"ping"}'></textarea>
+            <button class="btn-ping" onclick="sendCustom()">Send</button>
+        </div>
+
+        <div class="panel">
+            <h2>Auto Test Results</h2>
+            <div id="testResults"></div>
+        </div>
+
+        <div class="panel">
+            <h2>Log</h2>
+            <div id="log" class="log"></div>
+        </div>
+    </div>
+
+    <script>
+        var ws = null;
+        var sentCount = 0;
+        var recvCount = 0;
+        var connectTime = 0;
+        var pingStart = 0;
+
+        function log(msg, type) {
+            var el = document.getElementById('log');
+            var t = new Date().toLocaleTimeString();
+            el.innerHTML += '<div><span class="time">[' + t + ']</span> <span class="' + (type||'info') + '">' + msg + '</span></div>';
+            el.scrollTop = el.scrollHeight;
+        }
+
+        function updateStats() {
+            document.getElementById('sent').textContent = sentCount;
+            document.getElementById('received').textContent = recvCount;
+            document.getElementById('uptime').textContent = connectTime > 0 ? Math.floor((Date.now() - connectTime) / 1000) : 0;
+        }
+
+        function setStatus(state, text) {
+            var el = document.getElementById('status');
+            el.className = 'status ' + state;
+            el.textContent = text;
+        }
+
+        function wsConnect() {
+            if (ws && ws.readyState === WebSocket.OPEN) {
+                log('Already connected', 'info');
+                return;
+            }
+            setStatus('connecting', 'Connecting...');
+            log('Connecting to ws://127.0.0.1:9001 ...', 'info');
+
+            try {
+                ws = new WebSocket('ws://127.0.0.1:9001');
+            } catch(e) {
+                setStatus('disconnected', 'Error');
+                log('Failed to create WebSocket: ' + e.message, 'error');
+                return;
+            }
+
+            ws.onopen = function() {
+                setStatus('connected', 'Connected');
+                connectTime = Date.now();
+                log('Connected!', 'success');
+                setInterval(updateStats, 1000);
+            };
+
+            ws.onmessage = function(e) {
+                recvCount++;
+                var data = e.data;
+                try {
+                    var msg = JSON.parse(data);
+                    log('[RECV] ' + JSON.stringify(msg), 'recv');
+                    if (msg.type === 'pong') {
+                        var latencyMs = Date.now() - pingStart;
+                        document.getElementById('latency').textContent = latencyMs;
+                        log('Pong received! Latency: ' + latencyMs + 'ms', 'success');
+                    }
+                } catch(ex) {
+                    log('[RECV] ' + data, 'recv');
+                }
+            };
+
+            ws.onclose = function() {
+                setStatus('disconnected', 'Disconnected');
+                log('Connection closed', 'error');
+            };
+
+            ws.onerror = function(e) {
+                log('WebSocket error', 'error');
+                setStatus('disconnected', 'Error');
+            };
+        }
+
+        function wsDisconnect() {
+            if (ws) {
+                ws.close();
+                log('Disconnected by user', 'info');
+            }
+        }
+
+        function wsSendPing() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                log('Not connected!', 'error');
+                return;
+            }
+            pingStart = Date.now();
+            ws.send(JSON.stringify({type: 'ping'}));
+            sentCount++;
+            log('[SEND] {"type":"ping"}', 'send');
+        }
+
+        function sendCustom() {
+            if (!ws || ws.readyState !== WebSocket.OPEN) {
+                log('Not connected!', 'error');
+                return;
+            }
+            var msg = document.getElementById('customMsg').value;
+            if (!msg.trim()) return;
+            try {
+                JSON.parse(msg);
+                ws.send(msg);
+                sentCount++;
+                log('[SEND] ' + msg, 'send');
+            } catch(e) {
+                log('Invalid JSON: ' + e.message, 'error');
+            }
+        }
+
+        function triggerServerBroadcast() {
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'test_broadcast.php?event=order.new', true);
+            xhr.onload = function() {
+                if (xhr.status === 200) {
+                    log('[BROADCAST] Server broadcast triggered: ' + xhr.responseText, 'success');
+                } else {
+                    log('[BROADCAST] Error: HTTP ' + xhr.status, 'error');
+                }
+            };
+            xhr.onerror = function() { log('[BROADCAST] Request failed', 'error'); };
+            xhr.send();
+        }
+
+        function clearLog() {
+            document.getElementById('log').innerHTML = '';
+        }
+
+        function addTestResult(name, passed, detail) {
+            var el = document.getElementById('testResults');
+            var div = document.createElement('div');
+            div.className = 'test-result ' + (passed ? 'pass' : 'fail');
+            div.textContent = (passed ? 'PASS' : 'FAIL') + ': ' + name + (detail ? ' - ' + detail : '');
+            el.appendChild(div);
+        }
+
+        function runAllTests() {
+            document.getElementById('testResults').innerHTML = '';
+            var allPassed = true;
+
+            // Test 1: Connection
+            var test1 = ws && ws.readyState === WebSocket.OPEN;
+            addTestResult('WebSocket Connection', test1, test1 ? 'Connected' : 'Not connected');
+            if (!test1) allPassed = false;
+
+            // Test 2: Send/Receive (Ping/Pong)
+            if (test1) {
+                var before = recvCount;
+                pingStart = Date.now();
+                ws.send(JSON.stringify({type: 'ping'}));
+                sentCount++;
+
+                setTimeout(function() {
+                    var test2 = recvCount > before;
+                    addTestResult('Ping/Pong', test2, test2 ? 'Pong received' : 'No pong received');
+                    if (!test2) allPassed = false;
+
+                    // Test 3: Server broadcast via PHP
+                    var xhr = new XMLHttpRequest();
+                    xhr.open('GET', 'test_broadcast.php?event=test', true);
+                    xhr.onload = function() {
+                        var before2 = recvCount;
+                        setTimeout(function() {
+                            var test3 = recvCount > before2;
+                            addTestResult('Server Broadcast (PHP)', test3, test3 ? 'Broadcast received' : 'No broadcast received');
+                            if (!test3) allPassed = false;
+
+                            addTestResult('Overall', allPassed, allPassed ? 'All tests passed!' : 'Some tests failed');
+                        }, 2000);
+                    };
+                    xhr.send();
+                }, 1500);
+            }
+        }
+
+        setInterval(updateStats, 1000);
+    </script>
+</body>
+</html>

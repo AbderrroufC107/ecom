@@ -1,0 +1,206 @@
+[
+    {
+        "nom": "Ain Ben Beida",
+        "wilaya_id": 24,
+        "code_postal": "2414",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Hessania",
+        "wilaya_id": 24,
+        "code_postal": "2427",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Larbi",
+        "wilaya_id": 24,
+        "code_postal": "2423",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Makhlouf",
+        "wilaya_id": 24,
+        "code_postal": "2413",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Reggada",
+        "wilaya_id": 24,
+        "code_postal": "2432",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Belkheir",
+        "wilaya_id": 24,
+        "code_postal": "2410",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Djarah",
+        "wilaya_id": 24,
+        "code_postal": "2411",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Mezline",
+        "wilaya_id": 24,
+        "code_postal": "2416",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bordj Sabat",
+        "wilaya_id": 24,
+        "code_postal": "2421",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bou Hachana",
+        "wilaya_id": 24,
+        "code_postal": "2417",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bou Hamdane",
+        "wilaya_id": 24,
+        "code_postal": "2412",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouati Mahmoud",
+        "wilaya_id": 24,
+        "code_postal": "2403",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouchegouf",
+        "wilaya_id": 24,
+        "code_postal": "2425",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouhamra Ahmed",
+        "wilaya_id": 24,
+        "code_postal": "2431",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dahouara",
+        "wilaya_id": 24,
+        "code_postal": "2409",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djeballah Khemissi",
+        "wilaya_id": 24,
+        "code_postal": "2434",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Fedjoudj",
+        "wilaya_id": 24,
+        "code_postal": "2420",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guelaat Bou Sbaa",
+        "wilaya_id": 24,
+        "code_postal": "2418",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guelma",
+        "wilaya_id": 24,
+        "code_postal": "2401",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Hamam Debagh",
+        "wilaya_id": 24,
+        "code_postal": "2419",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hammam N'bail",
+        "wilaya_id": 24,
+        "code_postal": "2422",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Heliopolis",
+        "wilaya_id": 24,
+        "code_postal": "2426",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khezara",
+        "wilaya_id": 24,
+        "code_postal": "2415",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Medjez Amar",
+        "wilaya_id": 24,
+        "code_postal": "2424",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Medjez Sfa",
+        "wilaya_id": 24,
+        "code_postal": "2430",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Nechmaya",
+        "wilaya_id": 24,
+        "code_postal": "2402",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Cheham",
+        "wilaya_id": 24,
+        "code_postal": "2433",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Fragha",
+        "wilaya_id": 24,
+        "code_postal": "2406",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Zenati",
+        "wilaya_id": 24,
+        "code_postal": "2404",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ras El Agba",
+        "wilaya_id": 24,
+        "code_postal": "2408",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Roknia",
+        "wilaya_id": 24,
+        "code_postal": "2428",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sellaoua Announa",
+        "wilaya_id": 24,
+        "code_postal": "2429",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Sandel",
+        "wilaya_id": 24,
+        "code_postal": "2407",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamlouka",
+        "wilaya_id": 24,
+        "code_postal": "2405",
+        "has_stop_desk": 0
+    }
+]

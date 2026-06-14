@@ -1,0 +1,386 @@
+[
+    {
+        "nom": "Ain Boucif",
+        "wilaya_id": 26,
+        "code_postal": "2604",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Ouksir",
+        "wilaya_id": 26,
+        "code_postal": "2641",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Aissaouia",
+        "wilaya_id": 26,
+        "code_postal": "2605",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Aziz",
+        "wilaya_id": 26,
+        "code_postal": "2632",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Baata",
+        "wilaya_id": 26,
+        "code_postal": "2624",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Chicao",
+        "wilaya_id": 26,
+        "code_postal": "2630",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Slimane",
+        "wilaya_id": 26,
+        "code_postal": "2646",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Berrouaghia",
+        "wilaya_id": 26,
+        "code_postal": "2647",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Ben Laabed",
+        "wilaya_id": 26,
+        "code_postal": "2656",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boghar",
+        "wilaya_id": 26,
+        "code_postal": "2625",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouaiche",
+        "wilaya_id": 26,
+        "code_postal": "2610",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouaichoune",
+        "wilaya_id": 26,
+        "code_postal": "2659",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouchrahil",
+        "wilaya_id": 26,
+        "code_postal": "2621",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boughzoul",
+        "wilaya_id": 26,
+        "code_postal": "2651",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouskene",
+        "wilaya_id": 26,
+        "code_postal": "2619",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chabounia",
+        "wilaya_id": 26,
+        "code_postal": "2638",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chelalet El Adhaoura",
+        "wilaya_id": 26,
+        "code_postal": "2618",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cheniguel",
+        "wilaya_id": 26,
+        "code_postal": "2640",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Damiat",
+        "wilaya_id": 26,
+        "code_postal": "2613",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Derrag",
+        "wilaya_id": 26,
+        "code_postal": "2608",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Deux Bassins",
+        "wilaya_id": 26,
+        "code_postal": "2653",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djouab",
+        "wilaya_id": 26,
+        "code_postal": "2637",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Draa Essamar",
+        "wilaya_id": 26,
+        "code_postal": "2654",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Azizia",
+        "wilaya_id": 26,
+        "code_postal": "2636",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Guelbelkebir",
+        "wilaya_id": 26,
+        "code_postal": "2609",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hamdania",
+        "wilaya_id": 26,
+        "code_postal": "2616",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Omaria",
+        "wilaya_id": 26,
+        "code_postal": "2607",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ouinet",
+        "wilaya_id": 26,
+        "code_postal": "2657",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hannacha",
+        "wilaya_id": 26,
+        "code_postal": "2660",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kef Lakhdar",
+        "wilaya_id": 26,
+        "code_postal": "2617",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khams Djouamaa",
+        "wilaya_id": 26,
+        "code_postal": "2663",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksar El Boukhari",
+        "wilaya_id": 26,
+        "code_postal": "2635",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maghraoua",
+        "wilaya_id": 26,
+        "code_postal": "2639",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Medea",
+        "wilaya_id": 26,
+        "code_postal": "2601",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Medjebar",
+        "wilaya_id": 26,
+        "code_postal": "2662",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Meftaha",
+        "wilaya_id": 26,
+        "code_postal": "2649",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mezerana",
+        "wilaya_id": 26,
+        "code_postal": "2611",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mihoub",
+        "wilaya_id": 26,
+        "code_postal": "2650",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouamri",
+        "wilaya_id": 26,
+        "code_postal": "2643",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Harbil",
+        "wilaya_id": 26,
+        "code_postal": "2629",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Antar",
+        "wilaya_id": 26,
+        "code_postal": "2658",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Bouachra",
+        "wilaya_id": 26,
+        "code_postal": "2627",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Brahim",
+        "wilaya_id": 26,
+        "code_postal": "2612",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Deid",
+        "wilaya_id": 26,
+        "code_postal": "2606",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Hellal",
+        "wilaya_id": 26,
+        "code_postal": "2622",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Maaref",
+        "wilaya_id": 26,
+        "code_postal": "2603",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum El Djellil",
+        "wilaya_id": 26,
+        "code_postal": "2642",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouzera",
+        "wilaya_id": 26,
+        "code_postal": "2602",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rebaia",
+        "wilaya_id": 26,
+        "code_postal": "2620",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Saneg",
+        "wilaya_id": 26,
+        "code_postal": "2664",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sedraya",
+        "wilaya_id": 26,
+        "code_postal": "2661",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Seghouane",
+        "wilaya_id": 26,
+        "code_postal": "2648",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Si Mahdjoub",
+        "wilaya_id": 26,
+        "code_postal": "2644",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Demed",
+        "wilaya_id": 26,
+        "code_postal": "2631",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Naamane",
+        "wilaya_id": 26,
+        "code_postal": "2626",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Rabie",
+        "wilaya_id": 26,
+        "code_postal": "2655",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Zahar",
+        "wilaya_id": 26,
+        "code_postal": "2628",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ziane",
+        "wilaya_id": 26,
+        "code_postal": "2614",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souagui",
+        "wilaya_id": 26,
+        "code_postal": "2633",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tablat",
+        "wilaya_id": 26,
+        "code_postal": "2652",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tafraout",
+        "wilaya_id": 26,
+        "code_postal": "2623",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamesguida",
+        "wilaya_id": 26,
+        "code_postal": "2615",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tletat Ed Douair",
+        "wilaya_id": 26,
+        "code_postal": "2645",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zoubiria",
+        "wilaya_id": 26,
+        "code_postal": "2634",
+        "has_stop_desk": 0
+    }
+]

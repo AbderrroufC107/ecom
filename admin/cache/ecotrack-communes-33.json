@@ -1,0 +1,26 @@
+[
+    {
+        "nom": "Bordj Omar Driss",
+        "wilaya_id": 33,
+        "code_postal": "3304",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Debdeb",
+        "wilaya_id": 33,
+        "code_postal": "3303",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Illizi",
+        "wilaya_id": 33,
+        "code_postal": "3301",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "In Amenas",
+        "wilaya_id": 33,
+        "code_postal": "3306",
+        "has_stop_desk": 0
+    }
+]

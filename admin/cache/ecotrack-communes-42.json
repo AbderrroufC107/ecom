@@ -1,0 +1,170 @@
+[
+    {
+        "nom": "Aghbal",
+        "wilaya_id": 42,
+        "code_postal": "4207",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ahmer El Ain",
+        "wilaya_id": 42,
+        "code_postal": "4219",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Tagourait",
+        "wilaya_id": 42,
+        "code_postal": "4213",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Attatba",
+        "wilaya_id": 42,
+        "code_postal": "4225",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Mileuk",
+        "wilaya_id": 42,
+        "code_postal": "4227",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bou Haroun",
+        "wilaya_id": 42,
+        "code_postal": "4220",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bou Ismail",
+        "wilaya_id": 42,
+        "code_postal": "4218",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bourkika",
+        "wilaya_id": 42,
+        "code_postal": "4205",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chaiba",
+        "wilaya_id": 42,
+        "code_postal": "4212",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cherchell",
+        "wilaya_id": 42,
+        "code_postal": "4214",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Damous",
+        "wilaya_id": 42,
+        "code_postal": "4215",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Douaouda",
+        "wilaya_id": 42,
+        "code_postal": "4204",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Fouka",
+        "wilaya_id": 42,
+        "code_postal": "4217",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Gouraya",
+        "wilaya_id": 42,
+        "code_postal": "4210",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hadjout",
+        "wilaya_id": 42,
+        "code_postal": "4208",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hadjret Ennous",
+        "wilaya_id": 42,
+        "code_postal": "4228",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khemisti",
+        "wilaya_id": 42,
+        "code_postal": "4206",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kolea",
+        "wilaya_id": 42,
+        "code_postal": "4224",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Larhat",
+        "wilaya_id": 42,
+        "code_postal": "4203",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Menaceur",
+        "wilaya_id": 42,
+        "code_postal": "4202",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Merad",
+        "wilaya_id": 42,
+        "code_postal": "4216",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Messelmoun",
+        "wilaya_id": 42,
+        "code_postal": "4222",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Nador",
+        "wilaya_id": 42,
+        "code_postal": "4211",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Amar",
+        "wilaya_id": 42,
+        "code_postal": "4209",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ghiles",
+        "wilaya_id": 42,
+        "code_postal": "4221",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Rached",
+        "wilaya_id": 42,
+        "code_postal": "4223",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Semiane",
+        "wilaya_id": 42,
+        "code_postal": "4226",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tipaza",
+        "wilaya_id": 42,
+        "code_postal": "4201",
+        "has_stop_desk": 1
+    }
+]

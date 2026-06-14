@@ -1,0 +1,630 @@
+{
+    "timestamp": "2026-06-03 09:28:19",
+    "total": 68,
+    "with_issues": 4,
+    "with_errors": 1,
+    "with_warnings": 1,
+    "blank": 1,
+    "results": [
+        {
+            "label": "Login",
+            "url": "\/admin\/login.php",
+            "http_code": 200,
+            "body_size": 4042,
+            "time_ms": 41.99,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Dashboard (store)",
+            "url": "\/admin\/store.php",
+            "http_code": 200,
+            "body_size": 43267,
+            "time_ms": 22.29,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Index",
+            "url": "\/admin\/index.php",
+            "http_code": 200,
+            "body_size": 69034,
+            "time_ms": 46.03,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Orders List",
+            "url": "\/admin\/order.php",
+            "http_code": 200,
+            "body_size": 1436464,
+            "time_ms": 163.96,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Order Details",
+            "url": "\/admin\/order-details.php?id=1",
+            "http_code": 200,
+            "body_size": 1437372,
+            "time_ms": 182.14,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Order Process",
+            "url": "\/admin\/order-process.php",
+            "http_code": 200,
+            "body_size": 2,
+            "time_ms": 58.82,
+            "issues": [
+                "BLANK"
+            ],
+            "has_content": false
+        },
+        {
+            "label": "Order Bulk Action",
+            "url": "\/admin\/order-bulk-action.php",
+            "http_code": 200,
+            "body_size": 1437372,
+            "time_ms": 176.63,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Order Statistics",
+            "url": "\/admin\/order-statistics.php",
+            "http_code": 200,
+            "body_size": 546613,
+            "time_ms": 341.87,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Order Change Status",
+            "url": "\/admin\/order-change-status.php",
+            "http_code": 200,
+            "body_size": 1437623,
+            "time_ms": 176.97,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Order Ecotrack",
+            "url": "\/admin\/order-ecotrack-action.php",
+            "http_code": 200,
+            "body_size": 1437372,
+            "time_ms": 223.5,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Order Ecotrack Label",
+            "url": "\/admin\/order-ecotrack-label.php",
+            "http_code": 200,
+            "body_size": 1437446,
+            "time_ms": 190.62,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Add from Incomplete",
+            "url": "\/admin\/order-add-from-incomplete.php",
+            "http_code": 200,
+            "body_size": 33709,
+            "time_ms": 120.39,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Customers",
+            "url": "\/admin\/customer.php",
+            "http_code": 200,
+            "body_size": 27706,
+            "time_ms": 15.75,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Customer Messages",
+            "url": "\/admin\/customer-message.php",
+            "http_code": 500,
+            "body_size": 13273,
+            "time_ms": 40.32,
+            "issues": [
+                "HTTP_500"
+            ],
+            "has_content": true
+        },
+        {
+            "label": "Products",
+            "url": "\/admin\/product.php",
+            "http_code": 200,
+            "body_size": 27197,
+            "time_ms": 42.56,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Product Add",
+            "url": "\/admin\/product-add.php",
+            "http_code": 200,
+            "body_size": 56961,
+            "time_ms": 274.41,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Product Edit",
+            "url": "\/admin\/product-edit.php?id=1",
+            "http_code": 200,
+            "body_size": 29363,
+            "time_ms": 268.99,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Employees",
+            "url": "\/admin\/employees.php",
+            "http_code": 200,
+            "body_size": 34785,
+            "time_ms": 28.58,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Employee Details",
+            "url": "\/admin\/employee-details.php?id=1",
+            "http_code": 200,
+            "body_size": 35693,
+            "time_ms": 45.79,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Employee Ranking",
+            "url": "\/admin\/employee-ranking.php",
+            "http_code": 200,
+            "body_size": 27561,
+            "time_ms": 25.79,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Commission Settings",
+            "url": "\/admin\/commission-settings.php",
+            "http_code": 200,
+            "body_size": 31890,
+            "time_ms": 35.25,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Performance Settings",
+            "url": "\/admin\/performance-settings.php",
+            "http_code": 200,
+            "body_size": 30469,
+            "time_ms": 42.24,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Recovery Dashboard",
+            "url": "\/admin\/recovery-dashboard.php",
+            "http_code": 404,
+            "body_size": 295,
+            "time_ms": 2.48,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Disaster Recovery",
+            "url": "\/admin\/disaster-recovery.php",
+            "http_code": 200,
+            "body_size": 24332,
+            "time_ms": 345.76,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Audit Log",
+            "url": "\/admin\/audit-log.php",
+            "http_code": 200,
+            "body_size": 38730,
+            "time_ms": 20.02,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "System Health",
+            "url": "\/admin\/system-health.php",
+            "http_code": 200,
+            "body_size": 29385,
+            "time_ms": 21.78,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Architecture Health",
+            "url": "\/admin\/architecture-health.php",
+            "http_code": 200,
+            "body_size": 18088,
+            "time_ms": 58.85,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Store Dashboard",
+            "url": "\/admin\/store-dashboard.php",
+            "http_code": 200,
+            "body_size": 24333,
+            "time_ms": 16.6,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Backups",
+            "url": "\/admin\/backups.php",
+            "http_code": 200,
+            "body_size": 24332,
+            "time_ms": 279.01,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Billing",
+            "url": "\/admin\/billing.php",
+            "http_code": 200,
+            "body_size": 24332,
+            "time_ms": 254.77,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Queue Dashboard",
+            "url": "\/admin\/queue-dashboard.php",
+            "http_code": 200,
+            "body_size": 24332,
+            "time_ms": 14.68,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Settings",
+            "url": "\/admin\/settings.php",
+            "http_code": 200,
+            "body_size": 108532,
+            "time_ms": 439.53,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Site Security",
+            "url": "\/admin\/site-security.php",
+            "http_code": 200,
+            "body_size": 36323,
+            "time_ms": 228.77,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Users",
+            "url": "\/admin\/users.php",
+            "http_code": 200,
+            "body_size": 43899,
+            "time_ms": 68.58,
+            "issues": [
+                "PHP_WARN"
+            ],
+            "has_content": true
+        },
+        {
+            "label": "Profile Edit",
+            "url": "\/admin\/profile-edit.php",
+            "http_code": 200,
+            "body_size": 26357,
+            "time_ms": 15.52,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "API Keys",
+            "url": "\/admin\/api-keys.php",
+            "http_code": 200,
+            "body_size": 24332,
+            "time_ms": 176.8,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Integrations",
+            "url": "\/admin\/integrations.php",
+            "http_code": 200,
+            "body_size": 24332,
+            "time_ms": 126.34,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Social Media",
+            "url": "\/admin\/social-media.php",
+            "http_code": 200,
+            "body_size": 26354,
+            "time_ms": 31.93,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "FAQ",
+            "url": "\/admin\/faq.php",
+            "http_code": 200,
+            "body_size": 27666,
+            "time_ms": 36.34,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Slider",
+            "url": "\/admin\/slider.php",
+            "http_code": 200,
+            "body_size": 26514,
+            "time_ms": 52.12,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Pixel",
+            "url": "\/admin\/pixel.php",
+            "http_code": 200,
+            "body_size": 25852,
+            "time_ms": 46.04,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Send Bulk SMS",
+            "url": "\/admin\/send-bulk-sms.php",
+            "http_code": 200,
+            "body_size": 1437474,
+            "time_ms": 146.89,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Language",
+            "url": "\/admin\/language.php",
+            "http_code": 200,
+            "body_size": 86294,
+            "time_ms": 40.96,
+            "issues": [
+                "AUTOLOAD_ERR"
+            ],
+            "has_content": true
+        },
+        {
+            "label": "Photo Gallery",
+            "url": "\/admin\/photo.php",
+            "http_code": 200,
+            "body_size": 29231,
+            "time_ms": 56.66,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Services",
+            "url": "\/admin\/service.php",
+            "http_code": 200,
+            "body_size": 28186,
+            "time_ms": 55.9,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Shipping Cost",
+            "url": "\/admin\/shipping-cost.php",
+            "http_code": 200,
+            "body_size": 37459,
+            "time_ms": 43.58,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Delivery Companies",
+            "url": "\/admin\/delivery-company.php",
+            "http_code": 200,
+            "body_size": 138310,
+            "time_ms": 35.14,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Delivery List",
+            "url": "\/admin\/delivery_list.php",
+            "http_code": 200,
+            "body_size": 164549,
+            "time_ms": 94.42,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Top Categories",
+            "url": "\/admin\/top-category.php",
+            "http_code": 200,
+            "body_size": 29877,
+            "time_ms": 47.75,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Mid Categories",
+            "url": "\/admin\/mid-category.php",
+            "http_code": 200,
+            "body_size": 34909,
+            "time_ms": 31.87,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "End Categories",
+            "url": "\/admin\/end-category.php",
+            "http_code": 200,
+            "body_size": 69404,
+            "time_ms": 31.66,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Countries",
+            "url": "\/admin\/country.php",
+            "http_code": 200,
+            "body_size": 26237,
+            "time_ms": 38.59,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Colors",
+            "url": "\/admin\/color.php",
+            "http_code": 200,
+            "body_size": 38823,
+            "time_ms": 31.73,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Sizes",
+            "url": "\/admin\/size.php",
+            "http_code": 200,
+            "body_size": 46170,
+            "time_ms": 33.84,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Ecotrack Diagnostics",
+            "url": "\/admin\/ecotrack-diagnostics.php",
+            "http_code": 200,
+            "body_size": 35923,
+            "time_ms": 134.49,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Incomplete Orders",
+            "url": "\/admin\/incomplete-orders.php",
+            "http_code": 200,
+            "body_size": 32801,
+            "time_ms": 14.11,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "AI Insights",
+            "url": "\/admin\/ai-insights.php",
+            "http_code": 200,
+            "body_size": 37825,
+            "time_ms": 396.49,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Event Settings",
+            "url": "\/admin\/event-settings.php",
+            "http_code": 200,
+            "body_size": 31539,
+            "time_ms": 133.73,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Live Update Status",
+            "url": "\/admin\/live-update-status.php",
+            "http_code": 200,
+            "body_size": 121,
+            "time_ms": 33.33,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Exchange Requests",
+            "url": "\/admin\/exchange-requests.php",
+            "http_code": 200,
+            "body_size": 26525,
+            "time_ms": 200.1,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Staff Dashboard",
+            "url": "\/staff\/index.php",
+            "http_code": 200,
+            "body_size": 3547,
+            "time_ms": 187.89,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Staff Orders",
+            "url": "\/staff\/orders.php",
+            "http_code": 200,
+            "body_size": 3547,
+            "time_ms": 35.91,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Staff Order Details",
+            "url": "\/staff\/order-details.php?id=1",
+            "http_code": 200,
+            "body_size": 3547,
+            "time_ms": 164.34,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Staff Performance",
+            "url": "\/staff\/performance.php",
+            "http_code": 200,
+            "body_size": 3547,
+            "time_ms": 10.73,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Staff Commissions",
+            "url": "\/staff\/commissions.php",
+            "http_code": 200,
+            "body_size": 3547,
+            "time_ms": 106.37,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Staff Profile",
+            "url": "\/staff\/profile.php",
+            "http_code": 200,
+            "body_size": 3547,
+            "time_ms": 11.68,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Super Admin Dashboard",
+            "url": "\/super-admin\/index.php",
+            "http_code": 200,
+            "body_size": 2296,
+            "time_ms": 119.99,
+            "issues": [],
+            "has_content": true
+        },
+        {
+            "label": "Store Create",
+            "url": "\/super-admin\/store-create.php",
+            "http_code": 200,
+            "body_size": 2296,
+            "time_ms": 35.83,
+            "issues": [],
+            "has_content": true
+        }
+    ]
+}

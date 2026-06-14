@@ -1,0 +1,284 @@
+[
+    {
+        "nom": "Ain Fares",
+        "wilaya_id": 29,
+        "code_postal": "2924",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Fekan",
+        "wilaya_id": 29,
+        "code_postal": "2918",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Ferah",
+        "wilaya_id": 29,
+        "code_postal": "2911",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Frass",
+        "wilaya_id": 29,
+        "code_postal": "2925",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Alaimia",
+        "wilaya_id": 29,
+        "code_postal": "2928",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Aouf",
+        "wilaya_id": 29,
+        "code_postal": "2923",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benian",
+        "wilaya_id": 29,
+        "code_postal": "2919",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bou Henni",
+        "wilaya_id": 29,
+        "code_postal": "2937",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouhanifia",
+        "wilaya_id": 29,
+        "code_postal": "2902",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chorfa",
+        "wilaya_id": 29,
+        "code_postal": "2943",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Bordj",
+        "wilaya_id": 29,
+        "code_postal": "2917",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Gaada",
+        "wilaya_id": 29,
+        "code_postal": "2929",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ghomri",
+        "wilaya_id": 29,
+        "code_postal": "2934",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Gueitena",
+        "wilaya_id": 29,
+        "code_postal": "2938",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hachem",
+        "wilaya_id": 29,
+        "code_postal": "2907",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Keurt",
+        "wilaya_id": 29,
+        "code_postal": "2940",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Mamounia",
+        "wilaya_id": 29,
+        "code_postal": "2939",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Menaouer",
+        "wilaya_id": 29,
+        "code_postal": "2921",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ferraguig",
+        "wilaya_id": 29,
+        "code_postal": "2933",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Froha",
+        "wilaya_id": 29,
+        "code_postal": "2913",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Gharrous",
+        "wilaya_id": 29,
+        "code_postal": "2941",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ghriss",
+        "wilaya_id": 29,
+        "code_postal": "2912",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Guerdjoum",
+        "wilaya_id": 29,
+        "code_postal": "2942",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hacine",
+        "wilaya_id": 29,
+        "code_postal": "2904",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khalouia",
+        "wilaya_id": 29,
+        "code_postal": "2920",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Makhda",
+        "wilaya_id": 29,
+        "code_postal": "2915",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maoussa",
+        "wilaya_id": 29,
+        "code_postal": "2905",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mascara",
+        "wilaya_id": 29,
+        "code_postal": "2901",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Matemore",
+        "wilaya_id": 29,
+        "code_postal": "2914",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mocta Douz",
+        "wilaya_id": 29,
+        "code_postal": "2936",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mohammadia",
+        "wilaya_id": 29,
+        "code_postal": "2931",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Nesmot",
+        "wilaya_id": 29,
+        "code_postal": "2945",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oggaz",
+        "wilaya_id": 29,
+        "code_postal": "2927",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued El Abtal",
+        "wilaya_id": 29,
+        "code_postal": "2910",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Taria",
+        "wilaya_id": 29,
+        "code_postal": "2922",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ras El Ain Amirouche",
+        "wilaya_id": 29,
+        "code_postal": "2944",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sedjerara",
+        "wilaya_id": 29,
+        "code_postal": "2935",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sehailia",
+        "wilaya_id": 29,
+        "code_postal": "2947",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Abdeldjebar",
+        "wilaya_id": 29,
+        "code_postal": "2946",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Abdelmoumene",
+        "wilaya_id": 29,
+        "code_postal": "2932",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Boussaid",
+        "wilaya_id": 29,
+        "code_postal": "2916",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Kada",
+        "wilaya_id": 29,
+        "code_postal": "2908",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sig",
+        "wilaya_id": 29,
+        "code_postal": "2926",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tighennif",
+        "wilaya_id": 29,
+        "code_postal": "2906",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tizi",
+        "wilaya_id": 29,
+        "code_postal": "2903",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zahana",
+        "wilaya_id": 29,
+        "code_postal": "2930",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zelamta",
+        "wilaya_id": 29,
+        "code_postal": "2909",
+        "has_stop_desk": 0
+    }
+]

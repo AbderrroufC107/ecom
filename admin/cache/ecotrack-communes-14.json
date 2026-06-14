@@ -1,0 +1,254 @@
+[
+    {
+        "nom": "Ain Bouchekif",
+        "wilaya_id": 14,
+        "code_postal": "1403",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Deheb",
+        "wilaya_id": 14,
+        "code_postal": "1406",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain El Hadid",
+        "wilaya_id": 14,
+        "code_postal": "1418",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Kermes",
+        "wilaya_id": 14,
+        "code_postal": "1428",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Zarit",
+        "wilaya_id": 14,
+        "code_postal": "1405",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bougara",
+        "wilaya_id": 14,
+        "code_postal": "1440",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chehaima",
+        "wilaya_id": 14,
+        "code_postal": "1436",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dahmouni",
+        "wilaya_id": 14,
+        "code_postal": "1413",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djebilet Rosfa",
+        "wilaya_id": 14,
+        "code_postal": "1419",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djillali Ben Amar",
+        "wilaya_id": 14,
+        "code_postal": "1424",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Faidja",
+        "wilaya_id": 14,
+        "code_postal": "1441",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Frenda",
+        "wilaya_id": 14,
+        "code_postal": "1427",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Guertoufa",
+        "wilaya_id": 14,
+        "code_postal": "1422",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hamadia",
+        "wilaya_id": 14,
+        "code_postal": "1435",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksar Chellala",
+        "wilaya_id": 14,
+        "code_postal": "1429",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Madna",
+        "wilaya_id": 14,
+        "code_postal": "1410",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mahdia",
+        "wilaya_id": 14,
+        "code_postal": "1415",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mechraa Safa",
+        "wilaya_id": 14,
+        "code_postal": "1434",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Medrissa",
+        "wilaya_id": 14,
+        "code_postal": "1408",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Medroussa",
+        "wilaya_id": 14,
+        "code_postal": "1402",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Meghila",
+        "wilaya_id": 14,
+        "code_postal": "1421",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mellakou",
+        "wilaya_id": 14,
+        "code_postal": "1412",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Nadorah",
+        "wilaya_id": 14,
+        "code_postal": "1431",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Naima",
+        "wilaya_id": 14,
+        "code_postal": "1420",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Lilli",
+        "wilaya_id": 14,
+        "code_postal": "1433",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rahouia",
+        "wilaya_id": 14,
+        "code_postal": "1414",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rechaiga",
+        "wilaya_id": 14,
+        "code_postal": "1430",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sebaine",
+        "wilaya_id": 14,
+        "code_postal": "1425",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sebt",
+        "wilaya_id": 14,
+        "code_postal": "1411",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Serghine",
+        "wilaya_id": 14,
+        "code_postal": "1439",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Si Abdelghani",
+        "wilaya_id": 14,
+        "code_postal": "1417",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Abderrahmane",
+        "wilaya_id": 14,
+        "code_postal": "1438",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ali Mellal",
+        "wilaya_id": 14,
+        "code_postal": "1404",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Bakhti",
+        "wilaya_id": 14,
+        "code_postal": "1407",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Hosni",
+        "wilaya_id": 14,
+        "code_postal": "1423",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sougueur",
+        "wilaya_id": 14,
+        "code_postal": "1416",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tagdemt",
+        "wilaya_id": 14,
+        "code_postal": "1432",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Takhemaret",
+        "wilaya_id": 14,
+        "code_postal": "1437",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tiaret",
+        "wilaya_id": 14,
+        "code_postal": "1401",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Tidda",
+        "wilaya_id": 14,
+        "code_postal": "1442",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tousnina",
+        "wilaya_id": 14,
+        "code_postal": "1426",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zmalet El Emir Abdelkade",
+        "wilaya_id": 14,
+        "code_postal": "1409",
+        "has_stop_desk": 0
+    }
+]

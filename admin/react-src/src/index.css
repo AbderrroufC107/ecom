@@ -1,0 +1,1536 @@
+:root {
+  --admin-primary: #4f46e5;
+  --admin-success: #14b8a6;
+  --admin-warning: #d97706;
+  --admin-danger: #dc2626;
+  --admin-bg: #f8fafc;
+  --admin-card: #ffffff;
+  --admin-text: #0f172a;
+  --admin-muted: #64748b;
+  --admin-line: #e2e8f0;
+  --admin-line-soft: #eef2f7;
+  --admin-sidebar: #ffffff;
+  --admin-shell-sidebar-width: 288px;
+  --admin-topbar-height: 72px;
+  --admin-radius: 8px;
+  color-scheme: light;
+}
+
+html,
+body {
+  background: var(--admin-bg) !important;
+  color: var(--admin-text);
+  font-family: CairoLocal, InterLocal, Cairo, Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  letter-spacing: 0;
+}
+
+body.admin-react-ready {
+  direction: rtl;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+body.admin-react-ready .mantine-Button-root,
+body.admin-react-ready .mantine-ActionIcon-root {
+  font-weight: 800;
+  box-shadow: none;
+}
+
+body.admin-react-ready .mantine-Button-root *,
+body.admin-react-ready .mantine-ActionIcon-root * {
+  color: inherit;
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="filled"][data-color="indigo"] {
+  --button-bg: var(--admin-primary);
+  --button-hover: #4338ca;
+  --button-color: #ffffff;
+  --button-bd: 1px solid var(--admin-primary);
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="filled"][data-color="teal"] {
+  --button-bg: var(--admin-success);
+  --button-hover: #0f766e;
+  --button-color: #ffffff;
+  --button-bd: 1px solid var(--admin-success);
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="filled"][data-color="orange"] {
+  --button-bg: var(--admin-warning);
+  --button-hover: #b45309;
+  --button-color: #ffffff;
+  --button-bd: 1px solid var(--admin-warning);
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="filled"][data-color="red"] {
+  --button-bg: var(--admin-danger);
+  --button-hover: #b91c1c;
+  --button-color: #ffffff;
+  --button-bd: 1px solid var(--admin-danger);
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="default"] {
+  --button-bg: #ffffff;
+  --button-hover: #f8fafc;
+  --button-color: var(--admin-text);
+  --button-bd: 1px solid var(--admin-line);
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="light"][data-color="indigo"],
+body.admin-react-ready .mantine-Button-root[data-variant="subtle"][data-color="indigo"] {
+  --button-color: var(--admin-primary);
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="light"][data-color="teal"],
+body.admin-react-ready .mantine-Button-root[data-variant="subtle"][data-color="teal"] {
+  --button-color: #0f766e;
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="light"][data-color="orange"],
+body.admin-react-ready .mantine-Button-root[data-variant="subtle"][data-color="orange"] {
+  --button-color: #92400e;
+}
+
+body.admin-react-ready .mantine-Button-root[data-variant="light"][data-color="red"],
+body.admin-react-ready .mantine-Button-root[data-variant="subtle"][data-color="red"] {
+  --button-color: #991b1b;
+}
+
+body.admin-react-ready .mantine-ActionIcon-root[data-variant="subtle"][data-color="indigo"] {
+  --ai-color: var(--admin-primary);
+  --ai-hover: #eef2ff;
+}
+
+body.admin-react-ready .mantine-ActionIcon-root[data-variant="subtle"][data-color="teal"] {
+  --ai-color: #0f766e;
+  --ai-hover: #f0fdfa;
+}
+
+body.admin-react-ready .mantine-ActionIcon-root[data-variant="subtle"][data-color="orange"] {
+  --ai-color: #92400e;
+  --ai-hover: #fffbeb;
+}
+
+body.admin-react-ready .mantine-ActionIcon-root[data-variant="subtle"][data-color="red"] {
+  --ai-color: #991b1b;
+  --ai-hover: #fef2f2;
+}
+
+body.admin-react-ready .main-header,
+body.admin-react-ready .main-sidebar {
+  display: none !important;
+}
+
+body.admin-react-ready .wrapper {
+  background: var(--admin-bg) !important;
+}
+
+body.admin-react-ready.fixed .content-wrapper,
+body.admin-react-ready .content-wrapper,
+body.admin-react-ready .right-side,
+body.admin-react-ready .main-footer {
+  margin-right: var(--admin-shell-sidebar-width) !important;
+  margin-left: 0 !important;
+  padding-top: var(--admin-topbar-height) !important;
+  background: var(--admin-bg) !important;
+  transition: margin-right 160ms ease;
+}
+
+body.admin-react-ready .content-wrapper {
+  min-height: 100vh !important;
+}
+
+body.admin-react-ready .content {
+  padding: 24px !important;
+}
+
+body.admin-react-ready .content-header {
+  padding: 24px 24px 0 !important;
+  color: var(--admin-text);
+}
+
+body.admin-react-ready .main-footer {
+  border-top: 1px solid var(--admin-line);
+  color: var(--admin-muted);
+}
+
+#admin-react-shell {
+  position: relative;
+  z-index: 1050;
+  font-family: CairoLocal, InterLocal, Cairo, Inter, system-ui, sans-serif;
+}
+
+.saas-shell,
+.saas-shell * {
+  box-sizing: border-box;
+}
+
+.saas-sidebar {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1050;
+  width: var(--admin-shell-sidebar-width);
+  background: var(--admin-sidebar);
+  border-left: 1px solid var(--admin-line);
+  box-shadow: -12px 0 34px rgba(15, 23, 42, 0.06);
+  display: flex;
+  flex-direction: column;
+  padding: 16px 12px;
+  transition: width 160ms ease, transform 180ms ease;
+}
+
+.saas-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 44px;
+  padding: 4px 6px 14px;
+  color: var(--admin-text);
+  text-decoration: none;
+  border-bottom: 1px solid var(--admin-line-soft);
+  margin-bottom: 12px;
+}
+
+.saas-brand:hover,
+.saas-brand:focus {
+  color: var(--admin-text);
+  text-decoration: none;
+}
+
+.saas-brand-mark {
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  border-radius: var(--admin-radius);
+  display: grid;
+  place-items: center;
+  background: var(--admin-primary);
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13px;
+}
+
+.saas-brand-copy {
+  display: grid;
+  gap: 2px;
+}
+
+.saas-brand-copy strong {
+  font-size: 14px;
+  line-height: 1.2;
+}
+
+.saas-brand-copy small {
+  color: var(--admin-muted);
+  font-size: 11px;
+  line-height: 1.2;
+}
+
+.saas-nav-scroll {
+  flex: 1;
+  min-height: 0;
+}
+
+.saas-nav-group {
+  margin-bottom: 14px;
+}
+
+.saas-nav-heading {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.saas-nav-link,
+.saas-subnav-link {
+  width: 100%;
+  border: 0;
+  outline: 0;
+  background: transparent;
+  color: #334155;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  border-radius: var(--admin-radius);
+  transition: background 120ms ease, color 120ms ease;
+}
+
+.saas-nav-link {
+  min-height: 40px;
+  padding: 9px 10px;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.saas-nav-link span {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saas-nav-link:hover,
+.saas-subnav-link:hover {
+  background: #f1f5f9;
+  color: var(--admin-text);
+  text-decoration: none;
+}
+
+.saas-nav-link.is-active,
+.saas-subnav-link.is-active {
+  background: #eef2ff;
+  color: var(--admin-primary);
+}
+
+.saas-nav-link svg:last-child {
+  transition: transform 140ms ease;
+}
+
+.saas-nav-link svg:last-child.is-open {
+  transform: rotate(-90deg);
+}
+
+.saas-subnav {
+  margin: 2px 14px 8px 0;
+  padding: 4px 10px 4px 0;
+  border-right: 1px solid var(--admin-line);
+  max-height: 0;
+  opacity: 0;
+  transition: max-height 180ms ease, opacity 140ms ease;
+}
+
+.saas-nav-item.is-open .saas-subnav {
+  max-height: 420px;
+  opacity: 1;
+}
+
+.saas-subnav-link {
+  min-height: 34px;
+  padding: 7px 10px;
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.admin-react-collapsed .saas-sidebar {
+  padding-inline: 10px;
+}
+
+.admin-react-collapsed .saas-brand {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.admin-react-collapsed .saas-nav-link {
+  justify-content: center;
+  padding-inline: 0;
+}
+
+.saas-topbar {
+  position: fixed;
+  top: 0;
+  right: var(--admin-shell-sidebar-width);
+  left: 0;
+  z-index: 1048;
+  height: var(--admin-topbar-height);
+  display: grid;
+  grid-template-columns: minmax(220px, 1fr) minmax(280px, 560px) minmax(220px, 1fr);
+  align-items: center;
+  gap: 16px;
+  padding: 0 24px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid var(--admin-line);
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+  backdrop-filter: blur(16px);
+  transition: right 160ms ease;
+}
+
+.saas-breadcrumb {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.saas-breadcrumb span {
+  color: var(--admin-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.saas-breadcrumb strong {
+  color: var(--admin-text);
+  font-size: 15px;
+  font-weight: 850;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.saas-command {
+  position: relative;
+  min-width: 0;
+}
+
+.saas-command .mantine-TextInput-input {
+  height: 40px;
+  border-color: var(--admin-line);
+  background: #f8fafc;
+}
+
+.saas-command.is-focused .mantine-TextInput-input {
+  background: #ffffff;
+  border-color: #c7d2fe;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08);
+}
+
+.saas-command-panel {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  left: 0;
+  z-index: 1060;
+  background: #ffffff;
+  border: 1px solid var(--admin-line);
+  border-radius: var(--admin-radius);
+  box-shadow: 0 18px 44px rgba(15, 23, 42, 0.14);
+  padding: 6px;
+}
+
+.saas-command-result {
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr) 16px;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  color: var(--admin-text);
+  text-decoration: none;
+  border-radius: var(--admin-radius);
+}
+
+.saas-command-result:hover {
+  background: #f8fafc;
+  color: var(--admin-primary);
+  text-decoration: none;
+}
+
+.saas-command-result span {
+  display: grid;
+  gap: 2px;
+}
+
+.saas-command-result strong {
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.saas-command-result small,
+.saas-command-empty {
+  color: var(--admin-muted);
+  font-size: 12px;
+}
+
+.saas-command-empty {
+  padding: 18px;
+  text-align: center;
+}
+
+.saas-topbar-actions {
+  justify-content: flex-end;
+}
+
+.saas-profile-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 6px 4px 8px;
+  border-radius: var(--admin-radius);
+  color: var(--admin-text);
+}
+
+.saas-profile-button:hover {
+  background: #f1f5f9;
+}
+
+.saas-profile-button span {
+  max-width: 130px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.saas-notification-dot {
+  position: absolute;
+  top: 8px;
+  left: 8px;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--admin-danger);
+  border: 2px solid #ffffff;
+}
+
+.saas-mobile-backdrop {
+  display: none;
+}
+
+.saas-page {
+  padding: 24px;
+}
+
+.saas-page-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  gap: 20px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.saas-page-header.is-compact {
+  margin-bottom: 14px;
+}
+
+.saas-page-header-main {
+  min-width: 0;
+}
+
+.saas-eyebrow,
+.saas-card-eyebrow {
+  color: var(--admin-primary);
+  font-size: 11px;
+  font-weight: 850;
+  margin-bottom: 4px;
+}
+
+.saas-page-title {
+  margin: 0;
+  color: var(--admin-text);
+  font-size: 26px;
+  line-height: 1.25;
+  font-weight: 900;
+}
+
+.saas-page-description {
+  margin-top: 8px;
+  max-width: 820px;
+  color: var(--admin-muted);
+  font-size: 14px;
+  line-height: 1.8;
+}
+
+.saas-page-actions {
+  justify-content: flex-end;
+}
+
+.saas-header-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(110px, 1fr));
+  gap: 8px;
+  min-width: 260px;
+}
+
+.saas-header-metric {
+  background: #ffffff;
+  border: 1px solid var(--admin-line);
+  border-radius: var(--admin-radius);
+  padding: 10px 12px;
+}
+
+.saas-header-metric span {
+  display: block;
+  color: var(--admin-muted);
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.saas-header-metric strong {
+  display: block;
+  color: var(--admin-text);
+  font-size: 15px;
+  font-weight: 900;
+  margin-top: 2px;
+}
+
+.saas-surface,
+body.admin-react-ready .box,
+body.admin-react-ready .nav-tabs-custom,
+body.admin-react-ready .info-box,
+body.admin-react-ready .small-box,
+body.admin-react-ready .dr-card,
+body.admin-react-ready .sd-card,
+body.admin-react-ready .health-card,
+body.admin-react-ready .incomplete-card {
+  background: var(--admin-card) !important;
+  border: 1px solid var(--admin-line) !important;
+  border-radius: var(--admin-radius) !important;
+  box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04) !important;
+}
+
+.saas-surface {
+  padding: 18px;
+}
+
+.saas-surface.is-compact {
+  padding: 14px;
+}
+
+.saas-card-title {
+  color: var(--admin-text);
+  font-size: 16px;
+  line-height: 1.4;
+  font-weight: 850;
+}
+
+.saas-metric-card {
+  min-height: 136px;
+  padding: 16px;
+  border-color: var(--admin-line) !important;
+  border-radius: var(--admin-radius) !important;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.035);
+}
+
+.saas-metric-copy {
+  min-width: 0;
+}
+
+.saas-metric-label {
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.saas-metric-value {
+  color: var(--admin-text);
+  font-size: 24px;
+  line-height: 1.25;
+  font-weight: 900;
+  margin-top: 6px;
+}
+
+.saas-metric-description {
+  color: var(--admin-muted);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 6px;
+}
+
+.saas-metric-card .saas-metric-icon {
+  color: var(--admin-primary);
+  background: #eef2ff;
+}
+
+.saas-metric-card.tone-success .saas-metric-icon {
+  color: var(--admin-success);
+  background: #f0fdfa;
+}
+
+.saas-metric-card.tone-warning .saas-metric-icon {
+  color: var(--admin-warning);
+  background: #fffbeb;
+}
+
+.saas-metric-card.tone-danger .saas-metric-icon {
+  color: var(--admin-danger);
+  background: #fef2f2;
+}
+
+.saas-chart {
+  width: 100%;
+  height: 300px;
+}
+
+.saas-chart-tooltip {
+  min-width: 150px;
+  background: #ffffff;
+  border: 1px solid var(--admin-line);
+  border-radius: var(--admin-radius);
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.1);
+  padding: 10px 12px;
+}
+
+.saas-quick-grid {
+  display: grid;
+  gap: 10px;
+}
+
+.saas-quick-tile,
+.saas-alert-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  min-height: 56px;
+  padding: 11px 12px;
+  border: 1px solid var(--admin-line-soft);
+  border-radius: var(--admin-radius);
+  color: var(--admin-text);
+  text-decoration: none;
+}
+
+.saas-quick-tile:hover,
+.saas-alert-row:hover {
+  border-color: #c7d2fe;
+  background: #f8fafc;
+  color: var(--admin-primary);
+  text-decoration: none;
+}
+
+.saas-quick-tile span,
+.saas-alert-row span {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.saas-quick-tile strong,
+.saas-alert-row strong {
+  font-size: 13px;
+  font-weight: 850;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saas-quick-tile small,
+.saas-alert-row small {
+  color: var(--admin-muted);
+  font-size: 12px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saas-alert-list {
+  display: grid;
+  gap: 10px;
+}
+
+.saas-table-shell,
+.saas-orders-shell {
+  padding: 16px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.saas-table-search {
+  flex: 1;
+  min-width: 260px;
+  max-width: 520px;
+}
+
+.saas-density-select {
+  width: 150px;
+}
+
+.saas-tabs .mantine-Tabs-list {
+  border-bottom-color: var(--admin-line);
+  gap: 6px;
+  direction: rtl;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+.saas-tabs .mantine-Tabs-tab {
+  border-radius: var(--admin-radius) var(--admin-radius) 0 0;
+  font-weight: 800;
+  color: var(--admin-muted);
+  min-height: 38px;
+}
+
+.saas-tabs .mantine-Tabs-tab[data-active] {
+  color: var(--admin-primary);
+  background: #eef2ff;
+  border-color: #c7d2fe;
+}
+
+.saas-bulkbar {
+  border: 1px solid #c7d2fe;
+  background: #eef2ff;
+  border-radius: var(--admin-radius);
+  padding: 10px 12px;
+}
+
+.saas-data-table {
+  border-radius: var(--admin-radius);
+  overflow: hidden;
+  border: 1px solid var(--admin-line);
+  width: 100%;
+  direction: rtl;
+}
+
+.saas-data-table .mantine-ScrollArea-root,
+.saas-data-table .mantine-ScrollArea-viewport {
+  width: 100%;
+}
+
+.saas-data-table table {
+  border-collapse: separate;
+  border-spacing: 0;
+  width: 100% !important;
+  min-width: max(100%, 900px);
+}
+
+.saas-data-table table thead {
+  position: sticky;
+  top: 0;
+  z-index: 4;
+}
+
+.saas-data-table table th {
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-bottom: 1px solid var(--admin-line) !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+}
+
+.saas-data-table table td {
+  color: var(--admin-text);
+  border-bottom: 1px solid var(--admin-line-soft) !important;
+  font-size: 13px;
+}
+
+.saas-data-table table tbody tr:hover td {
+  background: #f8fafc !important;
+}
+
+.saas-table th {
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 850;
+}
+
+.saas-table td {
+  border-top-color: var(--admin-line-soft);
+}
+
+.saas-status-pill {
+  height: 24px;
+  max-width: 180px;
+  font-weight: 800;
+}
+
+.saas-status-pill .mantine-Badge-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.saas-status-pill.tone-primary {
+  color: var(--admin-primary);
+  background: #eef2ff;
+}
+
+.saas-status-pill.tone-success {
+  color: #0f766e;
+  background: #f0fdfa;
+}
+
+.saas-status-pill.tone-warning {
+  color: #92400e;
+  background: #fffbeb;
+}
+
+.saas-status-pill.tone-danger {
+  color: #991b1b;
+  background: #fef2f2;
+}
+
+.saas-status-pill.tone-neutral {
+  color: #475569;
+  background: #f1f5f9;
+}
+
+.saas-empty-state {
+  padding: 44px 18px;
+}
+
+.saas-detail-frame {
+  width: 100%;
+  height: calc(100vh - 110px);
+  border: 0;
+  border-radius: var(--admin-radius);
+  background: #ffffff;
+}
+
+.saas-form-surface {
+  min-height: 620px;
+}
+
+.saas-stepper {
+  display: block;
+}
+
+.saas-form-mobile-tabs {
+  display: none;
+  margin-bottom: 16px;
+}
+
+.saas-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 16px;
+}
+
+.saas-form-grid .mantine-Textarea-root,
+.saas-form-grid .saas-file-field {
+  grid-column: span 2;
+}
+
+.saas-file-field {
+  border: 1px dashed #cbd5e1;
+  border-radius: var(--admin-radius);
+  padding: 14px;
+  background: #f8fafc;
+}
+
+.saas-form-summary {
+  position: sticky;
+  top: calc(var(--admin-topbar-height) + 24px);
+}
+
+.saas-form-summary-list {
+  display: grid;
+  gap: 8px;
+}
+
+.saas-form-summary-list div {
+  display: flex;
+  justify-content: space-between;
+  padding: 9px 0;
+  border-bottom: 1px solid var(--admin-line-soft);
+}
+
+.saas-form-summary-list span {
+  color: var(--admin-muted);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.saas-form-summary-list strong {
+  color: var(--admin-text);
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.admin-source-hidden {
+  position: absolute !important;
+  width: 1px !important;
+  height: 1px !important;
+  overflow: hidden !important;
+  clip: rect(0 0 0 0) !important;
+  opacity: 0.01 !important;
+}
+
+.saas-settings-nav {
+  display: grid;
+  gap: 8px;
+}
+
+.saas-settings-picker {
+  margin-bottom: 16px;
+}
+
+.saas-settings-tab {
+  width: 100%;
+  min-height: 70px;
+  display: grid;
+  grid-template-columns: 36px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  border: 1px solid var(--admin-line-soft);
+  border-radius: var(--admin-radius);
+  background: #fff;
+  padding: 10px;
+  text-align: right;
+  color: var(--admin-text);
+}
+
+.saas-settings-tab:hover,
+.saas-settings-tab.is-active {
+  border-color: #c7d2fe;
+  background: #eef2ff;
+  color: var(--admin-primary);
+}
+
+.saas-settings-tab span {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.saas-settings-tab strong,
+.saas-settings-tab small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.saas-settings-tab strong {
+  font-size: 13px;
+  font-weight: 850;
+}
+
+.saas-settings-tab small {
+  color: var(--admin-muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.saas-settings-editor {
+  min-height: 520px;
+}
+
+.saas-settings-pane-host .tab-pane {
+  display: block !important;
+  opacity: 1 !important;
+}
+
+.saas-settings-pane-host .box {
+  border: 0 !important;
+  box-shadow: none !important;
+  background: transparent !important;
+  margin: 0 !important;
+}
+
+.saas-settings-pane-host .box-body {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(280px, 1fr));
+  gap: 14px;
+  padding: 0 !important;
+}
+
+.saas-settings-pane-host .form-horizontal .form-group,
+.saas-settings-pane-host form > .form-group {
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: 10px 14px;
+  align-items: center;
+  margin: 0 !important;
+  padding: 12px !important;
+  border: 1px solid var(--admin-line-soft);
+  border-radius: var(--admin-radius);
+  background: #ffffff;
+}
+
+.saas-settings-pane-host .box-body > h3,
+.saas-settings-pane-host .box-body > h4,
+.saas-settings-pane-host .box-body > p,
+.saas-settings-pane-host .box-body > .alert,
+.saas-settings-pane-host .box-body > .form-group:has(button[type="submit"]),
+.saas-settings-pane-host .box-body > .form-group:has(input[type="submit"]) {
+  grid-column: 1 / -1;
+}
+
+.saas-settings-pane-host .box-body > .form-group:has(button[type="submit"]),
+.saas-settings-pane-host .box-body > .form-group:has(input[type="submit"]) {
+  background: #f8fafc;
+}
+
+.saas-settings-pane-host .control-label {
+  float: none !important;
+  width: auto !important;
+  padding: 0 !important;
+  color: var(--admin-muted);
+  text-align: right !important;
+  font-size: 13px;
+  font-weight: 800;
+}
+
+.saas-settings-pane-host [class*="col-sm-"] {
+  float: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+.saas-settings-pane-host .checkbox {
+  margin: 0 !important;
+}
+
+.saas-settings-pane-host .existing-photo {
+  border: 1px solid var(--admin-line);
+  border-radius: var(--admin-radius);
+  background: #f8fafc;
+  padding: 4px;
+}
+
+.saas-settings-pane-host .table {
+  margin-bottom: 0;
+}
+
+.saas-content-surface {
+  padding: 0;
+  overflow: hidden;
+}
+
+.saas-content-surface > .saas-card-eyebrow {
+  padding: 18px 18px 0;
+}
+
+.saas-content-host {
+  padding: 0 18px 18px;
+  direction: rtl;
+  text-align: right;
+}
+
+.saas-content-host .content,
+.saas-content-source {
+  width: 100%;
+  padding: 0 !important;
+  margin: 0 !important;
+  background: transparent !important;
+}
+
+.saas-content-host .row {
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+
+.saas-content-host [class*="col-"] {
+  float: none !important;
+  width: 100% !important;
+  max-width: none !important;
+  padding-left: 0 !important;
+  padding-right: 0 !important;
+}
+
+.saas-content-host .box,
+.saas-content-host .card,
+.saas-content-host .panel {
+  margin-bottom: 14px !important;
+}
+
+.saas-content-host .table-responsive,
+.saas-content-host table {
+  width: 100% !important;
+}
+
+.saas-content-host table {
+  min-width: 760px;
+}
+
+.saas-content-host .system-health-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 12px;
+  margin: 0;
+}
+
+.saas-content-host .health-card {
+  border-radius: var(--admin-radius) !important;
+  border: 1px solid var(--admin-line) !important;
+  box-shadow: none !important;
+  padding: 16px !important;
+}
+
+.saas-content-host .health-card-header {
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.saas-content-host .health-card-header h4 {
+  color: var(--admin-text);
+  font-size: 14px;
+}
+
+.saas-content-host .health-status {
+  border-radius: 999px;
+  padding: 5px 9px;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.saas-legacy-cell {
+  max-width: 100%;
+  min-width: 0;
+  line-height: 1.55;
+}
+
+.saas-legacy-cell.is-long {
+  max-width: 520px;
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.saas-legacy-cell small,
+.saas-legacy-cell span,
+.saas-legacy-cell a {
+  overflow-wrap: anywhere;
+}
+
+.saas-legacy-cell img {
+  width: 52px !important;
+  height: 52px !important;
+  object-fit: cover;
+  border-radius: var(--admin-radius);
+  border: 1px solid var(--admin-line);
+  background: #f8fafc;
+}
+
+.saas-legacy-cell .btn,
+body.admin-react-ready .btn {
+  border-radius: var(--admin-radius) !important;
+  border: 1px solid transparent;
+  font-weight: 800 !important;
+  box-shadow: none !important;
+  text-decoration: none !important;
+}
+
+.saas-legacy-cell .btn *,
+body.admin-react-ready .btn * {
+  color: inherit !important;
+}
+
+.saas-legacy-cell .btn-xs,
+body.admin-react-ready .btn-xs {
+  padding: 5px 8px !important;
+  font-size: 11px !important;
+}
+
+body.admin-react-ready .btn-primary,
+.saas-legacy-cell .btn-primary {
+  background: var(--admin-primary) !important;
+  border-color: var(--admin-primary) !important;
+  color: #ffffff !important;
+}
+
+body.admin-react-ready .btn-success,
+.saas-legacy-cell .btn-success {
+  background: var(--admin-success) !important;
+  border-color: var(--admin-success) !important;
+  color: #ffffff !important;
+}
+
+body.admin-react-ready .btn-danger,
+.saas-legacy-cell .btn-danger {
+  background: var(--admin-danger) !important;
+  border-color: var(--admin-danger) !important;
+  color: #ffffff !important;
+}
+
+body.admin-react-ready .btn-warning,
+.saas-legacy-cell .btn-warning {
+  background: var(--admin-warning) !important;
+  border-color: var(--admin-warning) !important;
+  color: #ffffff !important;
+}
+
+body.admin-react-ready .btn-default,
+.saas-legacy-cell .btn-default {
+  background: #ffffff !important;
+  border-color: var(--admin-line) !important;
+  color: var(--admin-text) !important;
+}
+
+body.admin-react-ready .label,
+body.admin-react-ready .badge,
+body.admin-react-ready .pill {
+  border-radius: 999px !important;
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  padding: 5px 9px !important;
+}
+
+body.admin-react-ready .label-success,
+body.admin-react-ready .badge-success,
+body.admin-react-ready .pill-success,
+body.admin-react-ready .pill.is-good {
+  background: #f0fdfa !important;
+  color: #0f766e !important;
+}
+
+body.admin-react-ready .label-warning,
+body.admin-react-ready .badge-warning,
+body.admin-react-ready .pill-warning,
+body.admin-react-ready .pill.is-hot {
+  background: #fffbeb !important;
+  color: #92400e !important;
+}
+
+body.admin-react-ready .label-danger,
+body.admin-react-ready .badge-danger,
+body.admin-react-ready .pill-danger {
+  background: #fef2f2 !important;
+  color: #991b1b !important;
+}
+
+body.admin-react-ready .box {
+  border-top: 0 !important;
+}
+
+body.admin-react-ready .box-header,
+body.admin-react-ready .box-body,
+body.admin-react-ready .box-footer {
+  border-color: var(--admin-line) !important;
+}
+
+body.admin-react-ready .form-control,
+body.admin-react-ready .select2-container--default .select2-selection--single,
+body.admin-react-ready .select2-container--default .select2-selection--multiple,
+body.admin-react-ready .note-editor.note-frame {
+  border-color: var(--admin-line) !important;
+  border-radius: var(--admin-radius) !important;
+  box-shadow: none !important;
+}
+
+body.admin-react-ready .form-control:focus {
+  border-color: #c7d2fe !important;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.08) !important;
+}
+
+body.admin-react-ready .table-responsive {
+  border: 0 !important;
+}
+
+body.admin-react-ready .dataTables_length,
+body.admin-react-ready .dataTables_filter,
+body.admin-react-ready .dataTables_info,
+body.admin-react-ready .dataTables_paginate {
+  display: none !important;
+}
+
+body.admin-react-ready .table > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-color: var(--admin-line) !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+}
+
+body.admin-react-ready .table > tbody > tr > td {
+  border-color: var(--admin-line-soft) !important;
+  color: var(--admin-text);
+  font-size: 13px;
+  vertical-align: middle !important;
+}
+
+body.admin-react-ready .table-hover > tbody > tr:hover > td {
+  background: #f8fafc !important;
+}
+
+body.admin-react-ready .alert {
+  border: 1px solid var(--admin-line);
+  border-radius: var(--admin-radius);
+  box-shadow: none;
+  font-weight: 750;
+}
+
+body.admin-react-ready .modal-content {
+  border-radius: var(--admin-radius) !important;
+  border: 1px solid var(--admin-line) !important;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.18) !important;
+}
+
+body.admin-react-ready .modal:not(.in):not(.show) {
+  display: none !important;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 999px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+@media (max-width: 1180px) {
+  .saas-topbar {
+    grid-template-columns: minmax(180px, 1fr) minmax(240px, 420px) auto;
+  }
+
+  .saas-header-metrics {
+    display: none;
+  }
+
+  .saas-page-header {
+    grid-template-columns: minmax(0, 1fr) auto;
+  }
+}
+
+@media (max-width: 900px) {
+  :root {
+    --admin-shell-sidebar-width: 288px;
+  }
+
+  body.admin-react-ready.fixed .content-wrapper,
+  body.admin-react-ready .content-wrapper,
+  body.admin-react-ready .right-side,
+  body.admin-react-ready .main-footer,
+  body.admin-react-ready.admin-react-collapsed.fixed .content-wrapper,
+  body.admin-react-ready.admin-react-collapsed .content-wrapper,
+  body.admin-react-ready.admin-react-collapsed .right-side,
+  body.admin-react-ready.admin-react-collapsed .main-footer {
+    margin-right: 0 !important;
+  }
+
+  .saas-sidebar {
+    transform: translateX(100%);
+    width: 288px;
+  }
+
+  .admin-react-mobile-open .saas-sidebar {
+    transform: translateX(0);
+  }
+
+  .saas-topbar,
+  .admin-react-collapsed .saas-topbar {
+    right: 0;
+    grid-template-columns: minmax(0, 1fr) auto;
+    padding: 0 14px;
+  }
+
+  .saas-command {
+    display: none;
+  }
+
+  .saas-mobile-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 1049;
+    background: rgba(15, 23, 42, 0.32);
+    border: 0;
+    padding: 0;
+  }
+
+  .admin-react-mobile-open .saas-mobile-backdrop {
+    display: block;
+  }
+
+  .saas-page,
+  body.admin-react-ready .content {
+    padding: 16px !important;
+  }
+
+  .saas-page-header {
+    grid-template-columns: 1fr;
+  }
+
+  .saas-page-actions {
+    justify-content: flex-start;
+  }
+
+  .saas-profile-button span {
+    display: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .saas-page-title {
+    font-size: 22px;
+  }
+
+  .saas-topbar-title-group {
+    min-width: 0;
+  }
+
+  .saas-topbar-actions .mantine-ActionIcon-root:nth-child(1),
+  .saas-topbar-actions .mantine-ActionIcon-root:nth-child(2) {
+    display: none;
+  }
+
+  .saas-form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .saas-form-grid .mantine-Textarea-root,
+  .saas-form-grid .saas-file-field {
+    grid-column: span 1;
+  }
+
+  .saas-stepper {
+    display: none;
+  }
+
+  .saas-form-mobile-tabs {
+    display: block;
+  }
+
+  .saas-table-search,
+  .saas-density-select {
+    width: 100%;
+    max-width: none;
+  }
+
+  .saas-bulkbar {
+    align-items: flex-start;
+  }
+}
+
+body.admin-react-ready .table-responsive {
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow-x: auto !important;
+  display: block !important;
+  border: 0 !important;
+}
+
+body.admin-react-ready .box-body.table-responsive {
+  padding: 0 !important;
+}
+
+body.admin-react-ready .box-body.table-responsive > table.table,
+body.admin-react-ready .table-responsive > table.table,
+body.admin-react-ready table.table {
+  width: 100% !important;
+  min-width: 1040px;
+  border-collapse: separate !important;
+  border-spacing: 0 !important;
+  table-layout: auto;
+}
+
+body.admin-react-ready .table > thead > tr > th {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  padding: 11px 12px !important;
+  background: #f8fafc !important;
+  color: #475569 !important;
+  border-color: var(--admin-line) !important;
+  font-size: 12px !important;
+  font-weight: 850 !important;
+  text-align: right !important;
+  white-space: nowrap;
+}
+
+body.admin-react-ready .table > tbody > tr > td {
+  padding: 11px 12px !important;
+  max-width: 320px;
+  border-color: var(--admin-line-soft) !important;
+  color: var(--admin-text);
+  font-size: 13px;
+  vertical-align: middle !important;
+}
+
+body.admin-react-ready .table-hover > tbody > tr:hover > td,
+body.admin-react-ready .table-striped > tbody > tr:nth-of-type(odd):hover > td {
+  background: #f8fafc !important;
+}
+
+body.admin-react-ready .table > tbody > tr > td small,
+body.admin-react-ready .table > tbody > tr > td span,
+body.admin-react-ready .table > tbody > tr > td a {
+  overflow-wrap: anywhere;
+}
+
+body.admin-react-ready .table > tbody > tr > td[style*="max-width"] {
+  max-width: 420px !important;
+  white-space: normal !important;
+}

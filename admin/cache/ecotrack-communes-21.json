@@ -1,0 +1,230 @@
+[
+    {
+        "nom": "Ain Bouziane",
+        "wilaya_id": 21,
+        "code_postal": "2122",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Charchar",
+        "wilaya_id": 21,
+        "code_postal": "2106",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Kechera",
+        "wilaya_id": 21,
+        "code_postal": "2127",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Zouit",
+        "wilaya_id": 21,
+        "code_postal": "2102",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Azzaba",
+        "wilaya_id": 21,
+        "code_postal": "2104",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bekkouche Lakhdar",
+        "wilaya_id": 21,
+        "code_postal": "2107",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Azzouz",
+        "wilaya_id": 21,
+        "code_postal": "2108",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Bechir",
+        "wilaya_id": 21,
+        "code_postal": "2124",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Oulbane",
+        "wilaya_id": 21,
+        "code_postal": "2121",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Zid",
+        "wilaya_id": 21,
+        "code_postal": "2111",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bin El Ouiden",
+        "wilaya_id": 21,
+        "code_postal": "2129",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouchetata",
+        "wilaya_id": 21,
+        "code_postal": "2134",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cheraia",
+        "wilaya_id": 21,
+        "code_postal": "2131",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Collo",
+        "wilaya_id": 21,
+        "code_postal": "2110",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djendel Saadi Mohamed",
+        "wilaya_id": 21,
+        "code_postal": "2105",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Arrouch",
+        "wilaya_id": 21,
+        "code_postal": "2116",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ghedir",
+        "wilaya_id": 21,
+        "code_postal": "2133",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hadaiek",
+        "wilaya_id": 21,
+        "code_postal": "2103",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Marsa",
+        "wilaya_id": 21,
+        "code_postal": "2138",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Emjez Edchich",
+        "wilaya_id": 21,
+        "code_postal": "2120",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Es Sebt",
+        "wilaya_id": 21,
+        "code_postal": "2109",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Filfila",
+        "wilaya_id": 21,
+        "code_postal": "2130",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hamadi Krouma",
+        "wilaya_id": 21,
+        "code_postal": "2137",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kanoua",
+        "wilaya_id": 21,
+        "code_postal": "2132",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kerkera",
+        "wilaya_id": 21,
+        "code_postal": "2112",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khenag Mayoum",
+        "wilaya_id": 21,
+        "code_postal": "2136",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Zhour",
+        "wilaya_id": 21,
+        "code_postal": "2114",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouldja Boulbalout",
+        "wilaya_id": 21,
+        "code_postal": "2135",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Attia",
+        "wilaya_id": 21,
+        "code_postal": "2113",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Habbeba",
+        "wilaya_id": 21,
+        "code_postal": "2118",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum Toub",
+        "wilaya_id": 21,
+        "code_postal": "2128",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ramdane Djamel",
+        "wilaya_id": 21,
+        "code_postal": "2123",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Salah Bouchaour",
+        "wilaya_id": 21,
+        "code_postal": "2125",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Mezghiche",
+        "wilaya_id": 21,
+        "code_postal": "2119",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Skikda",
+        "wilaya_id": 21,
+        "code_postal": "2101",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Tamalous",
+        "wilaya_id": 21,
+        "code_postal": "2126",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zerdezas",
+        "wilaya_id": 21,
+        "code_postal": "2117",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zitouna",
+        "wilaya_id": 21,
+        "code_postal": "2115",
+        "has_stop_desk": 0
+    }
+]

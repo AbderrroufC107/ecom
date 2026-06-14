@@ -1,0 +1,68 @@
+[
+    {
+        "nom": "Abadla",
+        "wilaya_id": 8,
+        "code_postal": "817",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bechar",
+        "wilaya_id": 8,
+        "code_postal": "801",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Beni Ounif",
+        "wilaya_id": 8,
+        "code_postal": "821",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boukais",
+        "wilaya_id": 8,
+        "code_postal": "815",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Erg Ferradj",
+        "wilaya_id": 8,
+        "code_postal": "802",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kenadsa",
+        "wilaya_id": 8,
+        "code_postal": "810",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Lahmar",
+        "wilaya_id": 8,
+        "code_postal": "806",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mechraa H.boumediene",
+        "wilaya_id": 8,
+        "code_postal": "809",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Meridja",
+        "wilaya_id": 8,
+        "code_postal": "804",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mogheul",
+        "wilaya_id": 8,
+        "code_postal": "816",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taghit",
+        "wilaya_id": 8,
+        "code_postal": "813",
+        "has_stop_desk": 0
+    }
+]

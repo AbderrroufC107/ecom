@@ -1,0 +1,176 @@
+[
+    {
+        "nom": "Ain Babouche",
+        "wilaya_id": 4,
+        "code_postal": "408",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Beida",
+        "wilaya_id": 4,
+        "code_postal": "402",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ain Diss",
+        "wilaya_id": 4,
+        "code_postal": "415",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Fekroune",
+        "wilaya_id": 4,
+        "code_postal": "425",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Kercha",
+        "wilaya_id": 4,
+        "code_postal": "412",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain M'lila",
+        "wilaya_id": 4,
+        "code_postal": "403",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Ain Zitoun",
+        "wilaya_id": 4,
+        "code_postal": "427",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Behir Chergui",
+        "wilaya_id": 4,
+        "code_postal": "404",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Berriche",
+        "wilaya_id": 4,
+        "code_postal": "409",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Chouhada",
+        "wilaya_id": 4,
+        "code_postal": "421",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dhala",
+        "wilaya_id": 4,
+        "code_postal": "411",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Amiria",
+        "wilaya_id": 4,
+        "code_postal": "405",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Belala",
+        "wilaya_id": 4,
+        "code_postal": "407",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Djazia",
+        "wilaya_id": 4,
+        "code_postal": "414",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Fedjoudj Boughrara Sa",
+        "wilaya_id": 4,
+        "code_postal": "419",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Harmilia",
+        "wilaya_id": 4,
+        "code_postal": "429",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Fkirina",
+        "wilaya_id": 4,
+        "code_postal": "416",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hanchir Toumghani",
+        "wilaya_id": 4,
+        "code_postal": "413",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksar Sbahi",
+        "wilaya_id": 4,
+        "code_postal": "422",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Meskiana",
+        "wilaya_id": 4,
+        "code_postal": "424",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Nini",
+        "wilaya_id": 4,
+        "code_postal": "423",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Gacem",
+        "wilaya_id": 4,
+        "code_postal": "428",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Hamla",
+        "wilaya_id": 4,
+        "code_postal": "410",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Zouai",
+        "wilaya_id": 4,
+        "code_postal": "420",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum El Bouaghi",
+        "wilaya_id": 4,
+        "code_postal": "401",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Rahia",
+        "wilaya_id": 4,
+        "code_postal": "426",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sigus",
+        "wilaya_id": 4,
+        "code_postal": "406",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souk Naamane",
+        "wilaya_id": 4,
+        "code_postal": "417",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zorg",
+        "wilaya_id": 4,
+        "code_postal": "418",
+        "has_stop_desk": 0
+    }
+]

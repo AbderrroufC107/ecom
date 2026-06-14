@@ -1,0 +1,62 @@
+[
+    {
+        "nom": "Berriane",
+        "wilaya_id": 47,
+        "code_postal": "4704",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bounoura",
+        "wilaya_id": 47,
+        "code_postal": "4710",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dhayet Bendhahoua",
+        "wilaya_id": 47,
+        "code_postal": "4703",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Atteuf",
+        "wilaya_id": 47,
+        "code_postal": "4707",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Guerrara",
+        "wilaya_id": 47,
+        "code_postal": "4706",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ghardaia",
+        "wilaya_id": 47,
+        "code_postal": "4701",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Mansoura",
+        "wilaya_id": 47,
+        "code_postal": "4713",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Metlili",
+        "wilaya_id": 47,
+        "code_postal": "4705",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sebseb",
+        "wilaya_id": 47,
+        "code_postal": "4709",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zelfana",
+        "wilaya_id": 47,
+        "code_postal": "4708",
+        "has_stop_desk": 0
+    }
+]

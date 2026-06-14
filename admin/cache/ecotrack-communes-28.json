@@ -1,0 +1,284 @@
+[
+    {
+        "nom": "Ain El Hadjel",
+        "wilaya_id": 28,
+        "code_postal": "2817",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain El Melh",
+        "wilaya_id": 28,
+        "code_postal": "2841",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Fares",
+        "wilaya_id": 28,
+        "code_postal": "2837",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Khadra",
+        "wilaya_id": 28,
+        "code_postal": "2813",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Rich",
+        "wilaya_id": 28,
+        "code_postal": "2844",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Belaiba",
+        "wilaya_id": 28,
+        "code_postal": "2815",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ben Srour",
+        "wilaya_id": 28,
+        "code_postal": "2824",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Ilmane",
+        "wilaya_id": 28,
+        "code_postal": "2845",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benzouh",
+        "wilaya_id": 28,
+        "code_postal": "2835",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Berhoum",
+        "wilaya_id": 28,
+        "code_postal": "2812",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Foda",
+        "wilaya_id": 28,
+        "code_postal": "2836",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bou Saada",
+        "wilaya_id": 28,
+        "code_postal": "2820",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Bouti Sayeh",
+        "wilaya_id": 28,
+        "code_postal": "2831",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chellal",
+        "wilaya_id": 28,
+        "code_postal": "2809",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dehahna",
+        "wilaya_id": 28,
+        "code_postal": "2830",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Djebel Messaad",
+        "wilaya_id": 28,
+        "code_postal": "2847",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Hamel",
+        "wilaya_id": 28,
+        "code_postal": "2827",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Houamed",
+        "wilaya_id": 28,
+        "code_postal": "2826",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hammam Dalaa",
+        "wilaya_id": 28,
+        "code_postal": "2803",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khettouti Sed El Jir",
+        "wilaya_id": 28,
+        "code_postal": "2832",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khoubana",
+        "wilaya_id": 28,
+        "code_postal": "2807",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'cif",
+        "wilaya_id": 28,
+        "code_postal": "2808",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'sila",
+        "wilaya_id": 28,
+        "code_postal": "2801",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "M'tarfa",
+        "wilaya_id": 28,
+        "code_postal": "2806",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maadid",
+        "wilaya_id": 28,
+        "code_postal": "2802",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Maarif",
+        "wilaya_id": 28,
+        "code_postal": "2829",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Magra",
+        "wilaya_id": 28,
+        "code_postal": "2811",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Medjedel",
+        "wilaya_id": 28,
+        "code_postal": "2842",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Menaa",
+        "wilaya_id": 28,
+        "code_postal": "2839",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Mohamed Boudiaf",
+        "wilaya_id": 28,
+        "code_postal": "2834",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouanougha",
+        "wilaya_id": 28,
+        "code_postal": "2819",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Addi Guebala",
+        "wilaya_id": 28,
+        "code_postal": "2814",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Derradj",
+        "wilaya_id": 28,
+        "code_postal": "2804",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Madhi",
+        "wilaya_id": 28,
+        "code_postal": "2810",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Mansour",
+        "wilaya_id": 28,
+        "code_postal": "2828",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Sidi Brahim",
+        "wilaya_id": 28,
+        "code_postal": "2821",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Slimane",
+        "wilaya_id": 28,
+        "code_postal": "2825",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oulteme",
+        "wilaya_id": 28,
+        "code_postal": "2846",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Aissa",
+        "wilaya_id": 28,
+        "code_postal": "2816",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ameur",
+        "wilaya_id": 28,
+        "code_postal": "2822",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Hadjeres",
+        "wilaya_id": 28,
+        "code_postal": "2818",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi M'hamed",
+        "wilaya_id": 28,
+        "code_postal": "2838",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Slim",
+        "wilaya_id": 28,
+        "code_postal": "2843",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souamaa",
+        "wilaya_id": 28,
+        "code_postal": "2840",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamsa",
+        "wilaya_id": 28,
+        "code_postal": "2823",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tarmount",
+        "wilaya_id": 28,
+        "code_postal": "2805",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zarzour",
+        "wilaya_id": 28,
+        "code_postal": "2833",
+        "has_stop_desk": 0
+    }
+]

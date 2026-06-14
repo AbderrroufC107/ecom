@@ -1,0 +1,62 @@
+[
+    {
+        "nom": "Beni Abbes",
+        "wilaya_id": 52,
+        "code_postal": "5201",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Beni Ikhlef",
+        "wilaya_id": 52,
+        "code_postal": "5204",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Ouata",
+        "wilaya_id": 52,
+        "code_postal": "5207",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Igli",
+        "wilaya_id": 52,
+        "code_postal": "5205",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kerzaz",
+        "wilaya_id": 52,
+        "code_postal": "5208",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ksabi",
+        "wilaya_id": 52,
+        "code_postal": "5209",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Khoudir",
+        "wilaya_id": 52,
+        "code_postal": "5202",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tabelbala",
+        "wilaya_id": 52,
+        "code_postal": "5206",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamtert",
+        "wilaya_id": 52,
+        "code_postal": "5210",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Timoudi",
+        "wilaya_id": 52,
+        "code_postal": "5203",
+        "has_stop_desk": 0
+    }
+]

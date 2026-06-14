@@ -1,0 +1,314 @@
+[
+    {
+        "nom": "Adekar",
+        "wilaya_id": 6,
+        "code_postal": "624",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait R'zine",
+        "wilaya_id": 6,
+        "code_postal": "628",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ait Smail",
+        "wilaya_id": 6,
+        "code_postal": "647",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Akbou",
+        "wilaya_id": 6,
+        "code_postal": "625",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Akfadou",
+        "wilaya_id": 6,
+        "code_postal": "642",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Amalou",
+        "wilaya_id": 6,
+        "code_postal": "616",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Amizour",
+        "wilaya_id": 6,
+        "code_postal": "602",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Aokas",
+        "wilaya_id": 6,
+        "code_postal": "622",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Barbacha",
+        "wilaya_id": 6,
+        "code_postal": "634",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bejaia",
+        "wilaya_id": 6,
+        "code_postal": "601",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Beni Dejllil",
+        "wilaya_id": 6,
+        "code_postal": "623",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni K'sila",
+        "wilaya_id": 6,
+        "code_postal": "635",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Beni Mallikeche",
+        "wilaya_id": 6,
+        "code_postal": "638",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Benimaouche",
+        "wilaya_id": 6,
+        "code_postal": "650",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boudjellil",
+        "wilaya_id": 6,
+        "code_postal": "652",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouhamza",
+        "wilaya_id": 6,
+        "code_postal": "637",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boukhelifa",
+        "wilaya_id": 6,
+        "code_postal": "648",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chellata",
+        "wilaya_id": 6,
+        "code_postal": "605",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chemini",
+        "wilaya_id": 6,
+        "code_postal": "629",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Darghina",
+        "wilaya_id": 6,
+        "code_postal": "620",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Dra El Caid",
+        "wilaya_id": 6,
+        "code_postal": "645",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kseur",
+        "wilaya_id": 6,
+        "code_postal": "640",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Fenaia Il Maten",
+        "wilaya_id": 6,
+        "code_postal": "618",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Feraoun",
+        "wilaya_id": 6,
+        "code_postal": "603",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ighil Ali",
+        "wilaya_id": 6,
+        "code_postal": "617",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ighram",
+        "wilaya_id": 6,
+        "code_postal": "615",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kendira",
+        "wilaya_id": 6,
+        "code_postal": "613",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kherrata",
+        "wilaya_id": 6,
+        "code_postal": "644",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Leflaye",
+        "wilaya_id": 6,
+        "code_postal": "643",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'cisna",
+        "wilaya_id": 6,
+        "code_postal": "609",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Melbou",
+        "wilaya_id": 6,
+        "code_postal": "641",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Ghir",
+        "wilaya_id": 6,
+        "code_postal": "651",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouzellaguene",
+        "wilaya_id": 6,
+        "code_postal": "636",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Seddouk",
+        "wilaya_id": 6,
+        "code_postal": "626",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Aich",
+        "wilaya_id": 6,
+        "code_postal": "639",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ayad",
+        "wilaya_id": 6,
+        "code_postal": "621",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Smaoun",
+        "wilaya_id": 6,
+        "code_postal": "612",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souk El Tenine",
+        "wilaya_id": 6,
+        "code_postal": "608",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souk Oufella",
+        "wilaya_id": 6,
+        "code_postal": "630",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tala Hamza",
+        "wilaya_id": 6,
+        "code_postal": "633",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamokra",
+        "wilaya_id": 6,
+        "code_postal": "606",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamridjet",
+        "wilaya_id": 6,
+        "code_postal": "646",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taourit Ighil",
+        "wilaya_id": 6,
+        "code_postal": "604",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Taskriout",
+        "wilaya_id": 6,
+        "code_postal": "631",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tazmalt",
+        "wilaya_id": 6,
+        "code_postal": "627",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tibane",
+        "wilaya_id": 6,
+        "code_postal": "632",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tichy",
+        "wilaya_id": 6,
+        "code_postal": "611",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tifra",
+        "wilaya_id": 6,
+        "code_postal": "614",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Timezrit",
+        "wilaya_id": 6,
+        "code_postal": "607",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tinebdar",
+        "wilaya_id": 6,
+        "code_postal": "610",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tizi N'berber",
+        "wilaya_id": 6,
+        "code_postal": "649",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Toudja",
+        "wilaya_id": 6,
+        "code_postal": "619",
+        "has_stop_desk": 0
+    }
+]

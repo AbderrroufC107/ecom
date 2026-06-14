@@ -1,0 +1,158 @@
+[
+    {
+        "nom": "Ain Soltane",
+        "wilaya_id": 41,
+        "code_postal": "4118",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ain Zana",
+        "wilaya_id": 41,
+        "code_postal": "4117",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bir Bouhouche",
+        "wilaya_id": 41,
+        "code_postal": "4114",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Drea",
+        "wilaya_id": 41,
+        "code_postal": "4109",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Haddada",
+        "wilaya_id": 41,
+        "code_postal": "4110",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Hanencha",
+        "wilaya_id": 41,
+        "code_postal": "4103",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khedara",
+        "wilaya_id": 41,
+        "code_postal": "4111",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Khemissa",
+        "wilaya_id": 41,
+        "code_postal": "4123",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "M'daourouche",
+        "wilaya_id": 41,
+        "code_postal": "4115",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Machroha",
+        "wilaya_id": 41,
+        "code_postal": "4104",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Merahna",
+        "wilaya_id": 41,
+        "code_postal": "4112",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oued Kebrit",
+        "wilaya_id": 41,
+        "code_postal": "4124",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Driss",
+        "wilaya_id": 41,
+        "code_postal": "4105",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Moumen",
+        "wilaya_id": 41,
+        "code_postal": "4113",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Oum El Adhaim",
+        "wilaya_id": 41,
+        "code_postal": "4116",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Quillen",
+        "wilaya_id": 41,
+        "code_postal": "4119",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ragouba",
+        "wilaya_id": 41,
+        "code_postal": "4122",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Safel El Ouiden",
+        "wilaya_id": 41,
+        "code_postal": "4121",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sedrata",
+        "wilaya_id": 41,
+        "code_postal": "4102",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Fredj",
+        "wilaya_id": 41,
+        "code_postal": "4120",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Souk Ahras",
+        "wilaya_id": 41,
+        "code_postal": "4101",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Taoura",
+        "wilaya_id": 41,
+        "code_postal": "4108",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Terraguelt",
+        "wilaya_id": 41,
+        "code_postal": "4125",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tiffech",
+        "wilaya_id": 41,
+        "code_postal": "4106",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zaarouria",
+        "wilaya_id": 41,
+        "code_postal": "4107",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zouabi",
+        "wilaya_id": 41,
+        "code_postal": "4126",
+        "has_stop_desk": 0
+    }
+]

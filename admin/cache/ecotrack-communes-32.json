@@ -1,0 +1,134 @@
+[
+    {
+        "nom": "Ain El Orak",
+        "wilaya_id": 32,
+        "code_postal": "3208",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Arbaouat",
+        "wilaya_id": 32,
+        "code_postal": "3209",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boualem",
+        "wilaya_id": 32,
+        "code_postal": "3206",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bougtoub",
+        "wilaya_id": 32,
+        "code_postal": "3210",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Boussemghoun",
+        "wilaya_id": 32,
+        "code_postal": "3213",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Brezina",
+        "wilaya_id": 32,
+        "code_postal": "3204",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Cheguig",
+        "wilaya_id": 32,
+        "code_postal": "3217",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Chellala",
+        "wilaya_id": 32,
+        "code_postal": "3214",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Bayadh",
+        "wilaya_id": 32,
+        "code_postal": "3201",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "El Biodh Sidi Cheikh",
+        "wilaya_id": 32,
+        "code_postal": "3207",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Bnoud",
+        "wilaya_id": 32,
+        "code_postal": "3216",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Kheither",
+        "wilaya_id": 32,
+        "code_postal": "3211",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "El Mehara",
+        "wilaya_id": 32,
+        "code_postal": "3219",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ghassoul",
+        "wilaya_id": 32,
+        "code_postal": "3205",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Kef El Ahmar",
+        "wilaya_id": 32,
+        "code_postal": "3212",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Krakda",
+        "wilaya_id": 32,
+        "code_postal": "3215",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Rogassa",
+        "wilaya_id": 32,
+        "code_postal": "3202",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Ameur",
+        "wilaya_id": 32,
+        "code_postal": "3218",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Slimane",
+        "wilaya_id": 32,
+        "code_postal": "3221",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sidi Tifour",
+        "wilaya_id": 32,
+        "code_postal": "3222",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Stitten",
+        "wilaya_id": 32,
+        "code_postal": "3203",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tousmouline",
+        "wilaya_id": 32,
+        "code_postal": "3220",
+        "has_stop_desk": 0
+    }
+]
