@@ -5,6 +5,8 @@ require_once __DIR__ . '/next-common.php';
 
 next_api_headers();
 
+if (isset($pdo)) { next_api_rate_limit($pdo, basename(__FILE__)); }
+
 try {
     $productId = next_resolve_product_id($_GET['id'] ?? '');
     if ($productId <= 0) {

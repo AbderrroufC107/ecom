@@ -16,7 +16,7 @@ if(isset($_POST['form1'])) {
 
 	if($valid == 1) {
 	
-		$statement = $pdo->prepare("INSERT INTO tbl_faq (faq_title,faq_content) VALUES (?,?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_faq (faq_title,faq_content) VALUES (?,?)");
 		$statement->execute(array($_POST['faq_title'],$_POST['faq_content']));
 			
 		$success_message = 'FAQ is added successfully!';
@@ -85,4 +85,7 @@ if(isset($_POST['form1'])) {
 
 </section>
 
+<link rel="stylesheet" href="css/summernote.css">
+<script src="js/summernote.js"></script>
+<script>$(document).ready(function(){ $('#editor1').summernote({height:300}); });</script>
 <?php require_once('footer.php'); ?>

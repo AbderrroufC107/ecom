@@ -22,6 +22,32 @@ if (!function_exists('next_api_headers')) {
             http_response_code(204);
             exit;
         }
+
+if (!function_exists('next_api_rate_limit')) {
+    function next_api_rate_limit(PDO $pdo, string $endpoint, int $maxRequests = 60, int $timeWindowSeconds = 60): void
+    {
+        $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
+        // Cleanup old
+        $pdo->exec("DELETE FROM tbl_api_log WHERE created_at < DATE_SUB(NOW(), INTERVAL $timeWindowSeconds SECOND)");
+        // Count
+        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_api_log WHERE ip_address = ? AND endpoint = ? AND created_at >= DATE_SUB(NOW(), INTERVAL $timeWindowSeconds SECOND)");
+        $stmt->execute([$ip, $endpoint]);
+        $count = (int)$stmt->fetchColumn();
+
+        if ($count >= $maxRequests) {
+            next_json(['success' => false, 'error' => 'Too Many Requests', 'code' => 'RATE_LIMIT_EXCEEDED'], 429);
+        }
+        
+        // Log request
+        $logStmt = $pdo->prepare("INSERT INTO tbl_api_log (ip_address, endpoint, method, user_agent, created_at, tenant_id) VALUES (?, ?, ?, ?, NOW(), 1)");
+        $logStmt->execute([
+            $ip, 
+            $endpoint, 
+            $_SERVER['REQUEST_METHOD'] ?? 'GET',
+            substr($_SERVER['HTTP_USER_AGENT'] ?? '', 0, 255)
+        ]);
+    }
+}
     }
 }
 

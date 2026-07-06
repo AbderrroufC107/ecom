@@ -6,13 +6,13 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_ensure_tables')) {
         function performance_ensure_tables(PDO $pdo): void
-        {
+        { global $dbRepo;
             $lock_file = __DIR__ . '/../cache/performance_tables.lock';
             if (file_exists($lock_file)) {
                 return;
             }
 
-            $pdo->exec("
+            $dbRepo->executeCommand("
                 CREATE TABLE IF NOT EXISTS tbl_employee_commission (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     employee_id INT NOT NULL,
@@ -25,7 +25,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
                     INDEX idx_ec_created (created_at)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             ");
-            $pdo->exec("
+            $dbRepo->executeCommand("
                 CREATE TABLE IF NOT EXISTS tbl_commission_payment (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     employee_id INT NOT NULL,
@@ -37,7 +37,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
                     INDEX idx_cp_paid (paid_at)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             ");
-            $pdo->exec("
+            $dbRepo->executeCommand("
                 CREATE TABLE IF NOT EXISTS tbl_performance_settings (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     config_key VARCHAR(80) NOT NULL UNIQUE,
@@ -45,7 +45,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
                     updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             ");
-            $pdo->exec("INSERT IGNORE INTO tbl_performance_settings (config_key, config_value) VALUES
+            $dbRepo->executeCommand("INSERT IGNORE INTO tbl_performance_settings (config_key, config_value) VALUES
                 ('score_completed', '10'),
                 ('score_confirmed', '2'),
                 ('score_cancelled', '-5'),
@@ -67,10 +67,10 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_get_setting')) {
         function performance_get_setting(PDO $pdo, string $key, string $default = ''): string
-        {
+        { global $dbRepo;
             static $cache = [];
             if (!isset($cache[$key])) {
-                $stmt = $pdo->prepare("SELECT config_value FROM tbl_performance_settings WHERE config_key = ? LIMIT 1");
+                $stmt = $dbRepo->prepare("SELECT config_value FROM tbl_performance_settings WHERE config_key = ? LIMIT 1");
                 $stmt->execute([$key]);
                 $val = $stmt->fetchColumn();
                 $cache[$key] = $val !== false ? (string) $val : $default;
@@ -81,29 +81,29 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_set_setting')) {
         function performance_set_setting(PDO $pdo, string $key, string $value): void
-        {
-            $stmt = $pdo->prepare("INSERT INTO tbl_performance_settings (config_key, config_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE config_value = VALUES(config_value)");
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("INSERT INTO tbl_performance_settings (config_key, config_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE config_value = VALUES(config_value)");
             $stmt->execute([$key, $value]);
         }
     }
 
     if (!function_exists('performance_get_setting_int')) {
         function performance_get_setting_int(PDO $pdo, string $key, int $default = 0): int
-        {
+        { global $dbRepo;
             return (int) performance_get_setting($pdo, $key, (string) $default);
         }
     }
 
     if (!function_exists('performance_get_setting_bool')) {
         function performance_get_setting_bool(PDO $pdo, string $key): bool
-        {
+        { global $dbRepo;
             return performance_get_setting($pdo, $key, '0') === '1';
         }
     }
 
     if (!function_exists('performance_calculate_score')) {
         function performance_calculate_score(PDO $pdo, int $employee_id): int
-        {
+        { global $dbRepo;
             $score_completed = performance_get_setting_int($pdo, 'score_completed', 10);
             $score_confirmed = performance_get_setting_int($pdo, 'score_confirmed', 2);
             $score_cancelled = performance_get_setting_int($pdo, 'score_cancelled', -5);
@@ -111,7 +111,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
             $score_late = performance_get_setting_int($pdo, 'score_late_processing', -2);
             $late_hours = performance_get_setting_int($pdo, 'late_processing_hours', 24);
 
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 SELECT
                     COUNT(DISTINCT CASE WHEN o.order_status = 'Completed' THEN oa.order_id END) AS completed_count,
                     COUNT(DISTINCT CASE WHEN o.order_status = 'Confirmed' THEN oa.order_id END) AS confirmed_count,
@@ -138,7 +138,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_get_kpis')) {
         function performance_get_kpis(PDO $pdo, int $employee_id): array
-        {
+        { global $dbRepo;
             $rkpi = [
                 'total_assigned' => 0,
                 'pending' => 0,
@@ -153,7 +153,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
                 'score' => 0,
             ];
 
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 SELECT
                     COUNT(*) AS total_assigned,
                     SUM(CASE WHEN o.order_status = 'Pending' THEN 1 ELSE 0 END) AS pending_count,
@@ -188,7 +188,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
             $processed = $completed + $cancelled + $returned;
             if ($processed > 0) {
-                $stmt2 = $pdo->prepare("
+                $stmt2 = $dbRepo->prepare("
                     SELECT COALESCE(AVG(TIMESTAMPDIFF(HOUR, o.order_date, NOW())), 0) AS avg_hours
                     FROM tbl_order_assignment oa
                     INNER JOIN tbl_order o ON o.id = oa.order_id
@@ -214,8 +214,8 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
     }
 
     if (!function_exists('performance_get_ranking')) {
-        function performance_get_ranking(PDO $pdo, ?int $limit = null, string $period = 'all'): array
-        {
+        function performance_get_ranking(PDO $pdo, ?int $limit = null, string $period = 'all', ?int $manager_id = null): array
+        { global $dbRepo;
             $score_completed = performance_get_setting_int($pdo, 'score_completed', 10);
             $score_confirmed = performance_get_setting_int($pdo, 'score_confirmed', 2);
             $score_cancelled = performance_get_setting_int($pdo, 'score_cancelled', -5);
@@ -223,7 +223,23 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
             $score_late = performance_get_setting_int($pdo, 'score_late_processing', -2);
             $late_hours = performance_get_setting_int($pdo, 'late_processing_hours', 24);
 
-            $stmt = $pdo->query("
+            $dateFilter = '';
+            if ($period === 'today') {
+                $dateFilter = ' AND DATE(oa.assigned_at) = CURDATE()';
+            } elseif ($period === 'week') {
+                $dateFilter = ' AND oa.assigned_at >= DATE_SUB(CURDATE(), INTERVAL 7 DAY)';
+            } elseif ($period === 'month') {
+                $dateFilter = ' AND oa.assigned_at >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)';
+            }
+
+            $managerFilter = '';
+            if ($manager_id !== null && $manager_id > 0) {
+                $managerFilter = ' AND e.manager_id = ' . (int) $manager_id;
+            } elseif ($manager_id === 0) {
+                $managerFilter = ' AND (e.manager_id IS NULL OR e.manager_id = 0)';
+            }
+
+            $stmt = $dbRepo->query("
                 SELECT
                     e.id, e.full_name, e.email, e.telegram_chat_id,
                     COUNT(oa.id) AS total_assigned,
@@ -235,9 +251,9 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
                     COALESCE(SUM(CASE WHEN o.order_status IN ('Completed', 'Cancelled', 'Returned') THEN 1 ELSE 0 END), 0) AS processed_count,
                     COALESCE(AVG(CASE WHEN o.order_status IN ('Completed', 'Cancelled', 'Returned') THEN TIMESTAMPDIFF(HOUR, o.order_date, NOW()) END), 0) AS avg_processing_hours
                 FROM tbl_employee e
-                LEFT JOIN tbl_order_assignment oa ON oa.employee_id = e.id AND oa.status = 'active'
+                LEFT JOIN tbl_order_assignment oa ON oa.employee_id = e.id AND oa.status = 'active' {$dateFilter}
                 LEFT JOIN tbl_order o ON o.id = oa.order_id
-                WHERE e.is_active = 1
+                WHERE e.is_active = 1 {$managerFilter}
                 GROUP BY e.id, e.full_name, e.email, e.telegram_chat_id
             ");
             $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -291,7 +307,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_get_monthly_stats')) {
         function performance_get_monthly_stats(PDO $pdo, int $employee_id, int $months = 6): array
-        {
+        { global $dbRepo;
             $stats = [];
             for ($i = $months - 1; $i >= 0; $i--) {
                 $month = date('Y-m', strtotime("-{$i} months"));
@@ -306,7 +322,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
                 ];
             }
 
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 SELECT
                     DATE_FORMAT(oa.assigned_at, '%Y-%m') AS month,
                     COUNT(*) AS assigned,
@@ -346,7 +362,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_calculate_commission')) {
         function performance_calculate_commission(PDO $pdo, int $employee_id, int $order_id, float $order_total): array
-        {
+        { global $dbRepo;
             $enabled = performance_get_setting_bool($pdo, 'commission_enabled');
             if (!$enabled) {
                 return ['amount' => 0, 'type' => 'disabled'];
@@ -382,14 +398,14 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_record_commission')) {
         function performance_record_commission(PDO $pdo, int $employee_id, int $order_id, float $amount, string $type): void
-        {
+        { global $dbRepo;
             if ($amount <= 0) return;
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 INSERT INTO tbl_employee_commission (employee_id, order_id, commission_amount, commission_type)
                 VALUES (?, ?, ?, ?)
             ");
             $stmt->execute([$employee_id, $order_id, $amount, $type]);
-            $commission_id = (int) $pdo->lastInsertId();
+            $commission_id = (int) $dbRepo->lastInsertId();
             if ($commission_id > 0 && function_exists('audit_log_commission')) {
                 audit_log_commission($pdo, $commission_id, 'commission_created', null, json_encode(['employee_id' => $employee_id, 'order_id' => $order_id, 'amount' => $amount, 'type' => $type], JSON_UNESCAPED_UNICODE), 'system');
             }
@@ -398,11 +414,13 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_get_commission_summary')) {
         function performance_get_commission_summary(PDO $pdo, ?int $employee_id = null): array
-        {
-            $where = '';
+        { global $dbRepo;
+            $where1 = '';
+            $where2 = '';
             $params = [];
             if ($employee_id !== null) {
-                $where = 'WHERE employee_id = ?';
+                $where1 = 'WHERE ec.employee_id = ?';
+                $where2 = 'WHERE employee_id = ?';
                 $params[] = $employee_id;
             }
 
@@ -411,21 +429,21 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
             $month_start = date('Y-m-01');
 
             $sql = "SELECT
-                COALESCE(SUM(CASE WHEN DATE(created_at) = ? THEN commission_amount ELSE 0 END), 0) AS today,
-                COALESCE(SUM(CASE WHEN DATE(created_at) >= ? THEN commission_amount ELSE 0 END), 0) AS this_week,
-                COALESCE(SUM(CASE WHEN DATE(created_at) >= ? THEN commission_amount ELSE 0 END), 0) AS this_month,
+                COALESCE(SUM(CASE WHEN DATE(ec.created_at) = ? THEN commission_amount ELSE 0 END), 0) AS today,
+                COALESCE(SUM(CASE WHEN DATE(ec.created_at) >= ? THEN commission_amount ELSE 0 END), 0) AS this_week,
+                COALESCE(SUM(CASE WHEN DATE(ec.created_at) >= ? THEN commission_amount ELSE 0 END), 0) AS this_month,
                 COALESCE(SUM(commission_amount), 0) AS total_unpaid
             FROM tbl_employee_commission ec
             LEFT JOIN tbl_commission_payment cp ON cp.employee_id = ec.employee_id AND cp.paid_at >= ec.created_at
-            {$where}
-            AND cp.id IS NULL";
+            {$where1}
+            " . ($where1 ? "AND" : "WHERE") . " cp.id IS NULL";
             array_unshift($params, $today, $week_start, $month_start);
 
-            $stmt = $pdo->prepare($sql);
+            $stmt = $dbRepo->prepare($sql);
             $stmt->execute($params);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
 
-            $stmt2 = $pdo->prepare("SELECT COALESCE(SUM(amount), 0) AS total_paid FROM tbl_commission_payment {$where}");
+            $stmt2 = $dbRepo->prepare("SELECT COALESCE(SUM(amount), 0) AS total_paid FROM tbl_commission_payment {$where2}");
             $stmt2->execute($employee_id !== null ? [$employee_id] : []);
             $paid_row = $stmt2->fetch(PDO::FETCH_ASSOC);
 
@@ -440,17 +458,17 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
     }
 
     if (!function_exists('performance_get_dashboard_widgets')) {
-        function performance_get_dashboard_widgets(PDO $pdo): array
-        {
-            $ranking = performance_get_ranking($pdo, null);
+        function performance_get_dashboard_widgets(PDO $pdo, ?int $manager_id = null): array
+        { global $dbRepo;
+            $ranking = performance_get_ranking($pdo, null, 'all', $manager_id);
 
             $top = !empty($ranking) ? $ranking[0] : null;
             $worst = !empty($ranking) ? $ranking[count($ranking) - 1] : null;
 
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_order WHERE order_status = 'Pending'");
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_order WHERE order_status = 'Pending'");
             $pending_orders = (int) $stmt->fetchColumn();
 
-            $stmt = $pdo->query("
+            $stmt = $dbRepo->query("
                 SELECT 
                     COALESCE(SUM(CASE WHEN order_status IN ('Completed','Cancelled','Returned') THEN 1 ELSE 0 END), 0) AS processed,
                     COALESCE(SUM(CASE WHEN order_status = 'Completed' THEN 1 ELSE 0 END), 0) AS completed,
@@ -462,7 +480,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
             $delivery_rate = $processed > 0 ? round(((int) ($overall['completed'] ?? 0) / $processed) * 100, 1) : 0;
             $cancellation_rate = $processed > 0 ? round(((int) ($overall['cancelled'] ?? 0) / $processed) * 100, 1) : 0;
 
-            $stmt = $pdo->query("SELECT COALESCE(SUM(total_price), 0) FROM tbl_order WHERE order_status = 'Completed' AND DATE(order_date) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)");
+            $stmt = $dbRepo->query("SELECT COALESCE(SUM(total_price), 0) FROM tbl_order WHERE order_status = 'Completed' AND DATE(order_date) >= DATE_SUB(CURDATE(), INTERVAL 1 MONTH)");
             $monthly_revenue = (float) $stmt->fetchColumn();
 
             return [
@@ -478,7 +496,7 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('telegram_build_ranking_report')) {
         function telegram_build_ranking_report(PDO $pdo): string
-        {
+        { global $dbRepo;
             $ranking = performance_get_ranking($pdo, 10);
             $period = performance_get_setting($pdo, 'ranking_period', 'all');
             $period_label = $period === 'today' ? "\xD8\xA7\xD9\x84\xD9\x8A\xD9\x88\xD9\x85" : ($period === 'week' ? "\xD9\x87\xD8\xB0\xD8\xA7 \xD8\xA7\xD9\x84\xD8\xA3\xD8\xB3\xD8\xA8\xD9\x88\xD8\xB9" : "\xD8\xA7\xD9\x84\xD9\x83\xD9\x84");
@@ -513,9 +531,9 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_send_nightly_ranking')) {
         function performance_send_nightly_ranking(PDO $pdo): array
-        {
+        { global $dbRepo;
             if (!function_exists('telegram_send_message')) {
-                require_once __DIR__ . '/telegram_bot.php';
+                if (file_exists(__DIR__ . '/telegram_bot.php')) { require_once __DIR__ . '/telegram_bot.php'; }
             }
 
             $chat_id = defined('EVENT_BOT_CHAT_ID') ? trim(EVENT_BOT_CHAT_ID) : '';
@@ -542,20 +560,20 @@ if (!defined('PERFORMANCE_FUNCTIONS_LOADED')) {
 
     if (!function_exists('performance_auto_record_commission')) {
         function performance_auto_record_commission(PDO $pdo, int $order_id): void
-        {
+        { global $dbRepo;
             if (!performance_get_setting_bool($pdo, 'commission_enabled')) return;
 
-            $stmt = $pdo->prepare("SELECT total_price FROM tbl_order WHERE id = ? AND order_status = 'Completed' LIMIT 1");
+            $stmt = $dbRepo->prepare("SELECT total_price FROM tbl_order WHERE id = ? AND order_status = 'Completed' LIMIT 1");
             $stmt->execute([$order_id]);
             $total = (float) ($stmt->fetchColumn() ?: 0);
             if ($total <= 0) return;
 
-            $stmt = $pdo->prepare("SELECT employee_id FROM tbl_order_assignment WHERE order_id = ? AND status = 'active' LIMIT 1");
+            $stmt = $dbRepo->prepare("SELECT employee_id FROM tbl_order_assignment WHERE order_id = ? AND status = 'active' LIMIT 1");
             $stmt->execute([$order_id]);
             $employee_id = (int) ($stmt->fetchColumn() ?: 0);
             if ($employee_id <= 0) return;
 
-            $check = $pdo->prepare("SELECT id FROM tbl_employee_commission WHERE order_id = ? AND employee_id = ? LIMIT 1");
+            $check = $dbRepo->prepare("SELECT id FROM tbl_employee_commission WHERE order_id = ? AND employee_id = ? LIMIT 1");
             $check->execute([$order_id, $employee_id]);
             if ($check->fetch()) return;
 

@@ -32,7 +32,7 @@
 
             	<?php
             	$i=0;
-            	$statement = $pdo->prepare("SELECT * FROM tbl_photo");
+            	$statement = $dbRepo->prepare("SELECT * FROM tbl_photo");
             	$statement->execute();
             	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
             	foreach ($result as $row) {

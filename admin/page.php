@@ -31,23 +31,23 @@ if(isset($_POST['form_about'])) {
 
     if($valid == 1) {
         if($new_banner !== '') {
-            $statement = $pdo->prepare("SELECT about_banner FROM tbl_page WHERE id=1");
+            $statement = $dbRepo->prepare("SELECT about_banner FROM tbl_page WHERE id=1");
             $statement->execute();
             $current_about_banner = $statement->fetchColumn();
             delete_local_image_file($current_about_banner, '../assets/uploads');
 
-            $statement = $pdo->prepare("UPDATE tbl_page SET about_title=?,about_content=?,about_banner=?,about_meta_title=?,about_meta_keyword=?,about_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET about_title=?,about_content=?,about_banner=?,about_meta_title=?,about_meta_keyword=?,about_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['about_title'],$_POST['about_content'],$new_banner,$_POST['about_meta_title'],$_POST['about_meta_keyword'],$_POST['about_meta_description']));
         } elseif($remove_about_banner) {
-            $statement = $pdo->prepare("SELECT about_banner FROM tbl_page WHERE id=1");
+            $statement = $dbRepo->prepare("SELECT about_banner FROM tbl_page WHERE id=1");
             $statement->execute();
             $current_about_banner = $statement->fetchColumn();
             delete_local_image_file($current_about_banner, '../assets/uploads');
 
-            $statement = $pdo->prepare("UPDATE tbl_page SET about_title=?,about_content=?,about_banner='',about_meta_title=?,about_meta_keyword=?,about_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET about_title=?,about_content=?,about_banner='',about_meta_title=?,about_meta_keyword=?,about_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['about_title'],$_POST['about_content'],$_POST['about_meta_title'],$_POST['about_meta_keyword'],$_POST['about_meta_description']));
         } else {
-            $statement = $pdo->prepare("UPDATE tbl_page SET about_title=?,about_content=?,about_meta_title=?,about_meta_keyword=?,about_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET about_title=?,about_content=?,about_meta_title=?,about_meta_keyword=?,about_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['about_title'],$_POST['about_content'],$_POST['about_meta_title'],$_POST['about_meta_keyword'],$_POST['about_meta_description']));
         }
 
@@ -79,23 +79,23 @@ if(isset($_POST['form_faq'])) {
 
     if($valid == 1) {
         if($new_banner !== '') {
-            $statement = $pdo->prepare("SELECT faq_banner FROM tbl_page WHERE id=1");
+            $statement = $dbRepo->prepare("SELECT faq_banner FROM tbl_page WHERE id=1");
             $statement->execute();
             $current_faq_banner = $statement->fetchColumn();
             delete_local_image_file($current_faq_banner, '../assets/uploads');
 
-            $statement = $pdo->prepare("UPDATE tbl_page SET faq_title=?,faq_banner=?,faq_meta_title=?,faq_meta_keyword=?,faq_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET faq_title=?,faq_banner=?,faq_meta_title=?,faq_meta_keyword=?,faq_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['faq_title'],$new_banner,$_POST['faq_meta_title'],$_POST['faq_meta_keyword'],$_POST['faq_meta_description']));
         } elseif($remove_faq_banner) {
-            $statement = $pdo->prepare("SELECT faq_banner FROM tbl_page WHERE id=1");
+            $statement = $dbRepo->prepare("SELECT faq_banner FROM tbl_page WHERE id=1");
             $statement->execute();
             $current_faq_banner = $statement->fetchColumn();
             delete_local_image_file($current_faq_banner, '../assets/uploads');
 
-            $statement = $pdo->prepare("UPDATE tbl_page SET faq_title=?,faq_banner='',faq_meta_title=?,faq_meta_keyword=?,faq_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET faq_title=?,faq_banner='',faq_meta_title=?,faq_meta_keyword=?,faq_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['faq_title'],$_POST['faq_meta_title'],$_POST['faq_meta_keyword'],$_POST['faq_meta_description']));
         } else {
-            $statement = $pdo->prepare("UPDATE tbl_page SET faq_title=?,faq_meta_title=?,faq_meta_keyword=?,faq_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET faq_title=?,faq_meta_title=?,faq_meta_keyword=?,faq_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['faq_title'],$_POST['faq_meta_title'],$_POST['faq_meta_keyword'],$_POST['faq_meta_description']));
         }
 
@@ -127,23 +127,23 @@ if(isset($_POST['form_contact'])) {
 
     if($valid == 1) {
         if($new_banner !== '') {
-            $statement = $pdo->prepare("SELECT contact_banner FROM tbl_page WHERE id=1");
+            $statement = $dbRepo->prepare("SELECT contact_banner FROM tbl_page WHERE id=1");
             $statement->execute();
             $current_contact_banner = $statement->fetchColumn();
             delete_local_image_file($current_contact_banner, '../assets/uploads');
 
-            $statement = $pdo->prepare("UPDATE tbl_page SET contact_title=?,contact_banner=?,contact_meta_title=?,contact_meta_keyword=?,contact_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET contact_title=?,contact_banner=?,contact_meta_title=?,contact_meta_keyword=?,contact_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['contact_title'],$new_banner,$_POST['contact_meta_title'],$_POST['contact_meta_keyword'],$_POST['contact_meta_description']));
         } elseif($remove_contact_banner) {
-            $statement = $pdo->prepare("SELECT contact_banner FROM tbl_page WHERE id=1");
+            $statement = $dbRepo->prepare("SELECT contact_banner FROM tbl_page WHERE id=1");
             $statement->execute();
             $current_contact_banner = $statement->fetchColumn();
             delete_local_image_file($current_contact_banner, '../assets/uploads');
 
-            $statement = $pdo->prepare("UPDATE tbl_page SET contact_title=?,contact_banner='',contact_meta_title=?,contact_meta_keyword=?,contact_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET contact_title=?,contact_banner='',contact_meta_title=?,contact_meta_keyword=?,contact_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['contact_title'],$_POST['contact_meta_title'],$_POST['contact_meta_keyword'],$_POST['contact_meta_description']));
         } else {
-            $statement = $pdo->prepare("UPDATE tbl_page SET contact_title=?,contact_meta_title=?,contact_meta_keyword=?,contact_meta_description=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_page SET contact_title=?,contact_meta_title=?,contact_meta_keyword=?,contact_meta_description=? WHERE id=1");
             $statement->execute(array($_POST['contact_title'],$_POST['contact_meta_title'],$_POST['contact_meta_keyword'],$_POST['contact_meta_description']));
         }
 
@@ -159,7 +159,7 @@ if(isset($_POST['form_contact'])) {
 </section>
 
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_page WHERE id=1");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_page WHERE id=1");
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
 foreach ($result as $row) {
@@ -413,6 +413,9 @@ foreach ($result as $row) {
 
 </section>
 
+<link rel="stylesheet" href="css/summernote.css">
+<script src="js/summernote.js"></script>
+<script>$(document).ready(function(){ $('#editor1').summernote({height:300}); });</script>
 <?php require_once('footer.php'); ?>
 
 

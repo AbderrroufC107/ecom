@@ -13,7 +13,7 @@ if ($id <= 0) {
     exit;
 }
 
-$statement = $pdo->prepare("SELECT * FROM tbl_end_category WHERE mcat_id=? ORDER BY ecat_name ASC");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_end_category WHERE mcat_id=? ORDER BY ecat_name ASC");
 $statement->execute([$id]);
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($result as $row) {

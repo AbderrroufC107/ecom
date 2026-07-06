@@ -31,9 +31,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $paid_by = $_SESSION['user']['full_name'] ?? 'admin';
 
             if ($employee_id > 0 && $amount > 0) {
-                $stmt = $pdo->prepare("INSERT INTO tbl_commission_payment (employee_id, amount, paid_by, notes) VALUES (?, ?, ?, ?)");
+                $stmt = $dbRepo->prepare("INSERT INTO tbl_commission_payment (employee_id, amount, paid_by, notes) VALUES (?, ?, ?, ?)");
                 $stmt->execute([$employee_id, $amount, $paid_by, $notes]);
-                $payment_id = (int) $pdo->lastInsertId();
+                $payment_id = (int) $dbRepo->lastInsertId();
                 if ($payment_id > 0 && function_exists('audit_log_commission')) {
                     audit_log_commission($pdo, $payment_id, 'commission_paid', null, json_encode(['employee_id' => $employee_id, 'amount' => $amount, 'paid_by' => $paid_by], JSON_UNESCAPED_UNICODE), 'admin_panel', (int) ($_SESSION['user']['id'] ?? 0));
                 }
@@ -53,7 +53,7 @@ $commission_fixed = performance_get_setting($pdo, 'commission_fixed_amount', '0'
 $commission_pct = performance_get_setting($pdo, 'commission_percentage', '5');
 $commission_min = performance_get_setting($pdo, 'commission_min_order_amount', '0');
 
-$stmt = $pdo->query("
+$stmt = $dbRepo->query("
     SELECT ec.*, e.full_name, o.customer_name, o.product_name
     FROM tbl_employee_commission ec
     LEFT JOIN tbl_employee e ON e.id = ec.employee_id
@@ -63,7 +63,7 @@ $stmt = $pdo->query("
 ");
 $commissions = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-$stmt = $pdo->query("
+$stmt = $dbRepo->query("
     SELECT cp.*, e.full_name
     FROM tbl_commission_payment cp
     LEFT JOIN tbl_employee e ON e.id = cp.employee_id
@@ -275,8 +275,7 @@ foreach ($employees as $emp) {
 <script>
 (function() {
     var sel = document.getElementById('commission_mode');
-    function toggleFields() {
-        var v = sel.value;
+    function toggleFields() {        var v = sel.value;
         document.getElementById('fixed_group').style.display = (v === 'fixed' || v === 'hybrid') ? 'block' : 'none';
         document.getElementById('percentage_group').style.display = (v === 'percentage' || v === 'hybrid') ? 'block' : 'none';
     }

@@ -42,7 +42,7 @@ foreach ($targets as $target) {
         return "`$c`";
     }, $columns));
 
-    $stmt = $pdo->query("SELECT `$pk`, $column_sql FROM `$table`");
+    $stmt = $dbRepo->query("SELECT `$pk`, $column_sql FROM `$table`");
     $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
     if (!$rows) {
         continue;
@@ -96,7 +96,7 @@ foreach ($targets as $target) {
                 continue;
             }
 
-            $update = $pdo->prepare("UPDATE `$table` SET `$column` = ? WHERE `$pk` = ?");
+            $update = $dbRepo->prepare("UPDATE `$table` SET `$column` = ? WHERE `$pk` = ?");
             $update->execute([$new_value, $pk_value]);
             $updated++;
             echo $table . '.' . $column . ' #' . $pk_value . "\n";

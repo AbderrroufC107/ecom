@@ -18,13 +18,11 @@
 							<div class="col-sm-4">
 								<select name="cust_id" class="form-control select2">
 								<?php
-								$statement = $pdo->prepare("SELECT * FROM tbl_customer ORDER BY cust_id ASC");
-								$statement->execute(array($_REQUEST['id']));
-								$statement->rowCount();
-								$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+								global $customerRepo;
+								$result = $customerRepo->findAll([], 'cust_id ASC');
 								foreach ($result as $row) {
 									?>
-									<option value="<?php echo $row['cust_id']; ?>"><?php echo $row['cust_name']; ?> - <?php echo $row['cust_email']; ?></option>
+									<option value="<?php echo $row['cust_id']; ?>"><?php echo htmlspecialchars($row['cust_name']); ?> - <?php echo htmlspecialchars($row['cust_email'] ?? ''); ?></option>
 									<?php
 								}
 								?>
@@ -71,9 +69,8 @@
 						<tbody>
 							<?php
 							$i=0;
-							$statement = $pdo->prepare("SELECT * FROM tbl_customer_message WHERE cust_id=?");
-							$statement->execute(array($_POST['cust_id']));
-							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+							$messageRepo = new \SaaS\Repositories\CustomerMessageRepository($pdo);
+							$result = $messageRepo->findAll(['cust_id' => $_POST['cust_id']]);
 							foreach ($result as $row) {
 								$i++;
 								?>

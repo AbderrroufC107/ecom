@@ -6,7 +6,7 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['task']) ) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_payment WHERE id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_payment WHERE id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	if( $total == 0 ) {
@@ -17,7 +17,7 @@ if( !isset($_REQUEST['id']) || !isset($_REQUEST['task']) ) {
 ?>
 
 <?php
-	$statement = $pdo->prepare("UPDATE tbl_payment SET shipping_status=? WHERE id=?");
+	$statement = $dbRepo->prepare("UPDATE tbl_payment SET shipping_status=? WHERE id=?");
 	$statement->execute(array($_REQUEST['task'],$_REQUEST['id']));
 
 	header('location: order.php');

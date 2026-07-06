@@ -2,7 +2,7 @@
 
 if (!function_exists('audit_ensure_tables')) {
     function audit_ensure_tables(PDO $pdo): void
-    {
+    { global $dbRepo;
         static $done = false;
         if ($done) return;
 
@@ -12,7 +12,7 @@ if (!function_exists('audit_ensure_tables')) {
             return;
         }
 
-        $pdo->exec("
+        $dbRepo->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_audit_log (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 entity_type VARCHAR(60) NOT NULL DEFAULT '',
@@ -41,7 +41,7 @@ if (!function_exists('audit_ensure_tables')) {
 
 if (!function_exists('_audit_insert')) {
     function _audit_insert(PDO $pdo, array $params): int
-    {
+    { global $dbRepo;
         audit_ensure_tables($pdo);
 
         $entity_type = substr(trim((string) ($params['entity_type'] ?? '')), 0, 60);
@@ -59,20 +59,21 @@ if (!function_exists('_audit_insert')) {
         $ip_address = substr(trim((string) ($params['ip_address'] ?? $_SERVER['REMOTE_ADDR'] ?? '')), 0, 45);
         $user_agent = substr(trim((string) ($params['user_agent'] ?? $_SERVER['HTTP_USER_AGENT'] ?? '')), 0, 500);
 
-        $stmt = $pdo->prepare("
+        $audit_ref = strtoupper(uniqid('AUD-'));
+        $stmt = $dbRepo->prepare("
             INSERT INTO tbl_audit_log
-            (entity_type, entity_id, action_type, performed_by_type, performed_by_id, old_value, new_value, ip_address, user_agent, source, created_at)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+            (audit_ref, entity_type, entity_id, action_type, performed_by_type, performed_by_id, old_value, new_value, ip_address, user_agent, source, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
         ");
-        $stmt->execute([$entity_type, $entity_id, $action_type, $performed_by_type, $performed_by_id, $old_value, $new_value, $ip_address, $user_agent, $source]);
+        $stmt->execute([$audit_ref, $entity_type, $entity_id, $action_type, $performed_by_type, $performed_by_id, $old_value, $new_value, $ip_address, $user_agent, $source]);
 
-        return (int) $pdo->lastInsertId();
+        return (int) $dbRepo->lastInsertId();
     }
 }
 
 if (!function_exists('audit_log_order')) {
     function audit_log_order(PDO $pdo, int $order_id, string $action_type, $old_value = null, $new_value = null, string $source = 'admin_panel', int $performer_id = 0): int
-    {
+    { global $dbRepo;
         $performer_type = $source;
         return _audit_insert($pdo, [
             'entity_type' => 'order',
@@ -89,7 +90,7 @@ if (!function_exists('audit_log_order')) {
 
 if (!function_exists('audit_log_employee')) {
     function audit_log_employee(PDO $pdo, int $employee_id, string $action_type, $old_value = null, $new_value = null, string $source = 'admin_panel', int $performer_id = 0): int
-    {
+    { global $dbRepo;
         return _audit_insert($pdo, [
             'entity_type' => 'employee',
             'entity_id' => $employee_id,
@@ -105,7 +106,7 @@ if (!function_exists('audit_log_employee')) {
 
 if (!function_exists('audit_log_security')) {
     function audit_log_security(PDO $pdo, int $entity_id, string $action_type, $old_value = null, $new_value = null, string $source = 'admin_panel', int $performer_id = 0): int
-    {
+    { global $dbRepo;
         return _audit_insert($pdo, [
             'entity_type' => 'security',
             'entity_id' => $entity_id,
@@ -121,7 +122,7 @@ if (!function_exists('audit_log_security')) {
 
 if (!function_exists('audit_log_commission')) {
     function audit_log_commission(PDO $pdo, int $commission_id, string $action_type, $old_value = null, $new_value = null, string $source = 'admin_panel', int $performer_id = 0): int
-    {
+    { global $dbRepo;
         return _audit_insert($pdo, [
             'entity_type' => 'commission',
             'entity_id' => $commission_id,
@@ -137,7 +138,7 @@ if (!function_exists('audit_log_commission')) {
 
 if (!function_exists('audit_log_recovery')) {
     function audit_log_recovery(PDO $pdo, int $task_id, string $action_type, $old_value = null, $new_value = null, string $source = 'recovery_engine', int $performer_id = 0): int
-    {
+    { global $dbRepo;
         return _audit_insert($pdo, [
             'entity_type' => 'recovery_task',
             'entity_id' => $task_id,
@@ -153,7 +154,7 @@ if (!function_exists('audit_log_recovery')) {
 
 if (!function_exists('audit_log_telegram')) {
     function audit_log_telegram(PDO $pdo, int $order_id, string $action_type, $old_value = null, $new_value = null, int $employee_id = 0): int
-    {
+    { global $dbRepo;
         return _audit_insert($pdo, [
             'entity_type' => 'order',
             'entity_id' => $order_id,
@@ -169,7 +170,7 @@ if (!function_exists('audit_log_telegram')) {
 
 if (!function_exists('audit_log_system')) {
     function audit_log_system(PDO $pdo, string $entity_type, int $entity_id, string $action_type, $old_value = null, $new_value = null, string $source = 'system'): int
-    {
+    { global $dbRepo;
         return _audit_insert($pdo, [
             'entity_type' => $entity_type,
             'entity_id' => $entity_id,
@@ -185,10 +186,10 @@ if (!function_exists('audit_log_system')) {
 
 if (!function_exists('audit_get_for_entity')) {
     function audit_get_for_entity(PDO $pdo, string $entity_type, int $entity_id, int $limit = 100, int $offset = 0): array
-    {
+    { global $dbRepo;
         $limit_int = (int) $limit;
         $offset_int = (int) $offset;
-        $stmt = $pdo->prepare("SELECT * FROM tbl_audit_log WHERE entity_type = ? AND entity_id = ? ORDER BY created_at DESC LIMIT $limit_int OFFSET $offset_int");
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_audit_log WHERE entity_type = ? AND entity_id = ? ORDER BY created_at DESC LIMIT $limit_int OFFSET $offset_int");
         $stmt->execute([$entity_type, $entity_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -196,7 +197,7 @@ if (!function_exists('audit_get_for_entity')) {
 
 if (!function_exists('audit_search')) {
     function audit_search(PDO $pdo, array $filters = [], int $page = 1, int $per_page = 50): array
-    {
+    { global $dbRepo;
         $conditions = [];
         $params = [];
 
@@ -247,14 +248,14 @@ if (!function_exists('audit_search')) {
             $where = 'WHERE ' . implode(' AND ', $conditions);
         }
 
-        $count_stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_audit_log a $where");
+        $count_stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_audit_log a $where");
         $count_stmt->execute($params);
         $total = (int) $count_stmt->fetchColumn();
 
         $offset = ($page - 1) * $per_page;
         $limit_int = (int) $per_page;
         $offset_int = (int) $offset;
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             SELECT a.*,
                 o.customer_name AS order_customer_name,
                 o.customer_phone AS order_customer_phone,
@@ -280,7 +281,7 @@ if (!function_exists('audit_search')) {
 
 if (!function_exists('audit_get_action_label')) {
     function audit_get_action_label(string $action_type): string
-    {
+    { global $dbRepo;
         $labels = [
             'order_created' => 'إنشاء طلب',
             'order_edited' => 'تعديل طلب',
@@ -330,7 +331,7 @@ if (!function_exists('audit_get_action_label')) {
 
 if (!function_exists('audit_get_source_label')) {
     function audit_get_source_label(string $source): string
-    {
+    { global $dbRepo;
         $labels = [
             'admin_panel' => 'لوحة التحكم',
             'staff_portal' => 'بوابة الموظفين',
@@ -346,7 +347,7 @@ if (!function_exists('audit_get_source_label')) {
 
 if (!function_exists('audit_get_action_icon')) {
     function audit_get_action_icon(string $action_type): string
-    {
+    { global $dbRepo;
         $icons = [
             'order_created' => 'fa-plus-circle',
             'order_edited' => 'fa-pencil-square-o',
@@ -391,5 +392,48 @@ if (!function_exists('audit_get_action_icon')) {
         ];
 
         return $icons[$action_type] ?? 'fa-circle-o';
+    }
+}
+
+
+if (!function_exists('audit_log_security_event')) {
+    function audit_log_security_event(PDO $pdo, string $event_type, $details = null, string $risk_level = 'CRITICAL', string $result = 'SUCCESS'): int
+    { global $dbRepo;
+        try {
+        $performed_by_type = 'system';
+        $performed_by_id = 0;
+        if (isset($_SESSION['user'])) {
+            $performed_by_type = 'admin_panel';
+            $performed_by_id = $_SESSION['user']['id'];
+        } elseif (isset($_SESSION['store_user'])) {
+            $performed_by_type = 'staff_portal';
+            $performed_by_id = $_SESSION['store_user']['id'];
+        }
+        
+        $ip_address = substr(trim($_SERVER['REMOTE_ADDR'] ?? ''), 0, 45);
+        $user_agent = substr(trim($_SERVER['HTTP_USER_AGENT'] ?? ''), 0, 500);
+        
+        $details_json = isset($details) ? (is_string($details) ? $details : json_encode($details, JSON_UNESCAPED_UNICODE)) : null;
+
+        $audit_ref = strtoupper(uniqid('SEC-'));
+
+        $stmt = $dbRepo->prepare("
+            INSERT INTO tbl_security_log
+            (audit_ref, event_type, performed_by_type, performed_by_id, details, ip_address, user_agent, risk_level, result, created_at)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
+        ");
+        $stmt->execute([$audit_ref, $event_type, $performed_by_type, $performed_by_id, $details_json, $ip_address, $user_agent, $risk_level, $result]);
+        $inserted_id = (int) $dbRepo->lastInsertId();
+        
+        if ($risk_level === 'CRITICAL') {
+            if (function_exists('add_admin_notification')) {
+                @add_admin_notification($pdo, 'حدث أمني خطير - ' . $event_type, 'رقم العملية ' . $audit_ref, 'danger');
+            }
+        }
+        return $inserted_id;
+    } catch (Exception $e) {
+        error_log('Security Log Failed: ' . $e->getMessage());
+        return 0;
+    }
     }
 }

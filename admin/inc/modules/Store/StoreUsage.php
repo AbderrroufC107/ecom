@@ -7,18 +7,18 @@ use PDO;
 class StoreUsage
 {
     public static function recordUsage(PDO $pdo, int $storeId, string $resourceType, int $used, int $limitValue): void
-    {
+    { global $dbRepo;
         $today = date('Y-m-d');
-        $stmt = $pdo->prepare("INSERT INTO tbl_store_usage (store_id, resource_type, used, limit_value, recorded_at)
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_store_usage (store_id, resource_type, used, limit_value, recorded_at)
             VALUES (?, ?, ?, ?, ?)
             ON DUPLICATE KEY UPDATE used = VALUES(used), limit_value = VALUES(limit_value)");
         $stmt->execute([$storeId, $resourceType, $used, $limitValue, $today]);
     }
 
     public static function getUsage(PDO $pdo, int $storeId, string $resourceType, ?string $date = null): ?array
-    {
+    { global $dbRepo;
         $date = $date ?: date('Y-m-d');
-        $stmt = $pdo->prepare("SELECT * FROM tbl_store_usage
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_store_usage
             WHERE store_id = ? AND resource_type = ? AND recorded_at = ?");
         $stmt->execute([$storeId, $resourceType, $date]);
         $row = $stmt->fetch();
@@ -26,17 +26,17 @@ class StoreUsage
     }
 
     public static function getAllUsage(PDO $pdo, int $storeId, ?string $date = null): array
-    {
+    { global $dbRepo;
         $date = $date ?: date('Y-m-d');
-        $stmt = $pdo->prepare("SELECT * FROM tbl_store_usage
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_store_usage
             WHERE store_id = ? AND recorded_at = ?");
         $stmt->execute([$storeId, $date]);
         return $stmt->fetchAll();
     }
 
     public static function getUsageHistory(PDO $pdo, int $storeId, string $resourceType, int $days = 30): array
-    {
-        $stmt = $pdo->prepare("SELECT * FROM tbl_store_usage
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_store_usage
             WHERE store_id = ? AND resource_type = ?
             AND recorded_at >= DATE_SUB(CURDATE(), INTERVAL ? DAY)
             ORDER BY recorded_at ASC");
@@ -45,7 +45,7 @@ class StoreUsage
     }
 
     public static function checkQuota(PDO $pdo, int $storeId, string $resourceType, int $currentUsed): bool
-    {
+    { global $dbRepo;
         $limits = StoreSubscription::getPlanLimits($pdo, $storeId);
         $limitKey = 'max_' . $resourceType;
         $max = $limits[$limitKey] ?? 0;
@@ -56,7 +56,7 @@ class StoreUsage
     }
 
     public static function getQuotaUsagePercent(PDO $pdo, int $storeId, string $resourceType, int $currentUsed): float
-    {
+    { global $dbRepo;
         $limits = StoreSubscription::getPlanLimits($pdo, $storeId);
         $limitKey = 'max_' . $resourceType;
         $max = $limits[$limitKey] ?? 0;

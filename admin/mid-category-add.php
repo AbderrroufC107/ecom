@@ -17,7 +17,7 @@ if(isset($_POST['form1'])) {
     if($valid == 1) {
 
 		// Saving data into the main table tbl_mid_category
-		$statement = $pdo->prepare("INSERT INTO tbl_mid_category (mcat_name,tcat_id) VALUES (?,?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_mid_category (mcat_name,tcat_id) VALUES (?,?)");
 		$statement->execute(array($_POST['mcat_name'],$_POST['tcat_id']));
 	
     	$success_message = 'Mid Level Category is added successfully.';
@@ -66,7 +66,7 @@ if(isset($_POST['form1'])) {
 								<select name="tcat_id" class="form-control select2">
 									<option value="">Select Top Level Category</option>
 									<?php
-									$statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
+									$statement = $dbRepo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
 									$statement->execute();
 									$result = $statement->fetchAll(PDO::FETCH_ASSOC);	
 									foreach ($result as $row) {

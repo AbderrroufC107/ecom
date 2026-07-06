@@ -18,7 +18,7 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
-		$statement = $pdo->prepare("INSERT INTO tbl_pixel (pixel_name, pixel_network, pixel_id, pixel_script) VALUES (?,?,?,?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_pixel (pixel_name, pixel_network, pixel_id, pixel_script) VALUES (?,?,?,?)");
 		$statement->execute(array($_POST['pixel_name'], $_POST['pixel_network'], $_POST['pixel_id'], $_POST['pixel_script']));
 	
     	$success_message = 'Pixel is added successfully.';

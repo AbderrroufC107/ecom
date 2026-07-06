@@ -1,0 +1,213 @@
+﻿<div id="fb-root">
+</div>
+<div class="page landing-page" id="top">
+<main id="main-content">
+<div class="announcement-bar">
+<div class="container">
+<div class="announcement-track">
+</div>
+</div>
+</div>
+<div class="landing-header">
+<div class="container landing-header-inner">
+<nav class="landing-menu-inline" aria-label="القائمة الرئيسية">
+</nav>
+<div class="landing-header-spacer" aria-hidden="true">
+</div>
+</div>
+</div>
+<div class="landing-menu-overlay" aria-hidden="true">
+</div>
+<nav class="landing-menu-panel" id="landingMenu" aria-hidden="true" inert>
+<div class="landing-menu-head">
+</div>
+<ul class="landing-menu-list">
+</ul>
+</nav>
+<section class="landing-carousel" style="--landing-carousel-ratio: 1200 / 1200;">
+<div class="container">
+<div class="landing-carousel-frame">
+<div class="landing-carousel-title">سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود</div>
+<div class="swiper landing-carousel-main">
+<div class="swiper-wrapper">
+<div class="swiper-slide">
+<div class="landing-carousel-item">
+</div>
+</div>
+<div class="swiper-slide">
+<div class="landing-carousel-item">
+</div>
+</div>
+<div class="swiper-slide">
+<div class="landing-carousel-item">
+</div>
+</div>
+</div>
+<div class="landing-carousel-nav">
+</div>
+<div class="swiper-pagination landing-carousel-pagination">
+</div>
+</div>
+</div>
+<div class="swiper landing-carousel-thumbs">
+<div class="swiper-wrapper">
+<div class="swiper-slide">
+</div>
+<div class="swiper-slide">
+</div>
+<div class="swiper-slide">
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="landing-order">
+<div class="container">
+<div class="order-offers order-offers-top">
+<div class="offer-title">عرض خاص لفترة محدودة</div>
+<div class="offer-grid">
+<div class="offer-card selected offer-card--special" data-offer-id="80" data-offer-qty="1" data-offer-unit="1300" data-offer-type="special">
+<div class="offer-price-stack">
+</div>
+<div class="offer-details">
+<div class="offer-special-label">عرض 1</div>
+<div class="offer-special-desc">grand</div>
+</div>
+<div class="offer-thumb">
+</div>
+</div>
+<div class="offer-card offer-card--special" data-offer-id="81" data-offer-qty="1" data-offer-unit="1800" data-offer-type="special">
+<div class="offer-price-stack">
+</div>
+<div class="offer-details">
+<div class="offer-special-label">عرض 2</div>
+<div class="offer-special-desc">grand</div>
+</div>
+<div class="offer-thumb">
+</div>
+</div>
+</div>
+</div>
+<div id="orderFormSection" class="order-card reveal has-offers" style="--delay: 0.1s;">
+<div class="order-card-head">
+<div class="rating-row">
+</div>
+<div class="hero-price">
+</div>
+<div class="order-now-text">
+</div>
+</div>
+<form action="" method="post" id="orderForm">
+<div class="form-row">
+<div class="form-group form-field col-md-6 position-relative">
+</div>
+<div class="form-group form-field col-md-6 position-relative">
+<div id="phone-error" class="text-danger mt-1" style="display: none; font-size: 0.9rem;">
+</div>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group form-field col-md-6">
+</div>
+<div class="form-group form-field col-md-6">
+</div>
+</div>
+<div class="form-group quantity-group">
+<div class="qty-control">
+</div>
+</div>
+<div class="form-group">
+<div class="delivery-options">
+<div class="delivery-options-note" id="deliveryOptionsNote" style="display: none;">
+</div>
+</div>
+<div class="form-group">
+<div class="delivery-info p-3 mb-3 is-hidden">
+<div class="summary-row">
+</div>
+<div class="summary-row total">
+</div>
+</div>
+</div>
+<div class="form-features">
+<div class="feature-item">
+</i> &#1590;&#1605;&#1575;&#1606;&#32;&#1575;&#1604;&#1580;&#1608;&#1583;&#1577;</div>
+<div class="feature-item">
+</i> &#1578;&#1608;&#1589;&#1610;&#1604;&#32;&#1587;&#1585;&#1610;&#1593;</div>
+<div class="feature-item">
+</i> &#1583;&#1601;&#1593;&#32;&#1593;&#1606;&#1583;&#32;&#1575;&#1604;&#1575;&#1587;&#1578;&#1604;&#1575;&#1605;</div>
+</div>
+<div class="order-cta">
+</div>
+</form>
+</div>
+</div>
+</section>
+<section class="landing-photos" id="landingPhotos">
+<div class="container">
+<div class="landing-photos-grid">
+<figure class="landing-photo">
+</figure>
+<figure class="landing-photo">
+</figure>
+<figure class="landing-photo">
+</figure>
+</div>
+</div>
+</section>
+<section class="trust-strip">
+<div class="container trust-grid">
+<div class="trust-chip">
+</i> توصيل سريع 24-48 ساعة</div>
+<div class="trust-chip">
+</i> الدفع عند الاستلام</div>
+<div class="trust-chip">
+</i> إمكانية الاستبدال حسب الشروط</div>
+<div class="trust-chip">
+</i> فحص قبل الدفع</div>
+</div>
+</section>
+<section class="section steps" id="stepsSection">
+<div class="container">
+<div class="steps-grid">
+<div class="step-card reveal" style="--delay: 0s;">
+<div class="step-index">1</div>
+</div>
+<div class="step-card reveal" style="--delay: 0.05s;">
+<div class="step-index">2</div>
+</div>
+<div class="step-card reveal" style="--delay: 0.1s;">
+<div class="step-index">3</div>
+</div>
+</div>
+</div>
+</section>
+<section class="section details">
+<div class="container">
+<div class="details-card">
+<div class="details-text">اجعل وقت اللعب أكثر متعة وفائدة مع سجاد الطريق التفاعلي للأطفال المصمم خصيصًا لتنمية خيال الطفل وتشجيعه على الاستكشاف.<br />
+بفضل المقاس الكبير 1.60×2.60 متر فهو مثالي لغرفة الأطفال أو مساحة اللعب في المنزل، مع ألوان ثابتة وسهولة في التنظيف.</div>
+</div>
+</div>
+</section>
+<section class="section faq" id="faqSection">
+<div class="container">
+<div class="faq-grid">
+</div>
+</div>
+</section>
+<section class="final-cta">
+<div class="container final-cta-inner">
+</div>
+</section>
+<div id="sticky-scroll-btn" class="sticky-cta">
+</div>
+</main>
+</div>
+const slideHtml = '<div class="swiper-slide">
+<div class="landing-carousel-item">' + pictureHtml + '</div>
+</div>';
+const thumbHtml = '<div class="swiper-slide">
+</div>';
+</main>
+</div>

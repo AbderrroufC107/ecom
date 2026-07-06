@@ -1,6 +1,6 @@
 {
-    "timestamp": "2026-06-03 08:48:16",
-    "php_version": "8.2.12",
+    "timestamp": "2026-07-01 12:48:21",
+    "php_version": "8.3.27",
     "tests": [
         {
             "name": "bcrypt: password_verify() present in login.php",
@@ -38,7 +38,7 @@
             "detail": ""
         },
         {
-            "name": "Session: session_regenerate_id() found 4x across login files (\u22654 expected)",
+            "name": "Session: session_regenerate_id() found 5x across login files (\u22654 expected)",
             "status": "PASS",
             "detail": ""
         },
@@ -98,9 +98,9 @@
             "detail": ""
         },
         {
-            "name": "Auth: 2 pages may lack session check",
+            "name": "Auth: 28 pages may lack session check",
             "status": "WARN",
-            "detail": "get-end-category.php, get-mid-category.php"
+            "detail": "ai-product-tab.php, ajax-ai-product-save.php, ajax-ai-task-status.php, ajax-knowledge-search.php, ajax-marketing-product-save.php, cron-ai-worker.php, customer.php, db_migrate.php, db_trigger.php, get-end-category.php"
         },
         {
             "name": "Auth: admin\/logout.php destroys session",
@@ -153,27 +153,22 @@
             "detail": ""
         },
         {
-            "name": "DB: Average query latency: 0.06ms",
+            "name": "DB: Average query latency: 0.13ms",
             "status": "PASS",
             "detail": ""
         },
         {
-            "name": "DB: 74 tables found",
+            "name": "DB: 81 tables found",
             "status": "PASS",
             "detail": ""
         },
         {
-            "name": "DB: Engine InnoDB: 71 tables",
+            "name": "DB: Engine InnoDB: 81 tables",
             "status": "PASS",
             "detail": ""
         },
         {
-            "name": "DB: Engine MyISAM: 3 tables",
-            "status": "PASS",
-            "detail": ""
-        },
-        {
-            "name": "DB: 183 total indexes across all tables",
+            "name": "DB: 258 total indexes across all tables",
             "status": "PASS",
             "detail": ""
         },
@@ -183,7 +178,7 @@
             "detail": ""
         },
         {
-            "name": "PHP: File read throughput: 10872 reads\/sec",
+            "name": "PHP: File read throughput: 5945 reads\/sec",
             "status": "PASS",
             "detail": ""
         },
@@ -228,7 +223,7 @@
             "detail": ""
         },
         {
-            "name": "API: 19 functions across 6 API endpoint files",
+            "name": "API: 20 functions across 8 API endpoint files",
             "status": "PASS",
             "detail": ""
         },
@@ -294,11 +289,11 @@
         }
     ],
     "summary": {
-        "passed": 57,
+        "passed": 56,
         "failed": 0,
         "warnings": 1,
-        "total": 58
+        "total": 57
     },
-    "score": 98.3,
+    "score": 98.2,
     "certified": true
 }

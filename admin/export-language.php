@@ -25,7 +25,7 @@ $out = fopen('php://output', 'w');
 // Column headers
 fputcsv($out, ['lang_id', 'lang_value']);
 
-$stmt = $pdo->prepare('SELECT lang_id, lang_value FROM tbl_language ORDER BY lang_id ASC');
+$stmt = $dbRepo->prepare('SELECT lang_id, lang_value FROM tbl_language ORDER BY lang_id ASC');
 $stmt->execute();
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     // Ensure values are strings and UTF-8 safe

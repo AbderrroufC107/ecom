@@ -10,14 +10,14 @@ if(isset($_POST['form1'])) {
     } else {
 		// Duplicate Country checking
     	// current Country name that is in the database
-    	$statement = $pdo->prepare("SELECT * FROM tbl_shipping_cost WHERE shipping_cost_id=?");
+    	$statement = $dbRepo->prepare("SELECT * FROM tbl_shipping_cost WHERE shipping_cost_id=?");
 		$statement->execute(array($_REQUEST['id']));
 		$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 		foreach($result as $row) {
 			$current_country = $row['country_id'];
 		}
 
-		$statement = $pdo->prepare("SELECT * FROM tbl_shipping_cost WHERE country_id=? and country_id!=?");
+		$statement = $dbRepo->prepare("SELECT * FROM tbl_shipping_cost WHERE country_id=? and country_id!=?");
     	$statement->execute(array($_POST['country_id'],$current_country));
     	$total = $statement->rowCount();							
     	if($total) {
@@ -28,7 +28,7 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {    	
 		// updating into the database
-		$statement = $pdo->prepare("UPDATE tbl_shipping_cost SET country_id=?,amount=? WHERE shipping_cost_id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_shipping_cost SET country_id=?,amount=? WHERE shipping_cost_id=?");
 		$statement->execute(array($_POST['country_id'],$_POST['amount'],$_REQUEST['id']));
 
     	$success_message = 'Shipping Cost is updated successfully.';
@@ -42,7 +42,7 @@ if(!isset($_REQUEST['id'])) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_shipping_cost WHERE shipping_cost_id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_shipping_cost WHERE shipping_cost_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -100,7 +100,7 @@ foreach ($result as $row) {
                             <select name="country_id" class="form-control select2">
                                 <option value="">Select a country</option>
                                 <?php
-                                $statement = $pdo->prepare("SELECT * FROM tbl_country ORDER BY country_name ASC");
+                                $statement = $dbRepo->prepare("SELECT * FROM tbl_country ORDER BY country_name ASC");
                                 $statement->execute();
                                 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
                                 foreach ($result as $row) {

@@ -15,7 +15,7 @@ if(isset($_POST['form1'])) {
 	}
 
 	if($valid == 1) {
-		$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_service'");
+		$statement = $dbRepo->prepare("SHOW TABLE STATUS LIKE 'tbl_service'");
 		$statement->execute();
 		$result = $statement->fetchAll();
 		foreach($result as $row) {
@@ -32,7 +32,7 @@ if(isset($_POST['form1'])) {
 		);
 
 		if($image_ok && $image_value !== '') {
-			$statement = $pdo->prepare("INSERT INTO tbl_service (title,content,photo) VALUES (?,?,?)");
+			$statement = $dbRepo->prepare("INSERT INTO tbl_service (title,content,photo) VALUES (?,?,?)");
 			$statement->execute(array($_POST['title'],$_POST['content'],$image_value));
 			$success_message = 'Service is added successfully!';
 

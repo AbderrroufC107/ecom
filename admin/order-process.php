@@ -28,32 +28,49 @@ if(isset($_POST['form1'])) {
         ]);
         $_POST['customer_phone'] = $security_check['context']['phone'] ?? site_security_normalize_phone($_POST['customer_phone'] ?? '');
 
-        $order_id = time();
-        
-        // حفظ بيانات الطلب في قاعدة البيانات
-        $statement = $pdo->prepare("INSERT INTO tbl_order (
-            order_id,
+        $final_total = 0;
+        if (!empty($_SESSION['cart_product'])) {
+            foreach ($_SESSION['cart_product'] as $key => $value) {
+                $final_total += ($value['unit_price'] ?? 0) * ($value['quantity'] ?? 1);
+            }
+        }
+
+        $manager_id = (int)($_SESSION['user']['id'] ?? 0);
+
+        $statement = $dbRepo->prepare("INSERT INTO tbl_order (
+            product_name,
+            quantity,
+            unit_price,
+            total_price,
             customer_name,
             customer_phone,
-            customer_address,
-            total_amount,
+            address,
+            wilaya,
+            commune,
             order_date,
-            status
-        ) VALUES (?,?,?,?,?,?,?)");
+            order_status,
+            manager_id
+        ) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
         
+        $first_product = $_SESSION['cart_product'][0] ?? [];
         $statement->execute(array(
-            $order_id,
+            $first_product['product_name'] ?? '',
+            $first_product['quantity'] ?? 1,
+            $first_product['unit_price'] ?? 0,
+            $final_total,
             $_POST['customer_name'],
             $_POST['customer_phone'],
             $_POST['customer_address'],
-            $final_total,
+            $_POST['wilaya'] ?? '',
+            $_POST['commune'] ?? '',
             date('Y-m-d H:i:s'),
-            'جديد'
+            'Pending',
+            $manager_id > 0 ? $manager_id : null
         ));
+        $db_order_id = (int) $dbRepo->lastInsertId();
 
-        // حفظ تفاصيل المنتجات
         foreach($_SESSION['cart_product'] as $key => $value) {
-            $statement = $pdo->prepare("INSERT INTO tbl_order_details (
+            $statement = $dbRepo->prepare("INSERT INTO tbl_order_details (
                 order_id,
                 product_id,
                 quantity,
@@ -61,21 +78,29 @@ if(isset($_POST['form1'])) {
             ) VALUES (?,?,?,?)");
             
             $statement->execute(array(
-                $order_id,
+                $db_order_id,
                 $value['product_id'],
                 $value['quantity'],
                 $value['unit_price']
             ));
         }
 
+        // Central Order Assignment
+        if (file_exists(__DIR__ . '/inc/employee_functions.php')) {
+            require_once __DIR__ . '/inc/employee_functions.php';
+            if (function_exists('assign_order_by_strategy') && !empty($db_order_id)) {
+                assign_order_by_strategy($pdo, $db_order_id, 'order_process');
+            }
+        }
+
         // تفريغ سلة المشتريات
         unset($_SESSION['cart_product']);
         
         // رسالة نجاح
-        $success_message = 'تم إرسال طلبك بنجاح. رقم طلبك هو: ' . $order_id;
+        $success_message = 'تم إرسال طلبك بنجاح. رقم طلبك هو: ' . $db_order_id;
 
     } catch(Exception $e) {
         $error_message = $e->getMessage();
     }
 }
-?> 
+?>

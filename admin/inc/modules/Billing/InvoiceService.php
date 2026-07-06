@@ -7,27 +7,27 @@ use PDO;
 class InvoiceService
 {
     private static function generateNumber(PDO $pdo): string
-    {
+    { global $dbRepo;
         $year = date('Y');
-        $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_invoices WHERE YEAR(created_at) = {$year}");
+        $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_invoices WHERE YEAR(created_at) = {$year}");
         $count = (int) $stmt->fetchColumn() + 1;
         return "INV-{$year}-" . str_pad($count, 6, '0', STR_PAD_LEFT);
     }
 
     public static function create(PDO $pdo, int $storeId, float $amount, float $tax = 0.00,
         ?string $dueDate = null, ?int $subscriptionId = null): int
-    {
+    { global $dbRepo;
         $number = self::generateNumber($pdo);
         $total = $amount + $tax;
-        $stmt = $pdo->prepare("INSERT INTO tbl_invoices (store_id, subscription_id, invoice_number,
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_invoices (store_id, subscription_id, invoice_number,
             amount, tax, total, status, due_date) VALUES (?, ?, ?, ?, ?, ?, 'pending', ?)");
         $stmt->execute([$storeId, $subscriptionId, $number, $amount, $tax, $total, $dueDate]);
-        return (int) $pdo->lastInsertId();
+        return (int) $dbRepo->lastInsertId();
     }
 
     public static function get(PDO $pdo, int $invoiceId): ?array
-    {
-        $stmt = $pdo->prepare("SELECT i.*, s.name AS store_name, s.slug AS store_slug
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT i.*, s.name AS store_name, s.slug AS store_slug
             FROM tbl_invoices i
             LEFT JOIN tbl_stores s ON i.store_id = s.id
             WHERE i.id = ?");
@@ -37,7 +37,7 @@ class InvoiceService
     }
 
     public static function update(PDO $pdo, int $invoiceId, array $data): void
-    {
+    { global $dbRepo;
         $allowed = ['status', 'paid_at', 'due_date'];
         $sets = [];
         $params = [];
@@ -51,13 +51,13 @@ class InvoiceService
             return;
         }
         $params[] = $invoiceId;
-        $stmt = $pdo->prepare("UPDATE tbl_invoices SET " . implode(', ', $sets) . " WHERE id = ?");
+        $stmt = $dbRepo->prepare("UPDATE tbl_invoices SET " . implode(', ', $sets) . " WHERE id = ?");
         $stmt->execute($params);
     }
 
     public static function getInvoices(PDO $pdo, int $storeId, int $page = 1, int $perPage = 20,
         ?string $statusFilter = null): array
-    {
+    { global $dbRepo;
         $where = 'i.store_id = ?';
         $params = [$storeId];
         if ($statusFilter) {
@@ -65,7 +65,7 @@ class InvoiceService
             $params[] = $statusFilter;
         }
         $offset = ($page - 1) * $perPage;
-        $stmt = $pdo->prepare("SELECT i.*, s.name AS store_name
+        $stmt = $dbRepo->prepare("SELECT i.*, s.name AS store_name
             FROM tbl_invoices i
             LEFT JOIN tbl_stores s ON i.store_id = s.id
             WHERE {$where} ORDER BY i.id DESC LIMIT ? OFFSET ?");
@@ -75,20 +75,20 @@ class InvoiceService
     }
 
     public static function getCount(PDO $pdo, int $storeId, ?string $statusFilter = null): int
-    {
+    { global $dbRepo;
         $where = 'store_id = ?';
         $params = [$storeId];
         if ($statusFilter) {
             $where .= ' AND status = ?';
             $params[] = $statusFilter;
         }
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_invoices WHERE {$where}");
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_invoices WHERE {$where}");
         $stmt->execute($params);
         return (int) $stmt->fetchColumn();
     }
 
     public static function getAll(PDO $pdo, int $page = 1, int $perPage = 50, ?string $statusFilter = null): array
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
         if ($statusFilter) {
@@ -96,7 +96,7 @@ class InvoiceService
             $params[] = $statusFilter;
         }
         $offset = ($page - 1) * $perPage;
-        $stmt = $pdo->prepare("SELECT i.*, s.name AS store_name, s.slug AS store_slug
+        $stmt = $dbRepo->prepare("SELECT i.*, s.name AS store_name, s.slug AS store_slug
             FROM tbl_invoices i
             LEFT JOIN tbl_stores s ON i.store_id = s.id
             WHERE {$where} ORDER BY i.id DESC LIMIT ? OFFSET ?");
@@ -106,14 +106,14 @@ class InvoiceService
     }
 
     public static function getAllCount(PDO $pdo, ?string $statusFilter = null): int
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
         if ($statusFilter) {
             $where .= ' AND status = ?';
             $params[] = $statusFilter;
         }
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_invoices WHERE {$where}");
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_invoices WHERE {$where}");
         $stmt->execute($params);
         return (int) $stmt->fetchColumn();
     }

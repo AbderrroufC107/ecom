@@ -9,7 +9,7 @@ if(isset($_POST['form1'])) {
         $error_message .= "Top Category Name can not be empty<br>";
     } else {
     	// Duplicate Category checking
-    	$statement = $pdo->prepare("SELECT * FROM tbl_top_category WHERE tcat_name=?");
+    	$statement = $dbRepo->prepare("SELECT * FROM tbl_top_category WHERE tcat_name=?");
     	$statement->execute(array($_POST['tcat_name']));
     	$total = $statement->rowCount();
     	if($total)
@@ -22,7 +22,7 @@ if(isset($_POST['form1'])) {
     if($valid == 1) {
 
 		// Saving data into the main table tbl_top_category
-		$statement = $pdo->prepare("INSERT INTO tbl_top_category (tcat_name,show_on_menu) VALUES (?,?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_top_category (tcat_name,show_on_menu) VALUES (?,?)");
 		$statement->execute(array($_POST['tcat_name'],$_POST['show_on_menu']));
 	
     	$success_message = 'Top Category is added successfully.';

@@ -26,6 +26,7 @@ import {
 } from '@tabler/icons-react'
 
 import { decodeText } from '../lib/text.js'
+import { sharedTrans, legacyMappers } from '../lib/pageMeta.js'
 
 export const palette = {
   primary: '#4f46e5',
@@ -135,18 +136,20 @@ export function StatusPill({ children, tone, icon }) {
 }
 
 export function EmptyState({
-  title = 'لا توجد بيانات',
-  description = 'لم يتم العثور على سجلات مطابقة للفلاتر الحالية.',
+  title,
+  description,
   action,
 }) {
+  const displayTitle = title || sharedTrans.noData
+  const displayDescription = description || sharedTrans.noDataDesc
   return (
     <Stack className="saas-empty-state" align="center" gap="xs">
       <ThemeIcon size={44} radius="md" variant="light" color="gray">
         <IconDatabaseOff size={22} stroke={1.7} />
       </ThemeIcon>
-      <Text fw={800}>{decodeText(title)}</Text>
+      <Text fw={800}>{decodeText(displayTitle)}</Text>
       <Text size="sm" c="dimmed" ta="center">
-        {decodeText(description)}
+        {decodeText(displayDescription)}
       </Text>
       {action}
     </Stack>
@@ -180,7 +183,11 @@ export function SkeletonPage() {
 }
 
 export function ToolbarButton({ href, children, icon: Icon = IconExternalLink, variant = 'default', onClick }) {
-  const props = href ? { component: 'a', href } : {}
+  const handleClick = onClick || (href && href.startsWith('javascript:') ? (e) => {
+    e.preventDefault()
+    try { /* eslint-disable-next-line no-new-func */ new Function(href.slice('javascript:'.length))() } catch(err) { console.warn('action error', err) }
+  } : undefined)
+  const props = (href && !href.startsWith('javascript:')) ? { component: 'a', href } : {}
   return (
     <Button
       {...props}
@@ -190,7 +197,7 @@ export function ToolbarButton({ href, children, icon: Icon = IconExternalLink, v
       variant={variant}
       color={variant === 'filled' ? 'indigo' : 'gray'}
       leftSection={<Icon size={16} stroke={1.8} />}
-      onClick={onClick}
+      onClick={handleClick}
     >
       {decodeText(children)}
     </Button>
@@ -214,15 +221,17 @@ export function IconOnlyAction({ label, icon: Icon = IconDots, href, color = 'gr
   )
 }
 
-export function AddButton({ href, children = 'إضافة', icon = IconPlus }) {
+export function AddButton({ href, children, icon = IconPlus, onClick }) {
+  const label = children || sharedTrans.add
   return (
-    <ToolbarButton href={href} icon={icon} variant="filled">
-      {children}
+    <ToolbarButton href={href} icon={icon} variant="filled" onClick={onClick}>
+      {label}
     </ToolbarButton>
   )
 }
 
-export function LinkAction({ href, children = 'عرض الكل' }) {
+export function LinkAction({ href, children }) {
+  const label = children || sharedTrans.viewAll
   return (
     <Button
       component="a"
@@ -233,12 +242,13 @@ export function LinkAction({ href, children = 'عرض الكل' }) {
       radius="md"
       rightSection={<IconChevronLeft size={14} stroke={1.8} />}
     >
-      {decodeText(children)}
+      {decodeText(label)}
     </Button>
   )
 }
 
-export function BackAction({ href = 'javascript:history.back()', children = 'رجوع' }) {
+export function BackAction({ href = 'javascript:history.back()', children }) {
+  const label = children || sharedTrans.back
   return (
     <Button
       component="a"
@@ -248,16 +258,16 @@ export function BackAction({ href = 'javascript:history.back()', children = 'ر�
       radius="md"
       rightSection={<IconArrowLeft size={15} stroke={1.8} />}
     >
-      {decodeText(children)}
+      {decodeText(label)}
     </Button>
   )
 }
 
 function statusTone(value) {
   const text = decodeText(value).toLowerCase()
-  if (/completed|confirmed|paid|active|success|healthy|مكتمل|مؤكد|نشط|سليمة|ناجح|تم/.test(text)) return 'success'
-  if (/pending|warning|review|انتظار|معلق|تحذير|مراجعة|قيد/.test(text)) return 'warning'
-  if (/cancel|returned|failed|critical|danger|ملغي|مرتجع|فشل|حرج|خطر|خطأ/.test(text)) return 'danger'
+  if (legacyMappers.toneSuccess.test(text)) return 'success'
+  if (legacyMappers.toneWarning.test(text)) return 'warning'
+  if (legacyMappers.toneDanger.test(text)) return 'danger'
   return 'neutral'
 }
 

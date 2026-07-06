@@ -13,6 +13,10 @@ $banner_login_url = trim((string)get_front_image_url($banner_login));
 <?php
 if(isset($_POST['form1'])) {
     try {
+        require_once __DIR__ . '/inc/rate-limiter.php';
+        $limiter = new PublicRateLimiter($pdo);
+        $limiter->check('customer_login', 5, 300); // 5 attempts per 5 mins
+
         if(empty($_POST['cust_phone']) || empty($_POST['cust_password'])) {
             throw new Exception("يرجى ملء جميع الحقول المطلوبة");
         }
@@ -29,17 +33,25 @@ if(isset($_POST['form1'])) {
         if($statement->rowCount() == 0) {
             throw new Exception("رقم الهاتف غير مسجل أو الحساب غير مفعل");
         } else {
-            foreach($result as $row) {
-                $row_password = $row['cust_password'];
+            $row = $result[0];
+            $row_password = $row['cust_password'];
+            
+            if (password_verify($_POST['cust_password'], $row_password)) {
+                // Bcrypt match
+            } elseif (strlen($row_password) === 32 && md5($_POST['cust_password']) === $row_password) {
+                // Legacy MD5 match — rehash and update
+                $bcrypt_hash = password_hash($_POST['cust_password'], PASSWORD_DEFAULT);
+                $update = $pdo->prepare("UPDATE tbl_customer SET cust_password = ? WHERE id = ?");
+                $update->execute([$bcrypt_hash, $row['id']]);
+                $row['cust_password'] = $bcrypt_hash; // update in memory
+            } else {
+                throw new Exception("كلمة المرور غير صحيحة");
             }
             
-            if($row_password != md5($_POST['cust_password'])) {
-                throw new Exception("كلمة المرور غير صحيحة");
-            } else {
-                $_SESSION['customer'] = $row;
-                header("location: ".BASE_URL."dashboard.php");
-                exit;
-            }
+            session_regenerate_id(true);
+            $_SESSION['customer'] = $row;
+            header("location: ".BASE_URL."dashboard.php");
+            exit;
         }
     } catch(Exception $e) {
         $error_message = $e->getMessage();
@@ -64,7 +76,7 @@ if(isset($_POST['form1'])) {
                     <form action="" method="post">
                         <div class="form-group">
                             <label>رقم الهاتف *</label>
-                            <input type="tel" class="form-control" name="cust_phone" placeholder="مثال: 0555123456" value="<?php if(isset($_POST['cust_phone'])) echo $_POST['cust_phone']; ?>">
+                            <input type="tel" class="form-control" name="cust_phone" placeholder="مثال: 0555123456" value="<?php if(isset($_POST['cust_phone'])) echo htmlspecialchars($_POST['cust_phone'], ENT_QUOTES, 'UTF-8'); ?>">
                         </div>
                         <div class="form-group">
                             <label>كلمة المرور *</label>

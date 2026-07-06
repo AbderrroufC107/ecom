@@ -14,23 +14,23 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
-		$statement = $pdo->prepare("UPDATE tbl_pixel SET pixel_name=?, pixel_network=?, pixel_id=?, pixel_script=? WHERE id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_pixel SET pixel_name=?, pixel_network=?, pixel_id=?, pixel_script=? WHERE id=?");
 		$statement->execute(array($_POST['pixel_name'], $_POST['pixel_network'], $_POST['pixel_id'], $_POST['pixel_script'], $_REQUEST['id']));
 	
     	$success_message = 'Pixel is updated successfully.';
     }
 }
 
-if(!isset($_REQUEST['id'])) {
-    header('location: logout.php');
+if(!isset($_REQUEST['id']) || !ctype_digit((string) $_REQUEST['id'])) {
+    header('location: pixel.php');
     exit;
 } else {
-    $statement = $pdo->prepare("SELECT * FROM tbl_pixel WHERE id=?");
+    $statement = $dbRepo->prepare("SELECT * FROM tbl_pixel WHERE id=?");
     $statement->execute(array($_REQUEST['id']));
     $total = $statement->rowCount();
     $result = $statement->fetchAll(PDO::FETCH_ASSOC);
     if( $total == 0 ) {
-        header('location: logout.php');
+        header('location: pixel.php');
         exit;
     }
 }

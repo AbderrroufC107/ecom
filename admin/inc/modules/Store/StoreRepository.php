@@ -8,8 +8,8 @@ use RuntimeException;
 class StoreRepository
 {
     public static function ensureTables(PDO $pdo): void
-    {
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_plans (
+    { global $dbRepo;
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_plans (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(100) NOT NULL,
             slug VARCHAR(50) NOT NULL UNIQUE,
@@ -21,7 +21,7 @@ class StoreRepository
             created_at DATETIME DEFAULT CURRENT_TIMESTAMP
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_stores (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_stores (
             id INT AUTO_INCREMENT PRIMARY KEY,
             name VARCHAR(255) NOT NULL,
             slug VARCHAR(100) NOT NULL UNIQUE,
@@ -43,7 +43,7 @@ class StoreRepository
             FOREIGN KEY (plan_id) REFERENCES tbl_plans(id) ON DELETE SET NULL
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_store_settings (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_store_settings (
             id INT AUTO_INCREMENT PRIMARY KEY,
             store_id INT NOT NULL,
             setting_key VARCHAR(100) NOT NULL,
@@ -54,7 +54,7 @@ class StoreRepository
             FOREIGN KEY (store_id) REFERENCES tbl_stores(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_store_users (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_store_users (
             id INT AUTO_INCREMENT PRIMARY KEY,
             store_id INT NOT NULL,
             name VARCHAR(255) NOT NULL,
@@ -67,7 +67,7 @@ class StoreRepository
             FOREIGN KEY (store_id) REFERENCES tbl_stores(id) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_store_themes (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_store_themes (
             id INT AUTO_INCREMENT PRIMARY KEY,
             store_id INT NOT NULL UNIQUE,
             theme_json JSON DEFAULT NULL,
@@ -78,7 +78,7 @@ class StoreRepository
     }
 
     public static function migrateTables(PDO $pdo): void
-    {
+    { global $dbRepo;
         $tableDefs = [
             'tbl_stores' => "CREATE TABLE IF NOT EXISTS tbl_stores (
                 id INT AUTO_INCREMENT PRIMARY KEY,
@@ -341,14 +341,14 @@ class StoreRepository
 
         foreach ($orderedTables as $table) {
             if (isset($tableDefs[$table])) {
-                $pdo->exec($tableDefs[$table]);
+                $dbRepo->executeCommand($tableDefs[$table]);
             }
         }
     }
 
     public static function get(PDO $pdo, int $id): ?array
-    {
-        $stmt = $pdo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
             p.max_products, p.max_employees, p.max_storage_mb, p.features
             FROM tbl_stores s
             LEFT JOIN tbl_plans p ON s.plan_id = p.id
@@ -359,8 +359,8 @@ class StoreRepository
     }
 
     public static function getBySlug(PDO $pdo, string $slug): ?array
-    {
-        $stmt = $pdo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
             p.max_products, p.max_employees, p.max_storage_mb, p.features
             FROM tbl_stores s
             LEFT JOIN tbl_plans p ON s.plan_id = p.id
@@ -371,8 +371,8 @@ class StoreRepository
     }
 
     public static function getByDomain(PDO $pdo, string $domain): ?array
-    {
-        $stmt = $pdo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
             p.max_products, p.max_employees, p.max_storage_mb, p.features
             FROM tbl_stores s
             LEFT JOIN tbl_plans p ON s.plan_id = p.id
@@ -383,8 +383,8 @@ class StoreRepository
     }
 
     public static function getByEmail(PDO $pdo, string $email): ?array
-    {
-        $stmt = $pdo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
             p.max_products, p.max_employees, p.max_storage_mb, p.features
             FROM tbl_stores s
             LEFT JOIN tbl_plans p ON s.plan_id = p.id
@@ -395,7 +395,7 @@ class StoreRepository
     }
 
     public static function getAll(PDO $pdo, ?array $filters = null, int $page = 1, int $perPage = 50): array
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
 
@@ -416,7 +416,7 @@ class StoreRepository
         }
 
         $offset = ($page - 1) * $perPage;
-        $stmt = $pdo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
+        $stmt = $dbRepo->prepare("SELECT s.*, p.name AS plan_name, p.slug AS plan_slug,
             p.max_products, p.max_employees, p.max_storage_mb, p.features
             FROM tbl_stores s
             LEFT JOIN tbl_plans p ON s.plan_id = p.id
@@ -427,7 +427,7 @@ class StoreRepository
     }
 
     public static function getCount(PDO $pdo, ?array $filters = null): int
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
 
@@ -436,14 +436,14 @@ class StoreRepository
             $params[] = $filters['status'];
         }
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) AS cnt FROM tbl_stores WHERE {$where}");
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) AS cnt FROM tbl_stores WHERE {$where}");
         $stmt->execute($params);
         return (int) $stmt->fetchColumn();
     }
 
     public static function create(PDO $pdo, array $data): int
-    {
-        $stmt = $pdo->prepare("INSERT INTO tbl_stores (name, slug, domain, email, phone, address,
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_stores (name, slug, domain, email, phone, address,
             currency, status, plan_id, plan_expires_at, owner_name, owner_contact, logo, timezone, language)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
         $stmt->execute([
@@ -463,11 +463,11 @@ class StoreRepository
             $data['timezone'] ?? 'UTC',
             $data['language'] ?? 'en',
         ]);
-        return (int) $pdo->lastInsertId();
+        return (int) $dbRepo->lastInsertId();
     }
 
     public static function update(PDO $pdo, int $id, array $data): void
-    {
+    { global $dbRepo;
         $allowed = ['name', 'slug', 'domain', 'email', 'phone', 'address', 'currency',
             'status', 'plan_id', 'plan_expires_at', 'owner_name', 'owner_contact',
             'logo', 'timezone', 'language'];
@@ -483,13 +483,13 @@ class StoreRepository
             return;
         }
         $params[] = $id;
-        $stmt = $pdo->prepare("UPDATE tbl_stores SET " . implode(', ', $sets) . " WHERE id = ?");
+        $stmt = $dbRepo->prepare("UPDATE tbl_stores SET " . implode(', ', $sets) . " WHERE id = ?");
         $stmt->execute($params);
     }
 
     public static function delete(PDO $pdo, int $id): void
-    {
-        $stmt = $pdo->prepare("DELETE FROM tbl_stores WHERE id = ?");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("DELETE FROM tbl_stores WHERE id = ?");
         $stmt->execute([$id]);
     }
 }

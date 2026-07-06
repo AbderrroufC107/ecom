@@ -1,7 +1,7 @@
 <?php
 require_once('header.php');
 require_once('inc/employee_functions.php');
-require_once('inc/telegram_bot.php');
+if (file_exists('inc/telegram_bot.php')) { require_once('inc/telegram_bot.php'); }
 require_once('inc/telegram_actions.php');
 
 telegram_ensure_tables($pdo);
@@ -31,10 +31,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
     try {
         foreach ($config_keys as $key => $label) {
             $value = trim((string) ($_POST[$key] ?? ''));
-            $stmt = $pdo->prepare("UPDATE tbl_event_settings SET config_value = ? WHERE config_key = ?");
+            $stmt = $dbRepo->prepare("UPDATE tbl_event_settings SET config_value = ? WHERE config_key = ?");
             $stmt->execute([$value, $key]);
             if ($stmt->rowCount() === 0) {
-                $pdo->prepare("INSERT IGNORE INTO tbl_event_settings (config_key, config_value) VALUES (?, ?)")->execute([$key, $value]);
+                $dbRepo->prepare("INSERT IGNORE INTO tbl_event_settings (config_key, config_value) VALUES (?, ?)")->execute([$key, $value]);
             }
         }
         $success_message = 'تم حفظ الإعدادات بنجاح.';
@@ -44,7 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
 }
 
 $current = [];
-$stmt = $pdo->query("SELECT config_key, config_value FROM tbl_event_settings");
+$stmt = $dbRepo->query("SELECT config_key, config_value FROM tbl_event_settings");
 while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
     $current[$row['config_key']] = $row['config_value'];
 }
@@ -137,7 +137,9 @@ while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
 </section>
 <?php
 function ews_render_row(array $current, string $key, string $type, string $label, string $note = '', string $width = '')
-{
+{ global $dbRepo;
+    global $dbRepo;
+
     $value = $current[$key] ?? '';
     $style = $width !== '' ? 'style="width:' . $width . ';"' : '';
     echo '<div class="ews-row">';

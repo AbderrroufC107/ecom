@@ -1,7 +1,7 @@
 <?php require_once('header.php'); ?>
 <?php
 require_once('inc/employee_functions.php');
-require_once('inc/telegram_bot.php');
+if (file_exists('inc/telegram_bot.php')) { require_once('inc/telegram_bot.php'); }
 require_once('inc/performance_functions.php');
 require_once('inc/ai_functions.php');
 

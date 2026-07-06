@@ -24,6 +24,9 @@ export default defineConfig({
             if (id.includes('mantine-datatable')) return 'tables'
             if (id.includes('@mantine') || id.includes('react')) return 'vendor'
           }
+          if (id.includes('src/lib/pageMeta') || id.includes('src/lib/text')) {
+            return 'pagemeta'
+          }
           return undefined
         }
       }

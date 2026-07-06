@@ -14,7 +14,7 @@ class RateLimitService
     ];
 
     public static function setPlanLimit(string $planSlug, int $perHour, int $perDay): void
-    {
+    { global $dbRepo;
         self::$planLimits[$planSlug] = [
             'requests_per_hour' => $perHour,
             'requests_per_day'  => $perDay,
@@ -22,8 +22,8 @@ class RateLimitService
     }
 
     public static function getLimit(PDO $pdo, int $storeId): array
-    {
-        $stmt = $pdo->prepare("SELECT p.slug AS plan_slug
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT p.slug AS plan_slug
             FROM tbl_stores s LEFT JOIN tbl_plans p ON s.plan_id = p.id WHERE s.id = ?");
         $stmt->execute([$storeId]);
         $row = $stmt->fetch();
@@ -33,10 +33,10 @@ class RateLimitService
     }
 
     public static function isRateLimited(PDO $pdo, int $storeId): bool
-    {
+    { global $dbRepo;
         $limits = self::getLimit($pdo, $storeId);
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_api_logs
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_api_logs
             WHERE store_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
         $stmt->execute([$storeId]);
         $hourly = (int) $stmt->fetchColumn();
@@ -45,7 +45,7 @@ class RateLimitService
             return true;
         }
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_api_logs
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_api_logs
             WHERE store_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
         $stmt->execute([$storeId]);
         $daily = (int) $stmt->fetchColumn();
@@ -58,15 +58,15 @@ class RateLimitService
     }
 
     public static function getRemaining(PDO $pdo, int $storeId): array
-    {
+    { global $dbRepo;
         $limits = self::getLimit($pdo, $storeId);
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_api_logs
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_api_logs
             WHERE store_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
         $stmt->execute([$storeId]);
         $hourly = (int) $stmt->fetchColumn();
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_api_logs
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_api_logs
             WHERE store_id = ? AND created_at >= DATE_SUB(NOW(), INTERVAL 1 DAY)");
         $stmt->execute([$storeId]);
         $daily = (int) $stmt->fetchColumn();
@@ -82,8 +82,8 @@ class RateLimitService
     }
 
     public static function resetCounters(PDO $pdo, int $storeId): void
-    {
-        $stmt = $pdo->prepare("DELETE FROM tbl_api_logs WHERE store_id = ? AND created_at < DATE_SUB(NOW(), INTERVAL 1 DAY)");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("DELETE FROM tbl_api_logs WHERE store_id = ? AND created_at < DATE_SUB(NOW(), INTERVAL 1 DAY)");
         $stmt->execute([$storeId]);
     }
 }

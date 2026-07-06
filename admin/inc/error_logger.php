@@ -2,7 +2,7 @@
 
 if (!function_exists('error_logger_ensure_tables')) {
     function error_logger_ensure_tables(PDO $pdo): void
-    {
+    { global $dbRepo;
         static $done = false;
         if ($done) return;
 
@@ -12,7 +12,7 @@ if (!function_exists('error_logger_ensure_tables')) {
             return;
         }
 
-        $pdo->exec("
+        $dbRepo->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_system_error_log (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 component VARCHAR(60) NOT NULL DEFAULT '',
@@ -32,7 +32,7 @@ if (!function_exists('error_logger_ensure_tables')) {
 
 if (!function_exists('error_logger_log')) {
     function error_logger_log(PDO $pdo, string $component, string $error_message, ?string $stack_trace = null, $payload = null): int
-    {
+    { global $dbRepo;
         error_logger_ensure_tables($pdo);
 
         $payload_str = null;
@@ -40,7 +40,7 @@ if (!function_exists('error_logger_log')) {
             $payload_str = is_string($payload) ? $payload : json_encode($payload, JSON_UNESCAPED_UNICODE);
         }
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             INSERT INTO tbl_system_error_log (component, error_message, stack_trace, payload, created_at)
             VALUES (?, ?, ?, ?, NOW())
         ");
@@ -51,14 +51,14 @@ if (!function_exists('error_logger_log')) {
             $payload_str ? mb_substr($payload_str, 0, 65535) : null,
         ]);
 
-        return (int) $pdo->lastInsertId();
+        return (int) $dbRepo->lastInsertId();
     }
 }
 
 if (!function_exists('error_logger_get_recent')) {
     function error_logger_get_recent(PDO $pdo, int $hours = 24, int $limit = 50): array
-    {
-        $stmt = $pdo->prepare("
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("
             SELECT * FROM tbl_system_error_log
             WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? HOUR)
             ORDER BY created_at DESC
@@ -71,8 +71,8 @@ if (!function_exists('error_logger_get_recent')) {
 
 if (!function_exists('error_logger_count_recent')) {
     function error_logger_count_recent(PDO $pdo, int $hours = 24): int
-    {
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_system_error_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? HOUR)");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_system_error_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? HOUR)");
         $stmt->execute([$hours]);
         return (int) $stmt->fetchColumn();
     }
@@ -80,8 +80,8 @@ if (!function_exists('error_logger_count_recent')) {
 
 if (!function_exists('error_logger_count_by_component')) {
     function error_logger_count_by_component(PDO $pdo, int $hours = 24): array
-    {
-        $stmt = $pdo->prepare("
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("
             SELECT component, COUNT(*) AS cnt
             FROM tbl_system_error_log
             WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? HOUR)
@@ -95,7 +95,7 @@ if (!function_exists('error_logger_count_by_component')) {
 
 if (!function_exists('error_logger_check_health')) {
     function error_logger_check_health(PDO $pdo): array
-    {
+    { global $dbRepo;
         $checks = [];
 
         $error_count_1h = error_logger_count_recent($pdo, 1);
@@ -131,7 +131,7 @@ if (!function_exists('error_logger_check_health')) {
 
 if (!function_exists('error_logger_send_alert')) {
     function error_logger_send_alert(PDO $pdo, int $threshold = 5): void
-    {
+    { global $dbRepo;
         $recent = error_logger_get_recent($pdo, 1, $threshold);
         if (count($recent) < $threshold) {
             return;

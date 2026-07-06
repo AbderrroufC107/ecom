@@ -28,7 +28,9 @@ $admin_auto_refresh = admin_build_live_refresh_config($pdo, 'orders', ['interval
 
 if (!function_exists('admin_order_delivery_label')) {
     function admin_order_delivery_label($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = function_exists('admin_normalize_delivery_type_text')
             ? admin_normalize_delivery_type_text($value)
             : trim((string) $value);
@@ -55,7 +57,9 @@ if (!function_exists('admin_order_delivery_label')) {
 
 if (!function_exists('admin_order_customer_type_label')) {
     function admin_order_customer_type_label($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return (string) $value === 'registered'
             ? ['label' => 'عميل مسجل', 'class' => 'is-registered']
             : ['label' => 'طلب مباشر', 'class' => 'is-direct'];
@@ -64,7 +68,9 @@ if (!function_exists('admin_order_customer_type_label')) {
 
 if (!function_exists('admin_order_excerpt')) {
     function admin_order_excerpt($value, $limit = 90)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -81,7 +87,9 @@ if (!function_exists('admin_order_excerpt')) {
 
 if (!function_exists('admin_order_tab_id')) {
     function admin_order_tab_id($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = strtolower(preg_replace('/[^a-z0-9]+/i', '_', trim((string) $status)));
         $status = trim($status, '_');
         if ($status === '') {
@@ -94,7 +102,9 @@ if (!function_exists('admin_order_tab_id')) {
 
 if (!function_exists('admin_order_bulk_options')) {
     function admin_order_bulk_options($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = admin_normalize_order_status($status);
         switch ($status) {
             case 'Pending':
@@ -115,7 +125,9 @@ if (!function_exists('admin_order_bulk_options')) {
 
 if (!function_exists('admin_order_primary_action')) {
     function admin_order_primary_action($status, array $order = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = admin_normalize_order_status($status);
         switch ($status) {
             case 'Pending':
@@ -153,7 +165,9 @@ if (!function_exists('admin_order_primary_action')) {
 
 if (!function_exists('admin_order_followup_meta')) {
     function admin_order_followup_meta(array $order)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $call_count = (int) ($order['call_count'] ?? 0);
         $last_call_status = (string) ($order['last_call_status'] ?? '');
         $no_answer_count = (int) ($order['no_answer_count'] ?? 0);
@@ -273,7 +287,7 @@ foreach (array_keys($section_config) as $status_key) {
     $status_totals[$status_key] = 0.0;
 }
 
-$statement = $pdo->prepare("SELECT o.*, c.color_name AS resolved_color_name, COALESCE(cs.call_count, 0) AS call_count, COALESCE(cs.no_answer_count, 0) AS no_answer_count, cl.called_at AS last_call_at, cl.call_status AS last_call_status, sl.status_note AS last_status_note, sl.changed_at AS last_status_changed_at, sl.changed_by AS last_status_changed_by FROM tbl_order o LEFT JOIN tbl_color c ON c.color_id = o.order_color LEFT JOIN (SELECT order_id, COUNT(*) AS call_count, SUM(CASE WHEN call_status = 'no_answer' THEN 1 ELSE 0 END) AS no_answer_count, MAX(id) AS last_call_id FROM tbl_order_call_log GROUP BY order_id) cs ON cs.order_id = o.id LEFT JOIN tbl_order_call_log cl ON cl.id = cs.last_call_id LEFT JOIN (SELECT logs.order_id, logs.status_note, logs.changed_at, logs.changed_by FROM tbl_order_status_log logs INNER JOIN (SELECT order_id, MAX(id) AS last_id FROM tbl_order_status_log GROUP BY order_id) last_log ON last_log.last_id = logs.id) sl ON sl.order_id = o.id ORDER BY o.order_date DESC, o.id DESC");
+$statement = $dbRepo->prepare("SELECT o.*, c.color_name AS resolved_color_name, COALESCE(cs.call_count, 0) AS call_count, COALESCE(cs.no_answer_count, 0) AS no_answer_count, cl.called_at AS last_call_at, cl.call_status AS last_call_status, sl.status_note AS last_status_note, sl.changed_at AS last_status_changed_at, sl.changed_by AS last_status_changed_by FROM tbl_order o LEFT JOIN tbl_color c ON c.color_id = o.order_color LEFT JOIN (SELECT order_id, COUNT(*) AS call_count, SUM(CASE WHEN call_status = 'no_answer' THEN 1 ELSE 0 END) AS no_answer_count, MAX(id) AS last_call_id FROM tbl_order_call_log GROUP BY order_id) cs ON cs.order_id = o.id LEFT JOIN tbl_order_call_log cl ON cl.id = cs.last_call_id LEFT JOIN (SELECT logs.order_id, logs.status_note, logs.changed_at, logs.changed_by FROM tbl_order_status_log logs INNER JOIN (SELECT order_id, MAX(id) AS last_id FROM tbl_order_status_log GROUP BY order_id) last_log ON last_log.last_id = logs.id) sl ON sl.order_id = o.id ORDER BY o.order_date DESC, o.id DESC");
 $statement->execute();
 $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -763,22 +777,22 @@ window.addEventListener('load', function() {
             });
         }
 
-        function getOrderTabHash() {
-            var hash = window.location.hash || '#tab_orders_pending';
+        function getOrderTabHash() {            var hash = window.location.hash || '#tab_orders_pending';
             if (!$('#orderStatusTabs a[href="' + hash + '"]').length) {
                 hash = '#tab_orders_pending';
             }
             return hash;
         }
 
-        function applyOrderPageRedirects(hash) {
+        function applyOrderPageRedirects(hash) { global $dbRepo;
+    global $dbRepo;
+
             var targetHash = hash || getOrderTabHash();
             $('.js-order-page-redirect').val('order.php' + targetHash);
             $('.bulk-redirect-input').val('order.php' + targetHash);
         }
 
-        function adjustVisibleOrderTables() {
-            if (!$.fn.DataTable) {
+        function adjustVisibleOrderTables() {            if (!$.fn.DataTable) {
                 return;
             }
 
@@ -823,7 +837,9 @@ window.addEventListener('load', function() {
             $targetTab.tab('show');
         });
 
-        function syncAll(group) {
+        function syncAll(group) { global $dbRepo;
+    global $dbRepo;
+
             var $boxes = $('.js-order-checkbox[data-group="' + group + '"]');
             $('.js-select-all[data-group="' + group + '"]').prop('checked', $boxes.length > 0 && $boxes.length === $boxes.filter(':checked').length);
         }
@@ -882,7 +898,9 @@ window.addEventListener('load', function() {
             $bulkSmsModal.appendTo('body');
         }
 
-        function parseAllowed(value) {
+        function parseAllowed(value) { global $dbRepo;
+    global $dbRepo;
+
             try {
                 return JSON.parse(value || '[]');
             } catch (error) {
@@ -890,7 +908,9 @@ window.addEventListener('load', function() {
             }
         }
 
-        function buildSmsContext($source) {
+        function buildSmsContext($source) { global $dbRepo;
+    global $dbRepo;
+
             return {
                 order_id: $source.attr('data-order-id') || '',
                 customer_name: $source.attr('data-order-customer') || '',
@@ -910,7 +930,9 @@ window.addEventListener('load', function() {
             };
         }
 
-        function renderSmsTemplate(template, context) {
+        function renderSmsTemplate(template, context) { global $dbRepo;
+    global $dbRepo;
+
             var output = template || '';
             Object.keys(context).forEach(function(key) {
                 output = output.split('{{' + key + '}}').join(context[key] || '');
@@ -918,8 +940,7 @@ window.addEventListener('load', function() {
             return output;
         }
 
-        function populateSmsTemplates() {
-            var $select = $('#smsModalTemplate');
+        function populateSmsTemplates() {            var $select = $('#smsModalTemplate');
             $select.empty().append('<option value="">اختر رسالة ثابتة أو اكتب رسالة مخصصة</option>');
             smsTemplates.forEach(function(template) {
                 $select.append($('<option>', {
@@ -930,8 +951,7 @@ window.addEventListener('load', function() {
             });
         }
 
-        function populateBulkSmsTemplates() {
-            var $select = $('#bulkSmsTemplate');
+        function populateBulkSmsTemplates() {            var $select = $('#bulkSmsTemplate');
             $select.empty().append('<option value="">اختر رسالة ثابتة أو اكتب رسالة جماعية مخصصة</option>');
             smsTemplates.forEach(function(template) {
                 $select.append($('<option>', {
@@ -942,7 +962,9 @@ window.addEventListener('load', function() {
             });
         }
 
-        function checkboxSmsContext($checkbox) {
+        function checkboxSmsContext($checkbox) { global $dbRepo;
+    global $dbRepo;
+
             return buildSmsContext({
                 attr: function(name) {
                     return $checkbox.attr(name);
@@ -950,7 +972,9 @@ window.addEventListener('load', function() {
             });
         }
 
-        function collectBulkSmsRecipients($trigger) {
+        function collectBulkSmsRecipients($trigger) { global $dbRepo;
+    global $dbRepo;
+
             var items = [];
             var $form = $trigger.closest('form');
             $form.find('.js-order-checkbox:checked').each(function() {
@@ -959,7 +983,9 @@ window.addEventListener('load', function() {
             return items;
         }
 
-        function bulkSmsPreview(items) {
+        function bulkSmsPreview(items) { global $dbRepo;
+    global $dbRepo;
+
             if (!items.length) {
                 return '<li>لا توجد عناصر صالحة للإرسال.</li>';
             }
@@ -977,8 +1003,7 @@ window.addEventListener('load', function() {
             return html;
         }
 
-        function refreshModalButton() {
-            var selected = $('#modalTargetStatus').val();
+        function refreshModalButton() {            var selected = $('#modalTargetStatus').val();
             var meta = statusButtonMeta[selected] || { text: 'حفظ التغيير', class: 'btn btn-primary', placeholder: 'أضف ملاحظة توضح سبب تغيير الحالة.' };
             $('#modalSubmitButton').removeClass('btn-primary btn-success btn-warning btn-danger btn-default').addClass(meta.class).text(meta.text);
             $('#modalStatusNote').attr('placeholder', meta.placeholder);

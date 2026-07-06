@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if (!empty($ids) && $action === 'delete') {
         $ids = array_map('intval', $ids);
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $stmt = $pdo->prepare("DELETE FROM incomplete_orders WHERE id IN ($placeholders)");
+        $stmt = $dbRepo->prepare("DELETE FROM incomplete_orders WHERE id IN ($placeholders)");
         $stmt->execute($ids);
     }
 }

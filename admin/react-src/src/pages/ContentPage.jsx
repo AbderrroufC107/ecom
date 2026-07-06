@@ -4,29 +4,32 @@ import { IconActivity, IconAlertTriangle, IconChecks, IconLayoutDashboard } from
 
 import { MetricCard, PageHeader, Surface } from '../components/Enterprise.jsx'
 import { decodeText } from '../lib/text.js'
-import { getPageTitle, getSectionForFile, sectionLabels } from '../lib/pageMeta.js'
+import { getPageTitle, getSectionForFile, sectionLabels, getLanguage, pageTranslations } from '../lib/pageMeta.js'
 
-function collectMetrics(sourceContent) {
+function collectMetrics(sourceContent, trans) {
   const cards = sourceContent.querySelectorAll('.health-card, .small-box, .info-box, .dr-card, .qd-card, .b-card').length
   const warnings = sourceContent.querySelectorAll('.health-status.warning, .label-warning, .badge-warning, .alert-warning').length
   const critical = sourceContent.querySelectorAll('.health-status.critical, .label-danger, .badge-danger, .alert-danger').length
   const actions = sourceContent.querySelectorAll('a.btn, button.btn, input[type="submit"]').length
 
   return [
-    { label: 'الوحدات', value: cards, description: 'بطاقات ومؤشرات تشغيلية', icon: IconLayoutDashboard, tone: 'primary' },
-    { label: 'سليم', value: Math.max(0, cards - warnings - critical), description: 'مؤشرات دون إنذار', icon: IconChecks, tone: 'success' },
-    { label: 'تنبيهات', value: warnings, description: 'تحتاج متابعة', icon: IconAlertTriangle, tone: 'warning' },
-    { label: 'إجراءات', value: actions, description: 'أوامر متاحة', icon: IconActivity, tone: 'primary' },
+    { label: trans.modules, value: cards, description: trans.modulesDesc, icon: IconLayoutDashboard, tone: 'primary' },
+    { label: trans.healthy, value: Math.max(0, cards - warnings - critical), description: trans.healthyDesc, icon: IconChecks, tone: 'success' },
+    { label: trans.warnings, value: warnings, description: trans.warningsDesc, icon: IconAlertTriangle, tone: 'warning' },
+    { label: trans.actions, value: actions, description: trans.actionsDesc, icon: IconActivity, tone: 'primary' },
   ]
 }
 
 export default function ContentPage({ sourceContent, pageName }) {
+  const lang = getLanguage()
+  const trans = pageTranslations[lang] || pageTranslations['ar']
+
   const hostRef = React.useRef(null)
   const originalParentRef = React.useRef(sourceContent.parentNode)
   const nextSiblingRef = React.useRef(sourceContent.nextSibling)
-  const metrics = React.useMemo(() => collectMetrics(sourceContent), [sourceContent])
+  const metrics = React.useMemo(() => collectMetrics(sourceContent, trans), [sourceContent, trans])
   const title = decodeText(getPageTitle(pageName))
-  const section = sectionLabels[getSectionForFile(pageName)] || 'النظام'
+  const section = sectionLabels[getSectionForFile(pageName)] || sectionLabels.system
 
   React.useEffect(() => {
     document.querySelector('.content-header')?.classList.add('admin-source-hidden')
@@ -50,11 +53,11 @@ export default function ContentPage({ sourceContent, pageName }) {
   }, [sourceContent])
 
   return (
-    <main className="saas-page saas-content-page" dir="rtl">
+    <main className="saas-page saas-content-page" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <PageHeader
         eyebrow={section}
         title={title}
-        description="واجهة تشغيلية موحدة تعرض محتوى الصفحة الأصلي داخل إطار SaaS حديث مع الحفاظ على المسارات والإجراءات كما هي."
+        description={trans.contentPageDesc}
       />
 
       <Grid gutter="md" mb="md">
@@ -66,7 +69,7 @@ export default function ContentPage({ sourceContent, pageName }) {
       </Grid>
 
       <Surface className="saas-content-surface">
-        <Text className="saas-card-eyebrow" mb="xs">Operational view</Text>
+        <Text className="saas-card-eyebrow" mb="xs">{trans.operationalView}</Text>
         <div ref={hostRef} className="saas-content-host" />
       </Surface>
     </main>

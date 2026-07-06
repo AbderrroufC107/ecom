@@ -7,14 +7,16 @@ if (!isset($_GET['id'])) { header('Location: incomplete-orders.php'); exit; }
 $id = (int)$_GET['id'];
 
 // جلب السجل
-$stmt = $pdo->prepare("SELECT * FROM incomplete_orders WHERE id = ?");
+$stmt = $dbRepo->prepare("SELECT * FROM incomplete_orders WHERE id = ?");
 $stmt->execute([$id]);
 $row = $stmt->fetch(PDO::FETCH_ASSOC);
 if (!$row) { header('Location: incomplete-orders.php'); exit; }
 
 if (!function_exists('admin_normalize_phone_for_compare')) {
     function admin_normalize_phone_for_compare($phone)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $digits = preg_replace('/\D+/', '', (string) $phone);
         if ($digits === '') {
             return '';
@@ -60,7 +62,7 @@ $phone_variants = function_exists('site_security_phone_variants')
 
 if (!empty($phone_variants)) {
     $placeholders = implode(',', array_fill(0, count($phone_variants), '?'));
-    $check = $pdo->prepare("SELECT id, order_status FROM tbl_order WHERE customer_phone IN ($placeholders) ORDER BY id DESC LIMIT 1");
+    $check = $dbRepo->prepare("SELECT id, order_status FROM tbl_order WHERE customer_phone IN ($placeholders) ORDER BY id DESC LIMIT 1");
     $check->execute($phone_variants);
     $existing = $check->fetch(PDO::FETCH_ASSOC);
 
@@ -111,7 +113,7 @@ if ($total_price <= 0) {
 }
 
 site_security_ensure_order_columns($pdo);
-$insert = $pdo->prepare("INSERT INTO tbl_order (customer_id, product_id, order_size, order_color, product_name, quantity, unit_price, total_price, customer_name, customer_type, customer_phone, wilaya, commune, delivery_type, address, customer_ip, device_id, user_agent, order_date, order_status) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'direct', ?, ?, ?, ?, ?, ?, ?, NOW(), 'Pending')");
+$insert = $dbRepo->prepare("INSERT INTO tbl_order (customer_id, product_id, order_size, order_color, product_name, quantity, unit_price, total_price, customer_name, customer_type, customer_phone, wilaya, commune, delivery_type, address, customer_ip, device_id, user_agent, order_date, order_status) VALUES (NULL, ?, ?, ?, ?, ?, ?, ?, ?, 'direct', ?, ?, ?, ?, ?, ?, ?, NOW(), 'Pending')");
 $insert->execute([
     $product_id,
     $order_size !== '' ? $order_size : null,
@@ -130,7 +132,18 @@ $insert->execute([
     $device_id,
     $user_agent
 ]);
-$created_order_id = (int) $pdo->lastInsertId();
+$created_order_id = (int) $dbRepo->lastInsertId();
+if ($created_order_id > 0) {
+    if (file_exists(__DIR__ . '/inc/employee_functions.php')) {
+        require_once __DIR__ . '/inc/employee_functions.php';
+        if (function_exists('assign_order_by_strategy')) {
+            assign_order_by_strategy($pdo, $created_order_id, 'incomplete_conversion');
+        }
+    }
+}
+if ($created_order_id > 0 && class_exists('EventManager')) {
+    EventManager::dispatch('OrderCreated', $pdo, $created_order_id);
+}
 $created_order_context = [
     'id' => $created_order_id,
     'customer_name' => $customer_name,
@@ -153,7 +166,7 @@ if (empty($auto_sms_result['skipped']) && empty($auto_sms_result['success'])) {
 }
 
 // حذف السجل من غير المكتملة
-$del = $pdo->prepare("DELETE FROM incomplete_orders WHERE id = ?");
+$del = $dbRepo->prepare("DELETE FROM incomplete_orders WHERE id = ?");
 $del->execute([$id]);
 
 $_SESSION['incomplete_flash'] = [

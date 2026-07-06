@@ -17,6 +17,11 @@ $store_id = (int) $key_data['store_id'];
 $api_key_id = (int) $key_data['id'];
 $key_name = $key_data['name'] ?? '';
 
+// Check rate limiting
+if (Ecom\Api\RateLimitService::isRateLimited($pdo, $store_id)) {
+    api_error('لقد تجاوزت حد الطلبات المسموح به لخطة اشتراكك (Rate limit exceeded).', 429, 'RATE_LIMIT_EXCEEDED');
+}
+
 // Check subscription (read-only mode blocks writes)
 $method = $_SERVER['REQUEST_METHOD'] ?? 'GET';
 $is_write = in_array($method, ['POST', 'PUT', 'DELETE', 'PATCH'], true);
@@ -91,4 +96,4 @@ try {
 // Log the API call
 $elapsed = (int) ((microtime(true) - $start_time) * 1000);
 $response_code = http_response_code() ?: 200;
-store_log_api_call($pdo, $store_id, $api_key_id, $route, $method, $response_code);
+store_log_api_call($pdo, $store_id, $route, $method, $response_code, $api_key_id, $elapsed);

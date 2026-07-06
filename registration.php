@@ -3,6 +3,10 @@ require_once('header.php');
 
 if (isset($_POST['form1'])) {
     try {
+        require_once __DIR__ . '/inc/rate-limiter.php';
+        $limiter = new PublicRateLimiter($pdo);
+        $limiter->check('customer_register', 3, 600); // 3 attempts per 10 mins
+
         if(empty($_POST['cust_name']) || empty($_POST['cust_phone']) || 
            empty($_POST['wilaya']) || empty($_POST['commune']) || 
            empty($_POST['cust_address']) || empty($_POST['cust_password']) || 
@@ -44,7 +48,7 @@ if (isset($_POST['form1'])) {
             strip_tags($_POST['wilaya']),
             strip_tags($_POST['commune']),
             strip_tags($_POST['cust_address']),
-            md5($_POST['cust_password']),
+            password_hash($_POST['cust_password'], PASSWORD_DEFAULT),
             1
         ));
 
@@ -70,12 +74,12 @@ if (isset($_POST['form1'])) {
                     <form action="" method="post">
                         <div class="form-group">
                             <label>الاسم الكامل *</label>
-                            <input type="text" class="form-control" name="cust_name" value="<?php if(isset($_POST['cust_name'])) echo $_POST['cust_name']; ?>">
+                            <input type="text" class="form-control" name="cust_name" value="<?php if(isset($_POST['cust_name'])) echo htmlspecialchars($_POST['cust_name'], ENT_QUOTES, 'UTF-8'); ?>">
                         </div>
                         
                         <div class="form-group">
                             <label>رقم الهاتف *</label>
-                            <input type="tel" class="form-control" name="cust_phone" placeholder="مثال: 0555123456" value="<?php if(isset($_POST['cust_phone'])) echo $_POST['cust_phone']; ?>">
+                            <input type="tel" class="form-control" name="cust_phone" placeholder="مثال: 0555123456" value="<?php if(isset($_POST['cust_phone'])) echo htmlspecialchars($_POST['cust_phone'], ENT_QUOTES, 'UTF-8'); ?>">
                         </div>
 
                         <div class="row">
@@ -99,7 +103,7 @@ if (isset($_POST['form1'])) {
 
                         <div class="form-group">
                             <label>العنوان *</label>
-                            <textarea name="cust_address" class="form-control" rows="3" placeholder="أدخل عنوانك بالتفصيل"><?php if(isset($_POST['cust_address'])) echo $_POST['cust_address']; ?></textarea>
+                            <textarea name="cust_address" class="form-control" rows="3" placeholder="أدخل عنوانك بالتفصيل"><?php if(isset($_POST['cust_address'])) echo htmlspecialchars($_POST['cust_address'], ENT_QUOTES, 'UTF-8'); ?></textarea>
                         </div>
 
                         <div class="form-group">

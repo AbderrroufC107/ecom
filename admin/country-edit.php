@@ -10,14 +10,14 @@ if(isset($_POST['form1'])) {
     } else {
 		// Duplicate Country checking
     	// current Country name that is in the database
-    	$statement = $pdo->prepare("SELECT * FROM tbl_country WHERE country_id=?");
+    	$statement = $dbRepo->prepare("SELECT * FROM tbl_country WHERE country_id=?");
 		$statement->execute(array($_REQUEST['id']));
 		$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 		foreach($result as $row) {
 			$current_country_name = $row['country_name'];
 		}
 
-		$statement = $pdo->prepare("SELECT * FROM tbl_country WHERE country_name=? and country_name!=?");
+		$statement = $dbRepo->prepare("SELECT * FROM tbl_country WHERE country_name=? and country_name!=?");
     	$statement->execute(array($_POST['country_name'],$current_country_name));
     	$total = $statement->rowCount();							
     	if($total) {
@@ -28,7 +28,7 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {    	
 		// updating into the database
-		$statement = $pdo->prepare("UPDATE tbl_country SET country_name=? WHERE country_id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_country SET country_name=? WHERE country_id=?");
 		$statement->execute(array($_POST['country_name'],$_REQUEST['id']));
 
     	$success_message = 'Country is updated successfully.';
@@ -42,7 +42,7 @@ if(!isset($_REQUEST['id'])) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_country WHERE country_id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_country WHERE country_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);

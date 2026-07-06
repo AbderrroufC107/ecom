@@ -18,7 +18,9 @@ if (!isset($_SESSION['user'])) {
 
 if (!function_exists('admin_ecotrack_redirect_target')) {
     function admin_ecotrack_redirect_target($raw_target, $fallback_order_id = 0)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $raw_target = trim((string) $raw_target);
         if ($raw_target === '') {
             return $fallback_order_id > 0 ? 'order-details.php?id=' . (int) $fallback_order_id : 'order.php';
@@ -38,7 +40,9 @@ if (!function_exists('admin_ecotrack_redirect_target')) {
 
 if (!function_exists('admin_ecotrack_save_order_state')) {
     function admin_ecotrack_save_order_state(PDO $pdo, $order_id, array $state, $touch_sent_at = false)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $sql = "
             UPDATE tbl_order
             SET ecotrack_reference = ?,
@@ -90,14 +94,16 @@ if (!function_exists('admin_ecotrack_save_order_state')) {
         $sql .= " WHERE id = ? LIMIT 1";
         $params[] = (int) $order_id;
 
-        $statement = $pdo->prepare($sql);
+        $statement = $dbRepo->prepare($sql);
         $statement->execute($params);
     }
 }
 
 if (!function_exists('admin_ecotrack_request_success')) {
     function admin_ecotrack_request_success(array $request)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $request_ok = !empty($request['success']);
         if ($request_ok && is_array($request['json']) && array_key_exists('success', $request['json'])) {
             $request_ok = !empty($request['json']['success']);
@@ -109,7 +115,9 @@ if (!function_exists('admin_ecotrack_request_success')) {
 
 if (!function_exists('admin_ecotrack_request_error_text')) {
     function admin_ecotrack_request_error_text(array $request, $fallback = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $error_text = '';
 
         if (!empty($request['json']['errors'])) {
@@ -131,7 +139,9 @@ if (!function_exists('admin_ecotrack_request_error_text')) {
 
 if (!function_exists('admin_ecotrack_is_ajax_request')) {
     function admin_ecotrack_is_ajax_request()
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!empty($_POST['ajax'])) {
             return true;
         }
@@ -143,7 +153,9 @@ if (!function_exists('admin_ecotrack_is_ajax_request')) {
 
 if (!function_exists('admin_ecotrack_respond')) {
     function admin_ecotrack_respond($is_ajax, $success, $type, $message, $redirect)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($is_ajax) {
             header('Content-Type: application/json; charset=UTF-8');
             echo json_encode([
@@ -187,7 +199,7 @@ admin_ensure_ecotrack_setting_columns($pdo);
 admin_ensure_order_ecotrack_columns($pdo);
 site_security_ensure_order_columns($pdo);
 
-$statement = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
 $statement->execute([$order_id]);
 $order = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -263,7 +275,7 @@ if ($action === 'create') {
         try {
             $pdo->beginTransaction();
             if (($prepared_order['delivery_type'] ?? '') !== ($order['delivery_type'] ?? '')) {
-                $pdo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
+                $dbRepo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
                     ->execute([(string) $prepared_order['delivery_type'], $order_id]);
                 $order['delivery_type'] = $prepared_order['delivery_type'];
             }
@@ -280,6 +292,9 @@ if ($action === 'create') {
             admin_ecotrack_mark_order_sent_locally($pdo, $order, $changed_by !== '' ? $changed_by : null);
             $pdo->commit();
             $flash_message = 'تم إرسال الطلب إلى ECOTRACK بنجاح واعتماده تلقائيًا داخل المتجر. رقم التتبع: ' . $tracking;
+            if (!empty($request['elapsed_ms'])) {
+                $flash_message .= ' (الوقت: ' . number_format($request['elapsed_ms'], 0) . ' مللي ثانية)';
+            }
             if ($delivery_fallback_message !== '') {
                 $flash_message .= ' ' . $delivery_fallback_message;
             }
@@ -357,8 +372,11 @@ if ($action === 'update') {
         ], true);
 
         $flash_message = 'تم تحديث الطلب داخل ECOTRACK بنجاح.';
+        if (!empty($request['elapsed_ms'])) {
+            $flash_message .= ' (الوقت: ' . number_format($request['elapsed_ms'], 0) . ' مللي ثانية)';
+        }
         if (($prepared_order['delivery_type'] ?? '') !== ($order['delivery_type'] ?? '')) {
-            $pdo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
+            $dbRepo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
                 ->execute([(string) $prepared_order['delivery_type'], $order_id]);
         }
         if ($delivery_fallback_message !== '') {
@@ -405,6 +423,9 @@ if ($action === 'ship') {
         ], true);
 
         $flash_message = 'تم تأكيد الشحن داخل ECOTRACK بنجاح.';
+        if (!empty($request['elapsed_ms'])) {
+            $flash_message .= ' (الوقت: ' . number_format($request['elapsed_ms'], 0) . ' مللي ثانية)';
+        }
     } else {
         $error_text = admin_ecotrack_request_error_text($request, 'تعذر تأكيد الشحن داخل ECOTRACK.');
 
@@ -452,6 +473,9 @@ if ($action === 'delete') {
 
             $restored_meta = admin_get_order_status_meta($restored_status);
             $flash_message = 'تم حذف الطلب من ECOTRACK بنجاح وإرجاعه إلى الحالة "' . $restored_meta['label'] . '".';
+            if (!empty($request['elapsed_ms'])) {
+                $flash_message .= ' (الوقت: ' . number_format($request['elapsed_ms'], 0) . ' مللي ثانية)';
+            }
         } catch (Exception $exception) {
             if ($pdo->inTransaction()) {
                 $pdo->rollBack();

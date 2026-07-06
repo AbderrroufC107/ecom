@@ -55,10 +55,10 @@ $log = [];
 
 $last_run = telegram_get_event_setting($pdo, 'last_event_monitor_run');
 
-$stmt = $pdo->prepare("UPDATE tbl_event_settings SET config_value = NOW() WHERE config_key = 'last_event_monitor_run'");
+$stmt = $dbRepo->prepare("UPDATE tbl_event_settings SET config_value = NOW() WHERE config_key = 'last_event_monitor_run'");
 $stmt->execute();
 if ($stmt->rowCount() === 0) {
-    $pdo->prepare("INSERT IGNORE INTO tbl_event_settings (config_key, config_value) VALUES ('last_event_monitor_run', NOW())")->execute();
+    $dbRepo->prepare("INSERT IGNORE INTO tbl_event_settings (config_key, config_value) VALUES ('last_event_monitor_run', NOW())")->execute();
 }
 
 $unprocessed_minutes = telegram_event_setting_int($pdo, 'event_unprocessed_order_minutes', 15);
@@ -70,7 +70,7 @@ $failed_attempts = telegram_event_setting_int($pdo, 'event_failed_telegram_attem
 $reported = [];
 
 if (telegram_event_setting_bool($pdo, 'event_unprocessed_order_enabled')) {
-    $stmt = $pdo->prepare("
+    $stmt = $dbRepo->prepare("
         SELECT o.*, e.full_name AS emp_name, e.id AS emp_id
         FROM tbl_order o
         INNER JOIN tbl_order_assignment oa ON oa.order_id = o.id AND oa.status = 'active'
@@ -101,7 +101,7 @@ if (telegram_event_setting_bool($pdo, 'event_unprocessed_order_enabled')) {
 }
 
 if (telegram_event_setting_bool($pdo, 'event_unassigned_orders_enabled')) {
-    $stmt = $pdo->query("
+    $stmt = $dbRepo->query("
         SELECT o.* FROM tbl_order o
         LEFT JOIN tbl_order_assignment oa ON oa.order_id = o.id
         WHERE oa.id IS NULL
@@ -126,7 +126,7 @@ if (telegram_event_setting_bool($pdo, 'event_unassigned_orders_enabled')) {
 }
 
 if (telegram_event_setting_bool($pdo, 'event_employee_inactivity_enabled')) {
-    $stmt = $pdo->query("
+    $stmt = $dbRepo->query("
         SELECT e.id, e.full_name, e.telegram_chat_id,
             COUNT(DISTINCT o.id) AS pending_count,
             MAX(a.created_at) AS last_action_at
@@ -161,7 +161,7 @@ if (telegram_event_setting_bool($pdo, 'event_employee_inactivity_enabled')) {
 }
 
 if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
-    $stmt = $pdo->prepare("
+    $stmt = $dbRepo->prepare("
         SELECT id, ecotrack_status, product_name, customer_name, customer_phone, total_price, order_date
         FROM tbl_order
         WHERE ecotrack_status IS NOT NULL AND ecotrack_status != ''
@@ -175,7 +175,7 @@ if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
         $oid = (int) $eo['id'];
         $current_status = trim((string) ($eo['ecotrack_status'] ?? ''));
 
-        $snap = $pdo->prepare("
+        $snap = $dbRepo->prepare("
             SELECT id, payload FROM tbl_event_log
             WHERE event_type = 'ecotrack_status_snapshot' AND order_id = ?
             ORDER BY id DESC LIMIT 1
@@ -207,7 +207,7 @@ if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
 
             if ($changed) {
                 if (!telegram_was_event_recently_sent($pdo, 'ecotrack_status_changed', $oid, 0, 30)) {
-                    $assignment = $pdo->prepare("
+                    $assignment = $dbRepo->prepare("
                         SELECT e.id, e.full_name FROM tbl_order_assignment oa
                         INNER JOIN tbl_employee e ON e.id = oa.employee_id
                         WHERE oa.order_id = ? AND oa.status = 'active'
@@ -230,7 +230,7 @@ if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
 
             if ($current_status === 'Livr?' && $last_status !== 'Livr?') {
                 if (!telegram_was_event_recently_sent($pdo, 'delivered', $oid, 0, 60)) {
-                    $assignment = $pdo->prepare("
+                    $assignment = $dbRepo->prepare("
                         SELECT e.id, e.full_name FROM tbl_order_assignment oa
                         INNER JOIN tbl_employee e ON e.id = oa.employee_id
                         WHERE oa.order_id = ? AND oa.status = 'active'
@@ -239,7 +239,7 @@ if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
                     $assignment->execute([$oid]);
                     $emp = $assignment->fetch(PDO::FETCH_ASSOC) ?: null;
 
-                    $stmt2 = $pdo->prepare("UPDATE tbl_order SET order_status = 'Completed' WHERE id = ? AND order_status != 'Completed' AND order_status != 'Cancelled' AND order_status != 'Returned'");
+                    $stmt2 = $dbRepo->prepare("UPDATE tbl_order SET order_status = 'Completed' WHERE id = ? AND order_status != 'Completed' AND order_status != 'Cancelled' AND order_status != 'Returned'");
                     $stmt2->execute([$oid]);
                     performance_auto_record_commission($pdo, $oid);
 
@@ -256,7 +256,7 @@ if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
 
             if ($current_status === 'Retourn?' && $last_status !== 'Retourn?') {
                 if (!telegram_was_event_recently_sent($pdo, 'returned', $oid, 0, 60)) {
-                    $assignment = $pdo->prepare("
+                    $assignment = $dbRepo->prepare("
                         SELECT e.id, e.full_name FROM tbl_order_assignment oa
                         INNER JOIN tbl_employee e ON e.id = oa.employee_id
                         WHERE oa.order_id = ? AND oa.status = 'active'
@@ -266,12 +266,12 @@ if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
                     $emp = $assignment->fetch(PDO::FETCH_ASSOC) ?: null;
 
                     $reason = '';
-                    $stmt2 = $pdo->prepare("SELECT reason FROM tbl_order_cancellation_reason WHERE order_id = ? ORDER BY id DESC LIMIT 1");
+                    $stmt2 = $dbRepo->prepare("SELECT reason FROM tbl_order_cancellation_reason WHERE order_id = ? ORDER BY id DESC LIMIT 1");
                     $stmt2->execute([$oid]);
                     $rr = $stmt2->fetchColumn();
                     if ($rr) $reason = (string) $rr;
 
-                    $stmt3 = $pdo->prepare("UPDATE tbl_order SET order_status = 'Returned' WHERE id = ? AND order_status != 'Returned' AND order_status != 'Cancelled'");
+                    $stmt3 = $dbRepo->prepare("UPDATE tbl_order SET order_status = 'Returned' WHERE id = ? AND order_status != 'Returned' AND order_status != 'Cancelled'");
                     $stmt3->execute([$oid]);
 
                     $text = telegram_build_event_returned($eo, $reason, $emp);
@@ -287,13 +287,13 @@ if (telegram_event_setting_bool($pdo, 'event_ecotrack_status_enabled')) {
             }
         }
 
-        $save = $pdo->prepare("INSERT INTO tbl_event_log (event_type, order_id, payload) VALUES ('ecotrack_status_snapshot', ?, ?)");
+        $save = $dbRepo->prepare("INSERT INTO tbl_event_log (event_type, order_id, payload) VALUES ('ecotrack_status_snapshot', ?, ?)");
         $save->execute([$oid, json_encode(['status' => $current_status], JSON_UNESCAPED_UNICODE)]);
     }
 }
 
 if (telegram_event_setting_bool($pdo, 'event_high_cancellation_enabled')) {
-    $stmt = $pdo->query("
+    $stmt = $dbRepo->query("
         SELECT
             e.id, e.full_name,
             COUNT(DISTINCT oa.order_id) AS total_assigned,
@@ -330,7 +330,7 @@ if (telegram_event_setting_bool($pdo, 'event_high_cancellation_enabled')) {
 }
 
 if (telegram_event_setting_bool($pdo, 'event_failed_telegram_enabled')) {
-    $stmt = $pdo->prepare("
+    $stmt = $dbRepo->prepare("
         SELECT
             d.employee_id, e.full_name, COUNT(*) AS failed_count
         FROM tbl_telegram_delivery_log d
@@ -443,7 +443,7 @@ if ($error_count_1h > 10) {
 }
 
 try {
-    $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_order WHERE ecotrack_last_error != '' AND ecotrack_last_error IS NOT NULL AND ecotrack_updated_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+    $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_order WHERE ecotrack_last_error != '' AND ecotrack_last_error IS NOT NULL AND ecotrack_updated_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
     $ecotrack_err_1h = (int) $stmt->fetchColumn();
     if ($ecotrack_err_1h > 5) {
         $text = "⚠️ *تنبيه ECOTRACK*\n" . $ecotrack_err_1h . " خطأ مزامنة في آخر ساعة.";
@@ -455,7 +455,7 @@ try {
 }
 
 try {
-    $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_telegram_delivery_log WHERE delivery_status = 'failed' AND created_at >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)");
+    $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_telegram_delivery_log WHERE delivery_status = 'failed' AND created_at >= DATE_SUB(NOW(), INTERVAL 30 MINUTE)");
     $telegram_fail_30m = (int) $stmt->fetchColumn();
     if ($telegram_fail_30m > 10) {
         $text = "⚠️ *تنبيه تلغرام*\n" . $telegram_fail_30m . " رسالة فاشلة في آخر 30 دقيقة.";

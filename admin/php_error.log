@@ -1,0 +1,9 @@
+[06-Jul-2026 19:38:27 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 62.74ms
+
+bootstrap_complete            :    35.86ms
+sidebar_rendered              :     1.36ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content

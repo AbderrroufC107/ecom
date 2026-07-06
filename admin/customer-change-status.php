@@ -5,26 +5,23 @@ if(!isset($_REQUEST['id'])) {
 	header('location: logout.php');
 	exit;
 } else {
-	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_customer WHERE id=?");
-	$statement->execute(array($_REQUEST['id']));
-	$total = $statement->rowCount();
-	if( $total == 0 ) {
+	global $customerRepo;
+	$id = (int) $_REQUEST['id'];
+	
+	// Check if customer belongs to current tenant
+	$customer = $customerRepo->find($id);
+	if(!$customer) {
 		header('location: logout.php');
 		exit;
-	} else {
-		$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
-		foreach ($result as $row) {
-			$cust_status = $row['cust_status'];
-		}
 	}
+
+	$cust_status = $customer['cust_status'];
 }
 ?>
 
 <?php
-if($cust_status == 0) {$final = 1;} else {$final = 0;}
-$statement = $pdo->prepare("UPDATE tbl_customer SET cust_status=? WHERE id=?");
-$statement->execute(array($final,$_REQUEST['id']));
+$final = ($cust_status == 0) ? 1 : 0;
+$customerRepo->update($id, ['cust_status' => $final]);
 
 header('location: customer.php');
 ?>

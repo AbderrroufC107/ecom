@@ -1,16 +1,30 @@
 <?php
 require_once __DIR__ . '/admin/inc/config.php';
-require_once __DIR__ . '/inc/incomplete-orders.php';
-require_once __DIR__ . '/inc/site-security.php';
+require_once __DIR__ . '/admin/inc/CSRF_Protect.php';
+require_once __DIR__ . '/inc/rate-limiter.php';
 header('Content-Type: application/json; charset=UTF-8');
 
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // 1. Rate Limiting Check
+    $limiter = new PublicRateLimiter($pdo);
+    $limiter->check('update_incomplete_order', 10, 300, $_POST['device_id'] ?? null, true);
+
+    // 2. CSRF token validation
+    $csrf = new CSRF_Protect();
+    if (!$csrf->isTokenValid($_POST['_csrf'] ?? '')) {
+        http_response_code(403);
+        echo json_encode(['success' => false, 'error' => 'CSRF_INVALID', 'message' => 'CSRF validation failed.']);
+        exit;
+    }
+
+    require_once __DIR__ . '/inc/incomplete-orders.php';
+    require_once __DIR__ . '/inc/site-security.php';
+
     try {
         if (!ensure_incomplete_orders_table($pdo)) {
             echo json_encode(['success' => false, 'error' => 'incomplete_orders table unavailable']);
             exit;
         }
-
         $timestamp = date('Y-m-d H:i:s');
         $id = isset($_POST['id']) ? (int)$_POST['id'] : null;
         $product_id = isset($_POST['product_id']) && $_POST['product_id'] !== '' ? (int)$_POST['product_id'] : null;

@@ -22,7 +22,7 @@ if(isset($_POST['form1'])) {
     if($valid == 1) {
 
 		//Saving data into the main table tbl_end_category
-		$statement = $pdo->prepare("INSERT INTO tbl_end_category (ecat_name,mcat_id) VALUES (?,?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_end_category (ecat_name,mcat_id) VALUES (?,?)");
 		$statement->execute(array($_POST['ecat_name'],$_POST['mcat_id']));
 	
     	$success_message = 'End Level Category is added successfully.';
@@ -71,7 +71,7 @@ if(isset($_POST['form1'])) {
 								<select name="tcat_id" class="form-control select2 top-cat">
 									<option value="">Select Top Level Category</option>
 									<?php
-									$statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
+									$statement = $dbRepo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
 									$statement->execute();
 									$result = $statement->fetchAll(PDO::FETCH_ASSOC);	
 									foreach ($result as $row) {

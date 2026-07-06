@@ -3,16 +3,16 @@
 <?php
 if(isset($_POST['form1'])) {
 
-	$statement = $pdo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
+	$statement = $dbRepo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
 	$statement->execute(array($_POST['facebook'],'Facebook'));
 
-	$statement = $pdo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
+	$statement = $dbRepo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
 	$statement->execute(array($_POST['TikTok'],'TikTok'));
 
-	$statement = $pdo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
+	$statement = $dbRepo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
 	$statement->execute(array($_POST['instagram'],'Instagram'));
 
-	$statement = $pdo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
+	$statement = $dbRepo->prepare("UPDATE tbl_social SET social_url=? WHERE social_name=?");
 	$statement->execute(array($_POST['whatsapp'],'WhatsApp'));
 
 	$success_message = 'Social Media URLs are updated successfully.';
@@ -27,7 +27,7 @@ if(isset($_POST['form1'])) {
 </section>
 
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_social");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_social");
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 foreach ($result as $row) {

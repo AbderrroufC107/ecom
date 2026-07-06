@@ -1,11 +1,12 @@
 <?php
-session_start();
+require_once __DIR__ . '/../admin/inc/config.php';
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 if (isset($_SESSION['super_admin'])) {
     header('location: index.php');
     exit;
 }
-
-require_once __DIR__ . '/../admin/inc/config.php';
 require_once __DIR__ . '/../admin/inc/LoginThrottle.php';
 require_once __DIR__ . '/../admin/inc/audit.php';
 

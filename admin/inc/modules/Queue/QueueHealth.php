@@ -7,7 +7,7 @@ use PDO;
 class QueueHealth
 {
     public static function getHealth(PDO $pdo): array
-    {
+    { global $dbRepo;
         $stats = QueueService::getStats($pdo);
 
         $processingTime = self::getAvgProcessingTime($pdo);
@@ -15,14 +15,14 @@ class QueueHealth
         $failedTrend = [];
 
         try {
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_queue_jobs
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_queue_jobs
                 WHERE status = 'processing' AND started_at < DATE_SUB(NOW(), INTERVAL 30 MINUTE)");
             $stuckCount = (int) $stmt->fetchColumn();
         } catch (\PDOException $e) {
         }
 
         try {
-            $result = $pdo->query("SELECT DATE(created_at) AS day, COUNT(*) AS cnt
+            $result = $dbRepo->query("SELECT DATE(created_at) AS day, COUNT(*) AS cnt
                 FROM tbl_failed_jobs WHERE failed_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)
                 GROUP BY DATE(created_at) ORDER BY day ASC");
             while ($row = $result->fetch()) {
@@ -48,9 +48,9 @@ class QueueHealth
     }
 
     public static function getAvgProcessingTime(PDO $pdo): float
-    {
+    { global $dbRepo;
         try {
-            $stmt = $pdo->query("SELECT COALESCE(AVG(TIMESTAMPDIFF(SECOND, started_at, completed_at)), 0)
+            $stmt = $dbRepo->query("SELECT COALESCE(AVG(TIMESTAMPDIFF(SECOND, started_at, completed_at)), 0)
                 FROM tbl_queue_jobs WHERE status = 'completed' AND started_at IS NOT NULL
                 AND completed_at IS NOT NULL AND completed_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
             return (float) $stmt->fetchColumn();
@@ -60,10 +60,10 @@ class QueueHealth
     }
 
     public static function getByTypeOverTime(PDO $pdo, int $hours = 24): array
-    {
+    { global $dbRepo;
         $data = [];
         try {
-            $stmt = $pdo->prepare("SELECT type, status, COUNT(*) AS cnt
+            $stmt = $dbRepo->prepare("SELECT type, status, COUNT(*) AS cnt
                 FROM tbl_queue_jobs WHERE created_at >= DATE_SUB(NOW(), INTERVAL ? HOUR)
                 GROUP BY type, status ORDER BY type");
             $stmt->execute([$hours]);
@@ -79,7 +79,7 @@ class QueueHealth
     }
 
     public static function checkAndAlert(PDO $pdo, ?string $telegramChatId = null): array
-    {
+    { global $dbRepo;
         $alerts = [];
         $health = self::getHealth($pdo);
 

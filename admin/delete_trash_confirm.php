@@ -8,7 +8,7 @@ if (!isset($_REQUEST['id'])) {
 
 try {
     // حذف الطلب من جدول المهملات نهائيًا
-    $statement = $pdo->prepare("DELETE FROM tbl_order_trash WHERE id=?");
+    $statement = $dbRepo->prepare("DELETE FROM tbl_order_trash WHERE id=?");
     $statement->execute([$_REQUEST['id']]);
 
     // إعادة التوجيه إلى صفحة المهملات

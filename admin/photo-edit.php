@@ -36,7 +36,7 @@ if(isset($_POST['form1'])) {
 			$final_photo = '';
 		}
 
-		$statement = $pdo->prepare("UPDATE tbl_photo SET caption=?, photo=? WHERE id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_photo SET caption=?, photo=? WHERE id=?");
 		$statement->execute(array($_POST['caption'],$final_photo,$_REQUEST['id']));
 
     	$success_message = 'Photo is updated successfully.';
@@ -49,7 +49,7 @@ if(!isset($_REQUEST['id'])) {
 	header('location: logout.php');
 	exit;
 } else {
-	$statement = $pdo->prepare("SELECT * FROM tbl_photo WHERE id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_photo WHERE id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);

@@ -7,7 +7,7 @@ use PDO;
 class QueueWorker
 {
     public static function getJobTypes(): array
-    {
+    { global $dbRepo;
         return [
             'telegram_send',
             'webhook_delivery',
@@ -24,19 +24,19 @@ class QueueWorker
     }
 
     public static function getPriorities(): array
-    {
+    { global $dbRepo;
         return ['high', 'normal', 'low'];
     }
 
     public static function getBackoffMinutes(int $attempt): int
-    {
+    { global $dbRepo;
         $backoffs = [0, 5, 15, 30, 60, 120];
         $index = min($attempt, count($backoffs) - 1);
         return $backoffs[$index];
     }
 
     public static function processJob(PDO $pdo, array $job): array
-    {
+    { global $dbRepo;
         $type = $job['type'];
         $payload = $job['payload'] ? json_decode($job['payload'], true) : [];
 
@@ -71,8 +71,8 @@ class QueueWorker
     }
 
     public static function cleanupStuck(PDO $pdo, int $timeoutMinutes = 30): int
-    {
-        $stmt = $pdo->prepare("UPDATE tbl_queue_jobs SET status = 'pending',
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("UPDATE tbl_queue_jobs SET status = 'pending',
             error_message = CONCAT(COALESCE(error_message, ''), ' | Auto-retry after stuck timeout')
             WHERE status = 'processing' AND started_at < DATE_SUB(NOW(), INTERVAL ? MINUTE)");
         $stmt->execute([$timeoutMinutes]);
@@ -80,7 +80,7 @@ class QueueWorker
     }
 
     public static function handleTelegramSend(PDO $pdo, array $payload, array $job): bool
-    {
+    { global $dbRepo;
         $chatId = $payload['chat_id'] ?? '';
         $message = $payload['message'] ?? '';
         if (empty($chatId) || empty($message)) {
@@ -93,13 +93,21 @@ class QueueWorker
         $url = "https://api.telegram.org/bot{$token}/sendMessage";
         $postData = http_build_query(['chat_id' => $chatId, 'text' => $message, 'parse_mode' => 'HTML']);
         $ch = curl_init($url);
+        $allowInsecureSsl = filter_var(getenv('TELEGRAM_ALLOW_INSECURE_SSL') ?: '', FILTER_VALIDATE_BOOLEAN);
+        if (!$allowInsecureSsl) {
+            $host = $_SERVER['HTTP_HOST'] ?? $_SERVER['SERVER_NAME'] ?? '';
+            $allowInsecureSsl = $host === '' || $host === 'localhost' || $host === '127.0.0.1' || $host === '::1' || strpos($host, 'localhost') !== false;
+        }
         curl_setopt_array($ch, [
             CURLOPT_POST           => true,
             CURLOPT_POSTFIELDS     => $postData,
             CURLOPT_RETURNTRANSFER => true,
             CURLOPT_TIMEOUT        => 15,
-            CURLOPT_SSL_VERIFYPEER => true,
+            CURLOPT_SSL_VERIFYPEER => !$allowInsecureSsl,
         ]);
+        if ($allowInsecureSsl) {
+            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        }
         $response = curl_exec($ch);
         $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
@@ -107,12 +115,12 @@ class QueueWorker
     }
 
     public static function handleWebhookDelivery(PDO $pdo, array $payload, array $job): bool
-    {
+    { global $dbRepo;
         $webhookId = $payload['webhook_id'] ?? 0;
         $event = $payload['event'] ?? '';
         $eventPayload = $payload['payload'] ?? [];
 
-        $stmt = $pdo->prepare("SELECT * FROM tbl_webhooks WHERE id = ? AND status = 'active'");
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_webhooks WHERE id = ? AND status = 'active'");
         $stmt->execute([$webhookId]);
         $webhook = $stmt->fetch();
         if (!$webhook) {
@@ -144,20 +152,20 @@ class QueueWorker
         curl_close($ch);
 
         if ($httpCode >= 200 && $httpCode < 300) {
-            $pdo->prepare("UPDATE tbl_webhooks SET last_triggered_at = NOW(), failure_count = 0 WHERE id = ?")
+            $dbRepo->prepare("UPDATE tbl_webhooks SET last_triggered_at = NOW(), failure_count = 0 WHERE id = ?")
                 ->execute([$webhookId]);
             return true;
         }
 
-        $pdo->prepare("UPDATE tbl_webhooks SET failure_count = failure_count + 1 WHERE id = ?")
+        $dbRepo->prepare("UPDATE tbl_webhooks SET failure_count = failure_count + 1 WHERE id = ?")
             ->execute([$webhookId]);
 
-        $stmt = $pdo->prepare("SELECT failure_count FROM tbl_webhooks WHERE id = ?");
+        $stmt = $dbRepo->prepare("SELECT failure_count FROM tbl_webhooks WHERE id = ?");
         $stmt->execute([$webhookId]);
         $failCount = (int) $stmt->fetchColumn();
 
         if ($failCount >= 10) {
-            $pdo->prepare("UPDATE tbl_webhooks SET status = 'failed' WHERE id = ?")
+            $dbRepo->prepare("UPDATE tbl_webhooks SET status = 'failed' WHERE id = ?")
                 ->execute([$webhookId]);
         }
 
@@ -165,7 +173,7 @@ class QueueWorker
     }
 
     public static function handleEcotrackSync(PDO $pdo, array $payload, array $job): bool
-    {
+    { global $dbRepo;
         $action = $payload['action'] ?? '';
         $data = $payload['data'] ?? [];
 
@@ -199,21 +207,21 @@ class QueueWorker
     }
 
     public static function handleAiReport(PDO $pdo, array $payload, array $job): array
-    {
+    { global $dbRepo;
         $reportType = $payload['report_type'] ?? 'weekly';
         $storeId = $job['store_id'];
 
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_products WHERE store_id = ?");
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_products WHERE store_id = ?");
         $stmt->execute([$storeId]);
         $productCount = (int) $stmt->fetchColumn();
 
-        $stmt = $pdo->prepare("SELECT COALESCE(SUM(total), 0) FROM tbl_invoices
+        $stmt = $dbRepo->prepare("SELECT COALESCE(SUM(total), 0) FROM tbl_invoices
             WHERE store_id = ? AND status = 'paid'
             AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
         $stmt->execute([$storeId]);
         $monthlyRevenue = (float) $stmt->fetchColumn();
 
-        $stmt = $pdo->prepare("SELECT COALESCE(COUNT(*), 0) FROM tbl_invoices
+        $stmt = $dbRepo->prepare("SELECT COALESCE(COUNT(*), 0) FROM tbl_invoices
             WHERE store_id = ? AND status = 'paid'
             AND created_at >= DATE_SUB(NOW(), INTERVAL 30 DAY)");
         $stmt->execute([$storeId]);
@@ -231,7 +239,7 @@ class QueueWorker
         ];
 
         $reportJson = json_encode($report);
-        $stmt = $pdo->prepare("INSERT INTO tbl_ai_reports (store_id, report_type, report_data)
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_ai_reports (store_id, report_type, report_data)
             VALUES (?, ?, ?)");
         $stmt->execute([$storeId, $reportType, $reportJson]);
 
@@ -239,7 +247,7 @@ class QueueWorker
     }
 
     public static function handleProductExport(PDO $pdo, array $payload, array $job): string
-    {
+    { global $dbRepo;
         $storeId = $job['store_id'];
         $format = $payload['format'] ?? 'csv';
         $filters = $payload['filters'] ?? [];
@@ -256,7 +264,7 @@ class QueueWorker
             $params[] = $filters['status'];
         }
 
-        $stmt = $pdo->prepare($sql);
+        $stmt = $dbRepo->prepare($sql);
         $stmt->execute($params);
         $products = $stmt->fetchAll();
 
@@ -285,15 +293,15 @@ class QueueWorker
     }
 
     public static function handleDataSync(PDO $pdo, array $payload, array $job): bool
-    {
+    { global $dbRepo;
         $target = $payload['target'] ?? '';
         $storeId = $job['store_id'];
 
-        $stmt = $pdo->prepare("SELECT * FROM tbl_products WHERE store_id = ? AND updated_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_products WHERE store_id = ? AND updated_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
         $stmt->execute([$storeId]);
         $products = $stmt->fetchAll();
 
-        $stmt = $pdo->prepare("SELECT setting_value FROM tbl_store_settings WHERE store_id = ? AND setting_key = 'sync_url'");
+        $stmt = $dbRepo->prepare("SELECT setting_value FROM tbl_store_settings WHERE store_id = ? AND setting_key = 'sync_url'");
         $stmt->execute([$storeId]);
         $syncUrl = $stmt->fetchColumn();
 
@@ -317,15 +325,15 @@ class QueueWorker
     }
 
     public static function handleAuditCleanup(PDO $pdo, array $payload, array $job): int
-    {
-        $stmt = $pdo->prepare("DELETE FROM tbl_audit_log WHERE created_at < DATE_SUB(NOW(), INTERVAL 90 DAY)");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("DELETE FROM tbl_audit_log WHERE created_at < DATE_SUB(NOW(), INTERVAL 90 DAY)");
         $stmt->execute();
         return $stmt->rowCount();
     }
 
     public static function handleInvoiceReminder(PDO $pdo, array $payload, array $job): int
-    {
-        $stmt = $pdo->prepare("SELECT i.*, s.name AS store_name, s.email
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT i.*, s.name AS store_name, s.email
             FROM tbl_invoices i
             LEFT JOIN tbl_stores s ON i.store_id = s.id
             WHERE i.status = 'pending' AND i.due_date <= DATE_ADD(NOW(), INTERVAL 3 DAY)");

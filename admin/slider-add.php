@@ -5,9 +5,9 @@ if(isset($_POST['form1'])) {
 	$valid = 1;
 
 	if($valid == 1) {
-		$statement = $pdo->prepare("INSERT INTO tbl_slider (photo,heading,content,button_text,button_url,position) VALUES (?,?,?,?,?,?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_slider (photo,heading,content,button_text,button_url,position) VALUES (?,?,?,?,?,?)");
 		$statement->execute(array('',$_POST['heading'],$_POST['content'],$_POST['button_text'],$_POST['button_url'],$_POST['position']));
-		$new_id = $pdo->lastInsertId();
+		$new_id = $dbRepo->lastInsertId();
 
 		list($image_ok, $image_value) = store_image_input(
 			'photo',
@@ -19,9 +19,9 @@ if(isset($_POST['form1'])) {
 		);
 
 		if(!$image_ok || $image_value === '') {
-			$pdo->prepare("DELETE FROM tbl_slider WHERE id=?")->execute(array($new_id));
+			$dbRepo->prepare("DELETE FROM tbl_slider WHERE id=?")->execute(array($new_id));
 		} else {
-			$statement = $pdo->prepare("UPDATE tbl_slider SET photo=? WHERE id=?");
+			$statement = $dbRepo->prepare("UPDATE tbl_slider SET photo=? WHERE id=?");
 			$statement->execute(array($image_value,$new_id));
 			$success_message = 'Slider is added successfully!';
 		}

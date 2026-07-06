@@ -1,7 +1,9 @@
 <?php
 ob_start();
-session_start();
 include("inc/config.php");
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
 include("inc/functions.php");
 include("inc/store.php");
 include("inc/LoginThrottle.php");
@@ -29,7 +31,7 @@ if(isset($_POST['form1'])) {
         }
 
         // 1. Try existing admin (tbl_user with bcrypt, legacy MD5 fallback)
-        $statement = $pdo->prepare("SELECT * FROM tbl_user WHERE email=? AND status=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_user WHERE email=? AND status=1");
         $statement->execute(array($email));
         $admin_result = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -41,7 +43,7 @@ if(isset($_POST['form1'])) {
             } elseif (strlen($stored_hash) === 32 && md5($password) === $stored_hash) {
                 // Legacy MD5 match — rehash to bcrypt and update
                 $bcrypt_hash = password_hash($password, PASSWORD_DEFAULT);
-                $update = $pdo->prepare("UPDATE tbl_user SET password = ? WHERE id = ?");
+                $update = $dbRepo->prepare("UPDATE tbl_user SET password = ? WHERE id = ?");
                 $update->execute([$bcrypt_hash, $admin_result[0]['id']]);
                 $admin_result[0]['password'] = $bcrypt_hash;
             } else {
@@ -71,6 +73,35 @@ if(isset($_POST['form1'])) {
             session_regenerate_id(true);
             header("location: store-dashboard.php");
             exit;
+        }
+
+        // 3. Try employee (tbl_employee)
+        $stmt_emp = $dbRepo->prepare("SELECT * FROM tbl_employee WHERE email=? AND is_active=1");
+        $stmt_emp->execute([$email]);
+        $emp_result = $stmt_emp->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!empty($emp_result)) {
+            $stored_hash = $emp_result[0]['password_hash'];
+            if (password_verify($password, $stored_hash)) {
+                $throttle->clear_attempts($ip, $email);
+                audit_log_security($pdo, $emp_result[0]['id'], 'login_success', null, ['email' => $email, 'role' => 'employee'], 'admin_panel');
+                
+                $_SESSION['user'] = [
+                    'id' => 'emp_' . $emp_result[0]['id'],
+                    'full_name' => $emp_result[0]['full_name'],
+                    'email' => $emp_result[0]['email'],
+                    'phone' => '',
+                    'role' => 'Employee',
+                    'status' => '1'
+                ];
+                session_regenerate_id(true);
+                header("location: index.php");
+                exit;
+            } else {
+                $throttle->record_attempt($ip, $email, $ua, false);
+                audit_log_security($pdo, 0, 'login_failed', null, ['email' => $email, 'reason' => 'wrong_password'], 'admin_panel');
+                throw new Exception("كلمة المرور غير صحيحة");
+            }
         }
 
         $throttle->record_attempt($ip, $email, $ua, false);

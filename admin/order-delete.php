@@ -17,7 +17,8 @@ $order_id = isset($_GET['id']) ? (int) $_GET['id'] : 0;
 // Audit log the deletion
 $ip = $_SERVER['REMOTE_ADDR'] ?? '';
 $ua = $_SERVER['HTTP_USER_AGENT'] ?? '';
-audit_log_security($pdo, $order_id, 'order_deleted', null, ['order_id' => $order_id, 'performer' => $_SESSION['user']['full_name'] ?? $_SESSION['store_user']['name'] ?? 'unknown'], 'admin_panel');
+audit_log_order($pdo, $order_id, 'order_deleted', null, null, 'admin_panel', $_SESSION['user']['id'] ?? $_SESSION['store_user']['id'] ?? 0);
+add_admin_notification($pdo, 'حذف طلب', 'تم حذف الطلب رقم #'.$order_id.' من قبل مستخدم.', 'danger');
 
 if ($order_id <= 0) {
     admin_set_flash_message('orders', 'danger', 'تعذر حذف الطلب لأن المعرّف غير صالح.');
@@ -29,7 +30,7 @@ try {
     admin_ensure_order_call_log_table($pdo);
     admin_ensure_order_status_log_table($pdo);
 
-    $statement = $pdo->prepare('SELECT id, customer_name FROM tbl_order WHERE id = ? LIMIT 1');
+    $statement = $dbRepo->prepare('SELECT id, customer_name FROM tbl_order WHERE id = ? LIMIT 1');
     $statement->execute([$order_id]);
     $order = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -39,13 +40,13 @@ try {
 
     $pdo->beginTransaction();
 
-    $statement = $pdo->prepare('DELETE FROM tbl_order_call_log WHERE order_id = ?');
+    $statement = $dbRepo->prepare('DELETE FROM tbl_order_call_log WHERE order_id = ?');
     $statement->execute([$order_id]);
 
-    $statement = $pdo->prepare('DELETE FROM tbl_order_status_log WHERE order_id = ?');
+    $statement = $dbRepo->prepare('DELETE FROM tbl_order_status_log WHERE order_id = ?');
     $statement->execute([$order_id]);
 
-    $statement = $pdo->prepare('DELETE FROM tbl_order WHERE id = ?');
+    $statement = $dbRepo->prepare('DELETE FROM tbl_order WHERE id = ?');
     $statement->execute([$order_id]);
 
     $pdo->commit();

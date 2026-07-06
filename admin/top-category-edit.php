@@ -10,14 +10,14 @@ if(isset($_POST['form1'])) {
     } else {
 		// Duplicate Top Category checking
     	// current Top Category name that is in the database
-    	$statement = $pdo->prepare("SELECT * FROM tbl_top_category WHERE tcat_id=?");
+    	$statement = $dbRepo->prepare("SELECT * FROM tbl_top_category WHERE tcat_id=?");
 		$statement->execute(array($_REQUEST['id']));
 		$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 		foreach($result as $row) {
 			$current_tcat_name = $row['tcat_name'];
 		}
 
-		$statement = $pdo->prepare("SELECT * FROM tbl_top_category WHERE tcat_name=? and tcat_name!=?");
+		$statement = $dbRepo->prepare("SELECT * FROM tbl_top_category WHERE tcat_name=? and tcat_name!=?");
     	$statement->execute(array($_POST['tcat_name'],$current_tcat_name));
     	$total = $statement->rowCount();							
     	if($total) {
@@ -28,7 +28,7 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {    	
 		// updating into the database
-		$statement = $pdo->prepare("UPDATE tbl_top_category SET tcat_name=?,show_on_menu=? WHERE tcat_id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_top_category SET tcat_name=?,show_on_menu=? WHERE tcat_id=?");
 		$statement->execute(array($_POST['tcat_name'],$_POST['show_on_menu'],$_REQUEST['id']));
 
     	$success_message = 'Top Category is updated successfully.';
@@ -42,7 +42,7 @@ if(!isset($_REQUEST['id'])) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_top_category WHERE tcat_id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_top_category WHERE tcat_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);

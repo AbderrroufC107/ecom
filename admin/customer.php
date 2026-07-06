@@ -1,8 +1,11 @@
-<?php require_once('header.php'); ?>
+<?php
+header('Location: index.php');
+exit;
+?>
 
 <section class="content-header">
 	<div class="content-header-left">
-		<h1>View Customers</h1>
+		<h1><?php echo $l['page_customers']; ?></h1>
 	</div>
 </section>
 
@@ -14,21 +17,19 @@
 					<table id="customers_table" class="table table-bordered table-striped">
 						<thead>
 							<tr>
-								<th>رقم</th>
-								<th>الاسم واللقب</th>
-								<th>البريد الإلكتروني</th>
-								<th>رقم الهاتف</th>
-								<th>العنوان الكامل</th>
-								<th>حالة الحساب</th>
-								<th>تعديل</th>
+								<th><?php echo $l['num'] ?? '#'; ?></th>
+								<th><?php echo $l['customer_name']; ?></th>
+								<th><?php echo $l['phone']; ?></th>
+								<th><?php echo $l['full_address'] ?? ($l['nav_countries'] ?? 'العنوان'); ?></th>
+								<th><?php echo $l['account_status'] ?? 'حالة الحساب'; ?></th>
+								<th><?php echo $l['actions']; ?></th>
 							</tr>
 						</thead>
 						<tbody>
 							<?php
+							global $customerRepo;
 							$i = 0;
-							$statement = $pdo->prepare("SELECT * FROM tbl_customer ORDER BY id DESC");
-							$statement->execute();
-							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
+							$result = $customerRepo->findAll([], 'id DESC');
 							foreach ($result as $row) {
 								$i++;
 								?>
@@ -47,15 +48,15 @@
 									<td>
 										<?php 
 										if($row['cust_status'] == 1) {
-											echo '<span class="badge badge-success">نشط</span>';
+											echo '<span class="badge badge-success">' . ($l['status_active'] ?? 'نشط') . '</span>';
 										} else {
-											echo '<span class="badge badge-danger">معطل</span>';
+											echo '<span class="badge badge-danger">' . ($l['status_disabled'] ?? 'معطل') . '</span>';
 										}
 										?>
 									</td>
 									<td>
-										<a href="customer-change-status.php?id=<?php echo $row['id']; ?>" class="btn btn-success btn-xs">تغيير الحالة</a>
-										<a href="customer-delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-xs" onclick="return confirm('هل أنت متأكد من حذف هذا العميل؟');">حذف</a>
+										<a href="customer-change-status.php?id=<?php echo $row['id']; ?>" class="btn btn-success btn-xs"><?php echo $l['change_status'] ?? 'تغيير الحالة'; ?></a>
+										<a href="customer-delete.php?id=<?php echo $row['id']; ?>" class="btn btn-danger btn-xs" onclick="return confirm('<?php echo $l['confirm_delete_customer'] ?? 'هل أنت متأكد من حذف هذا العميل؟'; ?>');"><?php echo $l['delete']; ?></a>
 									</td>
 								</tr>
 								<?php
@@ -86,9 +87,29 @@
 $(document).ready(function() {
 	$('#customers_table').DataTable({
 		"order": [[ 0, "desc" ]],
+		<?php if ($current_lang === 'fr'): ?>
+		"language": {
+			"search": "Rechercher :",
+			"lengthMenu": "Afficher _MENU_ entrées",
+			"info": "Affichage de _START_ à _END_ sur _TOTAL_ entrées",
+			"paginate": { "first": "Premier", "last": "Dernier", "next": "Suivant", "previous": "Précédent" },
+			"emptyTable": "Aucune donnée",
+			"zeroRecords": "Aucun résultat"
+		}
+		<?php elseif ($current_lang === 'en'): ?>
+		"language": {
+			"search": "Search:",
+			"lengthMenu": "Show _MENU_ entries",
+			"info": "Showing _START_ to _END_ of _TOTAL_ entries",
+			"paginate": { "first": "First", "last": "Last", "next": "Next", "previous": "Previous" },
+			"emptyTable": "No data available",
+			"zeroRecords": "No matching records found"
+		}
+		<?php else: ?>
 		"language": {
 			"url": "//cdn.datatables.net/plug-ins/1.10.24/i18n/Arabic.json"
 		}
+		<?php endif; ?>
 	});
 });
 </script>

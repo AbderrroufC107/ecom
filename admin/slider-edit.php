@@ -31,7 +31,7 @@ if(isset($_POST['form1'])) {
 			$final_photo = '';
 		}
 
-		$statement = $pdo->prepare("UPDATE tbl_slider SET photo=?, heading=?, content=?, button_text=?, button_url=?, position=? WHERE id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_slider SET photo=?, heading=?, content=?, button_text=?, button_url=?, position=? WHERE id=?");
 		$statement->execute(array($final_photo,$_POST['heading'],$_POST['content'],$_POST['button_text'],$_POST['button_url'],$_POST['position'],$_REQUEST['id']));
 
 	    $success_message = 'Slider is updated successfully!';
@@ -44,7 +44,7 @@ if(!isset($_REQUEST['id'])) {
 	header('location: logout.php');
 	exit;
 } else {
-	$statement = $pdo->prepare("SELECT * FROM tbl_slider WHERE id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_slider WHERE id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -65,7 +65,7 @@ if(!isset($_REQUEST['id'])) {
 </section>
 
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_slider WHERE id=?");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_slider WHERE id=?");
 $statement->execute(array($_REQUEST['id']));
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($result as $row) {

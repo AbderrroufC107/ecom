@@ -48,7 +48,7 @@ $sql = "
     LIMIT 5
 ";
 
-$stmt = $pdo->prepare($sql);
+$stmt = $dbRepo->prepare($sql);
 $stmt->execute();
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -125,7 +125,7 @@ if (!empty($request['success']) && !empty($request['json'])) {
         }
         
         if ($latest_status !== '') {
-            $pdo->prepare("UPDATE tbl_order SET ecotrack_remote_status = ?, ecotrack_remote_time = ? WHERE id = ? LIMIT 1")
+            $dbRepo->prepare("UPDATE tbl_order SET ecotrack_remote_status = ?, ecotrack_remote_time = ? WHERE id = ? LIMIT 1")
                 ->execute([$latest_status, $latest_time, $order_id]);
             $risk_result = site_security_try_record_delivery_return(
                 $pdo,

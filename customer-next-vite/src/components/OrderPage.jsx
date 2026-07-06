@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { money, phpBase } from "../services/api";
 import { communesList, wilayasList } from "../services/wilayas-communes";
 import { StoreHeader } from "./Storefront";
@@ -84,9 +85,9 @@ function LandingHeader({ store }) {
   return (
     <header className="landing-header">
       <div className="landing-container landing-header-inner">
-        <a className="landing-logo" href="/">
+        <Link className="landing-logo" to="/">
           {store?.logo ? <img src={store.logo} alt={store?.name || "Store"} /> : <span>{store?.name || "Store"}</span>}
-        </a>
+        </Link>
         <nav className="landing-menu-inline" aria-label="القائمة الرئيسية">
           <a href="#top">الرئيسية</a>
           <a href="#orderFormSection">اطلب الآن</a>

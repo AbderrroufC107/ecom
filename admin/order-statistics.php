@@ -13,21 +13,27 @@ if (function_exists('admin_ensure_order_ecotrack_columns')) {
 
 if (!function_exists('stats_h')) {
     function stats_h($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return htmlspecialchars((string) $value, ENT_QUOTES, 'UTF-8');
     }
 }
 
 if (!function_exists('stats_money')) {
     function stats_money($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return number_format((float) $value) . ' دج';
     }
 }
 
 if (!function_exists('stats_text')) {
     function stats_text($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -39,7 +45,9 @@ if (!function_exists('stats_text')) {
 
 if (!function_exists('stats_status_meta')) {
     function stats_status_meta($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = trim((string) $status);
         $map = [
             'Pending' => ['label' => 'قيد التأكيد', 'class' => 'pending'],
@@ -54,7 +62,9 @@ if (!function_exists('stats_status_meta')) {
 
 if (!function_exists('stats_shipping_meta')) {
     function stats_shipping_meta($remote_status, $tracking = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = mb_strtolower(stats_text($remote_status), 'UTF-8');
         if (trim((string) $tracking) === '') {
             return ['label' => 'بدون تتبع', 'class' => 'empty', 'icon' => 'fa-minus-circle'];
@@ -77,14 +87,18 @@ if (!function_exists('stats_shipping_meta')) {
 
 if (!function_exists('stats_column')) {
     function stats_column($alias, $column)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return $alias !== '' ? $alias . '.' . $column : $column;
     }
 }
 
 if (!function_exists('stats_tracking_condition')) {
     function stats_tracking_condition($alias, $filter)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $tracking = stats_column($alias, 'ecotrack_tracking');
         $remote = stats_column($alias, 'ecotrack_remote_status');
         $has_tracking = "($tracking IS NOT NULL AND $tracking <> '')";
@@ -116,7 +130,9 @@ if (!function_exists('stats_tracking_condition')) {
 
 if (!function_exists('stats_build_where')) {
     function stats_build_where($alias = '', $product_alias = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $conditions = [];
         $params = [];
         $prefix = $alias !== '' ? $alias . '.' : '';
@@ -168,8 +184,10 @@ if (!function_exists('stats_build_where')) {
 
 if (!function_exists('stats_fetch_value')) {
     function stats_fetch_value(PDO $pdo, $sql, array $params = [])
-    {
-        $statement = $pdo->prepare($sql);
+    { global $dbRepo;
+    global $dbRepo;
+
+        $statement = $dbRepo->prepare($sql);
         $statement->execute($params);
         return $statement->fetchColumn();
     }
@@ -245,7 +263,7 @@ $delivered_shipments = (int) stats_fetch_value($pdo, "SELECT COUNT(*) FROM tbl_o
 $returned_shipments = (int) stats_fetch_value($pdo, "SELECT COUNT(*) FROM tbl_order WHERE " . stats_tracking_condition('', 'returned'));
 $followup_shipments = (int) stats_fetch_value($pdo, "SELECT COUNT(*) FROM tbl_order WHERE " . stats_tracking_condition('', 'warning'));
 
-$statement = $pdo->prepare("
+$statement = $dbRepo->prepare("
     SELECT DISTINCT COALESCE(NULLIF(p.p_name, ''), NULLIF(o.product_name, '')) AS product_name
     FROM tbl_order o
     LEFT JOIN tbl_product p ON o.product_id = p.p_id
@@ -255,7 +273,7 @@ $statement = $pdo->prepare("
 $statement->execute();
 $product_options = $statement->fetchAll(PDO::FETCH_COLUMN);
 
-$statement = $pdo->prepare("
+$statement = $dbRepo->prepare("
     SELECT o.*, p.purchase_price, p.p_name, c.cust_name
     FROM tbl_order o
     LEFT JOIN tbl_product p ON o.product_id = p.p_id

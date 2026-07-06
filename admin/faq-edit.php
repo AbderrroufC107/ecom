@@ -16,7 +16,7 @@ if(isset($_POST['form1'])) {
 
 	if($valid == 1) {
 
-		$statement = $pdo->prepare("UPDATE tbl_faq SET faq_title=?, faq_content=? WHERE faq_id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_faq SET faq_title=?, faq_content=? WHERE faq_id=?");
 		$statement->execute(array($_POST['faq_title'],$_POST['faq_content'],$_REQUEST['id']));
 		   
 
@@ -31,7 +31,7 @@ if(!isset($_REQUEST['id'])) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_faq WHERE faq_id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_faq WHERE faq_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -52,7 +52,7 @@ if(!isset($_REQUEST['id'])) {
 </section>
 
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_faq WHERE faq_id=?");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_faq WHERE faq_id=?");
 $statement->execute(array($_REQUEST['id']));
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);
 foreach ($result as $row) {
@@ -109,4 +109,7 @@ foreach ($result as $row) {
 
 </section>
 
+<link rel="stylesheet" href="css/summernote.css">
+<script src="js/summernote.js"></script>
+<script>$(document).ready(function(){ $('#editor1').summernote({height:300}); });</script>
 <?php require_once('footer.php'); ?>

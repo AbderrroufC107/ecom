@@ -5,6 +5,8 @@ require_once __DIR__ . '/next-common.php';
 
 next_api_headers();
 
+if (isset($pdo)) { next_api_rate_limit($pdo, basename(__FILE__)); }
+
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     next_json(['success' => false, 'message' => 'طريقة الطلب غير صحيحة.'], 405);
 }

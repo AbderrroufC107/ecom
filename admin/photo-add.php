@@ -10,7 +10,7 @@ if(isset($_POST['form1'])) {
     }
 
     if($valid == 1) {
-    	$statement = $pdo->prepare("SHOW TABLE STATUS LIKE 'tbl_photo'");
+    	$statement = $dbRepo->prepare("SHOW TABLE STATUS LIKE 'tbl_photo'");
 		$statement->execute();
 		$result = $statement->fetchAll();
 		foreach($result as $row) {
@@ -27,7 +27,7 @@ if(isset($_POST['form1'])) {
 		);
 
 		if($image_ok && $image_value !== '') {
-			$statement = $pdo->prepare("INSERT INTO tbl_photo (caption,photo) VALUES (?,?)");
+			$statement = $dbRepo->prepare("INSERT INTO tbl_photo (caption,photo) VALUES (?,?)");
 			$statement->execute(array($_POST['caption'],$image_value));
 			$success_message = 'Photo is added successfully.';
 

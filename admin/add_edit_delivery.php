@@ -28,7 +28,7 @@ $is_edit_price = isset($_REQUEST['edit_price']);
 $is_edit_company = isset($_REQUEST['id']) && !$is_edit_price;
 
 if ($is_edit_company) {
-    $statement = $pdo->prepare('SELECT * FROM tbl_delivery_company WHERE id = ?');
+    $statement = $dbRepo->prepare('SELECT * FROM tbl_delivery_company WHERE id = ?');
     $statement->execute([$_REQUEST['id']]);
     $company = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -42,7 +42,7 @@ if ($is_edit_company) {
 }
 
 if ($is_edit_price) {
-    $statement = $pdo->prepare('
+    $statement = $dbRepo->prepare('
         SELECT p.*, c.name AS company_name
         FROM tbl_delivery_price p
         LEFT JOIN tbl_delivery_company c ON c.id = p.company_id
@@ -78,11 +78,11 @@ if (isset($_POST['form1'])) {
         } elseif (!is_numeric($price) || (float) $price < 0) {
             $error_message = 'أدخل سعراً صحيحاً.';
         } else {
-            $statement = $pdo->prepare('UPDATE tbl_delivery_price SET wilaya = ?, price = ?, delivery_type = ?, company_id = ? WHERE id = ?');
+            $statement = $dbRepo->prepare('UPDATE tbl_delivery_price SET wilaya = ?, price = ?, delivery_type = ?, company_id = ? WHERE id = ?');
             $statement->execute([$wilaya, $price, $delivery_type, $company_id, $_REQUEST['edit_price']]);
             $success_message = 'تم تحديث سعر التوصيل بنجاح.';
 
-            $statement = $pdo->prepare('SELECT name FROM tbl_delivery_company WHERE id = ? LIMIT 1');
+            $statement = $dbRepo->prepare('SELECT name FROM tbl_delivery_company WHERE id = ? LIMIT 1');
             $statement->execute([$company_id]);
             $company_name = $statement->fetchColumn() ?: '';
         }
@@ -94,19 +94,19 @@ if (isset($_POST['form1'])) {
             $error_message = 'اسم الشركة مطلوب.';
         } else {
             if ($active === 1) {
-                $pdo->exec('UPDATE tbl_delivery_company SET active = 0');
+                $dbRepo->executeCommand('UPDATE tbl_delivery_company SET active = 0');
             }
 
             if ($is_edit_company) {
-                $statement = $pdo->prepare('UPDATE tbl_delivery_company SET name = ?, active = ? WHERE id = ?');
+                $statement = $dbRepo->prepare('UPDATE tbl_delivery_company SET name = ?, active = ? WHERE id = ?');
                 $statement->execute([$company_name, $active, $_REQUEST['id']]);
                 $success_message = 'تم تحديث بيانات شركة التوصيل بنجاح.';
             } else {
-                $statement = $pdo->prepare('INSERT INTO tbl_delivery_company (name, active) VALUES (?, ?)');
+                $statement = $dbRepo->prepare('INSERT INTO tbl_delivery_company (name, active) VALUES (?, ?)');
                 $statement->execute([$company_name, $active]);
                 $success_message = 'تم إضافة شركة التوصيل بنجاح.';
                 if ($active === 1) {
-                    $_SESSION['active_company_id'] = (int) $pdo->lastInsertId();
+                    $_SESSION['active_company_id'] = (int) $dbRepo->lastInsertId();
                 }
             }
         }

@@ -18,7 +18,7 @@ $status_labels = [
 if (isset($_GET['delete'])) {
     $id = (int)$_GET['delete'];
     if ($id > 0) {
-        $statement = $pdo->prepare("DELETE FROM site_security_blacklist WHERE id = ?");
+        $statement = $dbRepo->prepare("DELETE FROM site_security_blacklist WHERE id = ?");
         $statement->execute([$id]);
         $success_message = 'تم حذف قاعدة المخاطر.';
     }
@@ -27,7 +27,7 @@ if (isset($_GET['delete'])) {
 if (isset($_GET['toggle'])) {
     $id = (int)$_GET['toggle'];
     if ($id > 0) {
-        $statement = $pdo->prepare("UPDATE site_security_blacklist SET is_active = IF(is_active = 1, 0, 1), updated_at = NOW() WHERE id = ?");
+        $statement = $dbRepo->prepare("UPDATE site_security_blacklist SET is_active = IF(is_active = 1, 0, 1), updated_at = NOW() WHERE id = ?");
         $statement->execute([$id]);
         $success_message = 'تم تحديث حالة القاعدة.';
     }
@@ -35,7 +35,7 @@ if (isset($_GET['toggle'])) {
 
 $editing_rule = null;
 if (isset($_GET['edit'])) {
-    $statement = $pdo->prepare("SELECT * FROM site_security_blacklist WHERE id = ? LIMIT 1");
+    $statement = $dbRepo->prepare("SELECT * FROM site_security_blacklist WHERE id = ? LIMIT 1");
     $statement->execute([(int)$_GET['edit']]);
     $editing_rule = $statement->fetch(PDO::FETCH_ASSOC) ?: null;
 }
@@ -68,7 +68,7 @@ if (isset($_POST['save_security_rule'])) {
         $error_message = 'يجب إدخال إشارة واحدة على الأقل (رقم الهاتف، العنوان، IP، بصمة الجهاز، أو الاسم مع الولاية/البلدية).';
     } else {
         if ($rule_id > 0) {
-            $statement = $pdo->prepare("
+            $statement = $dbRepo->prepare("
                 UPDATE site_security_blacklist
                 SET phone = ?, normalized_phone = ?, 
                     customer_name = ?, normalized_name = ?,
@@ -97,13 +97,13 @@ if (isset($_POST['save_security_rule'])) {
         } else {
             $existing_id = 0;
             if ($normalized_phone !== '') {
-                $existing_statement = $pdo->prepare("SELECT id FROM site_security_blacklist WHERE normalized_phone = ? ORDER BY is_active DESC, id DESC LIMIT 1");
+                $existing_statement = $dbRepo->prepare("SELECT id FROM site_security_blacklist WHERE normalized_phone = ? ORDER BY is_active DESC, id DESC LIMIT 1");
                 $existing_statement->execute([$normalized_phone]);
                 $existing_id = (int)($existing_statement->fetchColumn() ?: 0);
             }
 
             if ($existing_id > 0) {
-                $statement = $pdo->prepare("
+                $statement = $dbRepo->prepare("
                     UPDATE site_security_blacklist
                     SET phone = ?, normalized_phone = ?, 
                         customer_name = ?, normalized_name = ?,
@@ -128,7 +128,7 @@ if (isset($_POST['save_security_rule'])) {
                     $status, $notes, $rejected_count, $is_active, $existing_id
                 ]);
             } else {
-                $statement = $pdo->prepare("
+                $statement = $dbRepo->prepare("
                     INSERT INTO site_security_blacklist
                     (phone, normalized_phone, customer_name, normalized_name, wilaya, commune, address, normalized_address, ip_address, device_id, status, notes, rejected_orders_count, is_active, created_at)
                     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, NOW())
@@ -159,14 +159,14 @@ $stats = [
     'deposit' => 0
 ];
 try {
-    $stats['total'] = (int)$pdo->query("SELECT COUNT(*) FROM site_security_blacklist")->fetchColumn();
-    $stats['active'] = (int)$pdo->query("SELECT COUNT(*) FROM site_security_blacklist WHERE is_active = 1")->fetchColumn();
-    $stats['banned'] = (int)$pdo->query("SELECT COUNT(*) FROM site_security_blacklist WHERE is_active = 1 AND status = 'banned'")->fetchColumn();
-    $stats['deposit'] = (int)$pdo->query("SELECT COUNT(*) FROM site_security_blacklist WHERE is_active = 1 AND status IN ('deposit_required', 'high_risk')")->fetchColumn();
+    $stats['total'] = (int)$dbRepo->query("SELECT COUNT(*) FROM site_security_blacklist")->fetchColumn();
+    $stats['active'] = (int)$dbRepo->query("SELECT COUNT(*) FROM site_security_blacklist WHERE is_active = 1")->fetchColumn();
+    $stats['banned'] = (int)$dbRepo->query("SELECT COUNT(*) FROM site_security_blacklist WHERE is_active = 1 AND status = 'banned'")->fetchColumn();
+    $stats['deposit'] = (int)$dbRepo->query("SELECT COUNT(*) FROM site_security_blacklist WHERE is_active = 1 AND status IN ('deposit_required', 'high_risk')")->fetchColumn();
 } catch (Exception $e) {
 }
 
-$statement = $pdo->query("SELECT * FROM site_security_blacklist ORDER BY is_active DESC, FIELD(status, 'banned', 'deposit_required', 'high_risk', 'review', 'warning') ASC, rejected_orders_count DESC, created_at DESC");
+$statement = $dbRepo->query("SELECT * FROM site_security_blacklist ORDER BY is_active DESC, FIELD(status, 'banned', 'deposit_required', 'high_risk', 'review', 'warning') ASC, rejected_orders_count DESC, created_at DESC");
 $rules = $statement->fetchAll(PDO::FETCH_ASSOC);
 $form = $editing_rule ?: [
     'id' => 0,

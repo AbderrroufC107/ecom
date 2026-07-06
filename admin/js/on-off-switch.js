@@ -130,10 +130,29 @@ $.extend(DG.OnOffSwitch.prototype, {
         this.thumb.on("mouseenter", this.enterThumb.bind(this));
         this.thumb.on("mouseleave", this.leaveThumb.bind(this));
 
-        $(document.documentElement).on("touchmove", this.drag.bind(this));
-        $(document.documentElement).on("mousemove", this.drag.bind(this));
-        $(document.documentElement).on("mouseup", this.endDrag.bind(this));
-        $(document.documentElement).on("touchend", this.endDrag.bind(this));
+        // Bind move/end handlers. Use non-passive touch listeners when possible
+        if (document && document.documentElement && document.documentElement.addEventListener) {
+            this._boundDrag = this.drag.bind(this);
+            this._boundEnd = this.endDrag.bind(this);
+            try {
+                document.documentElement.addEventListener('touchmove', this._boundDrag, {passive:false});
+            } catch (err) {
+                // fallback for older browsers
+                document.documentElement.addEventListener('touchmove', this._boundDrag, false);
+            }
+            document.documentElement.addEventListener('mousemove', this._boundDrag, false);
+            document.documentElement.addEventListener('mouseup', this._boundEnd, false);
+            try {
+                document.documentElement.addEventListener('touchend', this._boundEnd, {passive:false});
+            } catch (err) {
+                document.documentElement.addEventListener('touchend', this._boundEnd, false);
+            }
+        } else {
+            $(document.documentElement).on("touchmove", this.drag.bind(this));
+            $(document.documentElement).on("mousemove", this.drag.bind(this));
+            $(document.documentElement).on("mouseup", this.endDrag.bind(this));
+            $(document.documentElement).on("touchend", this.endDrag.bind(this));
+        }
     },
 
     enterThumb: function () {
@@ -287,6 +306,13 @@ $.extend(DG.OnOffSwitch.prototype, {
             x: this.getX(e),
             elX: position.left,
         };
+        // Prevent default to avoid native scrolling / text selection while dragging
+        if (e && e.preventDefault) {
+            try { e.preventDefault(); } catch (err) {}
+        }
+        if (e && e.stopPropagation) {
+            try { e.stopPropagation(); } catch (err) {}
+        }
         return false;
     },
 
@@ -296,6 +322,11 @@ $.extend(DG.OnOffSwitch.prototype, {
         }
 
         this.hasBeenDragged = true;
+        // Prevent native page scroll while dragging (works when listener is non-passive)
+        if (e && e.preventDefault) {
+            try { e.preventDefault(); } catch (err) {}
+        }
+
         var x = this.startCoordinates.elX + this.getX(e) - this.startCoordinates.x;
 
         if (x < this.minX)x = this.minX;
@@ -307,16 +338,22 @@ $.extend(DG.OnOffSwitch.prototype, {
     },
 
     getX: function (e) {
-        var x = e.pageX;
-
-        if (e.type && (e.type == "touchstart" || e.type == "touchmove")) {
+        var x = 0;
+        // jQuery event with originalEvent
+        if (e && e.originalEvent && e.originalEvent.touches && e.originalEvent.touches.length) {
             x = e.originalEvent.touches[0].pageX;
+        } else if (e && e.touches && e.touches.length) {
+            // native touch event
+            x = e.touches[0].pageX;
+        } else if (e && typeof e.pageX !== 'undefined') {
+            x = e.pageX;
+        } else if (e && typeof e.clientX !== 'undefined') {
+            x = e.clientX;
         }
 
         this.dragCurrentX = x;
 
         return x;
-
     },
 
     endDrag: function () {

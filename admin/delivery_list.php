@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 require_once('header.php');
 
 if (!isset($pdo)) {
@@ -7,7 +7,9 @@ if (!isset($pdo)) {
 
 if (!function_exists('delivery_list_redirect')) {
     function delivery_list_redirect(array $params = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = 'delivery_list.php';
         if (!empty($params)) {
             $url .= '?' . http_build_query($params);
@@ -19,14 +21,18 @@ if (!function_exists('delivery_list_redirect')) {
 
 if (!function_exists('delivery_money')) {
     function delivery_money($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return number_format((float) $value, 2) . ' دج';
     }
 }
 
 if (!function_exists('delivery_range')) {
     function delivery_range($minPrice, $maxPrice)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($minPrice === null || $maxPrice === null) {
             return 'لا توجد أسعار بعد';
         }
@@ -59,15 +65,15 @@ if (isset($_GET['active_company'])) {
         $error_message = 'معرّف الشركة غير صالح.';
     } else {
         try {
-            $statement = $pdo->prepare('SELECT id FROM tbl_delivery_company WHERE id = ? LIMIT 1');
+            $statement = $dbRepo->prepare('SELECT id FROM tbl_delivery_company WHERE id = ? LIMIT 1');
             $statement->execute([$active_company_id]);
 
             if (!$statement->fetch(PDO::FETCH_ASSOC)) {
                 $error_message = 'الشركة المحددة غير موجودة.';
             } else {
                 $pdo->beginTransaction();
-                $pdo->exec('UPDATE tbl_delivery_company SET active = 0');
-                $statement = $pdo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
+                $dbRepo->executeCommand('UPDATE tbl_delivery_company SET active = 0');
+                $statement = $dbRepo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
                 $statement->execute([$active_company_id]);
                 $pdo->commit();
 
@@ -97,7 +103,7 @@ if (isset($_GET['delete_company'])) {
         $error_message = 'معرّف الشركة المطلوب حذفها غير صالح.';
     } else {
         try {
-            $statement = $pdo->prepare('SELECT id FROM tbl_delivery_company WHERE id = ? LIMIT 1');
+            $statement = $dbRepo->prepare('SELECT id FROM tbl_delivery_company WHERE id = ? LIMIT 1');
             $statement->execute([$delete_company_id]);
 
             if (!$statement->fetch(PDO::FETCH_ASSOC)) {
@@ -105,22 +111,22 @@ if (isset($_GET['delete_company'])) {
             } else {
                 $pdo->beginTransaction();
 
-                $statement = $pdo->prepare('DELETE FROM tbl_delivery_price WHERE company_id = ?');
+                $statement = $dbRepo->prepare('DELETE FROM tbl_delivery_price WHERE company_id = ?');
                 $statement->execute([$delete_company_id]);
 
-                $statement = $pdo->prepare('DELETE FROM tbl_delivery_company WHERE id = ?');
+                $statement = $dbRepo->prepare('DELETE FROM tbl_delivery_company WHERE id = ?');
                 $statement->execute([$delete_company_id]);
 
-                $statement = $pdo->query('SELECT id FROM tbl_delivery_company WHERE active = 1 LIMIT 1');
+                $statement = $dbRepo->query('SELECT id FROM tbl_delivery_company WHERE active = 1 LIMIT 1');
                 $remaining_active = $statement->fetch(PDO::FETCH_ASSOC);
 
                 if (!$remaining_active) {
-                    $statement = $pdo->query('SELECT id FROM tbl_delivery_company ORDER BY id ASC LIMIT 1');
+                    $statement = $dbRepo->query('SELECT id FROM tbl_delivery_company ORDER BY id ASC LIMIT 1');
                     $fallback_company = $statement->fetch(PDO::FETCH_ASSOC);
 
                     if ($fallback_company) {
-                        $pdo->exec('UPDATE tbl_delivery_company SET active = 0');
-                        $statement = $pdo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
+                        $dbRepo->executeCommand('UPDATE tbl_delivery_company SET active = 0');
+                        $statement = $dbRepo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
                         $statement->execute([(int) $fallback_company['id']]);
                         $_SESSION['active_company_id'] = (int) $fallback_company['id'];
                     } else {
@@ -150,7 +156,7 @@ if (isset($_GET['delete_price'])) {
         $error_message = 'معرّف السعر غير صالح.';
     } else {
         try {
-            $statement = $pdo->prepare('DELETE FROM tbl_delivery_price WHERE id = ?');
+            $statement = $dbRepo->prepare('DELETE FROM tbl_delivery_price WHERE id = ?');
             $statement->execute([$delete_price_id]);
             delivery_list_redirect(['msg' => 'price_deleted']);
         } catch (Exception $e) {
@@ -160,21 +166,21 @@ if (isset($_GET['delete_price'])) {
     }
 }
 
-$statement = $pdo->query('SELECT id FROM tbl_delivery_company WHERE active = 1 LIMIT 1');
+$statement = $dbRepo->query('SELECT id FROM tbl_delivery_company WHERE active = 1 LIMIT 1');
 $active_company_row = $statement->fetch(PDO::FETCH_ASSOC);
 
 if (!$active_company_row) {
-    $statement = $pdo->query('SELECT id FROM tbl_delivery_company ORDER BY id ASC LIMIT 1');
+    $statement = $dbRepo->query('SELECT id FROM tbl_delivery_company ORDER BY id ASC LIMIT 1');
     $first_company_row = $statement->fetch(PDO::FETCH_ASSOC);
 
     if ($first_company_row) {
-        $statement = $pdo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
+        $statement = $dbRepo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
         $statement->execute([(int) $first_company_row['id']]);
         $_SESSION['active_company_id'] = (int) $first_company_row['id'];
     }
 }
 
-$statement = $pdo->query("\n    SELECT\n        c.id,\n        c.name,\n        c.active,\n        COUNT(p.id) AS price_count,\n        COUNT(DISTINCT p.wilaya) AS wilaya_count,\n        SUM(CASE WHEN p.delivery_type = 'منزل' THEN 1 ELSE 0 END) AS home_count,\n        SUM(CASE WHEN p.delivery_type = 'مكتب' THEN 1 ELSE 0 END) AS office_count,\n        MIN(p.price) AS min_price,\n        MAX(p.price) AS max_price\n    FROM tbl_delivery_company c\n    LEFT JOIN tbl_delivery_price p ON p.company_id = c.id\n    GROUP BY c.id, c.name, c.active\n    ORDER BY c.active DESC, c.name ASC, c.id ASC\n");
+$statement = $dbRepo->query("\n    SELECT\n        c.id,\n        c.name,\n        c.active,\n        COUNT(p.id) AS price_count,\n        COUNT(DISTINCT p.wilaya) AS wilaya_count,\n        SUM(CASE WHEN p.delivery_type = 'منزل' THEN 1 ELSE 0 END) AS home_count,\n        SUM(CASE WHEN p.delivery_type = 'مكتب' THEN 1 ELSE 0 END) AS office_count,\n        MIN(p.price) AS min_price,\n        MAX(p.price) AS max_price\n    FROM tbl_delivery_company c\n    LEFT JOIN tbl_delivery_price p ON p.company_id = c.id\n    GROUP BY c.id, c.name, c.active\n    ORDER BY c.active DESC, c.name ASC, c.id ASC\n");
 $companies = $statement->fetchAll(PDO::FETCH_ASSOC);
 
 $active_company = null;
@@ -219,7 +225,7 @@ if ($active_company_id !== null) {
     }
 
     $price_query .= " ORDER BY wilaya ASC, CASE WHEN delivery_type = 'منزل' THEN 0 ELSE 1 END ASC, price ASC";
-    $statement = $pdo->prepare($price_query);
+    $statement = $dbRepo->prepare($price_query);
     $statement->execute($price_params);
     $filtered_prices = $statement->fetchAll(PDO::FETCH_ASSOC);
     $filtered_prices_count = count($filtered_prices);
@@ -233,52 +239,46 @@ $has_filters = ($price_search !== '' || $delivery_type_filter !== '');
 .delivery-admin .panel-box{border-top:3px solid #1f6fb2;border-radius:12px;box-shadow:0 10px 24px rgba(18,35,52,.08);overflow:hidden}
 .delivery-admin .panel-box .box-header{padding:18px 20px;border-bottom:1px solid #e3ebf2;background:#f8fbfe}
 .delivery-admin .panel-box .box-body{padding:20px}
-.delivery-admin .metric{display:flex;gap:12px;align-items:center;margin-bottom:20px;padding:18px;border:1px solid #dde5ec;border-radius:14px;background:#fff;box-shadow:0 8px 20px rgba(19,37,55,.06)}
-.delivery-admin .metric i{display:inline-flex;align-items:center;justify-content:center;width:46px;height:46px;border-radius:14px;background:#eef6fd;color:#1f6fb2;font-size:20px}
-.delivery-admin .metric small{display:block;color:#6c7a89;font-size:12px;font-weight:700}
-.delivery-admin .metric strong{display:block;color:#263442;font-size:21px;line-height:1.4}
-.delivery-admin .quickbar,.delivery-admin .filters,.delivery-admin .card-actions,.delivery-admin .empty-actions{display:flex;flex-wrap:wrap;gap:10px}
-.delivery-admin .quickbar{justify-content:space-between;align-items:flex-end}
-.delivery-admin .quickbar-form{flex:1 1 340px}
-.delivery-admin .quickbar label,.delivery-admin .filters label,.delivery-admin .search-wrap label{display:block;margin-bottom:6px;color:#263442;font-weight:700}
-.delivery-admin .quickbar .inline-controls{display:flex;gap:10px}
-.delivery-admin .quickbar-note,.delivery-admin .muted{margin:8px 0 0;color:#6c7a89;font-size:13px}
-.delivery-admin .search-wrap{max-width:320px;margin-bottom:18px}
-.delivery-admin .company-card{height:100%;margin-bottom:20px;padding:20px;border:1px solid #dde5ec;border-radius:16px;background:#fff;box-shadow:0 8px 24px rgba(19,37,55,.06);transition:.2s ease}
-.delivery-admin .company-card:hover{transform:translateY(-2px);box-shadow:0 14px 28px rgba(19,37,55,.10)}
-.delivery-admin .company-card.active{border-color:rgba(31,111,178,.35);background:linear-gradient(180deg,#fff 0,#f7fbff 100%)}
-.delivery-admin .company-head{display:flex;gap:10px;justify-content:space-between;align-items:flex-start;margin-bottom:16px}
-.delivery-admin .company-head h3{margin:0;color:#263442;font-size:20px;font-weight:700}
-.delivery-admin .company-head p{margin:6px 0 0;color:#6c7a89;font-size:13px}
-.delivery-admin .state-pill,.delivery-admin .type-pill{display:inline-flex;align-items:center;justify-content:center;padding:6px 11px;border-radius:999px;font-size:12px;font-weight:700;white-space:nowrap}
+.delivery-admin .metric{display:flex;gap:10px;align-items:center;margin-bottom:16px;padding:14px;border:1px solid #dde5ec;border-radius:12px;background:#fff;box-shadow:0 4px 12px rgba(19,37,55,.05)}
+.delivery-admin .metric i{display:inline-flex;align-items:center;justify-content:center;width:38px;height:38px;border-radius:10px;background:#eef6fd;color:#1f6fb2;font-size:16px}
+.delivery-admin .metric small{display:block;color:#6c7a89;font-size:11px;font-weight:700}
+.delivery-admin .metric strong{display:block;color:#263442;font-size:18px;line-height:1.3}
+.delivery-admin .filters,.delivery-admin .card-actions,.delivery-admin .empty-actions{display:flex;flex-wrap:wrap;gap:8px}
+.delivery-admin .filters label,.delivery-admin .search-wrap label{display:block;margin-bottom:4px;color:#263442;font-weight:700}
+.delivery-admin .muted{margin:6px 0 0;color:#6c7a89;font-size:13px}
+.delivery-admin .search-wrap{max-width:280px;margin-bottom:14px}
+.delivery-admin .company-card{height:100%;margin-bottom:16px;padding:14px;border:1px solid #dde5ec;border-radius:12px;background:#fff;box-shadow:0 4px 12px rgba(19,37,55,.05);transition:.15s ease}
+.delivery-admin .company-card:hover{box-shadow:0 8px 18px rgba(19,37,55,.08)}
+.delivery-admin .company-card.active{border-color:rgba(31,111,178,.30);background:linear-gradient(180deg,#fff 0,#f7fbff 100%)}
+.delivery-admin .company-head{display:flex;gap:8px;justify-content:space-between;align-items:center;margin-bottom:10px}
+.delivery-admin .company-head h3{margin:0;color:#263442;font-size:15px;font-weight:700}
+.delivery-admin .state-pill,.delivery-admin .type-pill{display:inline-flex;align-items:center;justify-content:center;padding:4px 9px;border-radius:999px;font-size:11px;font-weight:700;white-space:nowrap}
 .delivery-admin .state-pill.active{background:#e7f7f0;color:#1e8a63}
 .delivery-admin .state-pill.inactive{background:#f3f5f7;color:#7c8a98}
-.delivery-admin .mini-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
-.delivery-admin .mini-stats div{padding:12px;border-radius:12px;background:#f5f8fb}
-.delivery-admin .mini-stats strong{display:block;color:#263442;font-size:17px}
-.delivery-admin .mini-stats span{display:block;margin-top:4px;color:#6c7a89;font-size:12px}
-.delivery-admin .company-range{margin:0 0 16px;color:#263442;font-weight:600}
-.delivery-admin .summary{display:flex;flex-wrap:wrap;gap:18px;justify-content:space-between;margin-bottom:20px;padding:20px;border:1px solid #dde5ec;border-radius:16px;background:linear-gradient(135deg,#f9fbfd 0,#eef5fb 100%)}
-.delivery-admin .summary-main{flex:1 1 250px}
-.delivery-admin .summary-main h3{margin:12px 0 8px;color:#263442;font-size:24px;font-weight:700}
-.delivery-admin .summary-main p{margin:0;color:#6c7a89;line-height:1.8}
-.delivery-admin .summary-grid{display:grid;grid-template-columns:repeat(2,minmax(150px,1fr));gap:12px;flex:1 1 330px}
-.delivery-admin .summary-grid div{padding:14px;border-radius:14px;background:rgba(255,255,255,.92);border:1px solid rgba(31,111,178,.12)}
-.delivery-admin .summary-grid strong{display:block;color:#263442;font-size:18px}
-.delivery-admin .summary-grid span{color:#6c7a89;font-size:12px}
-.delivery-admin .filters{align-items:flex-end;margin-bottom:16px;padding:18px;border:1px solid #dde5ec;border-radius:14px;background:#f5f8fb}
-.delivery-admin .filter-field{flex:1 1 220px}
-.delivery-admin .table-wrap{border:1px solid #dde5ec;border-radius:14px;overflow:hidden}
-.delivery-admin .table-wrap .table{margin-bottom:0}
-.delivery-admin .table-wrap thead th{background:#f8fafc;color:#263442;border-bottom:1px solid #dde5ec;font-weight:700}
-.delivery-admin .table-wrap tbody td{vertical-align:middle}
-.delivery-admin .type-pill.home{background:#e7f2fd;color:#1f6fb2;min-width:84px}
-.delivery-admin .type-pill.office{background:#fff2df;color:#d97706;min-width:84px}
+.delivery-admin .mini-stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:6px;margin-bottom:10px}
+.delivery-admin .mini-stats div{padding:8px;border-radius:8px;background:#f5f8fb}
+.delivery-admin .mini-stats strong{display:block;color:#263442;font-size:14px}
+.delivery-admin .mini-stats span{display:block;margin-top:2px;color:#6c7a89;font-size:10px}
+.delivery-admin .company-range{margin:0 0 10px;color:#6c7a89;font-size:12px;text-align:center}
+.delivery-admin .filters{align-items:flex-end;margin-bottom:14px;padding:14px;border:1px solid #dde5ec;border-radius:12px;background:#f5f8fb}
+.delivery-admin .filter-field{flex:1 1 200px}
+.delivery-admin .type-pill.home{background:#e7f2fd;color:#1f6fb2;min-width:68px}
+.delivery-admin .type-pill.office{background:#fff2df;color:#d97706;min-width:68px}
 .delivery-admin .empty-state{padding:28px 22px;border:1px dashed #c8d6e3;border-radius:16px;background:#fbfdff;text-align:center}
 .delivery-admin .empty-state i{display:inline-flex;align-items:center;justify-content:center;width:58px;height:58px;margin-bottom:14px;border-radius:18px;background:#eef6fd;color:#1f6fb2;font-size:24px}
 .delivery-admin .empty-state h3{margin:0 0 8px;color:#263442;font-size:22px;font-weight:700}
 .delivery-admin .empty-state p{max-width:620px;margin:0 auto 18px;color:#6c7a89;line-height:1.8}
-@media (max-width:767px){.delivery-admin .panel-box .box-header,.delivery-admin .panel-box .box-body{padding:16px}.delivery-admin .quickbar .inline-controls,.delivery-admin .quickbar,.delivery-admin .filters,.delivery-admin .card-actions,.delivery-admin .empty-actions{flex-direction:column}.delivery-admin .quickbar .form-control,.delivery-admin .quickbar .btn,.delivery-admin .filters .btn,.delivery-admin .card-actions .btn,.delivery-admin .empty-actions .btn{width:100%}.delivery-admin .mini-stats,.delivery-admin .summary-grid{grid-template-columns:1fr}}
+.delivery-admin .price-card{padding:14px;border-radius:12px;background:#fff;border:1px solid #dde5ec;box-shadow:0 4px 12px rgba(19,37,55,.05);transition:.15s ease;margin-bottom:14px;display:flex;flex-direction:column;gap:8px}
+.delivery-admin .price-card:hover{box-shadow:0 8px 18px rgba(19,37,55,.08)}
+.delivery-admin .price-card.home{border-right:3px solid #1f6fb2}
+.delivery-admin .price-card.office{border-right:3px solid #d97706}
+.delivery-admin .price-card-head{display:flex;justify-content:space-between;align-items:center}
+.delivery-admin .price-wilaya{font-weight:700;color:#263442;font-size:14px}
+.delivery-admin .price-amount{font-size:18px;font-weight:800;color:#1f6fb2}
+.delivery-admin .price-card.office .price-amount{color:#d97706}
+.delivery-admin .price-card-actions{display:flex;gap:6px;padding-top:4px;border-top:1px solid #eef2f6}
+.delivery-admin .inline-company-form{display:flex;align-items:center;gap:4px;font-size:13px;color:#6c7a89}
+@media (max-width:767px){.delivery-admin .panel-box .box-header,.delivery-admin .panel-box .box-body{padding:14px}.delivery-admin .filters,.delivery-admin .card-actions,.delivery-admin .empty-actions{flex-direction:column}.delivery-admin .filters .btn,.delivery-admin .card-actions .btn,.delivery-admin .empty-actions .btn{width:100%}.delivery-admin .mini-stats{grid-template-columns:1fr}.delivery-admin .price-cards .price-card{margin-bottom:10px}}
 </style>
 
 <section class="content-header">
@@ -322,33 +322,18 @@ $has_filters = ($price_search !== '' || $delivery_type_filter !== '');
         </div>
 
         <div class="box panel-box">
-            <div class="box-header with-border"><h3 class="box-title">التحكم السريع</h3></div>
-            <div class="box-body">
-                <div class="quickbar">
-                    <form class="quickbar-form" method="get" action="delivery_list.php">
-                        <label for="active_company">الشركة المعتمدة حالياً في النظام</label>
-                        <div class="inline-controls">
-                            <select name="active_company" id="active_company" class="form-control">
-                                <?php foreach ($companies as $company): ?>
-                                    <option value="<?= (int) $company['id']; ?>" <?= ((int) $company['id'] === $active_company_id) ? 'selected' : ''; ?>><?= htmlspecialchars($company['name'], ENT_QUOTES, 'UTF-8'); ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                            <button type="submit" class="btn btn-primary"><i class="fa fa-check"></i> تفعيل</button>
-                        </div>
-                        <p class="quickbar-note">هذه الشركة هي المرجع الحالي عند إدارة أسعار التوصيل.</p>
-                    </form>
-
-                    <div class="card-actions">
-                        <a href="delivery-company.php" class="btn btn-primary"><i class="fa fa-sliders"></i> إدارة الأسعار</a>
-                        <a href="add_edit_delivery.php?id=<?= $active_company_id; ?>" class="btn btn-default"><i class="fa fa-pencil"></i> تعديل الشركة النشطة</a>
-                        <a href="add_edit_delivery.php" class="btn btn-success"><i class="fa fa-plus"></i> شركة جديدة</a>
-                    </div>
-                </div>
+            <div class="box-header with-border">
+                <h3 class="box-title">قائمة الشركات</h3>
+                <form class="inline-company-form" method="get" action="delivery_list.php">
+                    <label for="active_company">النشطة:</label>
+                    <select name="active_company" id="active_company" class="form-control input-sm" style="width:auto;display:inline-block;margin:0 6px;">
+                        <?php foreach ($companies as $company): ?>
+                            <option value="<?= (int) $company['id']; ?>" <?= ((int) $company['id'] === $active_company_id) ? 'selected' : ''; ?>><?= htmlspecialchars($company['name'], ENT_QUOTES, 'UTF-8'); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                    <button type="submit" class="btn btn-primary btn-xs"><i class="fa fa-check"></i></button>
+                </form>
             </div>
-        </div>
-
-        <div class="box panel-box">
-            <div class="box-header with-border"><h3 class="box-title">قائمة الشركات</h3></div>
             <div class="box-body">
                 <div class="search-wrap">
                     <label for="company_search">بحث سريع داخل الشركات</label>
@@ -358,34 +343,33 @@ $has_filters = ($price_search !== '' || $delivery_type_filter !== '');
                 <div class="row" id="company_cards">
                     <?php foreach ($companies as $company): ?>
                         <?php $company_id = (int) $company['id']; $is_active = ((int) $company['active'] === 1); ?>
-                        <div class="col-lg-4 col-md-6 company-card-col" data-company-name="<?= htmlspecialchars(mb_strtolower($company['name'], 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>">
+                        <div class="col-lg-3 col-md-4 col-sm-6 company-card-col" data-company-name="<?= htmlspecialchars(mb_strtolower($company['name'], 'UTF-8'), ENT_QUOTES, 'UTF-8'); ?>">
                             <div class="company-card<?= $is_active ? ' active' : ''; ?>">
                                 <div class="company-head">
                                     <div>
                                         <h3><?= htmlspecialchars($company['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
-                                        <p>نطاق الأسعار: <?= htmlspecialchars(delivery_range($company['min_price'], $company['max_price']), ENT_QUOTES, 'UTF-8'); ?></p>
                                     </div>
-                                    <span class="state-pill <?= $is_active ? 'active' : 'inactive'; ?>"><?= $is_active ? 'نشطة الآن' : 'غير نشطة'; ?></span>
+                                    <span class="state-pill <?= $is_active ? 'active' : 'inactive'; ?>"><?= $is_active ? 'نشطة' : 'غير نشطة'; ?></span>
                                 </div>
 
                                 <div class="mini-stats">
-                                    <div><strong><?= number_format((int) $company['price_count']); ?></strong><span>سعر مسجل</span></div>
-                                    <div><strong><?= number_format((int) $company['wilaya_count']); ?></strong><span>ولاية مغطاة</span></div>
-                                    <div><strong><?= number_format((int) $company['home_count']); ?></strong><span>توصيل منزل</span></div>
-                                    <div><strong><?= number_format((int) $company['office_count']); ?></strong><span>توصيل مكتب</span></div>
+                                    <div><strong><?= number_format((int) $company['price_count']); ?></strong><span>سعر</span></div>
+                                    <div><strong><?= number_format((int) $company['wilaya_count']); ?></strong><span>ولاية</span></div>
+                                    <div><strong><?= number_format((int) $company['home_count']); ?></strong><span>منزل</span></div>
+                                    <div><strong><?= number_format((int) $company['office_count']); ?></strong><span>مكتب</span></div>
                                 </div>
 
-                                <p class="company-range">الحد السعري: <?= htmlspecialchars(delivery_range($company['min_price'], $company['max_price']), ENT_QUOTES, 'UTF-8'); ?></p>
+                                <div class="company-range"><?= htmlspecialchars(delivery_range($company['min_price'], $company['max_price']), ENT_QUOTES, 'UTF-8'); ?></div>
 
                                 <div class="card-actions">
                                     <?php if ($is_active): ?>
-                                        <a href="delivery-company.php" class="btn btn-primary btn-sm"><i class="fa fa-cog"></i> إدارة الأسعار</a>
+                                        <a href="delivery-company.php" class="btn btn-primary btn-xs"><i class="fa fa-cog"></i> الأسعار</a>
                                     <?php else: ?>
-                                        <a href="delivery_list.php?active_company=<?= $company_id; ?>" class="btn btn-primary btn-sm"><i class="fa fa-check"></i> تعيين كنشطة</a>
-                                        <a href="delivery_list.php?active_company=<?= $company_id; ?>&next=manage" class="btn btn-info btn-sm"><i class="fa fa-sliders"></i> تفعيل وإدارة</a>
+                                        <a href="delivery_list.php?active_company=<?= $company_id; ?>" class="btn btn-primary btn-xs"><i class="fa fa-check"></i> تفعيل</a>
+                                        <a href="delivery_list.php?active_company=<?= $company_id; ?>&next=manage" class="btn btn-info btn-xs"><i class="fa fa-sliders"></i> تفعيل وإدارة</a>
                                     <?php endif; ?>
-                                    <a href="add_edit_delivery.php?id=<?= $company_id; ?>" class="btn btn-default btn-sm"><i class="fa fa-pencil"></i> تعديل</a>
-                                    <a href="delivery_list.php?delete_company=<?= $company_id; ?>" class="btn btn-danger btn-sm" onclick="return confirm('هل أنت متأكد من حذف الشركة وجميع أسعارها؟');"><i class="fa fa-trash"></i> حذف</a>
+                                    <a href="add_edit_delivery.php?id=<?= $company_id; ?>" class="btn btn-default btn-xs"><i class="fa fa-pencil"></i></a>
+                                    <a href="delivery_list.php?delete_company=<?= $company_id; ?>" class="btn btn-danger btn-xs" onclick="return confirm('هل أنت متأكد من حذف الشركة وجميع أسعارها؟');"><i class="fa fa-trash"></i></a>
                                 </div>
                             </div>
                         </div>
@@ -395,22 +379,11 @@ $has_filters = ($price_search !== '' || $delivery_type_filter !== '');
         </div>
 
         <div class="box panel-box">
-            <div class="box-header with-border"><h3 class="box-title">أسعار الشركة النشطة</h3></div>
+            <div class="box-header with-border">
+                <h3 class="box-title">أسعار الشركة النشطة: <?= htmlspecialchars($active_company['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                <span class="state-pill active"><?= number_format((int) $active_company['price_count']); ?> سعر · <?= number_format((int) $active_company['wilaya_count']); ?> ولاية</span>
+            </div>
             <div class="box-body">
-                <div class="summary">
-                    <div class="summary-main">
-                        <span class="state-pill active">الشركة المعتمدة الآن</span>
-                        <h3><?= htmlspecialchars($active_company['name'], ENT_QUOTES, 'UTF-8'); ?></h3>
-                        <p>راجع الأسعار الحالية بسرعة، ثم انتقل إلى صفحة إدارة الأسعار إذا أردت إضافة أو تعديل الأسعار الخاصة بهذه الشركة.</p>
-                    </div>
-                    <div class="summary-grid">
-                        <div><strong><?= number_format((int) $active_company['price_count']); ?></strong><span>إجمالي الأسعار</span></div>
-                        <div><strong><?= number_format((int) $active_company['wilaya_count']); ?></strong><span>عدد الولايات المغطاة</span></div>
-                        <div><strong><?= number_format((int) $active_company['home_count']); ?></strong><span>أسعار توصيل المنزل</span></div>
-                        <div><strong><?= number_format((int) $active_company['office_count']); ?></strong><span>أسعار توصيل المكتب</span></div>
-                    </div>
-                </div>
-
                 <form method="get" action="delivery_list.php" class="filters">
                     <div class="filter-field">
                         <label for="price_search">بحث بالولاية</label>
@@ -428,40 +401,30 @@ $has_filters = ($price_search !== '' || $delivery_type_filter !== '');
                         <button type="submit" class="btn btn-primary"><i class="fa fa-search"></i> تطبيق</button>
                         <a href="delivery_list.php" class="btn btn-default"><i class="fa fa-refresh"></i> إعادة ضبط</a>
                         <a href="delivery-company.php" class="btn btn-success"><i class="fa fa-plus"></i> إضافة أو تعديل الأسعار</a>
+                        <a href="delivery-cache.php" class="btn btn-warning"><i class="fa fa-database"></i> إدارة المزامنة (Cache)</a>
                     </div>
                 </form>
 
                 <?php if ((int) $active_company['price_count'] > 0): ?>
                     <p class="muted"><?= $has_filters ? 'نتيجة التصفية الحالية: ' : 'المعروض حالياً: '; ?><strong><?= number_format($filtered_prices_count); ?></strong> من أصل <strong><?= number_format((int) $active_company['price_count']); ?></strong> سعر.</p>
-
                     <?php if ($filtered_prices_count > 0): ?>
-                        <div class="table-responsive table-wrap">
-                            <table class="table table-hover">
-                                <thead>
-                                    <tr>
-                                        <th style="width:70px;">#</th>
-                                        <th>الولاية</th>
-                                        <th style="width:150px;">نوع التوصيل</th>
-                                        <th style="width:160px;">السعر</th>
-                                        <th style="width:220px;">الإجراءات</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php foreach ($filtered_prices as $idx => $price): ?>
-                                        <?php $is_office = ($price['delivery_type'] === 'مكتب'); ?>
-                                        <tr>
-                                            <td><?= $idx + 1; ?></td>
-                                            <td><?= htmlspecialchars($price['wilaya'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                            <td><span class="type-pill <?= $is_office ? 'office' : 'home'; ?>"><?= $is_office ? 'مكتب' : 'منزل'; ?></span></td>
-                                            <td><?= htmlspecialchars(delivery_money($price['price']), ENT_QUOTES, 'UTF-8'); ?></td>
-                                            <td>
-                                                <a href="add_edit_delivery.php?edit_price=<?= (int) $price['id']; ?>&active_company=<?= $active_company_id; ?>" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i> تعديل</a>
-                                                <a href="delivery_list.php?delete_price=<?= (int) $price['id']; ?>" class="btn btn-danger btn-xs" onclick="return confirm('هل تريد حذف سعر هذه الولاية؟');"><i class="fa fa-trash"></i> حذف</a>
-                                            </td>
-                                        </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                            </table>
+                        <div class="row price-cards">
+                            <?php foreach ($filtered_prices as $idx => $price): ?>
+                                <?php $is_office = ($price['delivery_type'] === 'مكتب'); ?>
+                                <div class="col-lg-3 col-md-4 col-sm-6">
+                                    <div class="price-card <?= $is_office ? 'office' : 'home'; ?>">
+                                        <div class="price-card-head">
+                                            <span class="price-wilaya"><?= htmlspecialchars($price['wilaya'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                            <span class="type-pill <?= $is_office ? 'office' : 'home'; ?>"><?= $is_office ? 'مكتب' : 'منزل'; ?></span>
+                                        </div>
+                                        <div class="price-amount"><?= htmlspecialchars(delivery_money($price['price']), ENT_QUOTES, 'UTF-8'); ?></div>
+                                        <div class="price-card-actions">
+                                            <a href="add_edit_delivery.php?edit_price=<?= (int) $price['id']; ?>&active_company=<?= $active_company_id; ?>" class="btn btn-primary btn-xs"><i class="fa fa-pencil"></i></a>
+                                            <a href="delivery_list.php?delete_price=<?= (int) $price['id']; ?>" class="btn btn-danger btn-xs" onclick="return confirm('هل تريد حذف سعر هذه الولاية؟');"><i class="fa fa-trash"></i></a>
+                                        </div>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
                         </div>
                     <?php else: ?>
                         <div class="empty-state">

@@ -9,7 +9,7 @@ if(isset($_POST['form1'])) {
         $error_message .= "Country Name can not be empty<br>";
     } else {
     	// Duplicate Category checking
-    	$statement = $pdo->prepare("SELECT * FROM tbl_country WHERE country_name=?");
+    	$statement = $dbRepo->prepare("SELECT * FROM tbl_country WHERE country_name=?");
     	$statement->execute(array($_POST['country_name']));
     	$total = $statement->rowCount();
     	if($total)
@@ -22,7 +22,7 @@ if(isset($_POST['form1'])) {
     if($valid == 1) {
 
 		// Saving data into the main table tbl_country
-		$statement = $pdo->prepare("INSERT INTO tbl_country (country_name) VALUES (?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_country (country_name) VALUES (?)");
 		$statement->execute(array($_POST['country_name']));
 	
     	$success_message = 'Country is added successfully.';

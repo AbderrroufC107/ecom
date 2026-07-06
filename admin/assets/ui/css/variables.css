@@ -1,0 +1,53 @@
+/* 
+ * Enterprise UI Framework - Variables
+ * Standardized Design Tokens for Modals, Drawers, Cards, and UI Elements
+ */
+
+:root {
+    /* Colors */
+    --e-ui-primary: #1f6fb2;
+    --e-ui-primary-hover: #16568c;
+    --e-ui-success: #1b6c49;
+    --e-ui-danger: #a13030;
+    --e-ui-warning: #9b6206;
+    --e-ui-info: #0284c7;
+    
+    /* Neutral Colors */
+    --e-ui-text-main: #263442;
+    --e-ui-text-muted: #6c7a89;
+    --e-ui-border: #dde6ee;
+    --e-ui-bg-body: #f4f7f6;
+    --e-ui-bg-panel: #ffffff;
+    --e-ui-bg-hover: #f8fbfe;
+
+    /* Border Radius */
+    --e-ui-radius-sm: 6px;
+    --e-ui-radius-md: 10px;
+    --e-ui-radius-lg: 16px;
+    --e-ui-radius-xl: 24px;
+
+    /* Shadows */
+    --e-ui-shadow-sm: 0 2px 4px rgba(18, 35, 52, 0.04);
+    --e-ui-shadow-md: 0 4px 12px rgba(18, 35, 52, 0.06);
+    --e-ui-shadow-lg: 0 12px 28px rgba(18, 35, 52, 0.08);
+    --e-ui-shadow-drawer: -4px 0 24px rgba(0, 0, 0, 0.15); /* For right-side drawers */
+
+    /* Typography */
+    --e-ui-font-family: 'Cairo', 'Tajawal', sans-serif;
+    
+    /* Spacing */
+    --e-ui-spacing-sm: 8px;
+    --e-ui-spacing-md: 16px;
+    --e-ui-spacing-lg: 24px;
+    --e-ui-spacing-xl: 32px;
+
+    /* Z-Index Scale */
+    --e-ui-z-dropdown: 1000;
+    --e-ui-z-sticky: 1020;
+    --e-ui-z-fixed: 1030;
+    --e-ui-z-modal-backdrop: 1040;
+    --e-ui-z-modal: 1050;
+    --e-ui-z-drawer: 1060;
+    --e-ui-z-popover: 1070;
+    --e-ui-z-tooltip: 1080;
+}

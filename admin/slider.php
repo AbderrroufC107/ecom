@@ -30,7 +30,7 @@
 						<tbody>
 							<?php
 							$i=0;
-							$statement = $pdo->prepare("SELECT id,photo,heading,content,button_text,button_url,position FROM tbl_slider");
+							$statement = $dbRepo->prepare("SELECT id,photo,heading,content,button_text,button_url,position FROM tbl_slider");
 							$statement->execute();
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 							foreach ($result as $row) {

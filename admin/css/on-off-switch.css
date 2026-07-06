@@ -3,6 +3,8 @@
     cursor:pointer;
     overflow:hidden;
     user-select:none;
+    -ms-touch-action: none;
+    touch-action: none;
 }
 
 .on-off-switch-track{
@@ -11,6 +13,8 @@
     z-index:1;
     background-color: #fff;
     overflow:hidden;
+    -ms-touch-action: none;
+    touch-action: none;
 }
 
 /* semi transparent white overlay */
@@ -39,6 +43,8 @@
     position:absolute;
     z-index:2;
     overflow:hidden;
+    -ms-touch-action: none;
+    touch-action: none;
 }
 
 .on-off-switch-thumb-shadow{

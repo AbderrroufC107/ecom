@@ -17,7 +17,9 @@ $wilayas = [
 
 if (!function_exists('normalize_delivery_price_input')) {
     function normalize_delivery_price_input($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -30,8 +32,10 @@ if (!function_exists('normalize_delivery_price_input')) {
 
 if (!function_exists('load_company_price_rows')) {
     function load_company_price_rows(PDO $pdo, $companyId)
-    {
-        $statement = $pdo->prepare('SELECT * FROM tbl_delivery_price WHERE company_id = ? ORDER BY wilaya ASC, id ASC');
+    { global $dbRepo;
+    global $dbRepo;
+
+        $statement = $dbRepo->prepare('SELECT * FROM tbl_delivery_price WHERE company_id = ? ORDER BY wilaya ASC, id ASC');
         $statement->execute([$companyId]);
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -43,17 +47,17 @@ $flash_messages = [
 ];
 $success_message = isset($_GET['msg'], $flash_messages[$_GET['msg']]) ? $flash_messages[$_GET['msg']] : '';
 
-$statement = $pdo->prepare('SELECT * FROM tbl_delivery_company WHERE active = 1 LIMIT 1');
+$statement = $dbRepo->prepare('SELECT * FROM tbl_delivery_company WHERE active = 1 LIMIT 1');
 $statement->execute();
 $company = $statement->fetch(PDO::FETCH_ASSOC);
 
 if (!$company) {
-    $statement = $pdo->prepare('SELECT * FROM tbl_delivery_company ORDER BY id ASC LIMIT 1');
+    $statement = $dbRepo->prepare('SELECT * FROM tbl_delivery_company ORDER BY id ASC LIMIT 1');
     $statement->execute();
     $company = $statement->fetch(PDO::FETCH_ASSOC);
 
     if ($company) {
-        $statement = $pdo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
+        $statement = $dbRepo->prepare('UPDATE tbl_delivery_company SET active = 1 WHERE id = ?');
         $statement->execute([$company['id']]);
         $_SESSION['active_company_id'] = (int) $company['id'];
     }
@@ -98,9 +102,9 @@ if (isset($_POST['bulk_save']) && $company_id > 0) {
         try {
             $pdo->beginTransaction();
 
-            $insert_statement = $pdo->prepare('INSERT INTO tbl_delivery_price (company_id, wilaya, delivery_type, price) VALUES (?, ?, ?, ?)');
-            $update_statement = $pdo->prepare('UPDATE tbl_delivery_price SET price = ?, wilaya = ?, delivery_type = ? WHERE id = ?');
-            $delete_statement = $pdo->prepare('DELETE FROM tbl_delivery_price WHERE id = ?');
+            $insert_statement = $dbRepo->prepare('INSERT INTO tbl_delivery_price (company_id, wilaya, delivery_type, price) VALUES (?, ?, ?, ?)');
+            $update_statement = $dbRepo->prepare('UPDATE tbl_delivery_price SET price = ?, wilaya = ?, delivery_type = ? WHERE id = ?');
+            $delete_statement = $dbRepo->prepare('DELETE FROM tbl_delivery_price WHERE id = ?');
 
             foreach ($wilayas as $index => $wilaya_name) {
                 $values_by_type = [

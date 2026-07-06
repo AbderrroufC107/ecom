@@ -25,7 +25,7 @@ class SearchService
                 FROM tbl_order
                 WHERE customer_phone = ? OR order_id = ? OR CAST(id AS CHAR) = ?
                 LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$clean, $clean, $clean, $limit]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -36,7 +36,7 @@ class SearchService
                 FROM tbl_order
                 WHERE customer_phone LIKE ? OR customer_name LIKE ?
                 LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$clean . '%', $clean . '%', $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $results[] = $row;
@@ -52,7 +52,7 @@ class SearchService
                 WHERE MATCH(customer_name, customer_phone, product_name, wilaya, commune) AGAINST(? IN BOOLEAN MODE)
                 ORDER BY relevance DESC
                 LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$fulltextTerm, $fulltextTerm, $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $results[] = $row;
@@ -65,7 +65,7 @@ class SearchService
                 FROM tbl_order
                 WHERE customer_name LIKE ? OR customer_phone LIKE ? OR product_name LIKE ? OR wilaya LIKE ?
                 LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $likeTerm = '%' . $clean . '%';
         $stmt->execute([$likeTerm, $likeTerm, $likeTerm, $likeTerm, $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
@@ -94,7 +94,7 @@ class SearchService
         // 1. Exact phone match
         $sql = "SELECT id, cust_name, cust_phone, cust_address, wilaya, commune, cust_status
                 FROM tbl_customer WHERE cust_phone = ? LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$clean, $limit]);
         $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
@@ -103,7 +103,7 @@ class SearchService
         // 2. Prefix match
         $sql = "SELECT id, cust_name, cust_phone, cust_address, wilaya, commune, cust_status
                 FROM tbl_customer WHERE cust_name LIKE ? OR cust_phone LIKE ? LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$clean . '%', $clean . '%', $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
 
@@ -116,7 +116,7 @@ class SearchService
                 FROM tbl_customer
                 WHERE MATCH(cust_name, cust_phone, cust_address) AGAINST(? IN BOOLEAN MODE)
                 ORDER BY relevance DESC LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$fulltextTerm, $fulltextTerm, $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
 
@@ -126,7 +126,7 @@ class SearchService
         $sql = "SELECT id, cust_name, cust_phone, cust_address, wilaya, commune, cust_status
                 FROM tbl_customer WHERE cust_name LIKE ? OR cust_phone LIKE ? OR cust_address LIKE ?
                 LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $likeTerm = '%' . $clean . '%';
         $stmt->execute([$likeTerm, $likeTerm, $likeTerm, $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
@@ -150,7 +150,7 @@ class SearchService
 
         // 1. Exact match by p_id
         if (is_numeric($clean)) {
-            $stmt = $this->pdo->prepare("SELECT * FROM tbl_product WHERE p_id = ? LIMIT ?");
+            $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("SELECT * FROM tbl_product WHERE p_id = ? LIMIT ?");
             $stmt->execute([(int)$clean, $limit]);
             $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             if (count($results) >= $limit) return $results;
@@ -159,7 +159,7 @@ class SearchService
         // 2. Prefix match
         $sql = "SELECT p_id, p_name, p_current_price, p_old_price, p_qty, p_featured_photo, ecat_id
                 FROM tbl_product WHERE p_name LIKE ? LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$clean . '%', $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
 
@@ -172,7 +172,7 @@ class SearchService
                 FROM tbl_product
                 WHERE MATCH(p_name, p_description) AGAINST(? IN BOOLEAN MODE)
                 ORDER BY relevance DESC LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$fulltextTerm, $fulltextTerm, $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
 
@@ -181,7 +181,7 @@ class SearchService
         // 4. Substring LIKE
         $sql = "SELECT p_id, p_name, p_current_price, p_old_price, p_qty, p_featured_photo, ecat_id
                 FROM tbl_product WHERE p_name LIKE ? OR p_description LIKE ? LIMIT ?";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $likeTerm = '%' . $clean . '%';
         $stmt->execute([$likeTerm, $likeTerm, $limit]);
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) $results[] = $row;
@@ -200,18 +200,18 @@ class SearchService
         $results = [];
 
         // Only run Levenshtein on tables with data - first check row count
-        $stmt = $this->pdo->query("SELECT COUNT(*) FROM {$table}");
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->query("SELECT COUNT(*) FROM {$table}");
         $rowCount = (int)$stmt->fetchColumn();
 
         if ($rowCount > 10000) {
-            $stmt = $this->pdo->query("SELECT MIN(id) as min_id, MAX(id) as max_id FROM {$table}");
+            $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->query("SELECT MIN(id) as min_id, MAX(id) as max_id FROM {$table}");
             $range = $stmt->fetch(PDO::FETCH_ASSOC);
             $chunkSize = 1000;
             $candidates = [];
 
             for ($start = (int)$range['min_id']; $start <= (int)$range['max_id']; $start += $chunkSize) {
                 $end = $start + $chunkSize - 1;
-                $stmt = $this->pdo->prepare(
+                $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
                     "SELECT id, {$column} FROM {$table} WHERE id BETWEEN ? AND ? AND {$column} LIKE ?"
                 );
                 $stmt->execute([$start, $end, substr($query, 0, 3) . '%']);
@@ -231,13 +231,13 @@ class SearchService
             $ids = array_column(array_slice($scored, 0, $limit), 'id');
             if (!empty($ids)) {
                 $placeholders = implode(',', array_fill(0, count($ids), '?'));
-                $stmt = $this->pdo->prepare("SELECT * FROM {$table} WHERE id IN ({$placeholders})");
+                $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("SELECT * FROM {$table} WHERE id IN ({$placeholders})");
                 $stmt->execute($ids);
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }
         } else {
             // For smaller tables, load candidates via prefix filter first
-            $stmt = $this->pdo->prepare(
+            $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
                 "SELECT id, {$column} FROM {$table} WHERE {$column} LIKE ? LIMIT 100"
             );
             $stmt->execute([substr($query, 0, 2) . '%']);
@@ -254,7 +254,7 @@ class SearchService
             $ids = array_column(array_slice($scored, 0, $limit), 'id');
             if (!empty($ids)) {
                 $placeholders = implode(',', array_fill(0, count($ids), '?'));
-                $stmt = $this->pdo->prepare("SELECT * FROM {$table} WHERE id IN ({$placeholders})");
+                $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("SELECT * FROM {$table} WHERE id IN ({$placeholders})");
                 $stmt->execute($ids);
                 $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
             }

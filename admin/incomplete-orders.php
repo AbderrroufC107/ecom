@@ -3,7 +3,7 @@
 require_once __DIR__ . '/inc/config.php';
 
 if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
-    $stmt = $pdo->prepare("DELETE FROM incomplete_orders WHERE id = ?");
+    $stmt = $dbRepo->prepare("DELETE FROM incomplete_orders WHERE id = ?");
     $stmt->execute([$_GET['delete']]);
     $_SESSION['incomplete_flash'] = ['type' => 'success', 'message' => 'تم حذف السجل غير المكتمل بنجاح.'];
     header('Location: incomplete-orders.php');
@@ -13,7 +13,7 @@ if (isset($_GET['delete']) && is_numeric($_GET['delete'])) {
 $flash = $_SESSION['incomplete_flash'] ?? null;
 unset($_SESSION['incomplete_flash']);
 
-$stmt = $pdo->query("SELECT * FROM incomplete_orders ORDER BY COALESCE(last_updated, created_at) DESC");
+$stmt = $dbRepo->query("SELECT * FROM incomplete_orders ORDER BY COALESCE(last_updated, created_at) DESC");
 $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 <style>

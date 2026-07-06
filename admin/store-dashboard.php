@@ -22,7 +22,7 @@ $theme = store_get_theme($pdo, $store_id);
 $emp_check = store_check_employee_limit($pdo, $store_id);
 
 // Recent orders (scoped)
-$stmt = $pdo->prepare("
+$stmt = $dbRepo->prepare("
     SELECT id, order_no, total_price, order_status, order_date, payment_method
     FROM tbl_order
     WHERE store_id = ?
@@ -33,7 +33,7 @@ $stmt->execute([$store_id]);
 $recent_orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 // Low stock products (scoped)
-$stmt = $pdo->prepare("
+$stmt = $dbRepo->prepare("
     SELECT p_id, p_name, p_qty, p_current_price
     FROM tbl_product
     WHERE store_id = ? AND p_qty BETWEEN 0 AND 5
@@ -46,7 +46,7 @@ $low_stock = $stmt->fetchAll(PDO::FETCH_ASSOC);
 // Recent recovery tasks (scoped)
 $recovery_tasks = [];
 try {
-    $stmt = $pdo->prepare("
+    $stmt = $dbRepo->prepare("
         SELECT rt.*, o.order_no
         FROM tbl_recovery_tasks rt
         LEFT JOIN tbl_order o ON o.id = rt.order_id AND o.store_id = ?
@@ -61,7 +61,7 @@ try {
 }
 
 // Sales last 7 days (scoped)
-$stmt = $pdo->prepare("
+$stmt = $dbRepo->prepare("
     SELECT
         DATE(order_date) AS day_key,
         COUNT(*) AS order_count,
@@ -90,7 +90,9 @@ for ($i = 6; $i >= 0; $i--) {
     ];
 }
 
-function sd_format_amount($amount) {
+function sd_format_amount($amount) { global $dbRepo;
+    global $dbRepo;
+
     return number_format((float)$amount, 0, '.', ' ') . ' دج';
 }
 ?>

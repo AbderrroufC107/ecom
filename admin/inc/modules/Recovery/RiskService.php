@@ -7,7 +7,7 @@ use PDO;
 class RiskService
 {
     public static function calculateBackupRisk(PDO $pdo): array
-    {
+    { global $dbRepo;
         $risk = [
             'level'      => 'low',
             'score'      => 0,
@@ -16,7 +16,7 @@ class RiskService
         ];
 
         try {
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'completed'
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'completed'
                 AND completed_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
             $recent = (int) $stmt->fetchColumn();
 
@@ -26,7 +26,7 @@ class RiskService
                 $risk['recommendations'][] = 'Schedule automatic daily backups';
             }
 
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'failed'
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'failed'
                 AND updated_at >= DATE_SUB(NOW(), INTERVAL 7 DAY)");
             $recentFailures = (int) $stmt->fetchColumn();
 
@@ -39,15 +39,15 @@ class RiskService
                 $risk['factors'][] = "{$recentFailures} recent backup failures";
             }
 
-            $stmt = $pdo->query("SELECT COALESCE(SUM(file_size), 0) FROM tbl_backup_job WHERE status = 'completed'");
+            $stmt = $dbRepo->query("SELECT COALESCE(SUM(file_size), 0) FROM tbl_backup_job WHERE status = 'completed'");
             $totalSize = (int) $stmt->fetchColumn();
 
             if ($totalSize > 0) {
-                $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job
+                $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job
                     WHERE status = 'completed' AND storage_location = 'local'");
                 $local = (int) $stmt->fetchColumn();
 
-                $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job
+                $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job
                     WHERE status = 'completed' AND storage_location = 's3'");
                 $s3 = (int) $stmt->fetchColumn();
 
@@ -62,7 +62,7 @@ class RiskService
                 }
             }
 
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_restore_request WHERE status = 'executed'");
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_restore_request WHERE status = 'executed'");
             $restoreTested = (int) $stmt->fetchColumn();
 
             if ($restoreTested === 0) {
@@ -71,7 +71,7 @@ class RiskService
                 $risk['recommendations'][] = 'Perform a test restore to validate backup integrity';
             }
 
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'completed'");
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'completed'");
             $totalBackups = (int) $stmt->fetchColumn();
 
             if ($totalBackups === 0) {
@@ -98,7 +98,7 @@ class RiskService
     }
 
     public static function calculateSystemRisk(PDO $pdo): array
-    {
+    { global $dbRepo;
         $risk = [
             'level'   => 'low',
             'score'   => 0,
@@ -145,7 +145,7 @@ class RiskService
     }
 
     public static function getCombinedRisk(PDO $pdo): array
-    {
+    { global $dbRepo;
         $backupRisk = self::calculateBackupRisk($pdo);
         $systemRisk = self::calculateSystemRisk($pdo);
 

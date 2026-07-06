@@ -19,7 +19,7 @@ $redirect = $order_id > 0 ? 'order-details.php?id=' . $order_id : 'order.php';
 admin_ensure_ecotrack_setting_columns($pdo);
 admin_ensure_order_ecotrack_columns($pdo);
 
-$statement = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
 $statement->execute([$order_id]);
 $order = $statement->fetch(PDO::FETCH_ASSOC);
 

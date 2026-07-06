@@ -1,6 +1,6 @@
 <?php require_once('header.php'); ?>
 <?php
-$pdo->exec("CREATE TABLE IF NOT EXISTS tbl_order_call_log (
+$dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_order_call_log (
     id INT(11) NOT NULL AUTO_INCREMENT,
     order_id INT(11) NOT NULL,
     call_status VARCHAR(50) NOT NULL,
@@ -15,6 +15,12 @@ $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_order_call_log (
 admin_ensure_sms_template_table($pdo);
 admin_ensure_order_ecotrack_columns($pdo);
 admin_ensure_ecotrack_setting_columns($pdo);
+if (function_exists('admin_ensure_order_zrexpress_columns')) {
+    admin_ensure_order_zrexpress_columns($pdo);
+}
+if (function_exists('admin_ensure_zrexpress_setting_columns')) {
+    admin_ensure_zrexpress_setting_columns($pdo);
+}
 require_once('inc/employee_functions.php');
 require_once('inc/audit.php');
 audit_ensure_tables($pdo);
@@ -23,6 +29,8 @@ $sms_settings = front_get_settings($pdo);
 $sms_gateway_ready = sms_gateway_is_configured($sms_settings);
 $ecotrack_settings = ecotrack_normalize_settings($sms_settings);
 $ecotrack_ready = ecotrack_is_configured($ecotrack_settings);
+$zrexpress_settings = function_exists('zrexpress_normalize_settings') ? zrexpress_normalize_settings($sms_settings) : [];
+$zrexpress_ready = function_exists('zrexpress_is_configured') ? zrexpress_is_configured($zrexpress_settings) : false;
 $sms_templates = admin_get_sms_templates($pdo, true);
 $sms_template_payload = [];
 foreach ($sms_templates as $sms_template) {
@@ -42,7 +50,9 @@ $edit_error_message = '';
 
 if (!function_exists('admin_order_details_normalize_delivery_type')) {
     function admin_order_details_normalize_delivery_type($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         $normalized = strtolower($value);
 
@@ -62,7 +72,9 @@ if (!function_exists('admin_order_details_normalize_delivery_type')) {
 
 if (!function_exists('admin_order_details_delivery_label')) {
     function admin_order_details_delivery_label($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = admin_order_details_normalize_delivery_type($value);
         if ($value === 'منزل') {
             return 'إلى المنزل';
@@ -78,9 +90,7 @@ if (!function_exists('admin_order_details_delivery_label')) {
 }
 
 if (!function_exists('admin_order_details_delivery_type_labels_fixed')) {
-    function admin_order_details_delivery_type_labels_fixed()
-    {
-        if (function_exists('admin_delivery_type_labels')) {
+    function admin_order_details_delivery_type_labels_fixed() {        if (function_exists('admin_delivery_type_labels')) {
             return admin_delivery_type_labels();
         }
 
@@ -94,7 +104,9 @@ if (!function_exists('admin_order_details_delivery_type_labels_fixed')) {
 
 if (!function_exists('admin_order_details_normalize_delivery_type_fixed')) {
     function admin_order_details_normalize_delivery_type_fixed($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $labels = admin_order_details_delivery_type_labels_fixed();
         $value = function_exists('admin_normalize_delivery_type_text')
             ? admin_normalize_delivery_type_text($value)
@@ -117,7 +129,9 @@ if (!function_exists('admin_order_details_normalize_delivery_type_fixed')) {
 
 if (!function_exists('admin_order_details_delivery_label_fixed')) {
     function admin_order_details_delivery_label_fixed($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $labels = admin_order_details_delivery_type_labels_fixed();
         $value = admin_order_details_normalize_delivery_type_fixed($value);
 
@@ -137,14 +151,16 @@ if (!function_exists('admin_order_details_delivery_label_fixed')) {
 
 if (!function_exists('admin_order_details_lookup_name')) {
     function admin_order_details_lookup_name(PDO $pdo, $table, $id_column, $name_column, $value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $raw = trim((string) $value);
         if ($raw === '') {
             return 'لا يوجد';
         }
 
         if (ctype_digit($raw)) {
-            $statement = $pdo->prepare("SELECT {$name_column} FROM {$table} WHERE {$id_column} = ? LIMIT 1");
+            $statement = $dbRepo->prepare("SELECT {$name_column} FROM {$table} WHERE {$id_column} = ? LIMIT 1");
             $statement->execute([(int) $raw]);
             $row = $statement->fetch(PDO::FETCH_ASSOC);
             if ($row && isset($row[$name_column]) && trim((string) $row[$name_column]) !== '') {
@@ -158,7 +174,9 @@ if (!function_exists('admin_order_details_lookup_name')) {
 
 if (!function_exists('admin_ecotrack_status_label')) {
     function admin_ecotrack_status_label($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $raw = trim((string) $value);
         if ($raw === '') {
             return '';
@@ -248,7 +266,9 @@ if (!function_exists('admin_ecotrack_status_label')) {
 
 if (!function_exists('admin_ecotrack_wilaya_label')) {
     function admin_ecotrack_wilaya_label(PDO $pdo, $value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $raw = trim((string) $value);
         if ($raw === '') {
             return '';
@@ -265,7 +285,9 @@ if (!function_exists('admin_ecotrack_wilaya_label')) {
 
 if (!function_exists('admin_ecotrack_format_field_value')) {
     function admin_ecotrack_format_field_value(PDO $pdo, $field, $value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $raw = trim((string) $value);
         if ($raw === '') {
             return '';
@@ -301,7 +323,9 @@ if (!function_exists('admin_ecotrack_format_field_value')) {
 
 if (!function_exists('admin_ecotrack_translate_timeline_rows')) {
     function admin_ecotrack_translate_timeline_rows(PDO $pdo, array $rows)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         foreach ($rows as $index => $row) {
             if (!is_array($row)) {
                 continue;
@@ -322,7 +346,9 @@ if (!function_exists('admin_ecotrack_translate_timeline_rows')) {
 
 if (!function_exists('admin_ecotrack_pick_latest_timeline_row')) {
     function admin_ecotrack_pick_latest_timeline_row(array $rows)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $latest_row = [];
         $latest_timestamp = false;
 
@@ -352,7 +378,9 @@ if (!function_exists('admin_ecotrack_pick_latest_timeline_row')) {
 
 if (!function_exists('admin_ecotrack_pick_order_record')) {
     function admin_ecotrack_pick_order_record($payload, $tracking = '', $reference = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!is_array($payload)) {
             return [];
         }
@@ -394,7 +422,9 @@ if (!function_exists('admin_ecotrack_pick_order_record')) {
 
 if (!function_exists('admin_ecotrack_collect_history_rows')) {
     function admin_ecotrack_collect_history_rows($value, array &$rows)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!is_array($value)) {
             return;
         }
@@ -421,7 +451,9 @@ if (!function_exists('admin_ecotrack_collect_history_rows')) {
 
 if (!function_exists('admin_ecotrack_extract_history_rows')) {
     function admin_ecotrack_extract_history_rows($payload, $tracking = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!is_array($payload)) {
             return [];
         }
@@ -454,7 +486,9 @@ if (!function_exists('admin_ecotrack_extract_history_rows')) {
 
 if (!function_exists('admin_order_details_render_card_grid')) {
     function admin_order_details_render_card_grid(array $items, $extra_class = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (empty($items)) {
             return '';
         }
@@ -520,7 +554,9 @@ if (!function_exists('admin_order_details_render_card_grid')) {
 
 if (!function_exists('admin_order_details_render_timeline')) {
     function admin_order_details_render_timeline(array $items, array $meta_fields, array $content_fields)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (empty($items)) {
             return '';
         }
@@ -584,6 +620,33 @@ if ($order_id <= 0) {
     exit;
 }
 
+$statement = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+$statement->execute([$order_id]);
+$order = $statement->fetch(PDO::FETCH_ASSOC);
+if (!$order) {
+    header('location: order.php');
+    exit;
+}
+
+$current_admin_emp = employee_get_current_admin_employee($pdo);
+$is_product_restricted_for_user = false;
+if ($current_admin_emp !== null && !empty($current_admin_emp['id'])) {
+    if (!employee_can_access_order($pdo, (int)$current_admin_emp['id'], (int)$order['id'])) {
+        $is_product_restricted_for_user = true;
+    }
+}
+
+if ($is_product_restricted_for_user) {
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        die('ليس لديك صلاحية لتعديل هذا الطلب لأنه تابع لمنتج غير مخصص لك.');
+    }
+    $order['customer_phone'] = '***-***-**** (مخفي)';
+    $order['address'] = 'عنوان مخفي - ليس لديك صلاحية';
+    if (isset($order['order_notes'])) $order['order_notes'] = 'ملاحظات مخفية';
+    if (isset($order['notes'])) $order['notes'] = 'ملاحظات مخفية';
+    if (isset($order['shipping_note'])) $order['shipping_note'] = 'ملاحظات مخفية';
+}
+
 $call_status_labels = [
     'no_answer' => 'لم يرد',
     'answered' => 'تم الرد',
@@ -606,25 +669,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['add_call'])) {
         $call_error_message = 'الرجاء اختيار حالة الاتصال.';
     } else {
         $created_by = isset($_SESSION['user']['full_name']) ? $_SESSION['user']['full_name'] : null;
-        $stmt = $pdo->prepare("INSERT INTO tbl_order_call_log (order_id, call_status, call_note, called_at, created_by) VALUES (?, ?, ?, NOW(), ?)");
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_order_call_log (order_id, call_status, call_note, called_at, created_by) VALUES (?, ?, ?, NOW(), ?)");
         $stmt->execute([$order_id, $status, ($note !== '' ? $note : null), $created_by]);
         header('location: order-details.php?id=' . $order_id);
         exit;
     }
 }
 
-$statement = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
-$statement->execute([$order_id]);
-$order = $statement->fetch(PDO::FETCH_ASSOC);
-if (!$order) {
-    header('location: order.php');
-    exit;
-}
+// Order fetched and checked above
+
 
 $order_assignment = employee_get_assignment_for_order($pdo, (int) $order['id']);
 $all_active_employees = employee_get_all($pdo, true);
 
-require_once('inc/telegram_bot.php');
+if (file_exists('inc/telegram_bot.php')) { require_once('inc/telegram_bot.php'); }
 require_once('inc/telegram_actions.php');
 $telegram_edits = function_exists('telegram_get_edits_for_order') ? telegram_get_edits_for_order($pdo, (int) $order['id']) : [];
 $telegram_cancellation = function_exists('telegram_get_cancellation_for_order') ? telegram_get_cancellation_for_order($pdo, (int) $order['id']) : null;
@@ -633,7 +691,7 @@ $telegram_actions_log = function_exists('telegram_get_order_telegram_actions') ?
 $order_edit_delivery_company_id = resolve_product_delivery_company_id($pdo, 0);
 $order_product_id = (int) ($order['product_id'] ?? 0);
 if ($order_product_id > 0) {
-    $stmt_product_delivery_company = $pdo->prepare("SELECT p_delivery_company_id FROM tbl_product WHERE p_id = ? LIMIT 1");
+    $stmt_product_delivery_company = $dbRepo->prepare("SELECT p_delivery_company_id FROM tbl_product WHERE p_id = ? LIMIT 1");
     $stmt_product_delivery_company->execute([$order_product_id]);
     $preferred_delivery_company_id = (int) $stmt_product_delivery_company->fetchColumn();
     if ($preferred_delivery_company_id > 0) {
@@ -643,7 +701,7 @@ if ($order_product_id > 0) {
 
 $order_edit_shipping_fees = [];
 if ($order_edit_delivery_company_id > 0) {
-    $stmt_delivery_prices = $pdo->prepare("SELECT wilaya, delivery_type, price FROM tbl_delivery_price WHERE company_id = ?");
+    $stmt_delivery_prices = $dbRepo->prepare("SELECT wilaya, delivery_type, price FROM tbl_delivery_price WHERE company_id = ?");
     $stmt_delivery_prices->execute([$order_edit_delivery_company_id]);
     foreach ($stmt_delivery_prices->fetchAll(PDO::FETCH_ASSOC) as $delivery_row) {
         $wilaya_name = trim((string) ($delivery_row['wilaya'] ?? ''));
@@ -725,7 +783,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_edit_order'])) {
             }
         }
 
-        $statement = $pdo->prepare("
+        $statement = $dbRepo->prepare("
             UPDATE tbl_order
             SET product_name = ?, quantity = ?, unit_price = ?, total_price = ?,
                 customer_name = ?, customer_phone = ?, wilaya = ?, commune = ?, address = ?, delivery_type = ?
@@ -767,7 +825,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['form_edit_order'])) {
 $color_name = admin_order_details_lookup_name($pdo, 'tbl_color', 'color_id', 'color_name', $order['order_color'] ?? '');
 $size_name = admin_order_details_lookup_name($pdo, 'tbl_size', 'size_id', 'size_name', $order['order_size'] ?? '');
 
-$statement = $pdo->prepare("SELECT * FROM tbl_order_call_log WHERE order_id = ? ORDER BY called_at DESC, id DESC");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_order_call_log WHERE order_id = ? ORDER BY called_at DESC, id DESC");
 $statement->execute([$order_id]);
 $call_logs = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -829,12 +887,25 @@ $ecotrack_remote_order_summary = [
     'المبلغ' => function_exists('ecotrack_find_first_value_by_keys') ? ecotrack_find_first_value_by_keys($ecotrack_remote_order_record, ['montant', 'amount']) : '',
     'المنتجات' => function_exists('ecotrack_find_first_value_by_keys') ? ecotrack_find_first_value_by_keys($ecotrack_remote_order_record, ['products', 'product', 'produit']) : ''
 ];
+if ($is_product_restricted_for_user) {
+    if (isset($ecotrack_remote_order_summary['الهاتف'])) $ecotrack_remote_order_summary['الهاتف'] = '***-***-**** (مخفي)';
+    if (isset($ecotrack_remote_order_summary['العنوان'])) $ecotrack_remote_order_summary['العنوان'] = 'عنوان مخفي - ليس لديك صلاحية';
+}
 $ecotrack_remote_status_display = admin_ecotrack_status_label($ecotrack_remote_status);
 $ecotrack_remote_order_summary['الحالة'] = admin_ecotrack_format_field_value($pdo, 'status', $ecotrack_remote_order_summary['الحالة'] ?? '');
 $ecotrack_remote_order_summary['الولاية'] = admin_ecotrack_format_field_value($pdo, 'wilaya_id', $ecotrack_remote_order_summary['الولاية'] ?? '');
 $ecotrack_history_rows = admin_ecotrack_translate_timeline_rows($pdo, $ecotrack_history_rows);
 $ecotrack_updates_list = admin_ecotrack_translate_timeline_rows($pdo, $ecotrack_updates_list);
 $ecotrack_payload_changed_since_last_attempt = $ecotrack_last_payload !== '' && trim($ecotrack_last_payload) !== trim((string) $ecotrack_payload_json);
+
+$zrexpress_status = function_exists('zrexpress_status_meta') ? zrexpress_status_meta($order['zrexpress_status'] ?? '') : ['label' => 'غير مربوط بعد', 'class' => 'label label-default'];
+$zrexpress_reference = 'ZREX-' . $order['id'];
+$zrexpress_tracking = trim((string) ($order['zrexpress_tracking'] ?? ''));
+$zrexpress_remote_status = trim((string) ($order['zrexpress_remote_status'] ?? ''));
+$zrexpress_last_error = trim((string) ($order['zrexpress_last_error'] ?? ''));
+$zrexpress_last_payload = trim((string) ($order['zrexpress_last_payload'] ?? ''));
+$zrexpress_last_response = trim((string) ($order['zrexpress_last_response'] ?? ''));
+$zrexpress_sent_at = trim((string) ($order['zrexpress_sent_at'] ?? ''));
 ?>
 
 <style>
@@ -1257,11 +1328,27 @@ $ecotrack_payload_changed_since_last_attempt = $ecotrack_last_payload !== '' && 
 
 <section class="content">
     <div class="order-details-linkbar">
-        <a href="order.php" class="btn"><i class="fa fa-list"></i> إدارة الطلبات</a>
-        <a href="order-statistics.php" class="btn"><i class="fa fa-bar-chart"></i> إحصائيات الطلبات</a>
-        <a href="order-statistics.php#ordersTable" class="btn btn-primary"><i class="fa fa-truck"></i> تتبع الشحنات</a>
-        <a href="ecotrack-diagnostics.php" class="btn"><i class="fa fa-stethoscope"></i> تشخيص ECOTRACK</a>
+        <a href="order.php" target="_parent" class="btn"><i class="fa fa-list"></i> إدارة الطلبات</a>
+        <?php if (!$is_employee): ?>
+        <a href="order-statistics.php" target="_parent" class="btn"><i class="fa fa-bar-chart"></i> إحصائيات الطلبات</a>
+        <a href="order-statistics.php#ordersTable" target="_parent" class="btn btn-primary"><i class="fa fa-truck"></i> تتبع الشحنات</a>
+        <a href="ecotrack-diagnostics.php" target="_parent" class="btn"><i class="fa fa-stethoscope"></i> تشخيص ECOTRACK</a>
+        <a href="zrexpress-diagnostics.php" target="_parent" class="btn"><i class="fa fa-stethoscope"></i> تشخيص ZRexpress</a>
+        <?php endif; ?>
     </div>
+    <?php if ($is_product_restricted_for_user): ?>
+    <div class="row">
+        <div class="col-md-12">
+            <div class="alert alert-danger" style="background:#fef2f2;border:1px solid #f87171;color:#991b1b;padding:15px;border-radius:8px;font-weight:bold;margin-bottom:15px;">
+                <i class="fa fa-exclamation-triangle" style="font-size:18px;margin-left:8px;"></i> ليس لديك صلاحية لعرض أو تعديل هذا الطلب لأنه تابع لمنتج غير مخصص لك.
+            </div>
+        </div>
+    </div>
+    <style>
+        a[href="#tab_edit"], a[href="#tab_ecotrack"], a[href="#tab_zrexpress"], a[href="#tab_telegram"] { display: none !important; }
+        .order-actions-bar, button[name="add_call"] { display: none !important; }
+    </style>
+    <?php endif; ?>
     <?php if ($flash && !empty($flash['message'])): ?>
     <div class="row">
         <div class="col-md-12">
@@ -1274,9 +1361,14 @@ $ecotrack_payload_changed_since_last_attempt = $ecotrack_last_payload !== '' && 
     <ul class="nav nav-tabs" id="orderDetailsTabs" role="tablist">
         <li class="active"><a href="#tab_summary" data-toggle="tab">ملخص الطلب</a></li>
         <li><a href="#tab_edit" data-toggle="tab">تعديل الطلب</a></li>
+        <?php if (!$is_employee): ?>
         <li><a href="#tab_ecotrack" data-toggle="tab">ECOTRACK</a></li>
+        <li><a href="#tab_zrexpress" data-toggle="tab">ZRexpress</a></li>
         <li><a href="#tab_telegram" data-toggle="tab">تلغرام</a></li>
         <li><a href="#tab_audit" data-toggle="tab"><i class="fa fa-history"></i> سجل التدقيق</a></li>
+        <li><a href="#tab_timeline" data-toggle="tab"><i class="fa fa-clock-o"></i> السجل الزمني للطلب (ERP)</a></li>
+        <li><a href="#tab_api_logs" data-toggle="tab"><i class="fa fa-exchange"></i> سجل API (ERP)</a></li>
+        <?php endif; ?>
     </ul>
     <div class="tab-content" style="margin-top:15px;">
         <div class="tab-pane active" id="tab_summary">
@@ -1313,7 +1405,18 @@ $ecotrack_payload_changed_since_last_attempt = $ecotrack_last_payload !== '' && 
                                     </tr>
                                     <tr>
                                         <th>الحالة</th>
-                                        <td><span class="<?php echo $order_status['class']; ?>"><?php echo $order_status['text']; ?></span></td>
+                                        <td>
+                                            <span class="<?php echo $order_status['class']; ?>"><?php echo $order_status['text']; ?></span>
+                                            <?php if (!empty($order['delivery_company_id']) && !empty($order['tracking_number'])): ?>
+                                                <div style="margin-top: 10px;">
+                                                    <a href="order-sync-now.php?id=<?= $order['id'] ?>" class="btn btn-primary btn-xs"><i class="fa fa-refresh"></i> تحديث الحالة الآن</a>
+                                                </div>
+                                            <?php elseif (!empty($order['delivery_company_id']) && empty($order['tracking_number'])): ?>
+                                                <div style="margin-top: 10px;">
+                                                    <a href="order-resend-api.php?id=<?= $order['id'] ?>" class="btn btn-warning btn-xs"><i class="fa fa-send"></i> إعادة إرسال لشركة التوصيل</a>
+                                                </div>
+                                            <?php endif; ?>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -1814,6 +1917,120 @@ $ecotrack_payload_changed_since_last_attempt = $ecotrack_last_payload !== '' && 
         </div>
         </div>
     </div>
+
+        <div class="tab-pane" id="tab_zrexpress">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">ZRexpress</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="order-details-ecotrack-hero">
+                                <div>
+                                    <h4><i class="fa fa-truck"></i> تفاصيل الشحنة المرتبطة بالطلب (ZRexpress)</h4>
+                                    <p>مراجعة الحالة الحالية، تنفيذ إجراءات الربط، وتتبع آخر تحديثات ZRexpress.</p>
+                                </div>
+                            </div>
+                            <?php if (!$zrexpress_ready): ?>
+                                <div class="callout callout-warning">
+                                إعداد ZRexpress غير مكتمل بعد. أضف التوكن والمفتاح من <a href="settings.php#tab_zrexpress">إعدادات الموقع</a> أولاً.
+                                </div>
+                            <?php endif; ?>
+
+                            <div id="zrexpressAjaxFeedback"></div>
+                            
+                            <div class="row">
+                                <div class="col-md-7">
+                                    <?php
+                                    $zrexpress_status_summary = [
+                                        'حالة الربط' => $zrexpress_status['label'],
+                                        'المرجع المحلي' => $zrexpress_reference,
+                                        'رقم التتبع' => $zrexpress_tracking !== '' ? $zrexpress_tracking : 'غير متوفر',
+                                        'الحالة البعيدة' => $zrexpress_remote_status !== '' ? $zrexpress_remote_status : 'لم تتم المزامنة بعد',
+                                        'آخر إرسال' => $zrexpress_sent_at !== '' ? date('d/m/Y H:i', strtotime($zrexpress_sent_at)) : 'لم يرسل بعد'
+                                    ];
+                                    $zrexpress_status_cards = [];
+                                    foreach ($zrexpress_status_summary as $summary_label => $summary_value) {
+                                        $zrexpress_status_cards[] = [
+                                            'label' => (string) $summary_label,
+                                            'value' => $summary_label === 'حالة الربط'
+                                                ? '<span class="' . htmlspecialchars($zrexpress_status['class'], ENT_QUOTES, 'UTF-8') . '" style="padding: 4px 10px; border-radius: 4px;">' . htmlspecialchars((string) $summary_value, ENT_QUOTES, 'UTF-8') . '</span>'
+                                                : (string) $summary_value,
+                                            'html' => $summary_label === 'حالة الربط'
+                                        ];
+                                    }
+                                    ?>
+                                    <div class="order-details-ecotrack-card">
+                                        <h4><i class="fa fa-info-circle"></i> معلومات الشحنة</h4>
+                                        <?php echo admin_order_details_render_card_grid($zrexpress_status_cards); ?>
+                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                    <?php if ($zrexpress_last_error !== ''): ?>
+                                        <div class="callout callout-danger" style="border-radius: 8px; box-shadow: none;">
+                                            <strong><i class="fa fa-exclamation-triangle"></i> آخر خطأ:</strong><br>
+                                            <?php echo nl2br(htmlspecialchars($zrexpress_last_error, ENT_QUOTES, 'UTF-8')); ?>
+                                        </div>
+                                    <?php else: ?>
+                                        <div class="callout callout-success" style="border-radius: 8px; box-shadow: none; background: #ecfdf5; border-color: #10b981; color: #065f46;">
+                                            <i class="fa fa-check-circle"></i> لا توجد أخطاء حالياً. الربط سليم.
+                                        </div>
+                                    <?php endif; ?>
+
+                                    <?php if ($zrexpress_last_response !== ''): ?>
+                                        <details style="background: #fff; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px; margin-bottom: 10px;">
+                                            <summary style="cursor:pointer; font-weight: bold; color: #475569;">عرض آخر رد (Response)</summary>
+                                            <div style="margin-top:8px;">
+                                                <textarea class="form-control" rows="4" style="font-size:12px; font-family:monospace;" readonly><?php echo htmlspecialchars($zrexpress_last_response, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                                            </div>
+                                        </details>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+
+                            <div class="order-details-ecotrack-card">
+                                <h4><i class="fa fa-cogs"></i> الإجراءات المتاحة</h4>
+                                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                    <?php if ($zrexpress_ready): ?>
+                                        <?php if ($zrexpress_tracking === ''): ?>
+                                            <form method="post" action="order-zrexpress-action.php">
+                                                <?php $csrf->echoInputField(); ?>
+                                                <input type="hidden" name="order_id" value="<?php echo (int) $order['id']; ?>">
+                                                <input type="hidden" name="action" value="create">
+                                                <input type="hidden" name="redirect" value="order-details.php?id=<?php echo (int) $order['id']; ?>">
+                                                <button type="submit" class="btn btn-success" style="padding: 8px 20px; font-weight: bold;"><i class="fa fa-paper-plane"></i> إرسال إلى ZRexpress</button>
+                                            </form>
+                                        <?php else: ?>
+                                            <form method="post" action="order-zrexpress-action.php">
+                                                <?php $csrf->echoInputField(); ?>
+                                                <input type="hidden" name="order_id" value="<?php echo (int) $order['id']; ?>">
+                                                <input type="hidden" name="action" value="sync">
+                                                <input type="hidden" name="redirect" value="order-details.php?id=<?php echo (int) $order['id']; ?>">
+                                                <button type="submit" class="btn btn-info"><i class="fa fa-exchange"></i> مزامنة الحالة</button>
+                                            </form>
+                                            <form method="post" action="order-zrexpress-action.php">
+                                                <?php $csrf->echoInputField(); ?>
+                                                <input type="hidden" name="order_id" value="<?php echo (int) $order['id']; ?>">
+                                                <input type="hidden" name="action" value="pret">
+                                                <input type="hidden" name="redirect" value="order-details.php?id=<?php echo (int) $order['id']; ?>">
+                                                <button type="submit" class="btn btn-warning"><i class="fa fa-truck"></i> تغيير الحالة إلى جاهز للشحن</button>
+                                            </form>
+                                            <form method="post" action="order-zrexpress-action.php">
+                                                <?php $csrf->echoInputField(); ?>
+                                                <input type="hidden" name="order_id" value="<?php echo (int) $order['id']; ?>">
+                                                <input type="hidden" name="action" value="delete">
+                                                <input type="hidden" name="redirect" value="order-details.php?id=<?php echo (int) $order['id']; ?>">
+                                                <button type="submit" class="btn btn-danger" onclick="return confirm('هل تريد بالتأكيد حذف رقم التتبع محلياً؟');"><i class="fa fa-trash"></i> حذف محلي</button>
+                                            </form>
+                                        <?php endif; ?>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
         <div class="tab-pane" id="tab_telegram">
@@ -1898,7 +2115,7 @@ $ecotrack_payload_changed_since_last_attempt = $ecotrack_last_payload !== '' && 
                     <?php
                     $event_logs = [];
                     if (function_exists('telegram_was_event_recently_sent')) {
-                        $stmt_ev = $pdo->prepare("SELECT * FROM tbl_event_log WHERE order_id = ? ORDER BY created_at DESC LIMIT 20");
+                        $stmt_ev = $dbRepo->prepare("SELECT * FROM tbl_event_log WHERE order_id = ? ORDER BY created_at DESC LIMIT 20");
                         $stmt_ev->execute([(int) $order['id']]);
                         $event_logs = $stmt_ev->fetchAll(PDO::FETCH_ASSOC);
                     }
@@ -2010,6 +2227,100 @@ $ecotrack_payload_changed_since_last_attempt = $ecotrack_last_payload !== '' && 
     </div>
         </div>
 
+        <!-- ERP Phase 8: Timeline Tab -->
+        <div class="tab-pane" id="tab_timeline">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">السجل الزمني للطلب (Timeline)</h3>
+                </div>
+                <div class="box-body">
+                    <?php
+                    $stmt = $dbRepo->prepare("SELECT t.*, u.full_name as user_name, c.name as company_name FROM tbl_order_timeline t LEFT JOIN tbl_user u ON t.user_id = u.id LEFT JOIN tbl_delivery_company c ON t.delivery_company_id = c.id WHERE t.order_id = ? ORDER BY t.created_at DESC");
+                    $stmt->execute([$order['id']]);
+                    $timeline = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
+                    <?php if(empty($timeline)): ?>
+                        <p class="text-center text-muted">لا توجد أحداث مسجلة لهذا الطلب.</p>
+                    <?php else: ?>
+                    <ul class="timeline">
+                        <?php foreach($timeline as $tl): ?>
+                        <li>
+                            <i class="fa fa-clock-o bg-blue"></i>
+                            <div class="timeline-item">
+                                <span class="time"><i class="fa fa-clock-o"></i> <?= $tl['created_at']; ?></span>
+                                <h3 class="timeline-header"><?= htmlspecialchars($tl['action']); ?></h3>
+                                <div class="timeline-body">
+                                    <?= nl2br(htmlspecialchars($tl['description'] ?? '')); ?>
+                                </div>
+                                <div class="timeline-footer">
+                                    <span class="text-muted"><i class="fa fa-user"></i> <?= $tl['user_name'] ? htmlspecialchars($tl['user_name']) : 'النظام/API'; ?></span>
+                                    <?php if($tl['company_name']): ?>
+                                        &nbsp;|&nbsp; <span class="text-muted"><i class="fa fa-truck"></i> <?= htmlspecialchars($tl['company_name']); ?></span>
+                                    <?php endif; ?>
+                                </div>
+                            </div>
+                        </li>
+                        <?php endforeach; ?>
+                        <li><i class="fa fa-clock-o bg-gray"></i></li>
+                    </ul>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+        <!-- ERP Phase 8: API Logs Tab -->
+        <div class="tab-pane" id="tab_api_logs">
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">سجل التخاطب مع شركة التوصيل (API Logs)</h3>
+                </div>
+                <div class="box-body table-responsive">
+                    <?php
+                    $stmt = $dbRepo->prepare("SELECT l.*, c.name as company_name FROM tbl_api_request_log l LEFT JOIN tbl_delivery_company c ON l.delivery_company_id = c.id WHERE l.order_id = ? ORDER BY l.created_at DESC");
+                    $stmt->execute([$order['id']]);
+                    $api_logs = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                    ?>
+                    <?php if(empty($api_logs)): ?>
+                        <p class="text-center text-muted">لا توجد سجلات API لهذا الطلب.</p>
+                    <?php else: ?>
+                    <table class="table table-bordered table-striped">
+                        <thead>
+                            <tr>
+                                <th>التاريخ</th>
+                                <th>الشركة</th>
+                                <th>الطلب (Endpoint)</th>
+                                <th>رد الخادم (Code)</th>
+                                <th>الزمن المستغرق</th>
+                                <th>التفاصيل</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($api_logs as $log): ?>
+                            <tr>
+                                <td><?= $log['created_at']; ?></td>
+                                <td><?= htmlspecialchars($log['company_name'] ?? '-'); ?></td>
+                                <td><span class="label label-default"><?= $log['method']; ?></span> <?= htmlspecialchars($log['endpoint']); ?></td>
+                                <td>
+                                    <?php if($log['http_code'] >= 200 && $log['http_code'] < 300): ?>
+                                        <span class="label label-success"><?= $log['http_code']; ?></span>
+                                    <?php else: ?>
+                                        <span class="label label-danger"><?= $log['http_code']; ?></span>
+                                    <?php endif; ?>
+                                </td>
+                                <td><?= $log['response_time_ms']; ?> ms</td>
+                                <td>
+                                    <button class="btn btn-default btn-xs" onclick="alert('Request:\n<?= addslashes(htmlspecialchars($log['request_body'] ?? '')); ?>\n\nResponse:\n<?= addslashes(htmlspecialchars($log['response_body'] ?? '')); ?>');">عرض Payload</button>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                    </table>
+                    <?php endif; ?>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </section>
 
@@ -2035,7 +2346,9 @@ window.addEventListener('load', function() {
     var ecotrackActionDialogText = document.getElementById('ecotrackActionDialogText');
     var ecotrackActionDialogClose = document.getElementById('ecotrackActionDialogClose');
 
-    function escapeHtml(value) {
+    function escapeHtml(value) { global $dbRepo;
+    global $dbRepo;
+
         return String(value || '')
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
@@ -2044,8 +2357,7 @@ window.addEventListener('load', function() {
             .replace(/'/g, '&#039;');
     }
 
-    function arrangeEcotrackTab() {
-        var ecotrackToolbarTop = document.getElementById('ecotrackToolbarTop');
+    function arrangeEcotrackTab() {        var ecotrackToolbarTop = document.getElementById('ecotrackToolbarTop');
         var ecotrackActionsBlock = document.getElementById('ecotrackActionsBlock');
 
         if (ecotrackToolbarTop && ecotrackActionsBlock && ecotrackToolbarTop.parentNode) {
@@ -2055,7 +2367,9 @@ window.addEventListener('load', function() {
         }
     }
 
-    function openEcotrackActionOverlay(title, text) {
+    function openEcotrackActionOverlay(title, text) { global $dbRepo;
+    global $dbRepo;
+
         if (!ecotrackActionOverlay || !ecotrackActionDialog) {
             return;
         }
@@ -2074,7 +2388,9 @@ window.addEventListener('load', function() {
         ecotrackActionOverlay.setAttribute('aria-hidden', 'false');
     }
 
-    function finishEcotrackActionOverlay(state, text) {
+    function finishEcotrackActionOverlay(state, text) { global $dbRepo;
+    global $dbRepo;
+
         if (!ecotrackActionOverlay || !ecotrackActionDialog) {
             return;
         }
@@ -2094,8 +2410,7 @@ window.addEventListener('load', function() {
         }
     }
 
-    function closeEcotrackActionOverlay() {
-        if (!ecotrackActionOverlay) {
+    function closeEcotrackActionOverlay() {        if (!ecotrackActionOverlay) {
             return;
         }
 
@@ -2103,7 +2418,9 @@ window.addEventListener('load', function() {
         ecotrackActionOverlay.setAttribute('aria-hidden', 'true');
     }
 
-    function showEcotrackAjaxFeedback(type, message) {
+    function showEcotrackAjaxFeedback(type, message) { global $dbRepo;
+    global $dbRepo;
+
         var feedbackContainer = document.getElementById('ecotrackAjaxFeedback');
         if (!feedbackContainer) {
             return;
@@ -2123,8 +2440,7 @@ window.addEventListener('load', function() {
         ecotrackActionDialogClose.addEventListener('click', closeEcotrackActionOverlay);
     }
 
-    function getActiveOrderDetailsTab() {
-        var activeTabLink = document.querySelector('#orderDetailsTabs li.active a[href^="#"]')
+    function getActiveOrderDetailsTab() {        var activeTabLink = document.querySelector('#orderDetailsTabs li.active a[href^="#"]')
             || document.querySelector('#orderDetailsTabs a[aria-expanded="true"][href^="#"]');
         if (activeTabLink && activeTabLink.getAttribute('href')) {
             return activeTabLink.getAttribute('href');
@@ -2137,7 +2453,9 @@ window.addEventListener('load', function() {
         return '#tab_summary';
     }
 
-    function updateOrderDetailsHash(hash) {
+    function updateOrderDetailsHash(hash) { global $dbRepo;
+    global $dbRepo;
+
         if (!hash) {
             return;
         }
@@ -2150,8 +2468,7 @@ window.addEventListener('load', function() {
         window.location.hash = hash;
     }
 
-    function persistOrderDetailsViewState() {
-        var state = {
+    function persistOrderDetailsViewState() {        var state = {
             hash: getActiveOrderDetailsTab(),
             scrollY: window.pageYOffset || document.documentElement.scrollTop || 0
         };
@@ -2174,8 +2491,7 @@ window.addEventListener('load', function() {
         });
     }
 
-    function readStoredOrderDetailsViewState() {
-        try {
+    function readStoredOrderDetailsViewState() {        try {
             var rawState = sessionStorage.getItem(orderDetailsStateKey);
             if (!rawState) {
                 return null;
@@ -2307,7 +2623,9 @@ window.addEventListener('load', function() {
             site_name: <?php echo json_encode($sms_site_name, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES); ?>
         };
 
-        function renderSmsTemplate(template, context) {
+        function renderSmsTemplate(template, context) { global $dbRepo;
+    global $dbRepo;
+
             var output = template || '';
             Object.keys(context).forEach(function(key) {
                 output = output.split('{{' + key + '}}').join(context[key] || '');
@@ -2315,7 +2633,9 @@ window.addEventListener('load', function() {
             return output;
         }
 
-        function reloadEcotrackPanel(responsePayload, afterReload) {
+        function reloadEcotrackPanel(responsePayload, afterReload) { global $dbRepo;
+    global $dbRepo;
+
             $('#ecotrackPanelContent').load('order-details.php?id=<?php echo (int) $order_id; ?> #ecotrackPanelContent > *', function(response, status) {
                 arrangeEcotrackTab();
                 if (responsePayload && responsePayload.message) {
@@ -2346,8 +2666,7 @@ window.addEventListener('load', function() {
         var editDeliveryType = document.getElementById('editOrderDeliveryType');
         var editWilaya = document.getElementById('editOrderWilaya');
 
-        function getEditShippingFee() {
-            if (!editDeliveryType) {
+        function getEditShippingFee() {            if (!editDeliveryType) {
                 return 0;
             }
 
@@ -2374,8 +2693,7 @@ window.addEventListener('load', function() {
             return isFinite(fee) && fee > 0 ? fee : 0;
         }
 
-        function recalculateEditOrderTotal() {
-            if (!editQty || !editUnitPrice || !editTotalPrice) {
+        function recalculateEditOrderTotal() {            if (!editQty || !editUnitPrice || !editTotalPrice) {
                 return;
             }
 
@@ -2503,6 +2821,25 @@ window.addEventListener("load", function() {
         if ($targetTab.length) {
             $targetTab.tab("show");
         }
+    }
+
+    function toggleParentSaveBtn(target) { global $dbRepo;
+    global $dbRepo;
+
+        var showSave = (target === '#tab_edit' || target === '#tab_summary'); // Allow save from summary tab too
+        if (window.parent && window.parent.document.getElementById('iframeDrawerSaveBtn')) {
+            window.parent.document.getElementById('iframeDrawerSaveBtn').style.display = showSave ? 'inline-block' : 'none';
+        }
+    }
+
+    $('a[data-toggle="tab"]').on('shown.bs.tab', function (e) {
+        toggleParentSaveBtn($(e.target).attr("href"));
+    });
+
+    // Run once on load
+    var initialTab = $('#orderDetailsTabs li.active a').attr('href');
+    if (initialTab) {
+        toggleParentSaveBtn(initialTab);
     }
 });
 </script>

@@ -14,7 +14,9 @@ if (!isset($_SESSION['user'])) {
 
 if (!function_exists('admin_ecotrack_bulk_labels_redirect')) {
     function admin_ecotrack_bulk_labels_redirect($message = '', $type = 'warning')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($message !== '') {
             admin_set_flash_message('orders', $type, $message);
         }
@@ -26,7 +28,9 @@ if (!function_exists('admin_ecotrack_bulk_labels_redirect')) {
 
 if (!function_exists('admin_ecotrack_bulk_label_src')) {
     function admin_ecotrack_bulk_label_src($order_id)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return 'order-ecotrack-label.php?order_id=' . (int) $order_id . '&inline=1&print=1#toolbar=0&navpanes=0&scrollbar=0&view=FitH';
     }
 }
@@ -49,7 +53,7 @@ admin_ensure_ecotrack_setting_columns($pdo);
 admin_ensure_order_ecotrack_columns($pdo);
 
 $placeholders = implode(',', array_fill(0, count($order_ids), '?'));
-$statement = $pdo->prepare("SELECT id, customer_name, product_name, order_date, ecotrack_tracking FROM tbl_order WHERE id IN ($placeholders)");
+$statement = $dbRepo->prepare("SELECT id, customer_name, product_name, order_date, ecotrack_tracking FROM tbl_order WHERE id IN ($placeholders)");
 $statement->execute($order_ids);
 $rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 

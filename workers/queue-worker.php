@@ -16,6 +16,11 @@
 
 declare(strict_types=1);
 
+if (php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    exit('Forbidden');
+}
+
 // --- Bootstrap ---
 $scriptDir = dirname(__DIR__);
 $incDir = $scriptDir . '/admin/inc';

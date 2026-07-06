@@ -1,7 +1,64 @@
 <?php
+
+// ─── Tenant Isolation Helpers ──────────────────────────────────────────────
+if (!function_exists('get_current_tenant_id')) {
+    function get_current_tenant_id(): int { global $dbRepo;
+        // In a SaaS environment, the tenant_id is derived from the authenticated session.
+        // Currently single-tenant: always 1. Ready for multi-tenant extension.
+        if (session_status() === PHP_SESSION_NONE) session_start();
+        return (int)($_SESSION['tenant_id'] ?? 1);
+    }
+}
+
+if (!function_exists('pdo_fetch_all_for_tenant')) {
+    /**
+     * Execute a SELECT query scoped to the current tenant.
+     * Automatically appends AND tenant_id = ? if not already present.
+     */
+    function pdo_fetch_all_for_tenant(PDO $pdo, string $sql, array $params = []): array { global $dbRepo;
+        $tenant_id = get_current_tenant_id();
+        if (stripos($sql, 'tenant_id') === false && stripos($sql, 'FROM tbl_tenants') === false) {
+            // Determine the alias of the primary table to avoid ambiguous column errors on JOINs
+            $tenant_col = 'tenant_id';
+            if (preg_match('/FROM\s+([a-zA-Z0-9_`]+)(?:\s+(?:AS\s+)?([a-zA-Z0-9_`]+))?(?:\s+WHERE|\s+JOIN|\s+LEFT|\s+RIGHT|\s+INNER|\s+ON|\s+ORDER|\s+GROUP|\s+LIMIT|\s*$)/i', $sql, $matches)) {
+                $tableName = strtolower(trim($matches[1], '`'));
+                $globalTables = [
+                    'tbl_commune', 'tbl_country', 'tbl_delivery_company', 
+                    'tbl_language', 'tbl_store', 'tbl_stores', 'tbl_tenants', 
+                    'tbl_test_logs', 'tbl_wilaya', 'information_schema', 'tbl_plans', 'tbl_page'
+                ];
+                
+                if (in_array($tableName, $globalTables)) {
+                    // Driving table is global; skip auto-injection
+                    $stmt = $dbRepo->prepare($sql);
+                    $stmt->execute($params);
+                    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+                }
+                
+                $aliasCandidate = !empty($matches[2]) ? $matches[2] : $matches[1];
+                if (preg_match('/^(WHERE|JOIN|LEFT|RIGHT|INNER|ON|ORDER|GROUP|LIMIT|HAVING|ASC|DESC)$/i', $aliasCandidate)) {
+                    $aliasCandidate = $matches[1];
+                }
+                $tenant_col = $aliasCandidate . '.tenant_id';
+            }
+            if (stripos($sql, 'WHERE') !== false) {
+                $sql = preg_replace('/\bWHERE\b/i', "WHERE {$tenant_col} = " . (int)$tenant_id . ' AND ', $sql, 1);
+            } elseif (preg_match('/\b(LIMIT|ORDER BY|GROUP BY)\b/i', $sql)) {
+                $sql = preg_replace('/\b(LIMIT|ORDER BY|GROUP BY)\b/i', "WHERE {$tenant_col} = " . (int)$tenant_id . ' $1', $sql, 1);
+            } else {
+                $sql .= " WHERE {$tenant_col} = " . (int)$tenant_id;
+            }
+        }
+        $stmt = $dbRepo->prepare($sql);
+        $stmt->execute($params);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+}
 if (!function_exists('get_ext')) {
     function get_ext($pdo, $fname)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $up_filename = $_FILES[$fname]['name'] ?? '';
         return (string)substr($up_filename, strripos($up_filename, '.'));
     }
@@ -9,7 +66,9 @@ if (!function_exists('get_ext')) {
 
 if (!function_exists('ext_check')) {
     function ext_check($pdo, $allowed_ext, $my_ext)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $allowed = array_map(static function ($ext) {
             return '.' . ltrim(trim($ext), '.');
         }, explode('|', (string)$allowed_ext));
@@ -20,8 +79,10 @@ if (!function_exists('ext_check')) {
 
 if (!function_exists('get_ai_id')) {
     function get_ai_id($pdo, $tbl_name)
-    {
-        $statement = $pdo->prepare("SHOW TABLE STATUS LIKE '$tbl_name'");
+    { global $dbRepo;
+    global $dbRepo;
+
+        $statement = $dbRepo->prepare("SHOW TABLE STATUS LIKE '$tbl_name'");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);
         foreach ($result as $row) {
@@ -33,7 +94,9 @@ if (!function_exists('get_ai_id')) {
 
 if (!function_exists('is_external_image_url')) {
     function is_external_image_url($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string)$value);
         if ($value === '') {
             return false;
@@ -49,7 +112,9 @@ if (!function_exists('is_external_image_url')) {
 
 if (!function_exists('is_valid_image_url')) {
     function is_valid_image_url($url)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '') {
             return false;
@@ -70,7 +135,9 @@ if (!function_exists('is_valid_image_url')) {
 
 if (!function_exists('is_probable_direct_image_url')) {
     function is_probable_direct_image_url($url)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '' || !is_valid_image_url($url)) {
             return false;
@@ -102,7 +169,9 @@ if (!function_exists('is_probable_direct_image_url')) {
 
 if (!function_exists('can_resolve_image_from_meta_host')) {
     function can_resolve_image_from_meta_host($host)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $host = strtolower(trim((string)$host));
         if (strpos($host, 'www.') === 0) {
             $host = substr($host, 4);
@@ -121,7 +190,9 @@ if (!function_exists('can_resolve_image_from_meta_host')) {
 
 if (!function_exists('get_image_url_lookup_cache_file')) {
     function get_image_url_lookup_cache_file($url)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $cache_dir = rtrim((string)sys_get_temp_dir(), '/\\') . DIRECTORY_SEPARATOR . 'ecom-image-url-cache';
         if (!is_dir($cache_dir)) {
             @mkdir($cache_dir, 0777, true);
@@ -132,7 +203,9 @@ if (!function_exists('get_image_url_lookup_cache_file')) {
 
 if (!function_exists('read_cached_resolved_image_url')) {
     function read_cached_resolved_image_url($url, $ttl_seconds = 604800)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $cache_file = get_image_url_lookup_cache_file($url);
         if (!is_file($cache_file)) {
             return '';
@@ -160,7 +233,9 @@ if (!function_exists('read_cached_resolved_image_url')) {
 
 if (!function_exists('write_cached_resolved_image_url')) {
     function write_cached_resolved_image_url($url, $resolved_url)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $cache_file = get_image_url_lookup_cache_file($url);
         $payload = json_encode(['resolved' => trim((string)$resolved_url)], JSON_UNESCAPED_SLASHES);
         if ($payload !== false) {
@@ -171,7 +246,9 @@ if (!function_exists('write_cached_resolved_image_url')) {
 
 if (!function_exists('http_fetch_page_html')) {
     function http_fetch_page_html($url, $timeout_seconds = 4)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '') {
             return '';
@@ -227,7 +304,9 @@ if (!function_exists('http_fetch_page_html')) {
 
 if (!function_exists('extract_image_url_from_html_meta')) {
     function extract_image_url_from_html_meta($html)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $html = (string)$html;
         if ($html === '') {
             return '';
@@ -255,7 +334,9 @@ if (!function_exists('extract_image_url_from_html_meta')) {
 
 if (!function_exists('resolve_external_image_url')) {
     function resolve_external_image_url($url, $allow_meta_lookup = false)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $memory_cache = [];
 
         $url = trim((string)$url);
@@ -321,7 +402,9 @@ if (!function_exists('resolve_external_image_url')) {
 
 if (!function_exists('normalize_external_image_url')) {
     function normalize_external_image_url($url, $allow_meta_lookup = false)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '') {
             return '';
@@ -345,7 +428,9 @@ if (!function_exists('normalize_external_image_url')) {
 
 if (!function_exists('normalize_image_value')) {
     function normalize_image_value($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string)$value);
         if ($value !== '' && strpos($value, '//') === 0) {
             $value = 'https:' . $value;
@@ -356,7 +441,9 @@ if (!function_exists('normalize_image_value')) {
 
 if (!function_exists('normalize_product_delivery_mode')) {
     function normalize_product_delivery_mode($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = strtolower(trim((string)$value));
         $allowed = ['free', 'home_only', 'home_office'];
         if (!in_array($value, $allowed, true)) {
@@ -368,7 +455,9 @@ if (!function_exists('normalize_product_delivery_mode')) {
 
 if (!function_exists('admin_fix_broken_arabic_text')) {
     function admin_fix_broken_arabic_text($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -420,9 +509,7 @@ if (!function_exists('admin_fix_broken_arabic_text')) {
 }
 
 if (!function_exists('admin_delivery_type_labels')) {
-    function admin_delivery_type_labels()
-    {
-        return [
+    function admin_delivery_type_labels() {        return [
             'home' => "\u{0645}\u{0646}\u{0632}\u{0644}",
             'office' => "\u{0645}\u{0643}\u{062A}\u{0628}",
             'free' => "\u{0645}\u{062C}\u{0627}\u{0646}\u{064A}",
@@ -432,7 +519,9 @@ if (!function_exists('admin_delivery_type_labels')) {
 
 if (!function_exists('admin_normalize_delivery_type_text')) {
     function admin_normalize_delivery_type_text($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -460,7 +549,9 @@ if (!function_exists('admin_normalize_delivery_type_text')) {
 
 if (!function_exists('resolve_delivery_type_by_mode')) {
     function resolve_delivery_type_by_mode($requested_type, $delivery_mode)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $delivery_mode = normalize_product_delivery_mode($delivery_mode);
         $labels = admin_delivery_type_labels();
         $normalized_type = admin_normalize_delivery_type_text($requested_type);
@@ -550,7 +641,9 @@ if (!function_exists('resolve_delivery_type_by_mode')) {
 
 if (!function_exists('get_available_delivery_prices_for_wilaya')) {
     function get_available_delivery_prices_for_wilaya(array $shippingData, $wilaya, $deliveryMode)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $deliveryMode = normalize_product_delivery_mode($deliveryMode);
         $labels = admin_delivery_type_labels();
         $wilaya = trim((string) $wilaya);
@@ -591,7 +684,9 @@ if (!function_exists('get_available_delivery_prices_for_wilaya')) {
 
 if (!function_exists('resolve_available_delivery_type_for_wilaya')) {
     function resolve_available_delivery_type_for_wilaya(array $shippingData, $wilaya, $deliveryMode, $requestedType = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $available = get_available_delivery_prices_for_wilaya($shippingData, $wilaya, $deliveryMode);
         if (empty($available)) {
             return '';
@@ -608,16 +703,18 @@ if (!function_exists('resolve_available_delivery_type_for_wilaya')) {
 
 if (!function_exists('ensure_product_delivery_company_column')) {
     function ensure_product_delivery_company_column(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $lock_file = __DIR__ . '/../cache/product_delivery_company_column.lock';
         if (file_exists($lock_file)) {
             return;
         }
 
         try {
-            $column_check = $pdo->query("SHOW COLUMNS FROM tbl_product LIKE 'p_delivery_company_id'");
+            $column_check = $dbRepo->query("SHOW COLUMNS FROM tbl_product LIKE 'p_delivery_company_id'");
             if ($column_check->rowCount() === 0) {
-                $pdo->exec("ALTER TABLE tbl_product ADD COLUMN p_delivery_company_id INT NULL DEFAULT NULL");
+                $dbRepo->executeCommand("ALTER TABLE tbl_product ADD COLUMN p_delivery_company_id INT NULL DEFAULT NULL");
             }
             @file_put_contents($lock_file, '1');
         } catch (PDOException $e) {
@@ -628,7 +725,9 @@ if (!function_exists('ensure_product_delivery_company_column')) {
 
 if (!function_exists('ensure_product_offer_table')) {
     function ensure_product_offer_table(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $ensured = false;
 
         if ($ensured) {
@@ -642,7 +741,7 @@ if (!function_exists('ensure_product_offer_table')) {
         }
 
         try {
-            $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_product_offer (
+            $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_product_offer (
                 offer_id INT AUTO_INCREMENT PRIMARY KEY,
                 p_id INT NOT NULL,
                 offer_qty INT NOT NULL,
@@ -671,9 +770,9 @@ if (!function_exists('ensure_product_offer_table')) {
 
         foreach ($columns as $column_name => $sql) {
             try {
-                $column_check = $pdo->query("SHOW COLUMNS FROM tbl_product_offer LIKE " . $pdo->quote($column_name));
+                $column_check = $dbRepo->query("SHOW COLUMNS FROM tbl_product_offer LIKE " . $pdo->quote($column_name));
                 if ($column_check->rowCount() === 0) {
-                    $pdo->exec($sql);
+                    $dbRepo->executeCommand($sql);
                 }
             } catch (PDOException $e) {
                 error_log('Failed to ensure ' . $column_name . ' column in tbl_product_offer: ' . $e->getMessage());
@@ -681,27 +780,27 @@ if (!function_exists('ensure_product_offer_table')) {
         }
 
         try {
-            $legacy_unique_check = $pdo->query("SHOW INDEX FROM tbl_product_offer WHERE Key_name = 'uniq_product_qty'");
+            $legacy_unique_check = $dbRepo->query("SHOW INDEX FROM tbl_product_offer WHERE Key_name = 'uniq_product_qty'");
             if ($legacy_unique_check && $legacy_unique_check->rowCount() > 0) {
-                $pdo->exec("ALTER TABLE tbl_product_offer DROP INDEX uniq_product_qty");
+                $dbRepo->executeCommand("ALTER TABLE tbl_product_offer DROP INDEX uniq_product_qty");
             }
         } catch (PDOException $e) {
             error_log('Failed to drop legacy uniq_product_qty index in tbl_product_offer: ' . $e->getMessage());
         }
 
         try {
-            $slot_unique_check = $pdo->query("SHOW INDEX FROM tbl_product_offer WHERE Key_name = 'uniq_product_offer_slot'");
+            $slot_unique_check = $dbRepo->query("SHOW INDEX FROM tbl_product_offer WHERE Key_name = 'uniq_product_offer_slot'");
             if (!$slot_unique_check || $slot_unique_check->rowCount() === 0) {
-                $pdo->exec("ALTER TABLE tbl_product_offer ADD UNIQUE KEY uniq_product_offer_slot (p_id, offer_type, sort_order)");
+                $dbRepo->executeCommand("ALTER TABLE tbl_product_offer ADD UNIQUE KEY uniq_product_offer_slot (p_id, offer_type, sort_order)");
             }
         } catch (PDOException $e) {
             error_log('Failed to ensure uniq_product_offer_slot index in tbl_product_offer: ' . $e->getMessage());
         }
 
         try {
-            $qty_index_check = $pdo->query("SHOW INDEX FROM tbl_product_offer WHERE Key_name = 'idx_product_qty'");
+            $qty_index_check = $dbRepo->query("SHOW INDEX FROM tbl_product_offer WHERE Key_name = 'idx_product_qty'");
             if (!$qty_index_check || $qty_index_check->rowCount() === 0) {
-                $pdo->exec("ALTER TABLE tbl_product_offer ADD KEY idx_product_qty (p_id, offer_qty)");
+                $dbRepo->executeCommand("ALTER TABLE tbl_product_offer ADD KEY idx_product_qty (p_id, offer_qty)");
             }
         } catch (PDOException $e) {
             error_log('Failed to ensure idx_product_qty index in tbl_product_offer: ' . $e->getMessage());
@@ -714,9 +813,11 @@ if (!function_exists('ensure_product_offer_table')) {
 
 if (!function_exists('get_delivery_company_options')) {
     function get_delivery_company_options(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         try {
-            $statement = $pdo->query("SELECT id, name, active FROM tbl_delivery_company ORDER BY active DESC, name ASC, id ASC");
+            $statement = $dbRepo->query("SELECT id, name, active FROM tbl_delivery_company ORDER BY active DESC, name ASC, id ASC");
             return $statement->fetchAll(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             error_log('Failed to load delivery companies: ' . $e->getMessage());
@@ -727,12 +828,14 @@ if (!function_exists('get_delivery_company_options')) {
 
 if (!function_exists('resolve_product_delivery_company_id')) {
     function resolve_product_delivery_company_id(PDO $pdo, $preferredId = 0)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $preferredId = (int)$preferredId;
 
         if ($preferredId > 0) {
             try {
-                $statement = $pdo->prepare("SELECT id FROM tbl_delivery_company WHERE id = ? LIMIT 1");
+                $statement = $dbRepo->prepare("SELECT id FROM tbl_delivery_company WHERE id = ? LIMIT 1");
                 $statement->execute([$preferredId]);
                 $resolved = $statement->fetchColumn();
                 if ($resolved) {
@@ -744,13 +847,13 @@ if (!function_exists('resolve_product_delivery_company_id')) {
         }
 
         try {
-            $statement = $pdo->query("SELECT id FROM tbl_delivery_company WHERE active = 1 ORDER BY id ASC LIMIT 1");
+            $statement = $dbRepo->query("SELECT id FROM tbl_delivery_company WHERE active = 1 ORDER BY id ASC LIMIT 1");
             $activeId = $statement->fetchColumn();
             if ($activeId) {
                 return (int)$activeId;
             }
 
-            $statement = $pdo->query("SELECT id FROM tbl_delivery_company ORDER BY id ASC LIMIT 1");
+            $statement = $dbRepo->query("SELECT id FROM tbl_delivery_company ORDER BY id ASC LIMIT 1");
             $fallbackId = $statement->fetchColumn();
             if ($fallbackId) {
                 return (int)$fallbackId;
@@ -765,7 +868,9 @@ if (!function_exists('resolve_product_delivery_company_id')) {
 
 if (!function_exists('get_product_delivery_settings')) {
     function get_product_delivery_settings(PDO $pdo, $productId)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $productId = (int) $productId;
         $settings = [
             'product_id' => $productId,
@@ -780,7 +885,7 @@ if (!function_exists('get_product_delivery_settings')) {
 
         try {
             ensure_product_delivery_company_column($pdo);
-            $statement = $pdo->prepare("SELECT p_delivery_mode, p_delivery_company_id FROM tbl_product WHERE p_id = ? LIMIT 1");
+            $statement = $dbRepo->prepare("SELECT p_delivery_mode, p_delivery_company_id FROM tbl_product WHERE p_id = ? LIMIT 1");
             $statement->execute([$productId]);
             $row = $statement->fetch(PDO::FETCH_ASSOC);
             if (!$row) {
@@ -801,7 +906,9 @@ if (!function_exists('get_product_delivery_settings')) {
 
 if (!function_exists('product_delivery_company_has_office_for_wilaya')) {
     function product_delivery_company_has_office_for_wilaya(PDO $pdo, $companyId, $wilaya, $deliveryMode)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $companyId = (int) $companyId;
         $wilaya = trim((string) $wilaya);
         $deliveryMode = normalize_product_delivery_mode($deliveryMode);
@@ -813,7 +920,7 @@ if (!function_exists('product_delivery_company_has_office_for_wilaya')) {
         $labels = admin_delivery_type_labels();
 
         try {
-            $statement = $pdo->prepare("SELECT price, delivery_type FROM tbl_delivery_price WHERE company_id = ? AND wilaya = ?");
+            $statement = $dbRepo->prepare("SELECT price, delivery_type FROM tbl_delivery_price WHERE company_id = ? AND wilaya = ?");
             $statement->execute([$companyId, $wilaya]);
             foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $row) {
                 $type = resolve_delivery_type_by_mode($row['delivery_type'] ?? '', $deliveryMode);
@@ -831,7 +938,9 @@ if (!function_exists('product_delivery_company_has_office_for_wilaya')) {
 
 if (!function_exists('is_cloudinary_url')) {
     function is_cloudinary_url($url)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '' || !is_valid_image_url($url)) {
             return false;
@@ -847,9 +956,7 @@ if (!function_exists('is_cloudinary_url')) {
 }
 
 if (!function_exists('cloudinary_get_config')) {
-    function cloudinary_get_config()
-    {
-        static $config = null;
+    function cloudinary_get_config() {        static $config = null;
         if ($config !== null) {
             return $config;
         }
@@ -885,24 +992,22 @@ if (!function_exists('cloudinary_get_config')) {
 }
 
 if (!function_exists('cloudinary_is_enabled')) {
-    function cloudinary_is_enabled()
-    {
-        $cfg = cloudinary_get_config();
+    function cloudinary_is_enabled() {        $cfg = cloudinary_get_config();
         return !empty($cfg['enabled']);
     }
 }
 
 if (!function_exists('cloudinary_is_strict_mode')) {
-    function cloudinary_is_strict_mode()
-    {
-        $cfg = cloudinary_get_config();
+    function cloudinary_is_strict_mode() {        $cfg = cloudinary_get_config();
         return !empty($cfg['strict_mode']);
     }
 }
 
 if (!function_exists('cloudinary_make_signature')) {
     function cloudinary_make_signature(array $params, $api_secret)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         ksort($params);
         $sign_parts = [];
         foreach ($params as $key => $value) {
@@ -917,7 +1022,9 @@ if (!function_exists('cloudinary_make_signature')) {
 
 if (!function_exists('cloudinary_execute_upload_request')) {
     function cloudinary_execute_upload_request($file_param, $public_id = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $cfg = cloudinary_get_config();
         if (empty($cfg['enabled']) || empty($cfg['endpoint'])) {
             return [false, '', 'Cloudinary is not configured.'];
@@ -1000,7 +1107,9 @@ if (!function_exists('cloudinary_execute_upload_request')) {
 
 if (!function_exists('cloudinary_upload_local_image')) {
     function cloudinary_upload_local_image($tmp_file, $original_name, $public_id = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $tmp_file = trim((string)$tmp_file);
         $original_name = trim((string)$original_name);
         if ($tmp_file === '' || !is_file($tmp_file)) {
@@ -1027,7 +1136,9 @@ if (!function_exists('cloudinary_upload_local_image')) {
 
 if (!function_exists('cloudinary_upload_remote_image')) {
     function cloudinary_upload_remote_image($url, $public_id = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '' || !is_valid_image_url($url)) {
             return [false, '', 'Remote image URL is invalid.'];
@@ -1038,7 +1149,9 @@ if (!function_exists('cloudinary_upload_remote_image')) {
 
 if (!function_exists('store_external_image_url')) {
     function store_external_image_url($url, &$error_message = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $upload_cache = [];
 
         $url = normalize_external_image_url($url, true);
@@ -1084,7 +1197,9 @@ if (!function_exists('store_external_image_url')) {
 
 if (!function_exists('store_uploaded_image_file')) {
     function store_uploaded_image_file($file_tmp, $file_name, $target_basename, $upload_dir, &$error_message, $allowed_ext = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($allowed_ext === null) {
             $allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         }
@@ -1176,7 +1291,9 @@ if (!function_exists('store_uploaded_image_file')) {
 
 if (!function_exists('get_front_image_url')) {
     function get_front_image_url($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = normalize_image_value($value);
         if ($value === '') {
             return '';
@@ -1192,7 +1309,9 @@ if (!function_exists('get_front_image_url')) {
 
 if (!function_exists('front_get_settings')) {
     function front_get_settings(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $cache = [];
 
         $cache_key = spl_object_hash($pdo);
@@ -1200,8 +1319,9 @@ if (!function_exists('front_get_settings')) {
             return $cache[$cache_key];
         }
 
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1 LIMIT 1");
-        $statement->execute();
+        $tenant_id = function_exists('get_current_tenant_id') ? get_current_tenant_id() : 1;
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE tenant_id = ? LIMIT 1");
+        $statement->execute([$tenant_id]);
         $settings = $statement->fetch(PDO::FETCH_ASSOC);
 
         $cache[$cache_key] = is_array($settings) ? $settings : [];
@@ -1211,13 +1331,15 @@ if (!function_exists('front_get_settings')) {
 
 if (!function_exists('admin_add_column_if_missing')) {
     function admin_add_column_if_missing(PDO $pdo, $table, $column, $definition)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         try {
             $quoted_column = $pdo->quote($column);
-            $statement = $pdo->query("SHOW COLUMNS FROM {$table} LIKE {$quoted_column}");
+            $statement = $dbRepo->query("SHOW COLUMNS FROM {$table} LIKE {$quoted_column}");
             $exists = $statement->fetch(PDO::FETCH_ASSOC);
             if (!$exists) {
-                $pdo->exec("ALTER TABLE {$table} ADD COLUMN {$column} {$definition}");
+                $dbRepo->executeCommand("ALTER TABLE {$table} ADD COLUMN {$column} {$definition}");
             }
         } catch (Exception $exception) {
             error_log('Failed to ensure column ' . $table . '.' . $column . ': ' . $exception->getMessage());
@@ -1227,7 +1349,9 @@ if (!function_exists('admin_add_column_if_missing')) {
 
 if (!function_exists('admin_ensure_ecotrack_setting_columns')) {
     function admin_ensure_ecotrack_setting_columns(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $lock_file = __DIR__ . '/../cache/ecotrack_setting_columns.lock';
         if (file_exists($lock_file)) {
             return;
@@ -1242,9 +1366,7 @@ if (!function_exists('admin_ensure_ecotrack_setting_columns')) {
 }
 
 if (!function_exists('ecotrack_default_settings')) {
-    function ecotrack_default_settings()
-    {
-        return [
+    function ecotrack_default_settings() {        return [
             'ecotrack_enabled' => 0,
             'ecotrack_api_token' => '',
             'ecotrack_base_url' => ''
@@ -1254,7 +1376,9 @@ if (!function_exists('ecotrack_default_settings')) {
 
 if (!function_exists('ecotrack_normalize_base_url_value')) {
     function ecotrack_normalize_base_url_value($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -1273,7 +1397,9 @@ if (!function_exists('ecotrack_normalize_base_url_value')) {
 
 if (!function_exists('ecotrack_normalize_settings')) {
     function ecotrack_normalize_settings(array $settings)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = array_merge(ecotrack_default_settings(), $settings);
         $settings['ecotrack_enabled'] = !empty($settings['ecotrack_enabled']) ? 1 : 0;
         $settings['ecotrack_api_token'] = trim((string) ($settings['ecotrack_api_token'] ?? ''));
@@ -1284,7 +1410,9 @@ if (!function_exists('ecotrack_normalize_settings')) {
 
 if (!function_exists('ecotrack_is_configured')) {
     function ecotrack_is_configured(array $settings)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = ecotrack_normalize_settings($settings);
         return $settings['ecotrack_enabled'] === 1 && $settings['ecotrack_api_token'] !== '';
     }
@@ -1292,7 +1420,9 @@ if (!function_exists('ecotrack_is_configured')) {
 
 if (!function_exists('ecotrack_build_headers')) {
     function ecotrack_build_headers(array $settings)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = ecotrack_normalize_settings($settings);
         if ($settings['ecotrack_api_token'] === '') {
             return [];
@@ -1306,9 +1436,7 @@ if (!function_exists('ecotrack_build_headers')) {
 }
 
 if (!function_exists('ecotrack_candidate_base_urls')) {
-    function ecotrack_candidate_base_urls()
-    {
-        return [
+    function ecotrack_candidate_base_urls() {        return [
             'https://app.ecotrack.dz',
             'https://api.ecotrack.dz',
             'https://ecotrack.dz',
@@ -1319,7 +1447,9 @@ if (!function_exists('ecotrack_candidate_base_urls')) {
 
 if (!function_exists('ecotrack_json_decode')) {
     function ecotrack_json_decode($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return null;
@@ -1332,7 +1462,9 @@ if (!function_exists('ecotrack_json_decode')) {
 
 if (!function_exists('ecotrack_json_encode')) {
     function ecotrack_json_encode($value, $pretty = false)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $flags = JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES;
         if (!empty($pretty)) {
             $flags |= JSON_PRETTY_PRINT;
@@ -1345,7 +1477,9 @@ if (!function_exists('ecotrack_json_encode')) {
 
 if (!function_exists('ecotrack_response_to_text')) {
     function ecotrack_response_to_text($response, $json = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (is_array($json)) {
             $pretty = ecotrack_json_encode($json, true);
             if ($pretty !== '') {
@@ -1367,7 +1501,9 @@ if (!function_exists('ecotrack_response_to_text')) {
 
 if (!function_exists('ecotrack_messages_to_array')) {
     function ecotrack_messages_to_array($value, $prefix = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $messages = [];
 
         if (is_array($value)) {
@@ -1398,7 +1534,9 @@ if (!function_exists('ecotrack_messages_to_array')) {
 
 if (!function_exists('ecotrack_messages_to_text')) {
     function ecotrack_messages_to_text($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $messages = ecotrack_messages_to_array($value);
         $messages = array_values(array_unique(array_filter(array_map('trim', $messages))));
         return implode(PHP_EOL, $messages);
@@ -1407,7 +1545,9 @@ if (!function_exists('ecotrack_messages_to_text')) {
 
 if (!function_exists('ecotrack_find_first_value_by_keys')) {
     function ecotrack_find_first_value_by_keys($data, array $keys)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!is_array($data)) {
             return '';
         }
@@ -1438,7 +1578,9 @@ if (!function_exists('ecotrack_find_first_value_by_keys')) {
 
 if (!function_exists('ecotrack_find_tracking_record')) {
     function ecotrack_find_tracking_record($data, $tracking)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $tracking = trim((string) $tracking);
         if ($tracking === '' || !is_array($data)) {
             return null;
@@ -1469,7 +1611,9 @@ if (!function_exists('ecotrack_find_tracking_record')) {
 
 if (!function_exists('ecotrack_extract_remote_status')) {
     function ecotrack_extract_remote_status($data, $tracking = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status_keys = ['current_status', 'status', 'state', 'etat', 'last_status', 'lastState', 'status_label'];
         $record = ecotrack_find_tracking_record($data, $tracking);
         if (is_array($record)) {
@@ -1485,7 +1629,9 @@ if (!function_exists('ecotrack_extract_remote_status')) {
 
 if (!function_exists('ecotrack_extract_remote_note')) {
     function ecotrack_extract_remote_note($data, $tracking = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $note_keys = ['note', 'notes', 'comment', 'comments', 'content', 'message', 'reason', 'motif', 'observation', 'description'];
         $record = ecotrack_find_tracking_record($data, $tracking);
         if (is_array($record)) {
@@ -1501,7 +1647,9 @@ if (!function_exists('ecotrack_extract_remote_note')) {
 
 if (!function_exists('admin_ensure_telegram_order_status_columns')) {
     function admin_ensure_telegram_order_status_columns(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $lock_file = __DIR__ . '/../cache/telegram_order_status_columns.lock';
         if (file_exists($lock_file)) {
             return;
@@ -1517,7 +1665,9 @@ if (!function_exists('admin_ensure_telegram_order_status_columns')) {
 
 if (!function_exists('admin_send_order_status_telegram')) {
     function admin_send_order_status_telegram(PDO $pdo, array $order, $old_status, $new_status, array $context = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $old_status = trim((string) $old_status);
         $new_status = trim((string) $new_status);
         if ($new_status === '' || strcasecmp($old_status, $new_status) === 0) {
@@ -1525,60 +1675,77 @@ if (!function_exists('admin_send_order_status_telegram')) {
         }
 
         try {
-            admin_ensure_telegram_order_status_columns($pdo);
-            $settings = front_get_settings($pdo);
+            $stmt = $dbRepo->query("SELECT telegram_is_enabled, telegram_enable_manager_notifications, telegram_enable_employee_notifications FROM tbl_settings WHERE id = 1 LIMIT 1");
+            $settings = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             return ['skipped' => true, 'reason' => 'settings_unavailable'];
         }
 
-        if (empty($settings['telegram_order_status_enabled'])) {
+        if (empty($settings['telegram_is_enabled'])) {
             return ['skipped' => true, 'reason' => 'disabled'];
         }
 
-        $bot_token = trim((string) ($settings['telegram_order_status_bot_token'] ?? ''));
-        $chat_id = trim((string) ($settings['telegram_order_status_chat_id'] ?? ''));
-        if ($bot_token === '') {
-            $bot_token = trim((string) ($settings['telegram_bot_token'] ?? ''));
+        // Build Message
+        $message = "📦 <b>تحديث حالة الطلب</b>\n\n";
+        if (!empty($order['id'])) {
+            $message .= "🆔 الطلب: #" . htmlspecialchars((string)$order['id']) . "\n";
         }
-        if ($chat_id === '') {
-            $chat_id = trim((string) ($settings['telegram_chat_id'] ?? ''));
+        $tracking = $order['ecotrack_tracking'] ?? ($context['tracking'] ?? '');
+        if (!empty($tracking)) {
+            $message .= "🚚 التتبع: " . htmlspecialchars((string)$tracking) . "\n";
         }
-        if ($bot_token === '' || $chat_id === '') {
-            return ['skipped' => true, 'reason' => 'missing_credentials'];
-        }
-
-        $telegram_file = dirname(__DIR__, 2) . DIRECTORY_SEPARATOR . 'assets' . DIRECTORY_SEPARATOR . 'telegram-notification.php';
-        if (!class_exists('TelegramNotification') && is_file($telegram_file)) {
-            require_once $telegram_file;
-        }
-        if (!class_exists('TelegramNotification')) {
-            return ['success' => false, 'error' => 'TelegramNotification class missing'];
+        $message .= "\n🔄 <b>الحالة:</b>\n";
+        $message .= "من: " . htmlspecialchars((string)($old_status !== '' ? $old_status : '-')) . "\n";
+        $message .= "إلى: <b>" . htmlspecialchars((string)$new_status) . "</b>\n";
+        
+        if (!empty($context['note'])) {
+            $message .= "📝 ملاحظة: " . htmlspecialchars((string)$context['note']) . "\n";
         }
 
-        $telegram = new TelegramNotification($bot_token, $chat_id);
-        $ok = $telegram->sendOrderStatusNotification([
-            'order_id' => $order['id'] ?? '',
-            'tracking' => $order['ecotrack_tracking'] ?? ($context['tracking'] ?? ''),
-            'customer_name' => $order['customer_name'] ?? '',
-            'customer_phone' => $order['customer_phone'] ?? '',
-            'product_name' => $order['product_name'] ?? '',
-            'quantity' => $order['quantity'] ?? '',
-            'wilaya' => $order['wilaya'] ?? '',
-            'commune' => $order['commune'] ?? '',
-            'delivery_type' => $order['delivery_type'] ?? '',
-            'old_status' => $old_status !== '' ? $old_status : '-',
-            'new_status' => $new_status,
-            'note' => $context['note'] ?? '',
-            'remote_time' => $context['remote_time'] ?? ''
-        ]);
+        $message .= "\n👤 <b>الزبون:</b>\n";
+        if (!empty($order['customer_name'])) {
+            $message .= "الاسم: " . htmlspecialchars((string)$order['customer_name']) . "\n";
+        }
+        if (!empty($order['wilaya'])) {
+            $message .= "الولاية: " . htmlspecialchars((string)$order['wilaya']) . "\n";
+        }
 
-        return $ok ? ['success' => true] : ['success' => false, 'error' => 'telegram_send_failed'];
+        $message .= "\n⏰ التوقيت: " . date('Y-m-d H:i:s');
+
+        require_once dirname(__DIR__, 2) . '/admin/telegram/Services/QueueService.php';
+        $pushed = false;
+
+        // Notify Managers
+        if (!empty($settings['telegram_enable_manager_notifications'])) {
+            $stmt = $dbRepo->query("SELECT telegram_chat_id FROM tbl_user WHERE telegram_is_linked = 1 AND status = 1");
+            while ($mgr = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                if (!empty($mgr['telegram_chat_id'])) {
+                    QueueService::enqueueTelegram($pdo, $mgr['telegram_chat_id'], $message);
+                    $pushed = true;
+                }
+            }
+        }
+
+        // Notify Assigned Employee
+        if (!empty($settings['telegram_enable_employee_notifications']) && !empty($order['employee_id'])) {
+            $stmt = $dbRepo->prepare("SELECT telegram_chat_id FROM tbl_employee WHERE id = ? AND telegram_is_linked = 1 AND is_active = 1");
+            $stmt->execute([$order['employee_id']]);
+            $emp = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!empty($emp['telegram_chat_id'])) {
+                QueueService::enqueueTelegram($pdo, $emp['telegram_chat_id'], $message);
+                $pushed = true;
+            }
+        }
+
+        return $pushed ? ['success' => true] : ['skipped' => true, 'reason' => 'no_linked_users'];
     }
 }
 
 if (!function_exists('ecotrack_filter_query_params')) {
     function ecotrack_filter_query_params(array $params)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $filtered = [];
         foreach ($params as $key => $value) {
             if (is_array($value)) {
@@ -1609,7 +1776,9 @@ if (!function_exists('ecotrack_filter_query_params')) {
 
 if (!function_exists('ecotrack_build_query_string')) {
     function ecotrack_build_query_string(array $params)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $pairs = [];
         foreach (ecotrack_filter_query_params($params) as $key => $value) {
             $key = (string) $key;
@@ -1639,7 +1808,9 @@ if (!function_exists('ecotrack_build_query_string')) {
 
 if (!function_exists('ecotrack_curl_execute')) {
     function ecotrack_curl_execute($ch)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $response = curl_exec($ch);
         $error = trim((string) curl_error($ch));
         $errno = (int) curl_errno($ch);
@@ -1657,7 +1828,9 @@ if (!function_exists('ecotrack_curl_execute')) {
 
 if (!function_exists('ecotrack_update_base_url')) {
     function ecotrack_update_base_url(PDO $pdo, $base_url)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $base_url = ecotrack_normalize_base_url_value($base_url);
         if ($base_url === '') {
             return;
@@ -1665,7 +1838,7 @@ if (!function_exists('ecotrack_update_base_url')) {
 
         try {
             admin_ensure_ecotrack_setting_columns($pdo);
-            $statement = $pdo->prepare("UPDATE tbl_settings SET ecotrack_base_url=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET ecotrack_base_url=? WHERE id=1");
             $statement->execute([$base_url]);
         } catch (Exception $exception) {
             error_log('Unable to save ECOTRACK base URL: ' . $exception->getMessage());
@@ -1675,7 +1848,8 @@ if (!function_exists('ecotrack_update_base_url')) {
 
 if (!function_exists('ecotrack_resolve_base_url')) {
     function ecotrack_resolve_base_url(PDO $pdo, array $settings)
-    {
+    { global $dbRepo;
+
         $settings = ecotrack_normalize_settings($settings);
         $token = $settings['ecotrack_api_token'];
         if ($token === '') {
@@ -1750,7 +1924,8 @@ if (!function_exists('ecotrack_resolve_base_url')) {
 
 if (!function_exists('ecotrack_api_request')) {
     function ecotrack_api_request(PDO $pdo, array $settings, $method, $path, array $query = [], $body = null, $auth_mode = 'bearer')
-    {
+    { global $dbRepo;
+
         $settings = ecotrack_normalize_settings($settings);
         list($base_ok, $base_url, $base_error) = ecotrack_resolve_base_url($pdo, $settings);
         if (!$base_ok || $base_url === '') {
@@ -1796,6 +1971,7 @@ if (!function_exists('ecotrack_api_request')) {
         $response = '';
         $status_code = 0;
         $error = '';
+        $elapsed_ms = 0;
 
         if (function_exists('curl_init')) {
             $attempts = 2;
@@ -1805,7 +1981,7 @@ if (!function_exists('ecotrack_api_request')) {
             for ($attempt = 1; $attempt <= $attempts; $attempt++) {
                 $ch = curl_init($url);
                 if ($ch === false) {
-                    return ['success' => false, 'status_code' => 0, 'response' => '', 'json' => null, 'error' => 'Unable to initialize cURL', 'url' => $url];
+                    return ['success' => false, 'status_code' => 0, 'response' => '', 'json' => null, 'error' => 'Unable to initialize cURL', 'url' => $url, 'elapsed_ms' => 0];
                 }
                 curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
                 curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
@@ -1817,7 +1993,9 @@ if (!function_exists('ecotrack_api_request')) {
                 if ($method !== 'GET' && $payload !== '') {
                     curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
                 }
+                $t_start = microtime(true);
                 list($response, $error) = ecotrack_curl_execute($ch);
+                $elapsed_ms = round((microtime(true) - $t_start) * 1000);
                 $status_code = (int) curl_getinfo($ch, CURLINFO_HTTP_CODE);
                 curl_close($ch);
 
@@ -1871,14 +2049,17 @@ if (!function_exists('ecotrack_api_request')) {
             'response' => $response,
             'json' => $json,
             'error' => $error,
-            'url' => $url
+            'url' => $url,
+            'elapsed_ms' => $elapsed_ms
         ];
     }
 }
 
 if (!function_exists('ecotrack_normalize_compare_text')) {
     function ecotrack_normalize_compare_text($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -1926,7 +2107,9 @@ if (!function_exists('ecotrack_normalize_compare_text')) {
 
 if (!function_exists('ecotrack_transliterate_arabic_place_name')) {
     function ecotrack_transliterate_arabic_place_name($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return '';
@@ -2046,7 +2229,9 @@ if (!function_exists('ecotrack_transliterate_arabic_place_name')) {
 
 if (!function_exists('ecotrack_place_name_match_key')) {
     function ecotrack_place_name_match_key($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = ecotrack_normalize_compare_text($value);
         if ($value === '') {
             return '';
@@ -2060,7 +2245,9 @@ if (!function_exists('ecotrack_place_name_match_key')) {
 
 if (!function_exists('ecotrack_place_name_variants')) {
     function ecotrack_place_name_variants($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = trim((string) $value);
         if ($value === '') {
             return [];
@@ -2111,7 +2298,9 @@ if (!function_exists('ecotrack_place_name_variants')) {
 
 if (!function_exists('ecotrack_communes_cache_path')) {
     function ecotrack_communes_cache_path($wilaya_code)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $wilaya_code = max(0, (int) $wilaya_code);
         if ($wilaya_code <= 0) {
             return '';
@@ -2128,7 +2317,9 @@ if (!function_exists('ecotrack_communes_cache_path')) {
 
 if (!function_exists('ecotrack_read_cached_communes')) {
     function ecotrack_read_cached_communes($wilaya_code)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $path = ecotrack_communes_cache_path($wilaya_code);
         if ($path === '' || !is_file($path)) {
             return null;
@@ -2146,7 +2337,9 @@ if (!function_exists('ecotrack_read_cached_communes')) {
 
 if (!function_exists('ecotrack_write_cached_communes')) {
     function ecotrack_write_cached_communes($wilaya_code, array $rows)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $path = ecotrack_communes_cache_path($wilaya_code);
         if ($path === '') {
             return;
@@ -2163,7 +2356,9 @@ if (!function_exists('ecotrack_write_cached_communes')) {
 
 if (!function_exists('admin_ensure_order_ecotrack_columns')) {
     function admin_ensure_order_ecotrack_columns(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $lock_file = __DIR__ . '/../cache/order_ecotrack_columns.lock';
         if (file_exists($lock_file)) {
             return;
@@ -2190,7 +2385,9 @@ if (!function_exists('admin_ensure_order_ecotrack_columns')) {
 
 if (!function_exists('admin_ecotrack_request_success')) {
     function admin_ecotrack_request_success(array $request)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $request_ok = !empty($request['success']);
         if ($request_ok && is_array($request['json']) && array_key_exists('success', $request['json'])) {
             $request_ok = !empty($request['json']['success']);
@@ -2202,7 +2399,9 @@ if (!function_exists('admin_ecotrack_request_success')) {
 
 if (!function_exists('admin_ecotrack_request_error_text')) {
     function admin_ecotrack_request_error_text(array $request, $fallback = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $error_text = '';
 
         if (!empty($request['json']['errors'])) {
@@ -2224,7 +2423,9 @@ if (!function_exists('admin_ecotrack_request_error_text')) {
 
 if (!function_exists('admin_ecotrack_mark_order_sent_locally')) {
     function admin_ecotrack_mark_order_sent_locally(PDO $pdo, array $order, $changed_by = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $order_id = (int) ($order['id'] ?? 0);
         if ($order_id <= 0) {
             return false;
@@ -2233,12 +2434,12 @@ if (!function_exists('admin_ecotrack_mark_order_sent_locally')) {
         $current_status = admin_normalize_order_status($order['order_status'] ?? '');
         $target_status = 'Completed';
         if ($current_status === $target_status) {
-            $statement = $pdo->prepare("UPDATE tbl_order SET ecotrack_previous_order_status = CASE WHEN TRIM(ecotrack_previous_order_status) = '' THEN ? ELSE ecotrack_previous_order_status END WHERE id = ? LIMIT 1");
+            $statement = $dbRepo->prepare("UPDATE tbl_order SET ecotrack_previous_order_status = CASE WHEN TRIM(ecotrack_previous_order_status) = '' THEN ? ELSE ecotrack_previous_order_status END WHERE id = ? LIMIT 1");
             $statement->execute([$current_status, $order_id]);
             return false;
         }
 
-        $statement = $pdo->prepare('UPDATE tbl_order SET order_status = ?, ecotrack_previous_order_status = ? WHERE id = ? LIMIT 1');
+        $statement = $dbRepo->prepare('UPDATE tbl_order SET order_status = ?, ecotrack_previous_order_status = ? WHERE id = ? LIMIT 1');
         $statement->execute([$target_status, $current_status, $order_id]);
 
         admin_log_order_status_change(
@@ -2256,7 +2457,9 @@ if (!function_exists('admin_ecotrack_mark_order_sent_locally')) {
 
 if (!function_exists('admin_ecotrack_restore_local_order_status')) {
     function admin_ecotrack_restore_local_order_status(PDO $pdo, array $order, $changed_by = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $order_id = (int) ($order['id'] ?? 0);
         if ($order_id <= 0) {
             return '';
@@ -2266,7 +2469,7 @@ if (!function_exists('admin_ecotrack_restore_local_order_status')) {
         $restore_status = trim((string) ($order['ecotrack_previous_order_status'] ?? ''));
         $restore_status = $restore_status !== '' ? admin_normalize_order_status($restore_status) : 'Pending';
 
-        $statement = $pdo->prepare('UPDATE tbl_order SET order_status = ?, ecotrack_previous_order_status = ? WHERE id = ? LIMIT 1');
+        $statement = $dbRepo->prepare('UPDATE tbl_order SET order_status = ?, ecotrack_previous_order_status = ? WHERE id = ? LIMIT 1');
         $statement->execute([$restore_status, '', $order_id]);
 
         if ($current_status !== $restore_status) {
@@ -2286,7 +2489,9 @@ if (!function_exists('admin_ecotrack_restore_local_order_status')) {
 
 if (!function_exists('admin_ecotrack_save_order_state')) {
     function admin_ecotrack_save_order_state(PDO $pdo, $order_id, array $state, $touch_sent_at = false)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $sql = "
             UPDATE tbl_order
             SET ecotrack_reference = ?,
@@ -2338,14 +2543,16 @@ if (!function_exists('admin_ecotrack_save_order_state')) {
         $sql .= " WHERE id = ? LIMIT 1";
         $params[] = (int) $order_id;
 
-        $statement = $pdo->prepare($sql);
+        $statement = $dbRepo->prepare($sql);
         $statement->execute($params);
     }
 }
 
 if (!function_exists('ecotrack_status_meta')) {
     function ecotrack_status_meta($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = strtolower(trim((string) $status));
 
         switch ($status) {
@@ -2367,7 +2574,9 @@ if (!function_exists('ecotrack_status_meta')) {
 
 if (!function_exists('ecotrack_algeria_wilaya_code')) {
     function ecotrack_algeria_wilaya_code($wilaya)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $map = null;
 
         if ($map === null) {
@@ -2447,7 +2656,9 @@ if (!function_exists('ecotrack_algeria_wilaya_code')) {
 
 if (!function_exists('ecotrack_normalize_delivery_type')) {
     function ecotrack_normalize_delivery_type($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = function_exists('admin_normalize_delivery_type_text')
             ? admin_normalize_delivery_type_text($value)
             : trim((string) $value);
@@ -2491,7 +2702,9 @@ if (!function_exists('ecotrack_normalize_delivery_type')) {
 
 if (!function_exists('ecotrack_build_order_reference')) {
     function ecotrack_build_order_reference(array $order)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $existing_reference = trim((string) ($order['ecotrack_reference'] ?? ''));
         if ($existing_reference !== '') {
             return $existing_reference;
@@ -2508,7 +2721,9 @@ if (!function_exists('ecotrack_build_order_reference')) {
 
 if (!function_exists('ecotrack_lookup_order_option_label')) {
     function ecotrack_lookup_order_option_label(PDO $pdo, $table, $id_column, $name_column, $value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $raw = trim((string) $value);
         if ($raw === '') {
             return '';
@@ -2518,7 +2733,7 @@ if (!function_exists('ecotrack_lookup_order_option_label')) {
             return $raw;
         }
 
-        $statement = $pdo->prepare("SELECT {$name_column} FROM {$table} WHERE {$id_column} = ? LIMIT 1");
+        $statement = $dbRepo->prepare("SELECT {$name_column} FROM {$table} WHERE {$id_column} = ? LIMIT 1");
         $statement->execute([(int) $raw]);
         $label = trim((string) $statement->fetchColumn());
 
@@ -2528,7 +2743,9 @@ if (!function_exists('ecotrack_lookup_order_option_label')) {
 
 if (!function_exists('ecotrack_build_order_payload')) {
     function ecotrack_build_order_payload(array $order, array $commune_meta = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $phone_variants = sms_gateway_get_phone_variants((string) ($order['customer_phone'] ?? ''));
         $delivery_type = ecotrack_normalize_delivery_type($order['delivery_type'] ?? '');
         $commune_name = trim((string) ($commune_meta['nom'] ?? ($order['commune'] ?? '')));
@@ -2618,7 +2835,9 @@ if (!function_exists('ecotrack_build_order_payload')) {
 
 if (!function_exists('ecotrack_build_order_payload_json')) {
     function ecotrack_build_order_payload_json(array $order)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return json_encode(
             ecotrack_build_order_payload($order),
             JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
@@ -2628,7 +2847,9 @@ if (!function_exists('ecotrack_build_order_payload_json')) {
 
 if (!function_exists('ecotrack_find_commune_meta')) {
     function ecotrack_find_commune_meta(PDO $pdo, array $settings, $wilaya_code, $commune)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $wilaya_code = (int) $wilaya_code;
         $commune = trim((string) $commune);
         if ($wilaya_code <= 0 || $commune === '') {
@@ -2721,7 +2942,9 @@ if (!function_exists('ecotrack_find_commune_meta')) {
 
 if (!function_exists('ecotrack_commune_has_stop_desk')) {
     function ecotrack_commune_has_stop_desk($commune_meta)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!is_array($commune_meta) || !array_key_exists('has_stop_desk', $commune_meta)) {
             return null;
         }
@@ -2737,7 +2960,9 @@ if (!function_exists('ecotrack_commune_has_stop_desk')) {
 
 if (!function_exists('ecotrack_resolve_order_delivery_context')) {
     function ecotrack_resolve_order_delivery_context(PDO $pdo, array $settings, array $order)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $labels = function_exists('admin_delivery_type_labels')
             ? admin_delivery_type_labels()
             : ['home' => 'منزل', 'office' => 'مكتب', 'free' => 'مجاني'];
@@ -2775,7 +3000,9 @@ if (!function_exists('ecotrack_resolve_order_delivery_context')) {
 
 if (!function_exists('ecotrack_create_order_request_context')) {
     function ecotrack_create_order_request_context(PDO $pdo, array $settings, array $order)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $context = ecotrack_resolve_order_delivery_context($pdo, $settings, $order);
         $prepared_order = $context['order'];
         $prepared_order['ecotrack_color_label'] = ecotrack_lookup_order_option_label($pdo, 'tbl_color', 'color_id', 'color_name', $prepared_order['order_color'] ?? '');
@@ -2795,7 +3022,9 @@ if (!function_exists('ecotrack_create_order_request_context')) {
 
 if (!function_exists('ecotrack_create_order_request_body')) {
     function ecotrack_create_order_request_body(PDO $pdo, array $settings, array $order)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $context = ecotrack_create_order_request_context($pdo, $settings, $order);
         return $context['payload'];
     }
@@ -2803,7 +3032,9 @@ if (!function_exists('ecotrack_create_order_request_body')) {
 
 if (!function_exists('ecotrack_update_order_query')) {
     function ecotrack_update_order_query(PDO $pdo, array $settings, array $order)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $payload = ecotrack_create_order_request_body($pdo, $settings, $order);
         $entry = (array) ($payload['orders']['0'] ?? []);
 
@@ -2831,9 +3062,7 @@ if (!function_exists('ecotrack_update_order_query')) {
 }
 
 if (!function_exists('sms_gateway_default_settings')) {
-    function sms_gateway_default_settings()
-    {
-        return [
+    function sms_gateway_default_settings() {        return [
             'sms_gateway_enabled' => 0,
             'sms_gateway_url' => '',
             'sms_gateway_method' => 'POST',
@@ -2848,7 +3077,9 @@ if (!function_exists('sms_gateway_default_settings')) {
 
 if (!function_exists('sms_gateway_normalize_settings')) {
     function sms_gateway_normalize_settings(array $settings)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = array_merge(sms_gateway_default_settings(), $settings);
         $settings['sms_gateway_enabled'] = !empty($settings['sms_gateway_enabled']) ? 1 : 0;
         $settings['sms_gateway_url'] = trim((string) ($settings['sms_gateway_url'] ?? ''));
@@ -2867,7 +3098,9 @@ if (!function_exists('sms_gateway_normalize_settings')) {
 
 if (!function_exists('sms_gateway_is_configured')) {
     function sms_gateway_is_configured(array $settings)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = sms_gateway_normalize_settings($settings);
         return $settings['sms_gateway_enabled'] === 1 && $settings['sms_gateway_url'] !== '';
     }
@@ -2875,7 +3108,9 @@ if (!function_exists('sms_gateway_is_configured')) {
 
 if (!function_exists('sms_gateway_detect_provider')) {
     function sms_gateway_detect_provider($url)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $host = strtolower(trim((string) parse_url((string) $url, PHP_URL_HOST)));
         if ($host === 'api.smstext.app') {
             return 'smstext_app';
@@ -2887,7 +3122,9 @@ if (!function_exists('sms_gateway_detect_provider')) {
 
 if (!function_exists('sms_gateway_provider_defaults')) {
     function sms_gateway_provider_defaults($provider_key, array $context = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($provider_key === 'smstext_app') {
             return [
                 'method' => 'POST',
@@ -2909,7 +3146,9 @@ if (!function_exists('sms_gateway_provider_defaults')) {
 
 if (!function_exists('sms_gateway_get_phone_variants')) {
     function sms_gateway_get_phone_variants($phone)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $original = trim((string) $phone);
         $digits = preg_replace('/\D+/', '', $original);
         $local = $digits;
@@ -2942,7 +3181,9 @@ if (!function_exists('sms_gateway_get_phone_variants')) {
 
 if (!function_exists('sms_gateway_format_money')) {
     function sms_gateway_format_money($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($value === null || $value === '') {
             return '';
         }
@@ -2952,7 +3193,9 @@ if (!function_exists('sms_gateway_format_money')) {
 
 if (!function_exists('sms_gateway_build_context')) {
     function sms_gateway_build_context(array $settings, array $data = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = sms_gateway_normalize_settings($settings);
         $order_id = $data['order_id'] ?? $data['id'] ?? '';
         $status = admin_normalize_order_status($data['status'] ?? $data['order_status'] ?? '');
@@ -3001,7 +3244,9 @@ if (!function_exists('sms_gateway_build_context')) {
 
 if (!function_exists('sms_gateway_render_template')) {
     function sms_gateway_render_template($template, array $context)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $template = (string) $template;
         if ($template === '') {
             return '';
@@ -3018,7 +3263,9 @@ if (!function_exists('sms_gateway_render_template')) {
 
 if (!function_exists('sms_gateway_append_query_string')) {
     function sms_gateway_append_query_string($url, $query)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string) $url);
         $query = ltrim(trim((string) $query), '?&');
         if ($url === '' || $query === '') {
@@ -3035,7 +3282,9 @@ if (!function_exists('sms_gateway_append_query_string')) {
 
 if (!function_exists('sms_gateway_parse_headers')) {
     function sms_gateway_parse_headers($headers_text)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $headers_text = trim((string) $headers_text);
         if ($headers_text === '') {
             return [];
@@ -3070,7 +3319,9 @@ if (!function_exists('sms_gateway_parse_headers')) {
 
 if (!function_exists('sms_gateway_json_encode')) {
     function sms_gateway_json_encode($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $encoded = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
         return is_string($encoded) ? $encoded : false;
     }
@@ -3078,7 +3329,9 @@ if (!function_exists('sms_gateway_json_encode')) {
 
 if (!function_exists('sms_gateway_resolve_recipient_phone')) {
     function sms_gateway_resolve_recipient_phone(array $context, $prefer_international = false)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $candidates = [];
 
         if (!empty($context['phone_e164'])) {
@@ -3116,7 +3369,9 @@ if (!function_exists('sms_gateway_resolve_recipient_phone')) {
 
 if (!function_exists('sms_gateway_build_provider_payload')) {
     function sms_gateway_build_provider_payload($provider_key, array $context)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($provider_key !== 'smstext_app') {
             return ['handled' => false];
         }
@@ -3156,7 +3411,9 @@ if (!function_exists('sms_gateway_build_provider_payload')) {
 
 if (!function_exists('sms_gateway_http_request')) {
     function sms_gateway_http_request($method, $url, array $headers = [], $body = '')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $method = strtoupper(trim((string) $method));
         if ($method === '') {
             $method = 'POST';
@@ -3230,7 +3487,9 @@ if (!function_exists('sms_gateway_http_request')) {
 
 if (!function_exists('sms_gateway_mask_sensitive_value')) {
     function sms_gateway_mask_sensitive_value($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = (string) $value;
         if ($value === '') {
             return '';
@@ -3243,7 +3502,9 @@ if (!function_exists('sms_gateway_mask_sensitive_value')) {
 
 if (!function_exists('sms_gateway_finalize_result')) {
     function sms_gateway_finalize_result(array $settings, array $http_result, array $debug_context = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = sms_gateway_normalize_settings($settings);
         $response = (string) ($http_result['response'] ?? '');
         $http_code = (int) ($http_result['status_code'] ?? 0);
@@ -3289,7 +3550,9 @@ if (!function_exists('sms_gateway_finalize_result')) {
 
 if (!function_exists('sms_gateway_dispatch')) {
     function sms_gateway_dispatch(array $settings, array $context)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return ['success' => false, 'error' => 'Messaging removed'];
 
         $settings = sms_gateway_normalize_settings($settings);
@@ -3395,7 +3658,9 @@ if (!function_exists('sms_gateway_dispatch')) {
 
 if (!function_exists('sms_gateway_send_manual_message')) {
     function sms_gateway_send_manual_message(array $settings, $phone, $message, array $context = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = sms_gateway_normalize_settings($settings);
         $context['customer_phone'] = $phone;
         $render_context = sms_gateway_build_context($settings, $context);
@@ -3406,7 +3671,9 @@ if (!function_exists('sms_gateway_send_manual_message')) {
 
 if (!function_exists('sms_gateway_send_bulk_manual_messages')) {
     function sms_gateway_send_bulk_manual_messages(array $settings, array $items)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = sms_gateway_normalize_settings($settings);
         $provider_key = sms_gateway_detect_provider($settings['sms_gateway_url']);
         $prepared_items = [];
@@ -3567,13 +3834,15 @@ if (!function_exists('sms_gateway_send_bulk_manual_messages')) {
 
 if (!function_exists('admin_ensure_sms_template_table')) {
     function admin_ensure_sms_template_table(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $lock_file = __DIR__ . '/../cache/sms_template_table.lock';
         if (file_exists($lock_file)) {
             return;
         }
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_sms_template (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_sms_template (
             id INT(11) NOT NULL AUTO_INCREMENT,
             template_name VARCHAR(120) NOT NULL,
             template_body TEXT NOT NULL,
@@ -3590,23 +3859,23 @@ if (!function_exists('admin_ensure_sms_template_table')) {
 
 if (!function_exists('admin_get_sms_templates')) {
     function admin_get_sms_templates(PDO $pdo, $active_only = true)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         admin_ensure_sms_template_table($pdo);
         $sql = "SELECT id, template_name, template_body, sort_order, is_active FROM tbl_sms_template";
         if ($active_only) {
             $sql .= " WHERE is_active = 1";
         }
         $sql .= " ORDER BY sort_order ASC, id ASC";
-        $statement = $pdo->prepare($sql);
+        $statement = $dbRepo->prepare($sql);
         $statement->execute();
         return $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 }
 
 if (!function_exists('admin_get_sms_automation_events')) {
-    function admin_get_sms_automation_events()
-    {
-        return [
+    function admin_get_sms_automation_events() {        return [
             'order_created' => [
                 'label' => 'عند إنشاء طلب جديد',
                 'hint' => 'تُرسل مباشرة بعد تسجيل الطلب في الموقع أو من لوحة الإدارة.'
@@ -3637,13 +3906,15 @@ if (!function_exists('admin_get_sms_automation_events')) {
 
 if (!function_exists('admin_ensure_sms_automation_table')) {
     function admin_ensure_sms_automation_table(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $lock_file = __DIR__ . '/../cache/sms_automation_table.lock';
         if (file_exists($lock_file)) {
             return;
         }
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_sms_automation (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_sms_automation (
             event_key VARCHAR(80) NOT NULL,
             template_body TEXT NULL,
             is_enabled TINYINT(1) NOT NULL DEFAULT 0,
@@ -3652,7 +3923,7 @@ if (!function_exists('admin_ensure_sms_automation_table')) {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci");
 
         $events = admin_get_sms_automation_events();
-        $statement = $pdo->prepare("INSERT IGNORE INTO tbl_sms_automation (event_key, template_body, is_enabled, updated_at) VALUES (?, '', 0, NOW())");
+        $statement = $dbRepo->prepare("INSERT IGNORE INTO tbl_sms_automation (event_key, template_body, is_enabled, updated_at) VALUES (?, '', 0, NOW())");
         foreach (array_keys($events) as $event_key) {
             $statement->execute([$event_key]);
         }
@@ -3663,10 +3934,12 @@ if (!function_exists('admin_ensure_sms_automation_table')) {
 
 if (!function_exists('admin_get_sms_automation_templates')) {
     function admin_get_sms_automation_templates(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         admin_ensure_sms_automation_table($pdo);
 
-        $statement = $pdo->prepare("SELECT event_key, template_body, is_enabled, updated_at FROM tbl_sms_automation");
+        $statement = $dbRepo->prepare("SELECT event_key, template_body, is_enabled, updated_at FROM tbl_sms_automation");
         $statement->execute();
         $stored_rows = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -3694,10 +3967,12 @@ if (!function_exists('admin_get_sms_automation_templates')) {
 
 if (!function_exists('admin_save_sms_automation_templates')) {
     function admin_save_sms_automation_templates(PDO $pdo, array $submitted_templates)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         admin_ensure_sms_automation_table($pdo);
 
-        $statement = $pdo->prepare("
+        $statement = $dbRepo->prepare("
             INSERT INTO tbl_sms_automation (event_key, template_body, is_enabled, updated_at)
             VALUES (?, ?, ?, NOW())
             ON DUPLICATE KEY UPDATE
@@ -3721,7 +3996,9 @@ if (!function_exists('admin_save_sms_automation_templates')) {
 
 if (!function_exists('admin_resolve_sms_status_event_key')) {
     function admin_resolve_sms_status_event_key($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = admin_normalize_order_status($status);
         $map = [
             'Pending' => 'status_pending',
@@ -3737,7 +4014,9 @@ if (!function_exists('admin_resolve_sms_status_event_key')) {
 
 if (!function_exists('admin_send_order_sms_automation')) {
     function admin_send_order_sms_automation(PDO $pdo, $event_key, array $order_context, array $settings = null, array $automation_templates = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return ['success' => false, 'skipped' => true, 'reason' => 'sms_removed'];
 
         $event_key = trim((string) $event_key);
@@ -3781,7 +4060,9 @@ if (!function_exists('admin_send_order_sms_automation')) {
 
 if (!function_exists('front_get_page_content')) {
     function front_get_page_content(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $cache = [];
 
         $cache_key = spl_object_hash($pdo);
@@ -3789,7 +4070,7 @@ if (!function_exists('front_get_page_content')) {
             return $cache[$cache_key];
         }
 
-        $statement = $pdo->prepare("SELECT * FROM tbl_page WHERE id=1 LIMIT 1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_page WHERE id=1 LIMIT 1");
         $statement->execute();
         $page = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -3800,7 +4081,9 @@ if (!function_exists('front_get_page_content')) {
 
 if (!function_exists('front_bootstrap_language')) {
     function front_bootstrap_language(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $loaded = [];
 
         $cache_key = spl_object_hash($pdo);
@@ -3808,7 +4091,7 @@ if (!function_exists('front_bootstrap_language')) {
             return;
         }
 
-        $statement = $pdo->prepare("SELECT * FROM tbl_language");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_language");
         $statement->execute();
         $languages = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -3827,7 +4110,9 @@ if (!function_exists('front_bootstrap_language')) {
 
 if (!function_exists('front_get_top_categories')) {
     function front_get_top_categories(PDO $pdo, $limit = 6)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $cache = [];
 
         $limit = (int)$limit;
@@ -3845,7 +4130,7 @@ if (!function_exists('front_get_top_categories')) {
             $sql .= " LIMIT " . $limit;
         }
 
-        $statement = $pdo->prepare($sql);
+        $statement = $dbRepo->prepare($sql);
         $statement->execute();
         $cache[$cache_key] = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -3855,7 +4140,9 @@ if (!function_exists('front_get_top_categories')) {
 
 if (!function_exists('front_get_product_rating_map')) {
     function front_get_product_rating_map(PDO $pdo, array $product_ids)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $product_ids = array_values(array_unique(array_filter(array_map('intval', $product_ids))));
         if (empty($product_ids)) {
             return [];
@@ -3870,7 +4157,7 @@ if (!function_exists('front_get_product_rating_map')) {
         }
 
         $placeholders = implode(',', array_fill(0, count($product_ids), '?'));
-        $statement = $pdo->prepare(
+        $statement = $dbRepo->prepare(
             "SELECT p_id, ROUND(AVG(rating) * 2) / 2 AS avg_rating, COUNT(*) AS total_reviews
              FROM tbl_rating
              WHERE p_id IN ($placeholders)
@@ -3896,7 +4183,9 @@ if (!function_exists('front_get_product_rating_map')) {
 
 if (!function_exists('front_render_rating_stars')) {
     function front_render_rating_stars($avg_rating)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $avg_rating = round(((float)$avg_rating) * 2) / 2;
         if ($avg_rating <= 0) {
             return '';
@@ -3919,7 +4208,9 @@ if (!function_exists('front_render_rating_stars')) {
 
 if (!function_exists('db_table_has_columns')) {
     function db_table_has_columns(PDO $pdo, $table_name, array $required_columns)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $cache = [];
 
         $table_name = preg_replace('/[^a-zA-Z0-9_]/', '', (string)$table_name);
@@ -3930,7 +4221,7 @@ if (!function_exists('db_table_has_columns')) {
         $cache_key = spl_object_hash($pdo) . ':' . $table_name;
         if (!isset($cache[$cache_key])) {
             try {
-                $statement = $pdo->query("SHOW COLUMNS FROM `" . $table_name . "`");
+                $statement = $dbRepo->query("SHOW COLUMNS FROM `" . $table_name . "`");
                 $fields = $statement ? $statement->fetchAll(PDO::FETCH_COLUMN, 0) : [];
                 $cache[$cache_key] = array_map('strval', $fields);
             } catch (Exception $e) {
@@ -3950,7 +4241,9 @@ if (!function_exists('db_table_has_columns')) {
 
 if (!function_exists('build_site_absolute_url')) {
     function build_site_absolute_url($path)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $path = trim((string)$path);
         if ($path === '') {
             return '';
@@ -3977,7 +4270,9 @@ if (!function_exists('build_site_absolute_url')) {
 
 if (!function_exists('build_cloudinary_delivery_url')) {
     function build_cloudinary_delivery_url($url, $max_width = 0, $quality = 72)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '' || !is_cloudinary_url($url)) {
             return $url;
@@ -4038,7 +4333,9 @@ if (!function_exists('build_cloudinary_delivery_url')) {
 
 if (!function_exists('build_external_image_proxy_url')) {
     function build_external_image_proxy_url($url, $max_width = 0, $quality = 72)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = trim((string)$url);
         if ($url === '' || !is_valid_image_url($url)) {
             return $url;
@@ -4093,7 +4390,9 @@ if (!function_exists('build_external_image_proxy_url')) {
 
 if (!function_exists('get_front_optimized_image_url')) {
     function get_front_optimized_image_url($value, $max_width = 1200, $quality = 72)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = normalize_image_value($value);
         if ($value === '') {
             return '';
@@ -4139,7 +4438,9 @@ if (!function_exists('get_front_optimized_image_url')) {
 
 if (!function_exists('get_admin_image_url')) {
     function get_admin_image_url($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = normalize_image_value($value);
         if ($value === '') {
             return '';
@@ -4155,7 +4456,9 @@ if (!function_exists('get_admin_image_url')) {
 
 if (!function_exists('get_local_upload_path')) {
     function get_local_upload_path($value, $base_dir)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = normalize_image_value($value);
         if ($value === '' || is_external_image_url($value)) {
             return '';
@@ -4173,7 +4476,9 @@ if (!function_exists('get_local_upload_path')) {
 
 if (!function_exists('delete_local_image_file')) {
     function delete_local_image_file($value, $base_dir)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (defined('PRESERVE_LOCAL_UPLOAD_FILES') && PRESERVE_LOCAL_UPLOAD_FILES === true) {
             return;
         }
@@ -4186,7 +4491,9 @@ if (!function_exists('delete_local_image_file')) {
 
 if (!function_exists('store_image_input')) {
     function store_image_input($file_field, $url_field, $target_basename, $upload_dir, &$error_message, $required = false, $allowed_ext = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($allowed_ext === null) {
             $allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         }
@@ -4232,7 +4539,9 @@ if (!function_exists('store_image_input')) {
 
 if (!function_exists('admin_set_flash_message')) {
     function admin_set_flash_message($key, $type, $message)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
@@ -4250,7 +4559,9 @@ if (!function_exists('admin_set_flash_message')) {
 
 if (!function_exists('admin_pull_flash_message')) {
     function admin_pull_flash_message($key)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (session_status() !== PHP_SESSION_ACTIVE) {
             session_start();
         }
@@ -4268,9 +4579,7 @@ if (!function_exists('admin_pull_flash_message')) {
 }
 
 if (!function_exists('admin_order_status_definitions')) {
-    function admin_order_status_definitions()
-    {
-        return [
+    function admin_order_status_definitions() {        return [
             'Pending' => [
                 'label' => 'قيد التأكيد',
                 'short_label' => 'قيد الانتظار',
@@ -4312,7 +4621,9 @@ if (!function_exists('admin_order_status_definitions')) {
 
 if (!function_exists('admin_normalize_order_status')) {
     function admin_normalize_order_status($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = trim((string) $status);
         if ($status === '') {
             return 'Pending';
@@ -4334,7 +4645,9 @@ if (!function_exists('admin_normalize_order_status')) {
 
 if (!function_exists('admin_get_order_status_meta')) {
     function admin_get_order_status_meta($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = admin_normalize_order_status($status);
         $definitions = admin_order_status_definitions();
 
@@ -4349,15 +4662,15 @@ if (!function_exists('admin_get_order_status_meta')) {
 }
 
 if (!function_exists('admin_get_order_status_sequence')) {
-    function admin_get_order_status_sequence()
-    {
-        return ['Pending', 'Completed', 'Returned', 'Cancelled', 'Confirmed'];
+    function admin_get_order_status_sequence() {        return ['Pending', 'Completed', 'Returned', 'Cancelled', 'Confirmed'];
     }
 }
 
 if (!function_exists('admin_get_order_allowed_transitions')) {
     function admin_get_order_allowed_transitions($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $status = admin_normalize_order_status($status);
 
         $map = [
@@ -4374,7 +4687,9 @@ if (!function_exists('admin_get_order_allowed_transitions')) {
 
 if (!function_exists('admin_can_transition_order_status')) {
     function admin_can_transition_order_status($from_status, $to_status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $from_status = admin_normalize_order_status($from_status);
         $to_status = admin_normalize_order_status($to_status);
 
@@ -4388,15 +4703,15 @@ if (!function_exists('admin_can_transition_order_status')) {
 
 if (!function_exists('admin_format_order_amount')) {
     function admin_format_order_amount($amount)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return number_format((float) $amount, 0, '.', ' ') . ' دج';
     }
 }
 
 if (!function_exists('admin_get_order_call_statuses')) {
-    function admin_get_order_call_statuses()
-    {
-        return [
+    function admin_get_order_call_statuses() {        return [
             'no_answer' => ['label' => 'لم يرد', 'badge_class' => 'label label-warning'],
             'answered' => ['label' => 'تم الرد', 'badge_class' => 'label label-success'],
             'busy' => ['label' => 'مشغول', 'badge_class' => 'label label-info'],
@@ -4408,7 +4723,9 @@ if (!function_exists('admin_get_order_call_statuses')) {
 
 if (!function_exists('admin_get_order_call_status_meta')) {
     function admin_get_order_call_status_meta($status)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $statuses = admin_get_order_call_statuses();
         return $statuses[(string) $status] ?? ['label' => 'غير محدد', 'badge_class' => 'label label-default'];
     }
@@ -4416,7 +4733,9 @@ if (!function_exists('admin_get_order_call_status_meta')) {
 
 if (!function_exists('admin_ensure_order_call_log_table')) {
     function admin_ensure_order_call_log_table(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $ensured = false;
 
         if ($ensured) {
@@ -4435,7 +4754,7 @@ if (!function_exists('admin_ensure_order_call_log_table')) {
             return;
         }
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_order_call_log (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_order_call_log (
             id INT(11) NOT NULL AUTO_INCREMENT,
             order_id INT(11) NOT NULL,
             call_status VARCHAR(50) NOT NULL,
@@ -4454,7 +4773,9 @@ if (!function_exists('admin_ensure_order_call_log_table')) {
 
 if (!function_exists('admin_ensure_order_status_log_table')) {
     function admin_ensure_order_status_log_table(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $ensured = false;
 
         if ($ensured) {
@@ -4473,7 +4794,7 @@ if (!function_exists('admin_ensure_order_status_log_table')) {
             return;
         }
 
-        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_order_status_log (
+        $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_order_status_log (
             id INT(11) NOT NULL AUTO_INCREMENT,
             order_id INT(11) NOT NULL,
             from_status VARCHAR(20) DEFAULT NULL,
@@ -4493,7 +4814,9 @@ if (!function_exists('admin_ensure_order_status_log_table')) {
 
 if (!function_exists('admin_log_order_status_change')) {
     function admin_log_order_status_change(PDO $pdo, $order_id, $from_status, $to_status, $status_note = '', $changed_by = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $from_status = admin_normalize_order_status($from_status);
         $to_status = admin_normalize_order_status($to_status);
 
@@ -4507,24 +4830,32 @@ if (!function_exists('admin_log_order_status_change')) {
             throw new RuntimeException('Order status log table is missing before status change transaction.');
         }
 
-        $statement = $pdo->prepare("
+        $statement = $dbRepo->prepare("
             INSERT INTO tbl_order_status_log (order_id, from_status, to_status, status_note, changed_at, changed_by)
             VALUES (?, ?, ?, ?, NOW(), ?)
         ");
 
-        return $statement->execute([
+        $res = $statement->execute([
             (int) $order_id,
             $from_status,
             $to_status,
             trim((string) $status_note) !== '' ? trim((string) $status_note) : null,
             $changed_by !== null ? trim((string) $changed_by) : null
         ]);
+
+        if ($res && class_exists('EventManager')) {
+            EventManager::dispatch('OrderUpdated', $pdo, (int)$order_id, $from_status, $to_status, $status_note, $changed_by);
+        }
+
+        return $res;
     }
 }
 
 if (!function_exists('admin_db_table_exists')) {
     function admin_db_table_exists(PDO $pdo, $table_name)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         static $cache = [];
 
         $table_name = trim((string) $table_name);
@@ -4539,7 +4870,7 @@ if (!function_exists('admin_db_table_exists')) {
 
         try {
             $quoted_table = $pdo->quote($table_name);
-            $statement = $pdo->query("SHOW TABLES LIKE {$quoted_table}");
+            $statement = $dbRepo->query("SHOW TABLES LIKE {$quoted_table}");
             $cache[$cache_key] = (bool) $statement->fetchColumn();
         } catch (Exception $e) {
             $cache[$cache_key] = false;
@@ -4552,9 +4883,11 @@ if (!function_exists('admin_db_table_exists')) {
 
 if (!function_exists('admin_live_fetch_signature_row')) {
     function admin_live_fetch_signature_row(PDO $pdo, $sql, array $params = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         try {
-            $statement = $pdo->prepare($sql);
+            $statement = $dbRepo->prepare($sql);
             $statement->execute($params);
             $row = $statement->fetch(PDO::FETCH_ASSOC);
 
@@ -4568,7 +4901,9 @@ if (!function_exists('admin_live_fetch_signature_row')) {
 
 if (!function_exists('admin_live_signature_orders')) {
     function admin_live_signature_orders(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return admin_live_fetch_signature_row($pdo, "
             SELECT
                 COUNT(*) AS total_orders,
@@ -4592,7 +4927,9 @@ if (!function_exists('admin_live_signature_orders')) {
 
 if (!function_exists('admin_live_signature_products')) {
     function admin_live_signature_products(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         return admin_live_fetch_signature_row($pdo, "
             SELECT
                 COUNT(*) AS total_products,
@@ -4612,7 +4949,9 @@ if (!function_exists('admin_live_signature_products')) {
 
 if (!function_exists('admin_live_signature_customers')) {
     function admin_live_signature_customers(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!admin_db_table_exists($pdo, 'tbl_customer')) {
             return ['total_customers' => 0, 'active_customers' => 0];
         }
@@ -4628,7 +4967,9 @@ if (!function_exists('admin_live_signature_customers')) {
 
 if (!function_exists('admin_live_signature_incomplete_orders')) {
     function admin_live_signature_incomplete_orders(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!admin_db_table_exists($pdo, 'incomplete_orders')) {
             return ['total_incomplete_orders' => 0, 'checksum' => 0];
         }
@@ -4652,7 +4993,9 @@ if (!function_exists('admin_live_signature_incomplete_orders')) {
 
 if (!function_exists('admin_live_signature_delivery')) {
     function admin_live_signature_delivery(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $payload = [
             'companies' => ['total_companies' => 0, 'checksum' => 0],
             'prices' => ['total_prices' => 0, 'checksum' => 0]
@@ -4692,7 +5035,9 @@ if (!function_exists('admin_live_signature_delivery')) {
 
 if (!function_exists('admin_live_signature_sms_templates')) {
     function admin_live_signature_sms_templates(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!admin_db_table_exists($pdo, 'tbl_sms_template')) {
             return ['total_templates' => 0, 'checksum' => 0];
         }
@@ -4714,7 +5059,9 @@ if (!function_exists('admin_live_signature_sms_templates')) {
 
 if (!function_exists('admin_live_signature_settings_subset')) {
     function admin_live_signature_settings_subset(PDO $pdo, array $keys)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $settings = front_get_settings($pdo);
         $payload = [];
 
@@ -4728,7 +5075,9 @@ if (!function_exists('admin_live_signature_settings_subset')) {
 
 if (!function_exists('admin_live_signature_order_details')) {
     function admin_live_signature_order_details(PDO $pdo, $order_id)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $order_id = (int) $order_id;
         if ($order_id <= 0) {
             return ['order_exists' => 0];
@@ -4801,7 +5150,9 @@ if (!function_exists('admin_live_signature_order_details')) {
 
 if (!function_exists('admin_live_refresh_payload')) {
     function admin_live_refresh_payload(PDO $pdo, $scope, array $options = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $scope = trim((string) $scope);
 
         switch ($scope) {
@@ -4886,7 +5237,9 @@ if (!function_exists('admin_live_refresh_payload')) {
 
 if (!function_exists('admin_live_refresh_version')) {
     function admin_live_refresh_version(PDO $pdo, $scope, array $options = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $payload = admin_live_refresh_payload($pdo, $scope, $options);
         $encoded = json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
 
@@ -4896,7 +5249,9 @@ if (!function_exists('admin_live_refresh_version')) {
 
 if (!function_exists('admin_build_live_refresh_config')) {
     function admin_build_live_refresh_config(PDO $pdo, $scope, array $options = [])
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $scope = trim((string) $scope);
         if ($scope === '') {
             return ['enabled' => false];
@@ -4922,5 +5277,237 @@ if (!function_exists('admin_build_live_refresh_config')) {
             'active_text' => 'التحديث التلقائي مفعل',
             'pending_text' => 'يوجد تحديث جديد وسيتم تطبيقه تلقائياً'
         ];
+    }
+}
+
+if (!function_exists('admin_ensure_zrexpress_setting_columns')) {
+    function admin_ensure_zrexpress_setting_columns(PDO $pdo)
+    { global $dbRepo;
+    global $dbRepo;
+
+        $lock_file = __DIR__ . '/../cache/zrexpress_setting_columns.lock';
+        if (file_exists($lock_file)) {
+            return;
+        }
+
+        admin_add_column_if_missing($pdo, 'tbl_settings', 'zrexpress_enabled', 'TINYINT(1) NOT NULL DEFAULT 0');
+        admin_add_column_if_missing($pdo, 'tbl_settings', 'zrexpress_token', 'TEXT NULL');
+        admin_add_column_if_missing($pdo, 'tbl_settings', 'zrexpress_key', 'TEXT NULL');
+        admin_add_column_if_missing($pdo, 'tbl_settings', 'zrexpress_base_url', "VARCHAR(255) NOT NULL DEFAULT ''");
+
+        @file_put_contents($lock_file, '1');
+    }
+}
+
+if (!function_exists('admin_ensure_order_zrexpress_columns')) {
+    function admin_ensure_order_zrexpress_columns(PDO $pdo)
+    { global $dbRepo;
+    global $dbRepo;
+
+        $lock_file = __DIR__ . '/../cache/order_zrexpress_columns.lock';
+        if (file_exists($lock_file)) {
+            return;
+        }
+
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_status', "VARCHAR(40) NOT NULL DEFAULT ''");
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_reference', "VARCHAR(120) NOT NULL DEFAULT ''");
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_tracking', "VARCHAR(120) NOT NULL DEFAULT ''");
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_remote_status', "VARCHAR(120) NOT NULL DEFAULT ''");
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_remote_time', 'DATETIME NULL');
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_last_error', 'TEXT NULL');
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_last_payload', 'LONGTEXT NULL');
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_last_response', 'LONGTEXT NULL');
+        admin_add_column_if_missing($pdo, 'tbl_order', 'zrexpress_sent_at', 'DATETIME NULL');
+
+        @file_put_contents($lock_file, '1');
+    }
+}
+
+if (!function_exists('zrexpress_default_settings')) {
+    function zrexpress_default_settings() {        return [
+            'zrexpress_enabled' => 0,
+            'zrexpress_token' => '',
+            'zrexpress_key' => '',
+            'zrexpress_base_url' => 'https://procolis.com/api_v1'
+        ];
+    }
+}
+
+if (!function_exists('zrexpress_normalize_settings')) {
+    function zrexpress_normalize_settings(array $settings)
+    { global $dbRepo;
+    global $dbRepo;
+
+        $settings = array_merge(zrexpress_default_settings(), $settings);
+        $settings['zrexpress_enabled'] = !empty($settings['zrexpress_enabled']) ? 1 : 0;
+        $settings['zrexpress_token'] = trim((string) ($settings['zrexpress_token'] ?? ''));
+        $settings['zrexpress_key'] = trim((string) ($settings['zrexpress_key'] ?? ''));
+        
+        $base_url = trim((string) ($settings['zrexpress_base_url'] ?? ''));
+        if ($base_url === '') {
+            $base_url = 'https://procolis.com/api_v1';
+        }
+        $settings['zrexpress_base_url'] = rtrim($base_url, '/');
+        
+        return $settings;
+    }
+}
+
+if (!function_exists('zrexpress_is_configured')) {
+    function zrexpress_is_configured(array $settings)
+    { global $dbRepo;
+    global $dbRepo;
+
+        $settings = zrexpress_normalize_settings($settings);
+        return $settings['zrexpress_enabled'] === 1 && $settings['zrexpress_token'] !== '' && $settings['zrexpress_key'] !== '';
+    }
+}
+
+if (!function_exists('zrexpress_status_meta')) {
+    function zrexpress_status_meta($status)
+    { global $dbRepo;
+    global $dbRepo;
+
+        $status = strtolower(trim((string) $status));
+
+        switch ($status) {
+            case 'synced':
+                return ['label' => 'تمت المزامنة', 'class' => 'label label-info'];
+            case 'shipped':
+                return ['label' => 'تم تأكيد الشحن', 'class' => 'label label-primary'];
+            case 'sent':
+                return ['label' => 'أرسل إلى ZRexpress', 'class' => 'label label-success'];
+            case 'error':
+                return ['label' => 'فشل الإرسال', 'class' => 'label label-danger'];
+            case 'pending':
+                return ['label' => 'جاهز للإرسال', 'class' => 'label label-warning'];
+            default:
+                return ['label' => 'غير مربوط بعد', 'class' => 'label label-default'];
+        }
+    }
+}
+
+if (!function_exists('zrexpress_api_request')) {
+    function zrexpress_api_request(PDO $pdo, array $settings, $method, $path, array $query = [], $body = null)
+    { global $dbRepo;
+    global $dbRepo;
+
+        $settings = zrexpress_normalize_settings($settings);
+        $base_url = $settings['zrexpress_base_url'];
+
+        $method = strtoupper(trim((string) $method));
+        if (!in_array($method, ['GET', 'POST'], true)) {
+            $method = 'GET';
+        }
+
+        $url = $base_url . '/' . ltrim((string) $path, '/');
+        if (!empty($query)) {
+            $url .= (strpos($url, '?') === false ? '?' : '&') . http_build_query($query);
+        }
+
+        $headers = [
+            'Accept: application/json',
+            'token: ' . $settings['zrexpress_token'],
+            'key: ' . $settings['zrexpress_key']
+        ];
+
+        $payload = '';
+        if ($body !== null) {
+            $payload = is_string($body)
+                ? $body
+                : json_encode($body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+            $headers[] = 'Content-Type: application/json';
+        }
+
+        $response = '';
+        $status_code = 0;
+        $error = '';
+
+        if (function_exists('curl_init')) {
+            $ch = curl_init($url);
+            if ($ch === false) {
+                return [
+                    'success' => false,
+                    'status_code' => 0,
+                    'response' => '',
+                    'json' => null,
+                    'error' => 'Unable to initialize cURL',
+                    'url' => $url
+                ];
+            }
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+            curl_setopt($ch, CURLOPT_MAXREDIRS, 3);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 15);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+            if ($method !== 'GET' && $payload !== '') {
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+            }
+
+            $response = curl_exec($ch);
+            $status_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            if ($response === false) {
+                $error = curl_error($ch);
+            }
+            curl_close($ch);
+        } else {
+            $error = 'cURL extension is not enabled';
+        }
+
+        $json = null;
+        if ($error === '') {
+            $json = json_decode((string) $response, true);
+        }
+
+        return [
+            'success' => ($error === '' && $status_code >= 200 && $status_code < 300),
+            'status_code' => $status_code,
+            'response' => $response,
+            'json' => $json,
+            'error' => $error,
+            'url' => $url
+        ];
+    }
+}
+
+
+
+// Ensure essential directories exist
+if (!function_exists('ensure_system_directories')) {
+    function ensure_system_directories() {        $dirs = [
+            __DIR__ . '/../../assets/uploads',
+            __DIR__ . '/../invoices',
+            __DIR__ . '/../logs',
+            __DIR__ . '/../cron'
+        ];
+        foreach ($dirs as $dir) {
+            if (!file_exists($dir)) {
+                @mkdir($dir, 0755, true);
+            }
+        }
+        
+        $uploads_dir = __DIR__ . '/../../assets/uploads';
+        $htaccess_path = $uploads_dir . '/.htaccess';
+        if (file_exists($uploads_dir) && !file_exists($htaccess_path)) {
+            $htaccess_content = "<FilesMatch \"\\.(php|php4|php5|php7|php8|phtml|pl|py|jsp|asp|htm|html|shtml|sh|cgi)$\">\n    Require all denied\n</FilesMatch>\n<IfModule mod_php5.c>\n    php_flag engine off\n</IfModule>\n<IfModule mod_php7.c>\n    php_flag engine off\n</IfModule>\n<IfModule mod_php8.c>\n    php_flag engine off\n</IfModule>\n";
+            @file_put_contents($htaccess_path, $htaccess_content);
+        }
+    }
+    ensure_system_directories();
+}
+
+
+if (!function_exists('add_admin_notification')) {
+    function add_admin_notification(PDO $pdo, string $title, string $message, string $type = 'info') { global $dbRepo;
+    global $dbRepo;
+
+        $stmt = $dbRepo->query("SELECT id FROM tbl_user");
+        $admins = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        $insert = $dbRepo->prepare("INSERT INTO tbl_notification (user_id, title, message, type) VALUES (?, ?, ?, ?)");
+        foreach ($admins as $admin) {
+            $insert->execute([$admin['id'], $title, $message, $type]);
+        }
     }
 }

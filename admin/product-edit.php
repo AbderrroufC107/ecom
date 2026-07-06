@@ -79,7 +79,9 @@ if (!empty($missing_functions)) {
 
 if (!function_exists('normalize_product_delivery_mode')) {
     function normalize_product_delivery_mode($value)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $value = strtolower(trim((string) $value));
         if (in_array($value, ['free', 'home_only', 'home_office'], true)) {
             return $value;
@@ -90,9 +92,11 @@ if (!function_exists('normalize_product_delivery_mode')) {
 
 if (!function_exists('ensure_product_delivery_company_column')) {
     function ensure_product_delivery_company_column(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         try {
-            $pdo->exec("ALTER TABLE tbl_product ADD COLUMN p_delivery_company_id INT NULL DEFAULT NULL");
+            $dbRepo->executeCommand("ALTER TABLE tbl_product ADD COLUMN p_delivery_company_id INT NULL DEFAULT NULL");
         } catch (Exception $e) {
             // Ignore if column already exists or DB user has limited alter permissions.
         }
@@ -101,7 +105,9 @@ if (!function_exists('ensure_product_delivery_company_column')) {
 
 if (!function_exists('resolve_product_delivery_company_id')) {
     function resolve_product_delivery_company_id(PDO $pdo, $preferredId = 0)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $preferredId = (int) $preferredId;
         if ($preferredId > 0) {
             return $preferredId;
@@ -112,9 +118,11 @@ if (!function_exists('resolve_product_delivery_company_id')) {
 
 if (!function_exists('get_delivery_company_options')) {
     function get_delivery_company_options(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         try {
-            $statement = $pdo->query("SELECT id, name, active FROM tbl_delivery_company ORDER BY active DESC, name ASC, id ASC");
+            $statement = $dbRepo->query("SELECT id, name, active FROM tbl_delivery_company ORDER BY active DESC, name ASC, id ASC");
             return $statement ? $statement->fetchAll(PDO::FETCH_ASSOC) : [];
         } catch (Exception $e) {
             return [];
@@ -124,9 +132,11 @@ if (!function_exists('get_delivery_company_options')) {
 
 if (!function_exists('ensure_product_offer_table')) {
     function ensure_product_offer_table(PDO $pdo)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         try {
-            $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_product_offer (
+            $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_product_offer (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 p_id INT NOT NULL,
                 offer_type VARCHAR(20) NOT NULL DEFAULT 'quantity',
@@ -146,12 +156,11 @@ if (!function_exists('ensure_product_offer_table')) {
 
 if (!function_exists('product_edit_ensure_column')) {
     function product_edit_ensure_column(PDO $pdo, $table, $column, $definition, array &$schema_errors)
-    {
+    { global $dbRepo;
         try {
-            $statement = $pdo->prepare("SHOW COLUMNS FROM {$table} LIKE ?");
-            $statement->execute([$column]);
-            if (!$statement->fetch(PDO::FETCH_ASSOC)) {
-                $pdo->exec("ALTER TABLE {$table} ADD COLUMN {$column} {$definition}");
+            $check = $dbRepo->query("SHOW COLUMNS FROM {$table} WHERE Field = '{$column}'");
+            if ($check->rowCount() === 0) {
+                $dbRepo->query("ALTER TABLE {$table} ADD COLUMN {$column} {$definition}");
             }
         } catch (PDOException $e) {
             $schema_errors[] = $table . '.' . $column . ': ' . $e->getMessage();
@@ -162,7 +171,8 @@ if (!function_exists('product_edit_ensure_column')) {
 
 if (!function_exists('product_edit_ensure_database_schema')) {
     function product_edit_ensure_database_schema(PDO $pdo)
-    {
+    { global $dbRepo;
+
         $schema_errors = [];
 
         $product_columns = [
@@ -181,7 +191,7 @@ if (!function_exists('product_edit_ensure_database_schema')) {
         }
 
         try {
-            $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_pixel (
+            $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_pixel (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 pixel_name VARCHAR(255) NOT NULL,
                 pixel_network VARCHAR(100) NOT NULL,
@@ -194,7 +204,7 @@ if (!function_exists('product_edit_ensure_database_schema')) {
         }
 
         try {
-            $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_product_pixel (
+            $dbRepo->executeCommand("CREATE TABLE IF NOT EXISTS tbl_product_pixel (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 product_id INT NOT NULL,
                 pixel_id INT NOT NULL,
@@ -227,18 +237,18 @@ if (!function_exists('product_edit_ensure_database_schema')) {
 }
 
 try {
-    $column_check = $pdo->query("SHOW COLUMNS FROM tbl_product LIKE 'p_announcement'");
+    $column_check = $dbRepo->query("SHOW COLUMNS FROM tbl_product LIKE 'p_announcement'");
     if ($column_check->rowCount() === 0) {
-        $pdo->exec("ALTER TABLE tbl_product ADD COLUMN p_announcement TEXT NULL");
+        $dbRepo->executeCommand("ALTER TABLE tbl_product ADD COLUMN p_announcement TEXT NULL");
     }
 } catch (PDOException $e) {
     error_log('Failed to ensure p_announcement column: ' . $e->getMessage());
 }
 
 try {
-    $column_check = $pdo->query("SHOW COLUMNS FROM tbl_product LIKE 'p_delivery_mode'");
+    $column_check = $dbRepo->query("SHOW COLUMNS FROM tbl_product LIKE 'p_delivery_mode'");
     if ($column_check->rowCount() === 0) {
-        $pdo->exec("ALTER TABLE tbl_product ADD COLUMN p_delivery_mode VARCHAR(20) NOT NULL DEFAULT 'home_office'");
+        $dbRepo->executeCommand("ALTER TABLE tbl_product ADD COLUMN p_delivery_mode VARCHAR(20) NOT NULL DEFAULT 'home_office'");
     }
 } catch (PDOException $e) {
     error_log('Failed to ensure p_delivery_mode column: ' . $e->getMessage());
@@ -272,7 +282,7 @@ if ($id <= 0) {
     exit;
 }
 
-$statement = $pdo->prepare("SELECT * FROM tbl_product WHERE p_id=?");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_product WHERE p_id=?");
 $statement->execute([$id]);
 $p_data = $statement->fetch(PDO::FETCH_ASSOC);
 if (!$p_data) {
@@ -315,7 +325,7 @@ if (isset($_POST['remove_featured_photo'])) {
     }
 
     if ($new_featured !== $current_featured || $new_landing_1 !== $current_landing_1) {
-        $pdo->prepare("UPDATE tbl_product SET p_featured_photo=?, landing_photo_1=? WHERE p_id=?")
+        $dbRepo->prepare("UPDATE tbl_product SET p_featured_photo=?, landing_photo_1=? WHERE p_id=?")
             ->execute([$new_featured, $new_landing_1, $id]);
     }
 
@@ -326,7 +336,7 @@ if (isset($_POST['remove_featured_photo'])) {
 $delivery_companies = get_delivery_company_options($pdo);
 $default_product_delivery_company_id = resolve_product_delivery_company_id($pdo, (int)($p_data['p_delivery_company_id'] ?? 0));
 $existing_special_offer_photos_db = [];
-$stmt_existing_special_offer_photos = $pdo->prepare("SELECT offer_photo FROM tbl_product_offer WHERE p_id = ? AND offer_type = 'special'");
+$stmt_existing_special_offer_photos = $dbRepo->prepare("SELECT offer_photo FROM tbl_product_offer WHERE p_id = ? AND offer_type = 'special'");
 $stmt_existing_special_offer_photos->execute([$id]);
 foreach ($stmt_existing_special_offer_photos->fetchAll(PDO::FETCH_ASSOC) as $special_offer_row) {
     $photo_value = trim((string)($special_offer_row['offer_photo'] ?? ''));
@@ -565,7 +575,7 @@ if (isset($_POST['form1'])) {
     }
 
     if ($valid === 1) {
-        $pdo->prepare("UPDATE tbl_product SET p_name=?, p_old_price=?, p_current_price=?, purchase_price=?, p_qty=?, p_featured_photo=?, p_description=?, more_description=?, p_announcement=?, p_is_featured=?, p_is_active=?, ecat_id=?, product_template=?, p_delivery_mode=?, p_delivery_company_id=?, landing_photo_1=?, landing_photo_2=?, landing_photo_3=? WHERE p_id=?")
+        $dbRepo->prepare("UPDATE tbl_product SET p_name=?, p_old_price=?, p_current_price=?, purchase_price=?, p_qty=?, p_featured_photo=?, p_description=?, more_description=?, p_announcement=?, p_is_featured=?, p_is_active=?, ecat_id=?, product_template=?, p_delivery_mode=?, p_delivery_company_id=?, landing_photo_1=?, landing_photo_2=?, landing_photo_3=? WHERE p_id=?")
             ->execute([
                 $_POST['p_name'],
                 $_POST['p_old_price'] ?? '',
@@ -601,7 +611,7 @@ if (isset($_POST['form1'])) {
             }
         }
 
-        $pdo->prepare("DELETE FROM tbl_product_offer WHERE p_id=?")->execute([$id]);
+        $dbRepo->prepare("DELETE FROM tbl_product_offer WHERE p_id=?")->execute([$id]);
         if ($has_quantity_offer) {
             foreach ([1, 2, 3] as $q) {
                 $price = trim((string)($_POST['offer_price_' . $q] ?? ''));
@@ -613,28 +623,28 @@ if (isset($_POST['form1'])) {
                     continue;
                 }
                 $is_most_popular = ($most_popular_key === ('quantity:' . (int)$q)) ? 1 : 0;
-                $pdo->prepare("INSERT INTO tbl_product_offer (p_id, offer_qty, offer_unit_price, offer_type, is_most_popular, is_active, sort_order) VALUES (?, ?, ?, 'quantity', ?, 1, ?)")
+                $dbRepo->prepare("INSERT INTO tbl_product_offer (p_id, offer_qty, offer_unit_price, offer_type, is_most_popular, is_active, sort_order) VALUES (?, ?, ?, 'quantity', ?, 1, ?)")
                     ->execute([$id, $q, $price, $is_most_popular, $q]);
             }
         } elseif ($has_special_offer_input) {
             foreach ($special_offers_to_save as $slot => $special_offer_item) {
                 $is_most_popular = ($most_popular_key === ('special:' . (int)$slot)) ? 1 : 0;
-                $pdo->prepare("INSERT INTO tbl_product_offer (p_id, offer_qty, offer_unit_price, offer_type, offer_description, offer_photo, is_most_popular, is_active, sort_order) VALUES (?, 1, ?, 'special', ?, ?, ?, 1, ?)")
+                $dbRepo->prepare("INSERT INTO tbl_product_offer (p_id, offer_qty, offer_unit_price, offer_type, offer_description, offer_photo, is_most_popular, is_active, sort_order) VALUES (?, 1, ?, 'special', ?, ?, ?, 1, ?)")
                     ->execute([$id, $special_offer_item['price'], $special_offer_item['description'], $special_offer_item['photo'], $is_most_popular, (int)$slot]);
             }
         }
 
-        $pdo->prepare("DELETE FROM tbl_product_size WHERE p_id=?")->execute([$id]);
-        $pdo->prepare("DELETE FROM tbl_product_pixel WHERE product_id=?")->execute([$id]);
+        $dbRepo->prepare("DELETE FROM tbl_product_size WHERE p_id=?")->execute([$id]);
+        $dbRepo->prepare("DELETE FROM tbl_product_pixel WHERE product_id=?")->execute([$id]);
         foreach ((array)($_POST['pixel'] ?? []) as $pixel_id_value) {
-            $pdo->prepare("INSERT INTO tbl_product_pixel (pixel_id, product_id) VALUES (?, ?)")->execute([(int)$pixel_id_value, $id]);
+            $dbRepo->prepare("INSERT INTO tbl_product_pixel (pixel_id, product_id) VALUES (?, ?)")->execute([(int)$pixel_id_value, $id]);
         }
         foreach ((array)($_POST['size'] ?? []) as $size_id_value) {
-            $pdo->prepare("INSERT INTO tbl_product_size (size_id, p_id) VALUES (?, ?)")->execute([(int)$size_id_value, $id]);
+            $dbRepo->prepare("INSERT INTO tbl_product_size (size_id, p_id) VALUES (?, ?)")->execute([(int)$size_id_value, $id]);
         }
 
         $old_colors = [];
-        $stmt_old_colors = $pdo->prepare("SELECT color_id FROM tbl_product_color WHERE p_id=?");
+        $stmt_old_colors = $dbRepo->prepare("SELECT color_id FROM tbl_product_color WHERE p_id=?");
         $stmt_old_colors->execute([$id]);
         foreach ($stmt_old_colors->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $old_colors[] = (int)$row['color_id'];
@@ -645,8 +655,8 @@ if (isset($_POST['form1'])) {
 
         $removed_colors = array_diff($old_colors, $new_colors);
         if (!empty($removed_colors)) {
-            $stmt_color_photo = $pdo->prepare("SELECT photo FROM tbl_product_photo WHERE p_id=? AND color_id=?");
-            $stmt_color_photo_delete = $pdo->prepare("DELETE FROM tbl_product_photo WHERE p_id=? AND color_id=?");
+            $stmt_color_photo = $dbRepo->prepare("SELECT photo FROM tbl_product_photo WHERE p_id=? AND color_id=?");
+            $stmt_color_photo_delete = $dbRepo->prepare("DELETE FROM tbl_product_photo WHERE p_id=? AND color_id=?");
             foreach ($removed_colors as $removed_color) {
                 $stmt_color_photo->execute([$id, (int)$removed_color]);
                 foreach ($stmt_color_photo->fetchAll(PDO::FETCH_ASSOC) as $row) {
@@ -656,14 +666,14 @@ if (isset($_POST['form1'])) {
             }
         }
 
-        $pdo->prepare("DELETE FROM tbl_product_color WHERE p_id=?")->execute([$id]);
+        $dbRepo->prepare("DELETE FROM tbl_product_color WHERE p_id=?")->execute([$id]);
         foreach ($new_colors as $new_color) {
-            $pdo->prepare("INSERT INTO tbl_product_color (color_id, p_id) VALUES (?, ?)")->execute([(int)$new_color, $id]);
+            $dbRepo->prepare("INSERT INTO tbl_product_color (color_id, p_id) VALUES (?, ?)")->execute([(int)$new_color, $id]);
         }
 
         $color_photo_urls = $_POST['color_photo_urls'] ?? [];
-        $stmt_select_color_photo = $pdo->prepare("SELECT photo FROM tbl_product_photo WHERE p_id=? AND color_id=?");
-        $stmt_delete_color_photo = $pdo->prepare("DELETE FROM tbl_product_photo WHERE p_id=? AND color_id=?");
+        $stmt_select_color_photo = $dbRepo->prepare("SELECT photo FROM tbl_product_photo WHERE p_id=? AND color_id=?");
+        $stmt_delete_color_photo = $dbRepo->prepare("DELETE FROM tbl_product_photo WHERE p_id=? AND color_id=?");
 
         foreach ($new_colors as $new_color) {
             $url = $normalize_url($color_photo_urls[$new_color] ?? '');
@@ -673,7 +683,7 @@ if (isset($_POST['form1'])) {
                     delete_local_image_file($row['photo'] ?? '', '../assets/uploads');
                 }
                 $stmt_delete_color_photo->execute([$id, (int)$new_color]);
-                $pdo->prepare("INSERT INTO tbl_product_photo (photo, p_id, color_id) VALUES (?, ?, ?)")
+                $dbRepo->prepare("INSERT INTO tbl_product_photo (photo, p_id, color_id) VALUES (?, ?, ?)")
                     ->execute([$url, $id, (int)$new_color]);
                 continue;
             }
@@ -702,7 +712,7 @@ if (isset($_POST['form1'])) {
                 delete_local_image_file($row['photo'] ?? '', '../assets/uploads');
             }
             $stmt_delete_color_photo->execute([$id, (int)$new_color]);
-            $pdo->prepare("INSERT INTO tbl_product_photo (photo, p_id, color_id) VALUES (?, ?, ?)")
+            $dbRepo->prepare("INSERT INTO tbl_product_photo (photo, p_id, color_id) VALUES (?, ?, ?)")
                 ->execute([$stored_color, $id, (int)$new_color]);
         }
 
@@ -717,7 +727,7 @@ if (isset($_POST['form1'])) {
                     $error_message .= 'تم تجاهل رابط صورة إضافية غير صالح.<br>';
                     continue;
                 }
-                $pdo->prepare("INSERT INTO tbl_product_photo (photo, p_id, is_additional) VALUES (?, ?, 1)")
+                $dbRepo->prepare("INSERT INTO tbl_product_photo (photo, p_id, is_additional) VALUES (?, ?, 1)")
                     ->execute([$u, $id]);
             }
         }
@@ -737,12 +747,23 @@ if (isset($_POST['form1'])) {
                 $target_base = 'product-additional-' . $id . '-' . time() . '-' . $k;
                 list($upload_ok, $stored_additional) = store_uploaded_image_file($tmp, $name, $target_base, '../assets/uploads', $error_message, $allowed_ext);
                 if ($upload_ok && $stored_additional !== '') {
-                    $pdo->prepare("INSERT INTO tbl_product_photo (photo, p_id, is_additional) VALUES (?, ?, 1)")
+                    $dbRepo->prepare("INSERT INTO tbl_product_photo (photo, p_id, is_additional) VALUES (?, ?, 1)")
                         ->execute([$stored_additional, $id]);
                 } else {
                     $error_message .= 'فشل حفظ الصورة الإضافية.<br>';
                 }
             }
+        }
+
+        require_once('inc/stock_functions.php');
+        stock_sync_variants($pdo, $id);
+
+        require_once('inc/employee_functions.php');
+        if (function_exists('employee_save_product_assignment')) {
+            $exc_enabled = (int)($_POST['exc_is_enabled'] ?? 0);
+            $exc_emp_id = (int)($_POST['exc_employee_id'] ?? 0);
+            $exc_mode = trim((string)($_POST['exc_delivery_mode'] ?? 'queue'));
+            employee_save_product_assignment($pdo, (int)$id, $exc_enabled, $exc_emp_id, $exc_mode);
         }
 
         header('Location: product-edit.php?id=' . $id . '&success=1');
@@ -760,6 +781,13 @@ if (isset($_GET['success'])) {
 
 $statement->execute([$id]);
 $p_data = $statement->fetch(PDO::FETCH_ASSOC);
+
+require_once('inc/employee_functions.php');
+$active_employees_for_assign = function_exists('employee_get_all') ? employee_get_all($pdo, true) : [];
+$exc_assign_data = function_exists('employee_get_product_assignment') ? employee_get_product_assignment($pdo, (int)$id) : null;
+$exc_is_enabled_val = (int)($_POST['exc_is_enabled'] ?? ($exc_assign_data['is_enabled'] ?? 0));
+$exc_emp_id_val = (int)($_POST['exc_employee_id'] ?? ($exc_assign_data['employee_id'] ?? 0));
+$exc_mode_val = trim((string)($_POST['exc_delivery_mode'] ?? ($exc_assign_data['assignment_mode'] ?? 'queue')));
 
 $p_featured_photo = $p_data['p_featured_photo'] ?? '';
 $product_template = $p_data['product_template'] ?? 'buy-now.php';
@@ -784,7 +812,7 @@ foreach ($special_offer_slots as $slot) {
         'photo_url' => ''
     ];
 }
-$stmt_offers = $pdo->prepare("SELECT offer_qty, offer_unit_price, offer_type, offer_description, offer_photo, is_active, is_most_popular FROM tbl_product_offer WHERE p_id = ? ORDER BY sort_order ASC, offer_qty ASC");
+$stmt_offers = $dbRepo->prepare("SELECT offer_qty, offer_unit_price, offer_type, offer_description, offer_photo, is_active, is_most_popular FROM tbl_product_offer WHERE p_id = ? ORDER BY sort_order ASC, offer_qty ASC");
 $stmt_offers->execute([$id]);
 $special_offer_slot_index = 1;
 foreach ($stmt_offers->fetchAll(PDO::FETCH_ASSOC) as $offer_row) {
@@ -812,7 +840,7 @@ foreach ($stmt_offers->fetchAll(PDO::FETCH_ASSOC) as $offer_row) {
 }
 
 $size_id = [];
-$stmt_sizes = $pdo->prepare("SELECT size_id FROM tbl_product_size WHERE p_id=?");
+$stmt_sizes = $dbRepo->prepare("SELECT size_id FROM tbl_product_size WHERE p_id=?");
 $stmt_sizes->execute([$id]);
 foreach ($stmt_sizes->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $size_id[] = (int)$row['size_id'];
@@ -820,25 +848,25 @@ foreach ($stmt_sizes->fetchAll(PDO::FETCH_ASSOC) as $row) {
 
 $color_id = [];
 $pixel_id = [];
-$stmt_pixels = $pdo->prepare("SELECT pixel_id FROM tbl_product_pixel WHERE product_id=?");
+$stmt_pixels = $dbRepo->prepare("SELECT pixel_id FROM tbl_product_pixel WHERE product_id=?");
 $stmt_pixels->execute([$id]);
 foreach ($stmt_pixels->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $pixel_id[] = (int)$row['pixel_id'];
 }
-$stmt_colors = $pdo->prepare("SELECT color_id FROM tbl_product_color WHERE p_id=?");
+$stmt_colors = $dbRepo->prepare("SELECT color_id FROM tbl_product_color WHERE p_id=?");
 $stmt_colors->execute([$id]);
 foreach ($stmt_colors->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $color_id[] = (int)$row['color_id'];
 }
 
 $color_photo_map = [];
-$stmt_color_photo_map = $pdo->prepare("SELECT color_id, photo FROM tbl_product_photo WHERE p_id=? AND color_id IS NOT NULL AND color_id > 0 AND (is_additional IS NULL OR is_additional = 0)");
+$stmt_color_photo_map = $dbRepo->prepare("SELECT color_id, photo FROM tbl_product_photo WHERE p_id=? AND color_id IS NOT NULL AND color_id > 0 AND (is_additional IS NULL OR is_additional = 0)");
 $stmt_color_photo_map->execute([$id]);
 foreach ($stmt_color_photo_map->fetchAll(PDO::FETCH_ASSOC) as $row) {
     $color_photo_map[(int)$row['color_id']] = (string)($row['photo'] ?? '');
 }
 
-$stmt_additional = $pdo->prepare("SELECT * FROM tbl_product_photo WHERE p_id=? AND (is_additional=1 OR ((is_additional IS NULL OR is_additional=0) AND (color_id IS NULL OR color_id=0))) ORDER BY pp_id ASC");
+$stmt_additional = $dbRepo->prepare("SELECT * FROM tbl_product_photo WHERE p_id=? AND (is_additional=1 OR ((is_additional IS NULL OR is_additional=0) AND (color_id IS NULL OR color_id=0))) ORDER BY pp_id ASC");
 $stmt_additional->execute([$id]);
 $additional_photos = $stmt_additional->fetchAll(PDO::FETCH_ASSOC);
 
@@ -896,7 +924,17 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                 <div class="callout callout-warning">وضع Cloudinary الصارم مفعّل. لا يمكن حفظ الصور حتى تضبط مفاتيح Cloudinary في ملف الإعدادات.</div>
             <?php endif; ?>
 
+            
+<div class="nav-tabs-custom" style="border-radius:12px; overflow:hidden; box-shadow:0 4px 20px rgba(0,0,0,0.05); margin-bottom: 20px;">
+    <ul class="nav nav-tabs" style="background:#fff; border-bottom:1px solid #e2e8f0; padding:10px 15px 0 15px;">
+        <li class="active"><a href="#tab_1" data-toggle="tab" style="font-weight:bold;">البيانات الأساسية</a></li>
+        <li><a href="#tab_ai" data-toggle="tab" style="font-weight:bold; color:#4f46e5;"><i class="fa fa-magic"></i> الذكاء الاصطناعي (AI)</a></li>
+        <li><a href="#tab_marketing" data-toggle="tab" style="font-weight:bold; color:#ec4899;"><i class="fa fa-bullhorn"></i> التسويق (Marketing)</a></li>
+    </ul>
+    <div class="tab-content" style="background:#fff; padding: 20px;">
+        <div class="tab-pane active" id="tab_1">
             <form class="form-horizontal admin-product-form" method="post" enctype="multipart/form-data">
+
                 <input type="hidden" name="current_photo" value="<?= htmlspecialchars($p_featured_photo) ?>">
                 <input type="hidden" name="current_landing_photo_1" value="<?= htmlspecialchars($landing_photo_1) ?>">
                 <input type="hidden" name="current_landing_photo_2" value="<?= htmlspecialchars($landing_photo_2) ?>">
@@ -1060,7 +1098,7 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                             <div class="col-sm-4">
                                 <select name="size[]" class="form-control select2" multiple="multiple">
                                     <?php
-                                    $stmt = $pdo->prepare("SELECT * FROM tbl_size ORDER BY size_name ASC");
+                                    $stmt = $dbRepo->prepare("SELECT * FROM tbl_size ORDER BY size_name ASC");
                                     $stmt->execute();
                                     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row):
                                         $selected = in_array((int)$row['size_id'], $selected_sizes_for_form, true) ? 'selected' : '';
@@ -1076,7 +1114,7 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                             <div class="col-sm-4">
                                 <select name="color[]" id="colorSelect" class="form-control select2" multiple="multiple">
                                     <?php
-                                    $stmt = $pdo->prepare("SELECT * FROM tbl_color ORDER BY color_name ASC");
+                                    $stmt = $dbRepo->prepare("SELECT * FROM tbl_color ORDER BY color_name ASC");
                                     $stmt->execute();
                                     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row):
                                         $selected = in_array((int)$row['color_id'], $selected_colors_for_form, true) ? 'selected' : '';
@@ -1093,7 +1131,7 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                             <div class="col-sm-4">
                                 <select name="pixel[]" class="form-control select2" multiple="multiple">
                                     <?php
-                                    $stmt = $pdo->prepare("SELECT * FROM tbl_pixel ORDER BY pixel_name ASC");
+                                    $stmt = $dbRepo->prepare("SELECT * FROM tbl_pixel ORDER BY pixel_name ASC");
                                     $stmt->execute();
                                     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row):
                                         $selected = in_array((int)$row['id'], $selected_pixels_for_form, true) ? 'selected' : '';
@@ -1109,7 +1147,7 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                             <div class="col-sm-4">
                                 <select name="pixel[]" class="form-control select2" multiple="multiple">
                                     <?php
-                                    $stmt = $pdo->prepare("SELECT * FROM tbl_pixel ORDER BY pixel_name ASC");
+                                    $stmt = $dbRepo->prepare("SELECT * FROM tbl_pixel ORDER BY pixel_name ASC");
                                     $stmt->execute();
                                     foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row):
                                         $selected = in_array((int)$row['id'], $selected_pixels_for_form, true) ? 'selected' : '';
@@ -1136,6 +1174,56 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                                     <option value="1" <?= ((string)($_POST['p_is_active'] ?? ($p_data['p_is_active'] ?? 1)) === '1') ? 'selected' : '' ?>>نعم</option>
                                     <option value="0" <?= ((string)($_POST['p_is_active'] ?? ($p_data['p_is_active'] ?? 1)) === '0') ? 'selected' : '' ?>>لا</option>
                                 </select>
+                            </div>
+                        </div>
+                        <div class="box box-info admin-product-card" id="exclusive-assignment-section" style="border-top: 3px solid #00c0ef; margin: 20px 0;">
+                            <div class="box-header with-border">
+                                <h3 class="box-title" style="font-weight: 700; color: #00c0ef;"><i class="fa fa-user-secret"></i> التخصيص الحصري للمنتج (Exclusive Assignment)</h3>
+                                <p class="help-block" style="margin-bottom:0;">عند تفعيل التخصيص الحصري، سيتم إسناد جميع طلبات هذا المنتج حصرياً لموظف محدد، ولن تدخل في طابور التوزيع العام (WRR).</p>
+                            </div>
+                            <div class="box-body">
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label">تفعيل التخصيص الحصري</label>
+                                    <div class="col-sm-4">
+                                        <select name="exc_is_enabled" id="exc_is_enabled" class="form-control">
+                                            <option value="0" <?= ($exc_is_enabled_val === 0) ? 'selected' : '' ?>>معطل (OFF - الافتراضي)</option>
+                                            <option value="1" <?= ($exc_is_enabled_val === 1) ? 'selected' : '' ?>>مفعل (ON)</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div id="exc_fields_wrapper" style="<?= ($exc_is_enabled_val === 1) ? '' : 'display: none;' ?>">
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">الموظف المخصص (Assigned Employee)</label>
+                                        <div class="col-sm-4">
+                                            <select name="exc_employee_id" class="form-control select2" style="width:100%;">
+                                                <option value="0">-- اختر الموظف المخصص --</option>
+                                                <?php foreach ($active_employees_for_assign as $emp_assign): ?>
+                                                    <?php $selected_emp = ((int)($emp_assign['id']) === $exc_emp_id_val) ? 'selected' : ''; ?>
+                                                    <option value="<?= (int)$emp_assign['id'] ?>" <?= $selected_emp ?>><?= htmlspecialchars($emp_assign['full_name'] ?? '', ENT_QUOTES, 'UTF-8') ?></option>
+                                                <?php endforeach; ?>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="col-sm-3 control-label">طريقة وصول الطلبات (Delivery Mode)</label>
+                                        <div class="col-sm-6">
+                                            <div class="radio" style="margin-bottom: 10px;">
+                                                <label style="font-weight: 600;">
+                                                    <input type="radio" name="exc_delivery_mode" value="queue" <?= ($exc_mode_val === 'queue') ? 'checked' : '' ?>>
+                                                    <span class="label label-warning" style="padding: 4px 8px; margin-left: 5px;">Employee Queue</span>
+                                                    دخول الطلبات إلى طابور الانتظار الخاص بالموظف (بحالة Waiting) ليقوم بقبولها بنفسه.
+                                                </label>
+                                            </div>
+                                            <div class="radio">
+                                                <label style="font-weight: 600;">
+                                                    <input type="radio" name="exc_delivery_mode" value="direct" <?= ($exc_mode_val === 'direct') ? 'checked' : '' ?>>
+                                                    <span class="label label-success" style="padding: 4px 8px; margin-left: 5px;">Direct Assignment</span>
+                                                    إسناد الطلبات مباشرة إلى مساحة العمل الخاصة بالموظف (بحالة Active).
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <div id="landing-photos-section">
@@ -1220,7 +1308,58 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                         <button type="submit" class="btn btn-success" name="form1">حفظ التعديلات</button>
                     </div>
                 </div>
+            
             </form>
+        </div>
+        
+        <!-- AI TAB -->
+        <div class="tab-pane" id="tab_ai">
+            <div id="ai-card-wrapper">جاري التحميل...</div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const aiWrapper = document.getElementById('ai-card-wrapper');
+                    fetch('ai-product-tab.php?id=' + encodeURIComponent('<?= $id ?>'))
+                        .then(r => r.text())
+                        .then(html => {
+                            aiWrapper.innerHTML = html;
+                            // Execute any scripts in the loaded HTML
+                            const scripts = aiWrapper.querySelectorAll('script');
+                            scripts.forEach(s => {
+                                const newScript = document.createElement('script');
+                                newScript.textContent = s.textContent;
+                                document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                            });
+                        })
+                        .catch(e => aiWrapper.innerHTML = '<div class="alert alert-danger">خطأ في تحميل بيانات الذكاء الاصطناعي.</div>');
+                });
+            </script>
+        </div>
+        
+        <!-- MARKETING TAB -->
+        <div class="tab-pane" id="tab_marketing">
+            <div id="marketing-card-wrapper">جاري التحميل...</div>
+            <script>
+                document.addEventListener('DOMContentLoaded', function() {
+                    const mkgWrapper = document.getElementById('marketing-card-wrapper');
+                    fetch('marketing-product-tab.php?id=' + encodeURIComponent('<?= $id ?>'))
+                        .then(r => r.text())
+                        .then(html => {
+                            mkgWrapper.innerHTML = html;
+                            const scripts = mkgWrapper.querySelectorAll('script');
+                            scripts.forEach(s => {
+                                const newScript = document.createElement('script');
+                                newScript.textContent = s.textContent;
+                                document.body.appendChild(newScript).parentNode.removeChild(newScript);
+                            });
+                        })
+                        .catch(e => mkgWrapper.innerHTML = '<div class="alert alert-danger">خطأ في تحميل بيانات التسويق.</div>');
+                });
+            </script>
+        </div>
+        
+    </div> <!-- end tab-content -->
+</div> <!-- end nav-tabs-custom -->
+
 
         </div>
     </div>
@@ -1280,17 +1419,23 @@ window.addEventListener('load', function() {
     const existingColorPhotos = <?= json_encode($color_photo_map, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
     const postedColorUrls = <?= json_encode($posted_color_urls, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES) ?>;
 
-    function toAdminImageUrl(value) {
+    function toAdminImageUrl(value) { global $dbRepo;
+    global $dbRepo;
+
         if (!value) return '';
         if (/^(https?:)?\/\//i.test(value)) return value;
         return '../assets/uploads/' + String(value).replace(/^[/\\]+/, '');
     }
 
-    function safeAttr(value) {
+    function safeAttr(value) { global $dbRepo;
+    global $dbRepo;
+
         return String(value || '').replace(/"/g, '&quot;');
     }
 
-    function updateUrlPreview(input) {
+    function updateUrlPreview(input) { global $dbRepo;
+    global $dbRepo;
+
         const $input = $(input);
         const $box = $input.siblings('.js-url-preview-box').first();
         const $img = $box.find('.js-url-preview-img');
@@ -1309,7 +1454,9 @@ window.addEventListener('load', function() {
         $box.show();
     }
 
-    function bindUrlPreviewInputs(scope) {
+    function bindUrlPreviewInputs(scope) { global $dbRepo;
+    global $dbRepo;
+
         const $scope = $(scope || document);
         $scope.find('input.js-url-input')
             .off('input.urlPreview change.urlPreview')
@@ -1322,7 +1469,9 @@ window.addEventListener('load', function() {
         });
     }
 
-    function updateColorPhotoFields(values) {
+    function updateColorPhotoFields(values) { global $dbRepo;
+    global $dbRepo;
+
         const wrapper = $('#colorPhotoFields');
         wrapper.empty();
         if (!values || !values.length) return;
@@ -1356,8 +1505,7 @@ window.addEventListener('load', function() {
         return;
     }
 
-    function toggleFields() {
-        const template = $('#product_template').val();
+    function toggleFields() {        const template = $('#product_template').val();
         if (template === 'landing_page.php' || template === 'landing_page_2.php') {
             $('#landing-photos-section').show();
             $('#featured-photo-section').show();
@@ -1371,8 +1519,7 @@ window.addEventListener('load', function() {
         }
     }
 
-    function syncOfferModes() {
-        const $quantityInputs = $('input[name="offer_price_1"], input[name="offer_price_2"], input[name="offer_price_3"]');
+    function syncOfferModes() {        const $quantityInputs = $('input[name="offer_price_1"], input[name="offer_price_2"], input[name="offer_price_3"]');
         const $specialInputs = $('#special-offer-fields').find('input, textarea');
         const quantityHasValue = $quantityInputs.toArray().some(function(input) {
             return String(input.value || '').trim() !== '';
@@ -1419,6 +1566,14 @@ window.addEventListener('load', function() {
                 $('.end-cat').html(response);
             }
         });
+    });
+
+    $('#exc_is_enabled').on('change', function() {
+        if ($(this).val() === '1') {
+            $('#exc_fields_wrapper').slideDown();
+        } else {
+            $('#exc_fields_wrapper').slideUp();
+        }
     });
 });
 </script>

@@ -1,4 +1,4 @@
-﻿<?php
+<?php
 ob_start();
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
@@ -11,7 +11,9 @@ require_once('inc/performance_functions.php');
 
 if (!function_exists('admin_orders_bulk_redirect')) {
     function admin_orders_bulk_redirect($target = 'order.php')
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $target = trim((string) $target);
         if (!preg_match('/^order\.php(?:#[A-Za-z0-9_-]+)?$/', $target)) {
             $target = 'order.php';
@@ -24,7 +26,9 @@ if (!function_exists('admin_orders_bulk_redirect')) {
 
 if (!function_exists('admin_orders_bulk_sample_messages')) {
     function admin_orders_bulk_sample_messages(array $messages, $limit = 4)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $messages = array_values(array_filter(array_map('trim', $messages)));
         if (empty($messages)) {
             return '';
@@ -44,6 +48,7 @@ $action = trim((string) ($_POST['action'] ?? ''));
 $status_note = trim((string) ($_POST['status_note'] ?? ''));
 $changed_by = trim((string) ($_SESSION['user']['full_name'] ?? ''));
 $ecotrack_bulk_actions = ['ecotrack_create', 'ecotrack_delete', 'ecotrack_print_4up'];
+$zrexpress_bulk_actions = ['zrexpress_create', 'zrexpress_delete'];
 
 if (empty($ids) || $action === '') {
     admin_set_flash_message('orders', 'danger', 'Ø§Ù„Ø±Ø¬Ø§Ø¡ ØªØ­Ø¯ÙŠØ¯ Ø§Ù„Ø·Ù„Ø¨Ø§Øª ÙˆØ§Ù„Ø¥Ø¬Ø±Ø§Ø¡ Ø§Ù„Ø¬Ù…Ø§Ø¹ÙŠ Ù‚Ø¨Ù„ Ø§Ù„Ù…ØªØ§Ø¨Ø¹Ø©.');
@@ -72,7 +77,7 @@ try {
         }
 
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
-        $statement = $pdo->prepare("SELECT * FROM tbl_order WHERE id IN ($placeholders)");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id IN ($placeholders)");
         $statement->execute($ids);
         $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -130,7 +135,7 @@ try {
 
                     $pdo->beginTransaction();
                     if (($prepared_order['delivery_type'] ?? '') !== ($order['delivery_type'] ?? '')) {
-                        $pdo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
+                        $dbRepo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
                             ->execute([(string) $prepared_order['delivery_type'], $id]);
                         $order['delivery_type'] = $prepared_order['delivery_type'];
                     }
@@ -258,8 +263,166 @@ try {
         admin_orders_bulk_redirect($redirect);
     }
 
+    if (in_array($action, $zrexpress_bulk_actions, true)) {
+        admin_ensure_zrexpress_setting_columns($pdo);
+        admin_ensure_order_zrexpress_columns($pdo);
+
+        $settings = zrexpress_normalize_settings(front_get_settings($pdo));
+        if (!zrexpress_is_configured($settings)) {
+            throw new Exception('إعدادات ZRexpress غير مكتملة. أضف التوكن والمفتاح أولاً من الإعدادات.');
+        }
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id IN ($placeholders)");
+        $statement->execute($ids);
+        $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+        if (!$orders) {
+            throw new Exception('لم يتم العثور على أي طلبات مطابقة للعناصر المحددة.');
+        }
+
+        $orders_by_id = [];
+        foreach ($orders as $order) {
+            $orders_by_id[(int) $order['id']] = $order;
+        }
+
+        $success_count = 0;
+        $skipped_count = 0;
+        $failed_count = 0;
+        $error_messages = [];
+
+        foreach ($ids as $id) {
+            if (!isset($orders_by_id[$id])) {
+                $skipped_count++;
+                $error_messages[] = '#' . $id . ': الطلب غير موجود.';
+                continue;
+            }
+
+            $order = $orders_by_id[$id];
+            $reference = 'ZREX-' . $order['id'];
+            $tracking = trim((string) ($order['zrexpress_tracking'] ?? ''));
+            $status = trim((string) ($order['zrexpress_status'] ?? ''));
+
+            if ($action === 'zrexpress_create') {
+                if ($tracking !== '') {
+                    $skipped_count++;
+                    $error_messages[] = '#' . $id . ': الطلب مرسل مسبقاً إلى ZRexpress.';
+                    continue;
+                }
+
+                $wilaya_code = function_exists('ecotrack_algeria_wilaya_code') ? ecotrack_algeria_wilaya_code($order['wilaya']) : '';
+                if ($wilaya_code === '') {
+                    $wilaya_code = '31';
+                }
+
+                $delivery_type = (strpos(strtolower($order['delivery_type'] ?? ''), 'stopdesk') !== false || strpos(strtolower($order['delivery_type'] ?? ''), 'office') !== false) ? '1' : '0';
+
+                $payload_body = [
+                    "Colis" => [[
+                        "Tracking" => "",
+                        "TypeLivraison" => $delivery_type,
+                        "TypeColis" => "0",
+                        "Confrimee" => "1",
+                        "Client" => $order['customer_name'],
+                        "MobileA" => $order['customer_phone'],
+                        "MobileB" => "",
+                        "Adresse" => $order['address'],
+                        "IDWilaya" => (string) $wilaya_code,
+                        "Commune" => $order['commune'],
+                        "Total" => (string) $order['total_price'],
+                        "Note" => "",
+                        "TProduit" => $order['product_name'] . ' (x' . $order['quantity'] . ')',
+                        "id_Externe" => (string) $order['id'],
+                        "Source" => "BOOM STORE19E"
+                    ]]
+                ];
+
+                $payload_json = json_encode($payload_body, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+                $request = zrexpress_api_request($pdo, $settings, 'POST', '/add_colis', [], $payload_body);
+
+                if ($request['success'] && is_array($request['json'])) {
+                    $new_tracking = zrexpress_find_tracking_in_response($request['json']);
+                    if ($new_tracking !== '') {
+                        admin_zrexpress_save_order_state($pdo, $id, [
+                            'reference' => $reference,
+                            'tracking' => $new_tracking,
+                            'status' => 'sent',
+                            'remote_status' => 'pret a expedier',
+                            'last_error' => '',
+                            'last_payload' => $payload_json,
+                            'last_response' => $request['response'],
+                            'sent_at' => date('Y-m-d H:i:s')
+                        ]);
+                        if (function_exists('admin_send_order_status_telegram')) {
+                            admin_send_order_status_telegram($pdo, $order, '', 'pret a expedier', [
+                                'tracking' => $new_tracking,
+                                'note' => 'Sent to ZRexpress (Bulk)',
+                                'remote_time' => date('Y-m-d H:i:s')
+                            ]);
+                        }
+                        $success_count++;
+                        continue;
+                    }
+                }
+
+                $error_text = $request['error'] ?: 'API error';
+                admin_zrexpress_save_order_state($pdo, $id, [
+                    'reference' => $reference,
+                    'tracking' => '',
+                    'status' => 'error',
+                    'remote_status' => '',
+                    'last_error' => $error_text,
+                    'last_payload' => $payload_json,
+                    'last_response' => $request['response']
+                ]);
+
+                $failed_count++;
+                $error_messages[] = '#' . $id . ': ' . $error_text;
+                continue;
+            }
+
+            if ($action === 'zrexpress_delete') {
+                admin_zrexpress_save_order_state($pdo, $id, [
+                    'reference' => '',
+                    'tracking' => '',
+                    'status' => '',
+                    'remote_status' => '',
+                    'last_error' => '',
+                    'last_payload' => '',
+                    'last_response' => '',
+                    'sent_at' => null
+                ]);
+                $success_count++;
+            }
+        }
+
+        if ($action === 'zrexpress_create') {
+            if ($success_count > 0) {
+                $message = 'تم إرسال ' . $success_count . ' طلب/طلبات إلى ZRexpress بنجاح.';
+                if ($skipped_count > 0) {
+                    $message .= ' تم تجاوز ' . $skipped_count . ' طلب/طلبات.';
+                }
+                if ($failed_count > 0) {
+                    $message .= ' فشل ' . $failed_count . ' طلب/طلبات. الأخطاء: ' . implode(', ', array_slice($error_messages, 0, 3));
+                }
+                admin_set_flash_message('orders', $failed_count > 0 ? 'warning' : 'success', $message);
+            } else {
+                admin_set_flash_message('orders', 'danger', 'لم يتم إرسال أي طلب إلى ZRexpress. الأخطاء: ' . implode(', ', array_slice($error_messages, 0, 3)));
+            }
+        } else {
+            if ($success_count > 0) {
+                $message = 'تم حذف بيانات تتبع ZRexpress لعدد ' . $success_count . ' طلب/طلبات محلياً.';
+                admin_set_flash_message('orders', 'success', $message);
+            } else {
+                admin_set_flash_message('orders', 'danger', 'لم يتم حذف أي بيانات.');
+            }
+        }
+
+        admin_orders_bulk_redirect($redirect);
+    }
+
     $placeholders = implode(',', array_fill(0, count($ids), '?'));
-    $statement = $pdo->prepare("SELECT id, order_status, customer_name, customer_phone, product_name, quantity, total_price, wilaya, commune, address, delivery_type, customer_ip, device_id FROM tbl_order WHERE id IN ($placeholders)");
+    $statement = $dbRepo->prepare("SELECT id, order_status, customer_name, customer_phone, product_name, quantity, total_price, wilaya, commune, address, delivery_type, customer_ip, device_id, employee_id FROM tbl_order WHERE id IN ($placeholders)");
     $statement->execute($ids);
     $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
 
@@ -284,20 +447,20 @@ try {
         if ($existing_ids) {
             $delete_placeholders = implode(',', array_fill(0, count($existing_ids), '?'));
 
-            $statement = $pdo->prepare("DELETE FROM tbl_order_call_log WHERE order_id IN ($delete_placeholders)");
+            $statement = $dbRepo->prepare("DELETE FROM tbl_order_call_log WHERE order_id IN ($delete_placeholders)");
             $statement->execute($existing_ids);
 
-            $statement = $pdo->prepare("DELETE FROM tbl_order_status_log WHERE order_id IN ($delete_placeholders)");
+            $statement = $dbRepo->prepare("DELETE FROM tbl_order_status_log WHERE order_id IN ($delete_placeholders)");
             $statement->execute($existing_ids);
 
-            $statement = $pdo->prepare("DELETE FROM tbl_order WHERE id IN ($delete_placeholders)");
+            $statement = $dbRepo->prepare("DELETE FROM tbl_order WHERE id IN ($delete_placeholders)");
             $statement->execute($existing_ids);
 
             $deleted_count = count($existing_ids);
         }
     } else {
         $target_status = admin_normalize_order_status($action);
-        $statement = $pdo->prepare('UPDATE tbl_order SET order_status = ? WHERE id = ?');
+        $statement = $dbRepo->prepare('UPDATE tbl_order SET order_status = ? WHERE id = ?');
 
         foreach ($ids as $id) {
             if (!isset($orders_by_id[$id])) {

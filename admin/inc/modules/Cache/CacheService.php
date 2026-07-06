@@ -29,7 +29,7 @@ class CacheService
             return;
         }
 
-        $this->pdo->exec("
+        (new \SaaS\Repositories\DatabaseRepository($this->pdo))->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_cache (
                 cache_key VARCHAR(255) PRIMARY KEY,
                 cache_value LONGTEXT NOT NULL,
@@ -40,7 +40,7 @@ class CacheService
                 INDEX idx_created (created_at)
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         ");
-        $this->pdo->exec("
+        (new \SaaS\Repositories\DatabaseRepository($this->pdo))->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_materialized_stats (
                 stat_key VARCHAR(255) PRIMARY KEY,
                 stat_value LONGTEXT NOT NULL,
@@ -55,7 +55,7 @@ class CacheService
 
     public function get(string $key): ?string
     {
-        $stmt = $this->pdo->prepare(
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
             "SELECT cache_value FROM tbl_cache WHERE cache_key = ? AND expires_at > NOW()"
         );
         $stmt->execute([$this->prefix . $key]);
@@ -68,7 +68,7 @@ class CacheService
         $ttl = $ttl ?? $this->defaultTtl;
         $cacheKey = $this->prefix . $key;
         $expires = date('Y-m-d H:i:s', time() + $ttl);
-        $stmt = $this->pdo->prepare(
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
             "INSERT INTO tbl_cache (cache_key, cache_value, cache_ttl, expires_at)
              VALUES (?, ?, ?, ?)
              ON DUPLICATE KEY UPDATE cache_value = VALUES(cache_value), cache_ttl = VALUES(cache_ttl), expires_at = VALUES(expires_at), created_at = NOW()"
@@ -78,19 +78,19 @@ class CacheService
 
     public function delete(string $key): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM tbl_cache WHERE cache_key = ?");
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("DELETE FROM tbl_cache WHERE cache_key = ?");
         $stmt->execute([$this->prefix . $key]);
     }
 
     public function deleteByPrefix(string $prefix): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM tbl_cache WHERE cache_key LIKE ?");
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("DELETE FROM tbl_cache WHERE cache_key LIKE ?");
         $stmt->execute([$this->prefix . $prefix . '%']);
     }
 
     public function flush(): void
     {
-        $this->pdo->exec("TRUNCATE tbl_cache");
+        (new \SaaS\Repositories\DatabaseRepository($this->pdo))->executeCommand("TRUNCATE tbl_cache");
     }
 
     public function getOrCompute(string $key, callable $fn, ?int $ttl = null): mixed
@@ -109,7 +109,7 @@ class CacheService
     public function getStats(string $key, callable $fn, ?int $maxAge = null): string
     {
         $maxAge = $maxAge ?? 300;
-        $stmt = $this->pdo->prepare(
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
             "SELECT stat_value FROM tbl_materialized_stats WHERE stat_key = ? AND last_computed > DATE_SUB(NOW(), INTERVAL ? SECOND)"
         );
         $stmt->execute([$key, $maxAge]);
@@ -118,7 +118,7 @@ class CacheService
 
         $value = $fn();
         $stringValue = is_string($value) ? $value : json_encode($value, JSON_UNESCAPED_UNICODE);
-        $stmt = $this->pdo->prepare(
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
             "INSERT INTO tbl_materialized_stats (stat_key, stat_value, last_computed, refresh_interval)
              VALUES (?, ?, NOW(), ?)
              ON DUPLICATE KEY UPDATE stat_value = VALUES(stat_value), last_computed = NOW(), refresh_interval = VALUES(refresh_interval)"
@@ -129,7 +129,7 @@ class CacheService
 
     public function invalidateStats(string $keyPattern): void
     {
-        $stmt = $this->pdo->prepare("DELETE FROM tbl_materialized_stats WHERE stat_key LIKE ?");
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("DELETE FROM tbl_materialized_stats WHERE stat_key LIKE ?");
         $stmt->execute([$keyPattern]);
     }
 }

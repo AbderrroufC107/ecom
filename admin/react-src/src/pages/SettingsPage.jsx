@@ -14,6 +14,7 @@ import {
 
 import { MetricCard, PageHeader } from '../components/Enterprise.jsx'
 import { decodeText } from '../lib/text.js'
+import { getLanguage, pageTranslations, sectionLabels } from '../lib/pageMeta.js'
 
 const hiddenSettingsTabs = new Set(['tab_4', 'tab_5', 'tab_6', 'tab_7'])
 
@@ -37,7 +38,9 @@ function scrapeSettingsTabs(sourceTabs) {
     const pane = id ? sourceTabs.querySelector(`#${CSS.escape(id)}`) : null
     if (!id || !pane || hiddenSettingsTabs.has(id)) return null
 
-    const title = decodeText(anchor.textContent || `قسم ${index + 1}`)
+    const lang = getLanguage()
+    const fallback = lang === 'ar' ? `\u0642\u0633\u0645 ${index + 1}` : `Section ${index + 1}`
+    const title = decodeText(anchor.textContent || fallback)
     const forms = pane.querySelectorAll('form').length
     const fields = pane.querySelectorAll('input, select, textarea').length
     const uploads = pane.querySelectorAll('input[type="file"]').length
@@ -58,6 +61,9 @@ function scrapeSettingsTabs(sourceTabs) {
 }
 
 export default function SettingsPage({ sourceTabs }) {
+  const lang = getLanguage()
+  const trans = pageTranslations[lang] || pageTranslations['ar']
+
   const [tabs] = React.useState(() => scrapeSettingsTabs(sourceTabs))
   const [activeId, setActiveId] = React.useState(() => tabs.find((tab) => tab.active)?.id || tabs[0]?.id || '')
   const paneHostRef = React.useRef(null)
@@ -95,23 +101,23 @@ export default function SettingsPage({ sourceTabs }) {
   if (!tabs.length) return null
 
   return (
-    <main className="saas-page saas-settings-page" dir="rtl">
+    <main className="saas-page saas-settings-page" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <PageHeader
-        eyebrow="النظام"
-        title="إعدادات المتجر"
-        description="واجهة مختصرة لإدارة الهوية، بيانات التواصل، التكاملات، التتبع، والسكربتات مع الحفاظ على نماذج PHP الأصلية."
+        eyebrow={sectionLabels.system || 'System'}
+        title={trans.storeSettings}
+        description={trans.settingsDesc}
       />
 
       <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="md" mb="md">
-        <MetricCard label="الأقسام" value={tabs.length} description="الأقسام المعروضة فقط" icon={IconAdjustmentsHorizontal} tone="primary" />
-        <MetricCard label="النماذج" value={totalForms} description="مسارات الحفظ كما هي" icon={IconForms} tone="success" />
-        <MetricCard label="الحقول" value={totalFields} description="حقول قابلة للتحرير" icon={IconSettings} tone="warning" />
-        <MetricCard label="الملفات" value={totalUploads} description="رفع صور وملفات" icon={IconPhoto} tone="primary" />
+        <MetricCard label={trans.sections} value={tabs.length} description={trans.sectionsDesc} icon={IconAdjustmentsHorizontal} tone="primary" />
+        <MetricCard label={trans.forms} value={totalForms} description={trans.formsDesc} icon={IconForms} tone="success" />
+        <MetricCard label={trans.fields} value={totalFields} description={trans.fieldsDesc} icon={IconSettings} tone="warning" />
+        <MetricCard label={trans.files} value={totalUploads} description={trans.filesDesc} icon={IconPhoto} tone="primary" />
       </SimpleGrid>
 
       <Card className="saas-surface saas-settings-picker" withBorder>
         <Text className="saas-card-eyebrow">Settings</Text>
-        <Text className="saas-card-title" mb="md">أقسام الإعدادات</Text>
+        <Text className="saas-card-title" mb="md">{trans.settingsSections}</Text>
         <SimpleGrid cols={{ base: 1, sm: 2, lg: 4 }} spacing="sm">
           {tabs.map((tab) => (
             <button
@@ -125,7 +131,7 @@ export default function SettingsPage({ sourceTabs }) {
               </ThemeIcon>
               <span>
                 <strong>{tab.title}</strong>
-                <small>{tab.forms} نموذج، {tab.fields} حقل</small>
+                <small>{tab.forms} {trans.formCount}{trans.comma} {tab.fields} {trans.fieldCount}</small>
               </span>
             </button>
           ))}
@@ -139,7 +145,7 @@ export default function SettingsPage({ sourceTabs }) {
             <Text className="saas-card-title">{activeTab.title}</Text>
           </div>
           <Group gap="xs">
-            <Badge variant="light" color="gray">{activeTab.fields} حقل</Badge>
+            <Badge variant="light" color="gray">{activeTab.fields} {trans.fieldCount}</Badge>
             <Button
               size="sm"
               radius="md"
@@ -147,7 +153,7 @@ export default function SettingsPage({ sourceTabs }) {
               leftSection={<IconDeviceFloppy size={15} />}
               onClick={() => paneHostRef.current?.querySelector('button[type="submit"], input[type="submit"]')?.click()}
             >
-              حفظ القسم
+              {trans.saveSection}
             </Button>
           </Group>
         </Group>
@@ -156,3 +162,4 @@ export default function SettingsPage({ sourceTabs }) {
     </main>
   )
 }
+

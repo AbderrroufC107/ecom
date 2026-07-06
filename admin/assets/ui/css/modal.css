@@ -1,0 +1,107 @@
+/* 
+ * Enterprise UI Framework - Modal
+ * Professional Modal System for Centered Popups
+ */
+
+.professional-modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--e-ui-z-modal);
+    background: rgba(18, 35, 52, 0.5);
+    backdrop-filter: blur(4px);
+    overflow: hidden;
+    align-items: center;
+    justify-content: center;
+}
+
+.professional-modal.in {
+    display: flex;
+    animation: modalFadeIn 0.2s ease-out forwards;
+}
+
+.professional-modal.out {
+    animation: modalFadeOut 0.2s ease-in forwards;
+}
+
+.professional-modal .modal-dialog {
+    background: var(--e-ui-bg-panel);
+    border-radius: var(--e-ui-radius-lg);
+    box-shadow: var(--e-ui-shadow-lg);
+    width: 600px;
+    max-width: 90%;
+    max-height: 90vh;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.95);
+    opacity: 0;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.professional-modal.in .modal-dialog {
+    transform: scale(1);
+    opacity: 1;
+}
+
+/* Header */
+.professional-modal .modal-header {
+    flex: 0 0 auto;
+    padding: var(--e-ui-spacing-md) var(--e-ui-spacing-lg);
+    border-bottom: 1px solid var(--e-ui-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.professional-modal .modal-title {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 800;
+    color: var(--e-ui-text-main);
+}
+
+.professional-modal .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--e-ui-text-muted);
+    cursor: pointer;
+    line-height: 1;
+}
+.professional-modal .close-btn:hover {
+    color: var(--e-ui-danger);
+}
+
+/* Body */
+.professional-modal .modal-body {
+    flex: 1 1 auto;
+    padding: var(--e-ui-spacing-lg);
+    overflow-y: auto;
+    scrollbar-width: thin;
+}
+
+/* Footer */
+.professional-modal .modal-footer {
+    flex: 0 0 auto;
+    padding: var(--e-ui-spacing-md) var(--e-ui-spacing-lg);
+    border-top: 1px solid var(--e-ui-border);
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--e-ui-spacing-sm);
+    background: var(--e-ui-bg-hover);
+    border-bottom-left-radius: var(--e-ui-radius-lg);
+    border-bottom-right-radius: var(--e-ui-radius-lg);
+}
+
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes modalFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}

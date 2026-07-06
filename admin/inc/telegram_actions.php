@@ -4,7 +4,20 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_actions_ensure_tables')) {
         function telegram_actions_ensure_tables(PDO $pdo): void
-        {
+        { global $dbRepo;
+            try {
+                if (function_exists('admin_add_column_if_missing')) {
+                    admin_add_column_if_missing($pdo, 'tbl_order', 'order_note', 'TEXT NULL');
+                } else {
+                    $check = $dbRepo->query("SHOW COLUMNS FROM tbl_order LIKE 'order_note'");
+                    if (!$check->fetch()) {
+                        $dbRepo->executeCommand("ALTER TABLE tbl_order ADD COLUMN order_note TEXT NULL");
+                    }
+                }
+            } catch (Exception $e) {
+                error_log('Telegram order_note column migration failed: ' . $e->getMessage());
+            }
+
             $lock_file = __DIR__ . '/../cache/telegram_actions_tables.lock';
             if (file_exists($lock_file)) {
                 return;
@@ -20,8 +33,8 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_log_action')) {
         function telegram_log_action(PDO $pdo, int $employee_id, int $order_id, string $action_type, $telegram_user_id = null, $payload = null): int
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 INSERT INTO tbl_telegram_action_log (employee_id, order_id, action_type, telegram_user_id, payload)
                 VALUES (?, ?, ?, ?, ?)
             ");
@@ -32,14 +45,14 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                 $telegram_user_id !== null ? (int) $telegram_user_id : null,
                 $payload !== null ? (is_string($payload) ? $payload : json_encode($payload, JSON_UNESCAPED_UNICODE)) : null,
             ]);
-            return (int) $pdo->lastInsertId();
+            return (int) $dbRepo->lastInsertId();
         }
     }
 
     if (!function_exists('telegram_find_employee_by_chat_id')) {
         function telegram_find_employee_by_chat_id(PDO $pdo, string $chat_id): ?array
-        {
-            $stmt = $pdo->prepare("SELECT * FROM tbl_employee WHERE telegram_chat_id = ? AND is_active = 1 LIMIT 1");
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_employee WHERE telegram_chat_id = ? AND is_active = 1 LIMIT 1");
             $stmt->execute([$chat_id]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return $row ?: null;
@@ -48,8 +61,8 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_verify_order_access')) {
         function telegram_verify_order_access(PDO $pdo, int $order_id, int $employee_id): ?array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT oa.*, o.order_status, o.id AS oid
                 FROM tbl_order_assignment oa
                 INNER JOIN tbl_order o ON o.id = oa.order_id
@@ -64,21 +77,21 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_can_modify_status')) {
         function telegram_can_modify_status(string $status): bool
-        {
+        { global $dbRepo;
             return in_array($status, ['Pending'], true);
         }
     }
 
     if (!function_exists('telegram_already_processed')) {
         function telegram_already_processed(PDO $pdo, int $order_id, string $action_type, int $employee_id): bool
-        {
+        { global $dbRepo;
             if ($action_type === 'confirm') {
-                $stmt = $pdo->prepare("SELECT id FROM tbl_order WHERE id = ? AND order_status = 'Confirmed' LIMIT 1");
+                $stmt = $dbRepo->prepare("SELECT id FROM tbl_order WHERE id = ? AND order_status = 'Confirmed' LIMIT 1");
                 $stmt->execute([$order_id]);
                 return (bool) $stmt->fetch();
             }
             if ($action_type === 'cancel') {
-                $stmt = $pdo->prepare("SELECT id FROM tbl_order WHERE id = ? AND order_status = 'Cancelled' LIMIT 1");
+                $stmt = $dbRepo->prepare("SELECT id FROM tbl_order WHERE id = ? AND order_status = 'Cancelled' LIMIT 1");
                 $stmt->execute([$order_id]);
                 return (bool) $stmt->fetch();
             }
@@ -86,9 +99,162 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
         }
     }
 
+    if (!function_exists('telegram_ecotrack_encode')) {
+        function telegram_ecotrack_encode($value): string
+        {
+            if (function_exists('ecotrack_json_encode')) {
+                return ecotrack_json_encode($value, true);
+            }
+            $json = json_encode($value, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT);
+            return is_string($json) ? $json : '';
+        }
+    }
+
+    if (!function_exists('telegram_send_order_to_delivery_company')) {
+        function telegram_send_order_to_delivery_company(PDO $pdo, int $order_id, string $changed_by = 'Telegram'): array
+        {
+            global $dbRepo;
+
+            if (!function_exists('front_get_settings') || !function_exists('ecotrack_normalize_settings')) {
+                require_once __DIR__ . '/functions.php';
+            }
+
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt->execute([$order_id]);
+            $order = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$order) {
+                return ['success' => false, 'skipped' => false, 'message' => 'الطلب غير موجود.'];
+            }
+
+            $existing_tracking = trim((string) ($order['ecotrack_tracking'] ?? $order['tracking_number'] ?? ''));
+            if ($existing_tracking !== '') {
+                return ['success' => true, 'skipped' => true, 'message' => 'الطلب مرسل سابقا لشركة التوصيل.', 'tracking' => $existing_tracking];
+            }
+
+            $settings = ecotrack_normalize_settings(front_get_settings($pdo));
+            if (!ecotrack_is_configured($settings)) {
+                return ['success' => false, 'skipped' => true, 'message' => 'إعدادات شركة التوصيل غير مكتملة.'];
+            }
+
+            $request_context = ecotrack_create_order_request_context($pdo, $settings, $order);
+            $request_body = $request_context['payload'];
+            $prepared_order = $request_context['order'];
+            $request_entry = (array) ($request_body['orders']['0'] ?? []);
+            $reference = trim((string) ($request_entry['reference'] ?? ecotrack_build_order_reference($order)));
+            $request_wilaya_code = trim((string) ($request_entry['code_wilaya'] ?? ''));
+            $request_commune_name = trim((string) ($request_entry['commune'] ?? ''));
+
+            if ($request_wilaya_code === '' || $request_commune_name === '') {
+                return ['success' => false, 'skipped' => false, 'message' => 'بيانات الولاية أو البلدية غير مكتملة.'];
+            }
+
+            $request = ecotrack_api_request($pdo, $settings, 'POST', '/api/v1/create/orders', [], $request_body, 'bearer');
+            $response_text = function_exists('ecotrack_response_to_text')
+                ? ecotrack_response_to_text($request['response'] ?? '', $request['json'] ?? null)
+                : (string) ($request['response'] ?? '');
+            $request_payload_text = telegram_ecotrack_encode($request_body);
+
+            $result_entry = [];
+            if (!empty($request['json']['results'][$reference]) && is_array($request['json']['results'][$reference])) {
+                $result_entry = $request['json']['results'][$reference];
+            }
+
+            if (!empty($result_entry['success']) && !empty($result_entry['tracking'])) {
+                $tracking = trim((string) $result_entry['tracking']);
+                $remote_status = trim((string) ($result_entry['status'] ?? ''));
+                try {
+                    $pdo->beginTransaction();
+                    if (($prepared_order['delivery_type'] ?? '') !== ($order['delivery_type'] ?? '')) {
+                        $dbRepo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
+                            ->execute([(string) $prepared_order['delivery_type'], $order_id]);
+                        $order['delivery_type'] = $prepared_order['delivery_type'];
+                    }
+                    admin_ecotrack_save_order_state($pdo, $order_id, [
+                        'reference' => $reference,
+                        'tracking' => $tracking,
+                        'status' => 'sent',
+                        'remote_status' => $remote_status,
+                        'last_error' => '',
+                        'last_payload' => $request_payload_text,
+                        'last_response' => $response_text
+                    ], true);
+                    admin_ecotrack_mark_order_sent_locally($pdo, $order, $changed_by);
+                    $pdo->commit();
+                } catch (Exception $exception) {
+                    if ($pdo->inTransaction()) {
+                        $pdo->rollBack();
+                    }
+                    return ['success' => false, 'skipped' => false, 'message' => 'تم الإرسال لكن فشل تحديث الحالة المحلية: ' . $exception->getMessage(), 'tracking' => $tracking];
+                }
+
+                $message = 'تم إرسال الطلب إلى شركة التوصيل. رقم التتبع: ' . $tracking;
+                $fallback = trim((string) ($request_context['fallback_message'] ?? ''));
+                if ($fallback !== '') {
+                    $message .= ' ' . $fallback;
+                }
+                return ['success' => true, 'skipped' => false, 'message' => $message, 'tracking' => $tracking];
+            }
+
+            $result_errors = $result_entry;
+            unset($result_errors['success'], $result_errors['tracking']);
+            $error_text = function_exists('ecotrack_messages_to_text') ? ecotrack_messages_to_text($result_errors) : '';
+            if ($error_text === '') {
+                $error_text = admin_ecotrack_request_error_text($request, 'تعذر إرسال الطلب إلى شركة التوصيل.');
+            }
+
+            admin_ecotrack_save_order_state($pdo, $order_id, [
+                'reference' => $reference,
+                'tracking' => '',
+                'status' => 'error',
+                'remote_status' => '',
+                'last_error' => $error_text,
+                'last_payload' => $request_payload_text,
+                'last_response' => $response_text
+            ], false);
+
+            return ['success' => false, 'skipped' => false, 'message' => $error_text];
+        }
+    }
+
+    if (!function_exists('telegram_send_order_note_to_delivery_company')) {
+        function telegram_send_order_note_to_delivery_company(PDO $pdo, int $order_id, string $content): array
+        {
+            global $dbRepo;
+
+            if (!function_exists('front_get_settings') || !function_exists('ecotrack_normalize_settings')) {
+                require_once __DIR__ . '/functions.php';
+            }
+
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt->execute([$order_id]);
+            $order = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$order) {
+                return ['success' => false, 'skipped' => false, 'message' => 'الطلب غير موجود.'];
+            }
+
+            $tracking = trim((string) ($order['ecotrack_tracking'] ?? $order['tracking_number'] ?? ''));
+            if ($tracking === '') {
+                return ['success' => true, 'skipped' => true, 'message' => 'حفظت الملاحظة محليا وسترسل مع الطلب عند إرساله للشركة.'];
+            }
+
+            $settings = ecotrack_normalize_settings(front_get_settings($pdo));
+            if (!ecotrack_is_configured($settings)) {
+                return ['success' => false, 'skipped' => true, 'message' => 'إعدادات شركة التوصيل غير مكتملة.'];
+            }
+
+            $query = ['tracking' => $tracking, 'content' => $content];
+            $request = ecotrack_api_request($pdo, $settings, 'POST', '/api/v1/add/maj', $query, null, 'bearer');
+            if (admin_ecotrack_request_success($request)) {
+                return ['success' => true, 'skipped' => false, 'message' => 'تم إرسال الملاحظة إلى شركة التوصيل.'];
+            }
+
+            return ['success' => false, 'skipped' => false, 'message' => admin_ecotrack_request_error_text($request, 'تعذر إرسال الملاحظة إلى شركة التوصيل.')];
+        }
+    }
+
     if (!function_exists('telegram_handle_confirm')) {
         function telegram_handle_confirm(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
             $callback_id = (string) ($callback_query['id'] ?? '');
@@ -110,7 +276,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                 return;
             }
 
-            $stmt = $pdo->prepare("UPDATE tbl_order SET order_status = 'Confirmed' WHERE id = ?");
+            $stmt = $dbRepo->prepare("UPDATE tbl_order SET order_status = 'Confirmed' WHERE id = ?");
             $stmt->execute([$order_id]);
 
             if (function_exists('admin_log_order_status_change')) {
@@ -121,14 +287,24 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
             telegram_log_action($pdo, $employee_id, $order_id, 'confirm', $telegram_user_id, ['status' => 'Confirmed']);
 
-            $stmt = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $employee = employee_get_by_id($pdo, $employee_id);
+            $changed_by = $employee ? 'Telegram: ' . $employee['full_name'] : 'Telegram';
+            $delivery_result = telegram_send_order_to_delivery_company($pdo, $order_id, $changed_by);
+
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
             $stmt->execute([$order_id]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
-            $employee = employee_get_by_id($pdo, $employee_id);
 
             $extra = "\xE2\x9C\x85 \xD8\xAA\xD9\x85 \xD8\xAA\xD8\xA3\xD9\x83\xD9\x8A\xD8\xAF \xD8\xA7\xD9\x84\xD8\xB7\xD9\x84\xD8\xA8 \xD8\xA8\xD9\x88\xD8\xA7\xD8\xB3\xD8\xB7\xD8\xA9 " . htmlspecialchars($employee['full_name'] ?? '', ENT_QUOTES, 'UTF-8');
+            if (!empty($delivery_result['success'])) {
+                $extra .= "\n🚚 " . htmlspecialchars((string) ($delivery_result['message'] ?? 'تمت معالجة الإرسال لشركة التوصيل.'), ENT_QUOTES, 'UTF-8');
+            } elseif (empty($delivery_result['skipped'])) {
+                $extra .= "\n⚠️ تعذر الإرسال لشركة التوصيل: " . htmlspecialchars((string) ($delivery_result['message'] ?? 'خطأ غير معروف'), ENT_QUOTES, 'UTF-8');
+            } else {
+                $extra .= "\nℹ️ " . htmlspecialchars((string) ($delivery_result['message'] ?? 'لم يتم الإرسال لشركة التوصيل.'), ENT_QUOTES, 'UTF-8');
+            }
             $text = telegram_build_order_notification($order, $employee, $extra);
-            $reply_markup = telegram_build_action_buttons($order_id, 'Confirmed');
+            $reply_markup = telegram_build_action_buttons($order_id, $order['order_status'] ?? 'Confirmed');
 
             telegram_edit_message_text($chat_id, $message_id, $text, $reply_markup);
             telegram_answer_callback_query($callback_id, "\xE2\x9C\x85 \xD8\xAA\xD9\x85 \xD8\xAA\xD8\xA3\xD9\x83\xD9\x8A\xD8\xAF \xD8\xA7\xD9\x84\xD8\xB7\xD9\x84\xD8\xA8 \xD8\xA8\xD9\x86\xD8\xAC\xD8\xA7\xD8\xAD");
@@ -137,7 +313,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_cancel_show_reasons')) {
         function telegram_handle_cancel_show_reasons(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
             $callback_id = (string) ($callback_query['id'] ?? '');
@@ -188,7 +364,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_cancel_do')) {
         function telegram_handle_cancel_do(PDO $pdo, array $callback_query, int $order_id, int $employee_id, string $reason_code): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
             $callback_id = (string) ($callback_query['id'] ?? '');
@@ -218,10 +394,10 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
             ];
             $reason_text = $reason_map[$reason_code] ?? $reason_code;
 
-            $stmt = $pdo->prepare("UPDATE tbl_order SET order_status = 'Cancelled' WHERE id = ?");
+            $stmt = $dbRepo->prepare("UPDATE tbl_order SET order_status = 'Cancelled' WHERE id = ?");
             $stmt->execute([$order_id]);
 
-            $ins = $pdo->prepare("INSERT INTO tbl_order_cancellation_reason (order_id, employee_id, reason) VALUES (?, ?, ?)");
+            $ins = $dbRepo->prepare("INSERT INTO tbl_order_cancellation_reason (order_id, employee_id, reason) VALUES (?, ?, ?)");
             $ins->execute([$order_id, $employee_id, $reason_text]);
 
             if (function_exists('admin_log_order_status_change')) {
@@ -232,7 +408,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
             telegram_log_action($pdo, $employee_id, $order_id, 'cancel', $telegram_user_id, ['reason_code' => $reason_code, 'reason' => $reason_text]);
 
-            $stmt = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
             $stmt->execute([$order_id]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
             $employee = employee_get_by_id($pdo, $employee_id);
@@ -251,7 +427,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_get_editable_fields')) {
         function telegram_get_editable_fields(int $order_id): array
-        {
+        { global $dbRepo;
             return [
                 'customer_name' => "\xF0\x9F\x91\xA4 \xD8\xA7\xD9\x84\xD8\xA7\xD8\xB3\xD9\x85",
                 'customer_phone' => "\xF0\x9F\x93\x9E \xD8\xA7\xD9\x84\xD9\x87\xD8\xA7\xD8\xAA\xD9\x81",
@@ -267,7 +443,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_get_field_label')) {
         function telegram_get_field_label(string $field): string
-        {
+        { global $dbRepo;
             $labels = [
                 'customer_name' => "\xD8\xA7\xD9\x84\xD8\xA7\xD8\xB3\xD9\x85",
                 'customer_phone' => "\xD8\xA7\xD9\x84\xD9\x87\xD8\xA7\xD8\xAA\xD9\x81",
@@ -284,7 +460,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_edit_choose')) {
         function telegram_handle_edit_choose(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
             $callback_id = (string) ($callback_query['id'] ?? '');
@@ -330,7 +506,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_edit_field')) {
         function telegram_handle_edit_field(PDO $pdo, array $callback_query, int $order_id, int $employee_id, string $field_name): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
             $callback_id = (string) ($callback_query['id'] ?? '');
@@ -341,7 +517,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                 return;
             }
 
-            $stmt = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
             $stmt->execute([$order_id]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$order) {
@@ -352,9 +528,9 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
             $current_value = $order[$field_name] ?? '';
             $field_label = telegram_get_field_label($field_name);
 
-            $pdo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE employee_id = ? AND status = 'pending'")->execute([$employee_id]);
+            $dbRepo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE employee_id = ? AND status = 'pending'")->execute([$employee_id]);
 
-            $ins = $pdo->prepare("
+            $ins = $dbRepo->prepare("
                 INSERT INTO tbl_telegram_edit_session (employee_id, order_id, field_name, old_value, chat_id, message_id, status)
                 VALUES (?, ?, ?, ?, ?, ?, 'pending')
             ");
@@ -377,7 +553,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_validate_field_value')) {
         function telegram_validate_field_value(string $field_name, string $value, PDO $pdo = null): ?string
-        {
+        { global $dbRepo;
             $value = trim($value);
             if ($value === '') {
                 return "\xD8\xA7\xD9\x84\xD9\x82\xD9\x8A\xD9\x85\xD8\xA9 \xD9\x84\xD8\xA7 \xD9\x8A\xD9\x85\xD9\x83\xD9\x86 \xD8\xA3\xD9\x86 \xD8\xAA\xD9\x83\xD9\x88\xD9\x86 \xD9\x81\xD8\xA7\xD8\xB1\xD8\xBA\xD8\xA9";
@@ -411,7 +587,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
                 case 'wilaya':
                     if ($pdo !== null) {
-                        $check = $pdo->prepare("SELECT COUNT(*) FROM tbl_wilaya WHERE name = ? OR id = ?");
+                        $check = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_wilaya WHERE name = ? OR id = ?");
                         $check->execute([$value, $value]);
                         if ((int) $check->fetchColumn() === 0) {
                             return "\xD8\xA7\xD9\x84\xD9\x88\xD9\x84\xD8\xA7\xD9\x8A\xD8\xA9 \xD8\xBA\xD9\x8A\xD8\xB1 \xD9\x85\xD9\x88\xD8\xAC\xD9\x88\xD8\xAF\xD8\xA9 \xD9\x81\xD9\x8A \xD8\xA7\xD9\x84\xD9\x86\xD8\xB8\xD8\xA7\xD9\x85";
@@ -427,7 +603,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_edit_value')) {
         function telegram_handle_edit_value(PDO $pdo, array $message, int $employee_id): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($message['chat']['id'] ?? '');
             $text = trim((string) ($message['text'] ?? ''));
 
@@ -435,7 +611,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                 return;
             }
 
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 SELECT * FROM tbl_telegram_edit_session
                 WHERE employee_id = ? AND status = 'pending'
                 ORDER BY id DESC LIMIT 1
@@ -455,34 +631,34 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
             $access = telegram_verify_order_access($pdo, $order_id, $employee_id);
             if (!$access) {
-                $pdo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE id = ?")->execute([$session['id']]);
+                $dbRepo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE id = ?")->execute([$session['id']]);
                 telegram_send_message($chat_id, "\xE2\x9D\x8C \xD9\x84\xD8\xA7 \xD9\x8A\xD9\x85\xD9\x83\xD9\x86\xD9\x83 \xD8\xA7\xD9\x84\xD9\x88\xD8\xB5\xD9\x88\xD9\x84 \xD9\x84\xD9\x87\xD8\xB0\xD8\xA7 \xD8\xA7\xD9\x84\xD8\xB7\xD9\x84\xD8\xA8");
                 return;
             }
             if (!telegram_can_modify_status($access['order_status'])) {
-                $pdo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE id = ?")->execute([$session['id']]);
+                $dbRepo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE id = ?")->execute([$session['id']]);
                 telegram_send_message($chat_id, "\xE2\x9D\x8C \xD9\x84\xD8\xA7 \xD9\x8A\xD9\x85\xD9\x83\xD9\x86 \xD8\xAA\xD8\xB9\xD8\xAF\xD9\x8A\xD9\x84 \xD8\xB7\xD9\x84\xD8\xA8 \xD8\xAA\xD9\x85 \xD9\x85\xD8\xB9\xD8\xA7\xD9\x84\xD8\xAC\xD8\xAA\xD9\x87");
                 return;
             }
 
             $validation_error = telegram_validate_field_value($field_name, $text, $pdo);
             if ($validation_error !== null) {
-                $pdo->prepare("UPDATE tbl_telegram_edit_session SET updated_at = NOW() WHERE id = ?")->execute([$session['id']]);
+                $dbRepo->prepare("UPDATE tbl_telegram_edit_session SET updated_at = NOW() WHERE id = ?")->execute([$session['id']]);
                 telegram_send_message($chat_id, "\xE2\x9D\x8C {$validation_error}\n\n\xD8\xA7\xD9\x84\xD8\xB1\xD8\xAC\xD8\xA7\xD8\xA1 \xD8\xA5\xD8\xB1\xD8\xB3\xD8\xA7\xD9\x84 \xD9\x82\xD9\x8A\xD9\x85\xD8\xA9 \xD8\xB5\xD8\xAD\xD9\x8A\xD8\xAD\xD8\xA9:");
                 return;
             }
 
             $update_sql = "UPDATE tbl_order SET `{$field_name}` = ? WHERE id = ?";
-            $stmt = $pdo->prepare($update_sql);
+            $stmt = $dbRepo->prepare($update_sql);
             $stmt->execute([$text, $order_id]);
 
-            $log_stmt = $pdo->prepare("
+            $log_stmt = $dbRepo->prepare("
                 INSERT INTO tbl_order_edit_log (order_id, employee_id, field_name, old_value, new_value)
                 VALUES (?, ?, ?, ?, ?)
             ");
             $log_stmt->execute([$order_id, $employee_id, $field_name, $old_value, $text]);
 
-            $pdo->prepare("UPDATE tbl_telegram_edit_session SET status = 'completed' WHERE id = ?")->execute([$session['id']]);
+            $dbRepo->prepare("UPDATE tbl_telegram_edit_session SET status = 'completed' WHERE id = ?")->execute([$session['id']]);
 
             telegram_log_action($pdo, $employee_id, $order_id, 'edit_completed', null, [
                 'field' => $field_name,
@@ -490,7 +666,15 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                 'new_value' => $text,
             ]);
 
-            $stmt = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $delivery_note_message = '';
+            if ($field_name === 'order_note') {
+                $note_result = telegram_send_order_note_to_delivery_company($pdo, $order_id, $text);
+                $delivery_note_message = "\n\n" . (!empty($note_result['success']) ? "🚚 " : "⚠️ ");
+                $delivery_note_message .= htmlspecialchars((string) ($note_result['message'] ?? ''), ENT_QUOTES, 'UTF-8');
+                telegram_log_action($pdo, $employee_id, $order_id, 'note_delivery_sync', null, $note_result);
+            }
+
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
             $stmt->execute([$order_id]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
             $employee = employee_get_by_id($pdo, $employee_id);
@@ -499,6 +683,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
             $summary .= "\xD8\xA7\xD9\x84\xD8\xAD\xD9\x82\xD9\x84: {$field_label}\n\n";
             $summary .= "\xD8\xA7\xD9\x84\xD9\x82\xD9\x8A\xD9\x85\xD8\xA9 \xD8\xA7\xD9\x84\xD9\x82\xD8\xAF\xD9\x8A\xD9\x85\xD8\xA9:\n" . htmlspecialchars((string) $old_value, ENT_QUOTES, 'UTF-8') . "\n\n";
             $summary .= "\xD8\xA7\xD9\x84\xD9\x82\xD9\x8A\xD9\x85\xD8\xA9 \xD8\xA7\xD9\x84\xD8\xAC\xD8\xAF\xD9\x8A\xD8\xAF\xD8\xA9:\n" . htmlspecialchars($text, ENT_QUOTES, 'UTF-8');
+            $summary .= $delivery_note_message;
 
             telegram_send_message($chat_id, $summary);
 
@@ -512,12 +697,12 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_reassign')) {
         function telegram_handle_reassign(PDO $pdo, array $callback_query, int $order_id, int $employee_id_from): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
             $callback_id = (string) ($callback_query['id'] ?? '');
 
-            $stmt = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
             $stmt->execute([$order_id]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
             if (!$order) {
@@ -542,7 +727,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                 return;
             }
 
-            $stmt = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
             $stmt->execute([$order_id]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
             $new_employee = employee_get_by_id($pdo, $new_employee_id);
@@ -579,14 +764,14 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_back')) {
         function telegram_handle_back(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
             $callback_id = (string) ($callback_query['id'] ?? '');
 
-            $pdo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE employee_id = ? AND status = 'pending'")->execute([$employee_id]);
+            $dbRepo->prepare("UPDATE tbl_telegram_edit_session SET status = 'cancelled' WHERE employee_id = ? AND status = 'pending'")->execute([$employee_id]);
 
-            $stmt = $pdo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
             $stmt->execute([$order_id]);
             $order = $stmt->fetch(PDO::FETCH_ASSOC);
             $employee = employee_get_by_id($pdo, $employee_id);
@@ -602,9 +787,111 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
         }
     }
 
+    if (!function_exists('telegram_handle_ship')) {
+        function telegram_handle_ship(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
+        {
+            global $dbRepo;
+
+            $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
+            $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
+            $callback_id = (string) ($callback_query['id'] ?? '');
+
+            $access = telegram_verify_order_access($pdo, $order_id, $employee_id);
+            if (!$access) {
+                telegram_answer_callback_query($callback_id, "❌ لا يمكنك الوصول لهذا الطلب");
+                return;
+            }
+
+            $employee = employee_get_by_id($pdo, $employee_id);
+            $changed_by = $employee ? 'Telegram: ' . $employee['full_name'] : 'Telegram';
+            $result = telegram_send_order_to_delivery_company($pdo, $order_id, $changed_by);
+
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt->execute([$order_id]);
+            $order = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            $extra = !empty($result['success']) ? "🚚 " : "⚠️ ";
+            $extra .= htmlspecialchars((string) ($result['message'] ?? 'تمت معالجة الطلب.'), ENT_QUOTES, 'UTF-8');
+
+            if ($order && $employee) {
+                $text = telegram_build_order_notification($order, $employee, $extra);
+                $reply_markup = telegram_build_action_buttons($order_id, $order['order_status'] ?? 'Pending');
+                telegram_edit_message_text($chat_id, $message_id, $text, $reply_markup);
+            }
+
+            telegram_log_action($pdo, $employee_id, $order_id, 'ship', (int) ($callback_query['from']['id'] ?? 0), $result);
+            telegram_answer_callback_query($callback_id, (string) ($result['message'] ?? 'تمت معالجة الطلب.'));
+        }
+    }
+
+    if (!function_exists('telegram_handle_note')) {
+        function telegram_handle_note(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
+        {
+            telegram_handle_edit_field($pdo, $callback_query, $order_id, $employee_id, 'order_note');
+        }
+    }
+
+    if (!function_exists('telegram_handle_delete')) {
+        function telegram_handle_delete(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
+        {
+            global $dbRepo;
+
+            $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
+            $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
+            $callback_id = (string) ($callback_query['id'] ?? '');
+            $telegram_user_id = (int) ($callback_query['from']['id'] ?? 0);
+
+            $access = telegram_verify_order_access($pdo, $order_id, $employee_id);
+            if (!$access) {
+                telegram_answer_callback_query($callback_id, "❌ لا يمكنك الوصول لهذا الطلب");
+                return;
+            }
+
+            try {
+                if (function_exists('admin_ensure_order_call_log_table')) {
+                    admin_ensure_order_call_log_table($pdo);
+                }
+                if (function_exists('admin_ensure_order_status_log_table')) {
+                    admin_ensure_order_status_log_table($pdo);
+                }
+
+                $employee = employee_get_by_id($pdo, $employee_id);
+                $pdo->beginTransaction();
+
+                if (function_exists('admin_db_table_exists') && admin_db_table_exists($pdo, 'tbl_order_call_log')) {
+                    $dbRepo->prepare('DELETE FROM tbl_order_call_log WHERE order_id = ?')->execute([$order_id]);
+                }
+                if (function_exists('admin_db_table_exists') && admin_db_table_exists($pdo, 'tbl_order_status_log')) {
+                    $dbRepo->prepare('DELETE FROM tbl_order_status_log WHERE order_id = ?')->execute([$order_id]);
+                }
+                if (function_exists('admin_db_table_exists') && admin_db_table_exists($pdo, 'tbl_order_assignment')) {
+                    $dbRepo->prepare('DELETE FROM tbl_order_assignment WHERE order_id = ?')->execute([$order_id]);
+                }
+                if (function_exists('admin_db_table_exists') && admin_db_table_exists($pdo, 'tbl_telegram_edit_session')) {
+                    $dbRepo->prepare('DELETE FROM tbl_telegram_edit_session WHERE order_id = ?')->execute([$order_id]);
+                }
+                if (function_exists('admin_db_table_exists') && admin_db_table_exists($pdo, 'tbl_telegram_delivery_log')) {
+                    $dbRepo->prepare('DELETE FROM tbl_telegram_delivery_log WHERE order_id = ?')->execute([$order_id]);
+                }
+
+                $dbRepo->prepare('DELETE FROM tbl_order WHERE id = ?')->execute([$order_id]);
+                $pdo->commit();
+
+                telegram_log_action($pdo, $employee_id, $order_id, 'delete', $telegram_user_id, ['deleted_by' => $employee['full_name'] ?? 'Telegram']);
+                telegram_edit_message_text($chat_id, $message_id, "🗑 تم حذف الطلب #{$order_id} عبر تيليجرام.", null);
+                telegram_answer_callback_query($callback_id, "تم حذف الطلب");
+            } catch (Exception $exception) {
+                if ($pdo->inTransaction()) {
+                    $pdo->rollBack();
+                }
+                telegram_answer_callback_query($callback_id, "فشل حذف الطلب: " . $exception->getMessage(), true);
+            }
+        }
+    }
+
     if (!function_exists('telegram_handle_callback_query')) {
         function telegram_handle_callback_query(PDO $pdo, array $callback_query): void
-        {
+        { global $dbRepo;
             $data = (string) ($callback_query['data'] ?? '');
             $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
             $from_id = (int) ($callback_query['from']['id'] ?? 0);
@@ -642,6 +929,15 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                 case 'edit_field':
                     telegram_handle_edit_field($pdo, $callback_query, $order_id, $employee_id, $extra);
                     break;
+                case 'note':
+                    telegram_handle_note($pdo, $callback_query, $order_id, $employee_id);
+                    break;
+                case 'ship':
+                    telegram_handle_ship($pdo, $callback_query, $order_id, $employee_id);
+                    break;
+                case 'delete':
+                    telegram_handle_delete($pdo, $callback_query, $order_id, $employee_id);
+                    break;
                 case 'reassign':
                     telegram_handle_reassign($pdo, $callback_query, $order_id, $employee_id);
                     break;
@@ -657,7 +953,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_handle_message')) {
         function telegram_handle_message(PDO $pdo, array $message): void
-        {
+        { global $dbRepo;
             $chat_id = (string) ($message['chat']['id'] ?? '');
             $text = trim((string) ($message['text'] ?? ''));
 
@@ -671,7 +967,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
             }
             $employee_id = (int) $employee['id'];
 
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 SELECT id FROM tbl_telegram_edit_session
                 WHERE employee_id = ? AND status = 'pending'
                 LIMIT 1
@@ -687,7 +983,7 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_process_update')) {
         function telegram_process_update(PDO $pdo, array $update): void
-        {
+        { global $dbRepo;
             if (isset($update['callback_query'])) {
                 telegram_handle_callback_query($pdo, $update['callback_query']);
             } elseif (isset($update['message']) && isset($update['message']['text'])) {
@@ -698,8 +994,8 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_get_edits_for_order')) {
         function telegram_get_edits_for_order(PDO $pdo, int $order_id): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT e.*, emp.full_name AS employee_name
                 FROM tbl_order_edit_log e
                 LEFT JOIN tbl_employee emp ON emp.id = e.employee_id
@@ -713,8 +1009,8 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_get_cancellation_for_order')) {
         function telegram_get_cancellation_for_order(PDO $pdo, int $order_id): ?array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT c.*, emp.full_name AS employee_name
                 FROM tbl_order_cancellation_reason c
                 LEFT JOIN tbl_employee emp ON emp.id = c.employee_id
@@ -729,8 +1025,8 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_get_order_telegram_actions')) {
         function telegram_get_order_telegram_actions(PDO $pdo, int $order_id): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT a.*, emp.full_name AS employee_name
                 FROM tbl_telegram_action_log a
                 LEFT JOIN tbl_employee emp ON emp.id = a.employee_id
@@ -744,8 +1040,8 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
 
     if (!function_exists('telegram_get_employee_telegram_actions')) {
         function telegram_get_employee_telegram_actions(PDO $pdo, int $employee_id, int $limit = 20): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT a.*, o.id AS order_id_ref
                 FROM tbl_telegram_action_log a
                 LEFT JOIN tbl_order o ON o.id = a.order_id

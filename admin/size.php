@@ -30,7 +30,7 @@
             <tbody>
             	<?php
             	$i=0;
-            	$statement = $pdo->prepare("SELECT * FROM tbl_size ORDER BY size_id ASC");
+            	$statement = $dbRepo->prepare("SELECT * FROM tbl_size ORDER BY size_id ASC");
             	$statement->execute();
             	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
             	foreach ($result as $row) {
@@ -39,9 +39,9 @@
 					<tr>
 	                    <td><?php echo $i; ?></td>
 	                    <td><?php echo $row['size_name']; ?></td>
-	                    <td>
-	                        <a href="size-edit.php?id=<?php echo $row['size_id']; ?>" class="btn btn-primary btn-xs">Edit</a>
-	                        <a href="#" class="btn btn-danger btn-xs" data-href="size-delete.php?id=<?php echo $row['size_id']; ?>" data-toggle="modal" data-target="#confirm-delete">Delete</a>
+	                    <td style="white-space: nowrap;">
+	                        <a href="size-edit.php?id=<?php echo $row['size_id']; ?>" class="btn btn-primary btn-xs"><i class="fa fa-edit"></i> تعديل</a>
+	                        <a href="#" class="btn btn-danger btn-xs" data-href="size-delete.php?id=<?php echo $row['size_id']; ?>" data-toggle="modal" data-target="#confirm-delete"><i class="fa fa-trash"></i> حذف</a>
 	                    </td>
 	                </tr>
             		<?php

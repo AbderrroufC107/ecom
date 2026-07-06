@@ -16,7 +16,7 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {    	
 		// updating into the database
-		$statement = $pdo->prepare("UPDATE tbl_mid_category SET mcat_name=?,tcat_id=? WHERE mcat_id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_mid_category SET mcat_name=?,tcat_id=? WHERE mcat_id=?");
 		$statement->execute(array($_POST['mcat_name'],$_POST['tcat_id'],$_REQUEST['id']));
 
     	$success_message = 'Mid Level Category is updated successfully.';
@@ -30,7 +30,7 @@ if(!isset($_REQUEST['id'])) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_mid_category WHERE mcat_id=?");
+	$statement = $dbRepo->prepare("SELECT * FROM tbl_mid_category WHERE mcat_id=?");
 	$statement->execute(array($_REQUEST['id']));
 	$total = $statement->rowCount();
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -90,7 +90,7 @@ foreach ($result as $row) {
                         <select name="tcat_id" class="form-control select2">
                             <option value="">Select Top Level Category</option>
                             <?php
-                            $statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
+                            $statement = $dbRepo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
                             $statement->execute();
                             $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
                             foreach ($result as $row) {

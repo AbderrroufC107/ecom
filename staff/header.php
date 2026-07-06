@@ -281,6 +281,9 @@ header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
             <a href="orders.php" class="<?php echo $cur_page === 'orders.php' ? 'active' : ''; ?>">
                 <i class="bi bi-card-list"></i> طلباتي
             </a>
+            <a href="payments.php" class="<?php echo $cur_page === 'payments.php' ? 'active' : ''; ?>">
+                <i class="bi bi-receipt"></i> سجل المدفوعات والفواتير
+            </a>
             <a href="commissions.php" class="<?php echo $cur_page === 'commissions.php' ? 'active' : ''; ?>">
                 <i class="bi bi-cash-coin"></i> عمولاتي
             </a>
@@ -289,6 +292,9 @@ header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
             </a>
             <a href="profile.php" class="<?php echo $cur_page === 'profile.php' ? 'active' : ''; ?>">
                 <i class="bi bi-person-gear"></i> ملفي الشخصي
+            </a>
+            <a href="complaints.php" class="<?php echo $cur_page === 'complaints.php' ? 'active' : ''; ?>">
+                <i class="bi bi-chat-left-text"></i> الشكاوى والملاحظات
             </a>
             <hr style="border-color:rgba(255,255,255,0.08);margin:12px 20px;">
             <a href="logout.php">

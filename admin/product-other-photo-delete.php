@@ -24,7 +24,7 @@ if ($photo_id <= 0) {
     exit;
 }
 
-$statement = $pdo->prepare("SELECT pp_id, photo, p_id FROM tbl_product_photo WHERE pp_id=?");
+$statement = $dbRepo->prepare("SELECT pp_id, photo, p_id FROM tbl_product_photo WHERE pp_id=?");
 $statement->execute([$photo_id]);
 $row = $statement->fetch(PDO::FETCH_ASSOC);
 if (!$row || (int)$row['p_id'] !== $product_id) {
@@ -37,7 +37,7 @@ if ($photo !== '') {
     delete_local_image_file($photo, '../assets/uploads');
 }
 
-$statement = $pdo->prepare("DELETE FROM tbl_product_photo WHERE pp_id=?");
+$statement = $dbRepo->prepare("DELETE FROM tbl_product_photo WHERE pp_id=?");
 $statement->execute([$photo_id]);
 
 header('location: product-edit.php?id=' . $product_id);

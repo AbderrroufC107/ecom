@@ -21,6 +21,25 @@
             this.bindLinks();
             this.bindPopState();
             this.highlightCurrentMenu();
+            this.moveModalsToBody();
+            this.injectCSRF();
+        },
+
+        moveModalsToBody: function() {
+            var contentModals = document.querySelectorAll('.content-wrapper .modal');
+            for (var i = 0; i < contentModals.length; i++) {
+                document.body.appendChild(contentModals[i]);
+            }
+        },
+
+        bindPopState: function() {
+            var self = this;
+
+            window.addEventListener('popstate', function(e) {
+                if (e.state && e.state.spa) {
+                    self.loadPage(window.location.href, false);
+                }
+            });
         },
 
         bindLinks: function() {
@@ -47,7 +66,7 @@
                 if (link.closest('.treeview') && link.querySelector('.pull-right-container')) return;
 
                 // Only intercept same-origin admin pages
-                var url = new URL(href, window.location.origin);
+                var url = new URL(link.href);
                 if (url.origin !== window.location.origin) return;
 
                 // Skip non-PHP pages, login, logout, etc.
@@ -59,13 +78,6 @@
 
                 e.preventDefault();
                 self.navigate(url.href);
-            });
-
-            // Handle popstate (back/forward buttons)
-            window.addEventListener('popstate', function(e) {
-                if (e.state && e.state.spa) {
-                    self.loadPage(window.location.href, false);
-                }
             });
         },
 
@@ -205,10 +217,25 @@
                 $('.select2').select2();
             }
 
-            // Re-initialize dataTables
+            // Re-initialize dataTables (Disabled - handled by React + Mantine)
+            /*
             if (typeof $ !== 'undefined' && $.fn.dataTable) {
+                if ($('#example1').length && !$('#example1').hasClass('dataTable')) {
+                    $('#example1').DataTable();
+                }
+                if ($('#example2').length && !$('#example2').hasClass('dataTable')) {
+                    $('#example2').DataTable({
+                        "paging": true,
+                        "lengthChange": false,
+                        "searching": false,
+                        "ordering": true,
+                        "info": true,
+                        "autoWidth": false
+                    });
+                }
                 $('.dataTable').DataTable();
             }
+            */
 
             // Re-initialize inputmask
             if (typeof $ !== 'undefined' && $.fn.inputmask) {
@@ -225,6 +252,12 @@
                 $('.icheck').iCheck({ checkboxClass: 'icheckbox_minimal-blue', radioClass: 'iradio_minimal-blue' });
             }
 
+            // Re-inject CSRF tokens to dynamically loaded forms
+            this.injectCSRF();
+
+            // Move modals to body to prevent layout clipping/squishing by transformed/relative parent containers
+            this.moveModalsToBody();
+
             // Trigger custom event for React admin
             document.dispatchEvent(new CustomEvent('spa:pageLoaded'));
 
@@ -235,7 +268,7 @@
             var scripts = document.querySelectorAll('.content-wrapper script');
             for (var i = 0; i < scripts.length; i++) {
                 try {
-                    eval(scripts[i].textContent);
+                    (0, eval)(scripts[i].textContent);
                 } catch(e) {}
             }
         },
@@ -245,7 +278,7 @@
             if (!overlay) {
                 overlay = document.createElement('div');
                 overlay.id = 'spa-loading-overlay';
-                overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(236,240,245,0.7);z-index:9999;display:flex;align-items:center;justify-content:center;transition:opacity 0.2s;';
+                overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:#f8fafc;z-index:9999;display:flex;align-items:center;justify-content:center;';
                 overlay.innerHTML = '<div style="text-align:center"><div style="width:40px;height:40px;border:4px solid #3c8dbc;border-top-color:transparent;border-radius:50%;animation:spin 0.8s linear infinite;margin:0 auto 10px"></div><div style="color:#666;font-size:14px">جاري التحميل...</div></div>';
                 var style = document.createElement('style');
                 style.textContent = '@keyframes spin{to{transform:rotate(360deg)}}';
@@ -254,6 +287,21 @@
             }
             overlay.style.display = 'flex';
             overlay.style.opacity = '1';
+        },
+
+        injectCSRF: function() {
+            if (window.csrfToken) {
+                var forms = document.querySelectorAll('form[method="post" i]');
+                for (var i = 0; i < forms.length; i++) {
+                    if (!forms[i].querySelector('input[name="_csrf"]')) {
+                        var input = document.createElement('input');
+                        input.type = 'hidden';
+                        input.name = '_csrf';
+                        input.value = window.csrfToken;
+                        forms[i].appendChild(input);
+                    }
+                }
+            }
         },
 
         hideLoading: function() {

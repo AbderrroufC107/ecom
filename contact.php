@@ -42,6 +42,10 @@ $contact_form_success = '';
                             
                             <?php
                             if (isset($_POST['form_contact'])) {
+                                require_once __DIR__ . '/inc/rate-limiter.php';
+                                $limiter = new PublicRateLimiter($pdo);
+                                $limiter->check('contact_form', 3, 600); // 3 attempts per 10 mins
+
                                 foreach ($contact_form_values as $field => $value) {
                                     $contact_form_values[$field] = trim((string)($_POST[$field] ?? ''));
                                 }

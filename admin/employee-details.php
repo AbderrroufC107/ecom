@@ -1,7 +1,7 @@
 <?php require_once('header.php'); ?>
 <?php
 require_once('inc/employee_functions.php');
-require_once('inc/telegram_bot.php');
+if (file_exists('inc/telegram_bot.php')) { require_once('inc/telegram_bot.php'); }
 require_once('inc/performance_functions.php');
 
 performance_ensure_tables($pdo);
@@ -19,7 +19,7 @@ $commission_summary = performance_get_commission_summary($pdo, $employee_id);
 $assigned_orders = employee_get_assigned_orders($pdo, $employee_id);
 $telegram_status = telegram_get_status_html($employee);
 
-$stmt = $pdo->prepare("
+$stmt = $dbRepo->prepare("
     SELECT a.*, o.order_status, o.total_price, o.product_name, o.customer_name, o.customer_phone
     FROM tbl_telegram_action_log a
     LEFT JOIN tbl_order o ON o.id = a.order_id
@@ -230,7 +230,7 @@ $recent_actions = $stmt->fetchAll(PDO::FETCH_ASSOC);
                                         <td><?php echo number_format((float) ($o['total_price'] ?? 0), 0); ?> دج</td>
                                         <td><?php echo htmlspecialchars($o['order_status'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
                                         <td><?php echo htmlspecialchars($o['order_date'] ?? '', ENT_QUOTES, 'UTF-8'); ?></td>
-                                        <td><a href="order-details.php?id=<?php echo (int) $o['id']; ?>" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></a></td>
+                                        <td><a href="order-details.php?id=<?php echo (int) $o['id']; ?>" class="btn btn-default btn-xs"><i class="fa fa-eye"></i> عرض</a></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>

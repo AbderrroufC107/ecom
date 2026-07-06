@@ -1,0 +1,780 @@
+2026-06-19 23:38:43 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:38:43 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-19 23:38:43 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-19 23:38:52 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:38:52 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-19 23:38:53 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-19 23:38:56 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:38:57 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-19 23:38:57 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-19 23:39:00 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:39:00 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-19 23:39:00 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-Dashboard-DRE5BG6U.js:1
+2026-06-19 23:40:29 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:40:29 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-Dashboard-DRE5BG6U.js:1
+2026-06-19 23:40:33 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:40:33 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-19 23:40:33 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-19 23:40:36 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:40:37 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-19 23:40:37 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-19 23:47:28 - Uncaught RangeError: Maximum call stack size exceeded at http://localhost/ecom/admin/js/jquery-2.2.4.min.js:2
+2026-06-19 23:47:28 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-19 23:47:29 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-19 23:47:29 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 12:16:17 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:16:18 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:16:18 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-Dashboard-DRE5BG6U.js:1
+2026-06-20 12:16:45 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:16:47 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:16:47 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-Orders-BBezPCU_.js:1
+2026-06-20 12:17:11 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:17:11 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:17:11 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:17:21 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:17:21 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:17:21 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:17:23 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:17:23 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:17:23 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:17:31 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:17:31 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:17:31 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:17:37 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:17:37 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:17:37 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:20:58 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:20:59 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:20:59 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'y' at http://localhost/ecom/admin/dist/admin-react-ContentPage-DkJE4QSb.js:1
+2026-06-20 12:21:02 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:21:03 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:21:03 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'y' at http://localhost/ecom/admin/dist/admin-react-ContentPage-DkJE4QSb.js:1
+2026-06-20 12:21:28 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:21:28 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:21:28 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:21:31 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:21:31 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:21:32 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:21:33 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:21:34 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:21:34 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:21:36 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:21:37 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:21:37 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'y' at http://localhost/ecom/admin/dist/admin-react-ContentPage-DkJE4QSb.js:1
+2026-06-20 12:21:41 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:21:42 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:21:42 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 12:23:48 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:23:48 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:23:48 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 12:23:54 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:23:55 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:23:55 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'y' at http://localhost/ecom/admin/dist/admin-react-ContentPage-DkJE4QSb.js:1
+2026-06-20 12:29:58 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:29:59 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:29:59 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'y' at http://localhost/ecom/admin/dist/admin-react-ContentPage-DkJE4QSb.js:1
+2026-06-20 12:30:51 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:30:51 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:30:51 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:30:53 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:30:54 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:30:54 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 12:31:22 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:31:22 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:31:22 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 12:31:30 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:31:31 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:31:31 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:56:02 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:56:03 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:56:03 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 12:56:05 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 12:56:06 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 12:56:06 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 13:01:23 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 13:01:24 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 13:01:24 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 13:03:47 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 13:03:48 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 13:03:48 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 13:48:50 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 13:48:50 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 13:48:50 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 13:48:53 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 13:48:54 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 13:48:54 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 13:49:01 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 13:49:02 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 13:49:02 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 19:02:27 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:02:28 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 19:02:32 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:02:33 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:02:33 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 19:02:36 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:02:36 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:02:36 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 19:13:32 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:13:33 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:13:33 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 19:15:34 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:15:35 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:15:35 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 19:17:15 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:17:15 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:17:15 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 19:17:35 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:17:36 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:17:36 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 19:23:48 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:23:49 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-20 19:23:49 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:24:15 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:24:15 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:24:15 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 19:25:36 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:25:36 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:25:36 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-20 19:25:40 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-20 19:25:41 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-20 19:25:41 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-ProductForm-wqwMh8cw.js:1
+2026-06-21 00:26:34 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-21 00:26:34 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-21 00:26:55 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-21 00:26:55 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-21 00:27:23 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-21 00:27:23 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-21 00:27:28 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-21 00:27:28 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN.js:1
+2026-06-21 00:34:20 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-21 00:34:20 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN_v2.js:1
+2026-06-21 00:34:32 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-21 00:34:32 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN_v2.js:1
+2026-06-21 00:34:37 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'v'
+2026-06-21 00:34:37 - Uncaught SyntaxError: The requested module './admin-react.js' does not provide an export named 'v' at http://localhost/ecom/admin/dist/admin-react-OtherTables-B7RZqftN_v2.js:1
+2026-06-21 15:54:53 - Uncaught TypeError: Cannot read properties of undefined (reading 'noRecords') at http://localhost/ecom/admin/dist/admin-react-OtherTables-GIGO3rSK.js:1
+2026-06-21 15:54:53 - Uncaught TypeError: Cannot read properties of undefined (reading 'noRecords') at http://localhost/ecom/admin/dist/admin-react-OtherTables-GIGO3rSK.js:1
+2026-06-21 15:57:38 - Uncaught TypeError: Cannot read properties of undefined (reading 'noRecords') at http://localhost/ecom/admin/dist/admin-react-OtherTables-GIGO3rSK.js:1
+2026-06-21 15:57:38 - Uncaught TypeError: Cannot read properties of undefined (reading 'noRecords') at http://localhost/ecom/admin/dist/admin-react-OtherTables-GIGO3rSK.js:1
+2026-06-22 11:57:36 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 11:57:36 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:17:29 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:17:29 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:17:44 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:17:44 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:37:33 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:37:33 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:53:17 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 12:53:17 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:17:39 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:17:39 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:24:12 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:24:12 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:27:40 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:27:40 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:30:19 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:30:19 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 13:30:29 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:6623
+2026-06-22 13:33:13 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:11774
+2026-06-22 14:35:12 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-DBwpsOB8.js:8
+2026-06-22 14:35:12 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-DBwpsOB8.js:8
+2026-06-22 14:35:17 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-22 14:35:17 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-22 14:35:18 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 14:35:18 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 14:35:34 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:11774
+2026-06-22 14:59:27 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:11774
+2026-06-22 14:59:35 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-22 14:59:36 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-22 14:59:36 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 14:59:36 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 14:59:44 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 14:59:44 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 15:11:52 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-22 15:11:52 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-22 15:11:52 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 15:11:52 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 15:11:58 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:11774
+2026-06-22 15:15:22 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:11774
+2026-06-22 15:20:42 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 15:20:42 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 16:45:57 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 16:45:57 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 18:04:13 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 18:04:13 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 18:04:57 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-DBwpsOB8.js:8
+2026-06-22 18:04:57 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-DBwpsOB8.js:8
+2026-06-22 18:05:01 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-DBwpsOB8.js:8
+2026-06-22 18:05:01 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-DBwpsOB8.js:8
+2026-06-22 18:06:49 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 18:06:49 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 18:13:24 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-22 18:13:24 - Uncaught Error: Minified React error #520; visit https://react.dev/errors/520 for the full message or use the non-minified dev environment for full errors and additional helpful warnings. at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-23 00:25:10 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-23 00:27:42 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12092
+2026-06-23 00:35:11 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12106
+2026-06-23 00:37:32 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12102
+2026-06-23 00:45:23 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12102
+2026-06-23 00:45:32 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12102
+2026-06-23 00:45:32 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12102
+2026-06-23 00:45:41 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12102
+2026-06-23 00:45:45 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-23 00:45:55 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:12102
+2026-06-23 00:48:15 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:8421
+2026-06-23 00:54:42 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:8427
+2026-06-23 00:59:23 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:8423
+2026-06-23 01:05:13 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:8416
+2026-06-23 01:14:31 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-23 01:14:31 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-23 01:14:32 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-23 01:14:32 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-23 10:57:58 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-23 14:41:36 - Uncaught TypeError: $.fn.dataTable.isDataTable is not a function at http://localhost/ecom/admin/order.php:8496
+2026-06-24 12:33:51 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:35:04 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:36:47 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:37:29 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:38:30 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:40:37 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:41:08 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:41:29 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 12:41:48 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 13:20:20 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 13:23:16 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 13:25:32 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 13:30:25 - Promise Rejection: SyntaxError: The requested module './admin-react.js' does not provide an export named 'a'
+2026-06-24 14:45:53 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:11:59 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:12:11 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:19:01 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:26:24 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:26:44 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:38:47 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:39:01 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 00:39:02 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-25 01:19:11 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:19:11 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-25 01:19:15 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:31:10 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:31:55 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:32:00 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:32:01 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:32:01 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:32:01 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:32:01 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:52:41 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:52:42 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:52:42 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:52:42 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:52:42 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:56:30 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:56:30 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:56:30 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:56:31 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:56:31 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:59:38 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 01:59:39 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:59:39 - Promise Rejection: TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js
+2026-06-25 01:59:39 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:59:39 - Uncaught TypeError: Failed to fetch dynamically imported module: http://localhost/ecom/admin/dist/admin-react-SettingsPage-3NRKpU-J.js at http://localhost/ecom/admin/dist/admin-react-vendor-BpkbKxju.js:8
+2026-06-25 01:59:51 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 02:00:03 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 02:29:46 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 02:29:51 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 02:29:55 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 14:33:00 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 14:33:01 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-25 14:36:49 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 14:36:50 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-25 14:42:20 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 14:42:20 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-25 14:42:30 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 14:42:40 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 17:03:08 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 17:03:11 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 17:03:14 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 17:03:22 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 17:03:31 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 17:03:36 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 17:44:54 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 18:00:18 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 18:02:32 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 18:22:18 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 18:24:10 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-25 18:24:31 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:12:51 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:12:52 - Promise Rejection: SyntaxError: Failed to execute 'json' on 'Response': Unexpected end of JSON input
+2026-06-26 17:13:04 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:13:13 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:21:40 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:21:46 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:21:51 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:22:09 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:23:08 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 17:23:15 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:00:52 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:02:04 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:13:59 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:22:23 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:25:45 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:31:43 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:32:57 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:33:49 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:38:55 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:42:48 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:44:57 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:45:34 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:45:42 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-26 20:48:04 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-27 00:32:55 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-27 00:33:27 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-27 19:39:27 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-27 19:39:40 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-27 19:50:30 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 19:15:17 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 19:37:23 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 19:37:43 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 19:38:01 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:06:16 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:06:43 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:06:53 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:22:40 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:25:04 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:16 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:21 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:24 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:26 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:30 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:37 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:48 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:26:58 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:27:06 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 20:27:18 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:21:48 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:22:41 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:22:44 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:22:51 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:23:05 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:23:19 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:24:27 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:24:40 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:28:12 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:30:10 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:31:20 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:35:03 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:35:20 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:55:49 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:55:59 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:56:05 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:56:10 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:56:13 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-28 21:57:32 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-06-29 12:23:44 - Uncaught TypeError: this.bindPopState is not a function at http://localhost/ecom/admin/js/spa-navigation.js:22
+2026-07-02 17:56:21 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-02 17:56:29 - [ReactLog] mountPageSpecific path: delivery_list.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 17:56:29 - [ReactLog] otherTables block. table: null
+2026-07-02 17:57:00 - [ReactLog] mountPageSpecific path: pixel.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 17:57:00 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 17:57:00 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 17:57:00 - [ReactLog] OtherTables rendering. pageName=pixel.php tablesLength=1
+2026-07-02 17:57:15 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-02 17:57:36 - [ReactLog] mountPageSpecific path: shipping-cost.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 17:57:36 - [ReactLog] otherTables block. table: null
+2026-07-02 17:57:45 - [ReactLog] mountPageSpecific path: country.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 17:57:45 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 17:57:45 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 17:57:45 - [ReactLog] OtherTables rendering. pageName=country.php tablesLength=1
+2026-07-02 17:57:46 - [ReactLog] mountPageSpecific path: settings.php, pageType: settings, expectedRootId: settings-react-root, exists: false
+2026-07-02 18:07:01 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:07:01 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:07:01 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:07:01 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-02 18:07:03 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:07:03 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:07:03 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:07:03 - [ReactLog] OtherTables rendering. pageName=top-category.php tablesLength=1
+2026-07-02 18:07:04 - [ReactLog] mountPageSpecific path: mid-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:07:04 - [ReactLog] OtherTables rendering. pageName=mid-category.php tablesLength=1
+2026-07-02 18:07:04 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:07:04 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:07:10 - [ReactLog] mountPageSpecific path: mid-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:07:10 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:07:10 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:07:10 - [ReactLog] OtherTables rendering. pageName=mid-category.php tablesLength=1
+2026-07-02 18:07:12 - [ReactLog] mountPageSpecific path: size.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:07:12 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:07:12 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:07:12 - [ReactLog] OtherTables rendering. pageName=size.php tablesLength=1
+2026-07-02 18:07:13 - [ReactLog] mountPageSpecific path: end-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:07:13 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:07:13 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:07:13 - [ReactLog] OtherTables rendering. pageName=end-category.php tablesLength=1
+2026-07-02 18:07:15 - [ReactLog] mountPageSpecific path: size.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:07:15 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:07:15 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:07:15 - [ReactLog] OtherTables rendering. pageName=size.php tablesLength=1
+2026-07-02 18:08:54 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:08:54 - [ReactLog] mountPageSpecific path: size.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:08:54 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:08:54 - [ReactLog] OtherTables rendering. pageName=size.php tablesLength=1
+2026-07-02 18:09:00 - [ReactLog] mountPageSpecific path: size.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:09:00 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:09:00 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:09:00 - [ReactLog] OtherTables rendering. pageName=size.php tablesLength=1
+2026-07-02 18:09:03 - [ReactLog] mountPageSpecific path: end-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-02 18:09:03 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-02 18:09:03 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-02 18:09:03 - [ReactLog] OtherTables rendering. pageName=end-category.php tablesLength=1
+2026-07-03 11:21:47 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-03 11:21:48 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-03 11:31:13 - [ReactLog] otherTables block. table: null
+2026-07-03 11:31:13 - [ReactLog] mountPageSpecific path: delivery_list.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-03 11:31:13 - [ReactLog] mountPageSpecific path: delivery_list.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-03 11:31:20 - [ReactLog] otherTables block. table: null
+2026-07-03 11:31:20 - [ReactLog] mountPageSpecific path: delivery_list.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-03 11:31:20 - [ReactLog] mountPageSpecific path: delivery_list.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-03 11:31:20 - [ReactLog] otherTables block. table: null
+2026-07-04 20:20:33 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-04 20:20:33 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 11:44:43 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 11:44:44 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 12:00:36 - [ReactLog] mountPageSpecific path: order-statistics.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:00:36 - [ReactLog] mountPageSpecific path: order-statistics.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:36 - [ReactLog] otherTables block. table: found id=ordersTable class=stats-orders-table
+2026-07-05 12:00:37 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:37 - [ReactLog] OtherTables rendering. pageName=order-statistics.php tablesLength=1
+2026-07-05 12:00:38 - [ReactLog] otherTables block. table: found id= class=table table-bordered table-striped table-hover
+2026-07-05 12:00:38 - [ReactLog] mountPageSpecific path: exchange-requests.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:00:38 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:38 - [ReactLog] OtherTables rendering. pageName=exchange-requests.php tablesLength=1
+2026-07-05 12:00:38 - [ReactLog] mountPageSpecific path: exchange-requests.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:39 - [ReactLog] mountPageSpecific path: incomplete-orders.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:39 - [ReactLog] mountPageSpecific path: incomplete-orders.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:00:39 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:39 - [ReactLog] OtherTables rendering. pageName=incomplete-orders.php tablesLength=1
+2026-07-05 12:00:39 - [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover incomplete-table
+2026-07-05 12:00:40 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:40 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:40 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 12:00:41 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:41 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:00:41 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 12:00:41 - [ReactLog] OtherTables rendering. pageName=top-category.php tablesLength=1
+2026-07-05 12:00:41 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:46 - [ReactLog] mountPageSpecific path: mid-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:46 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+t-root, exists: true
+2026-07-05 12:00:46 - [ReactLog] OtherTables rendering. pageName=mid-category.php tablesLength=1
+2026-07-05 12:00:46 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:48 - [ReactLog] mountPageSpecific path: end-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:48 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 12:00:48 - [ReactLog] mountPageSpecific path: end-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:00:48 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:48 - [ReactLog] OtherTables rendering. pageName=end-category.php tablesLength=1
+2026-07-05 12:00:52 - [ReactLog] mountPageSpecific path: size.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:52 - [ReactLog] mountPageSpecific path: size.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:00:52 - [ReactLog] OtherTables rendering. pageName=size.php tablesLength=1
+2026-07-05 12:00:56 - [ReactLog] mountPageSpecific path: color.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:00:56 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 12:00:56 - [ReactLog] mountPageSpecific path: color.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:00:56 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:00:56 - [ReactLog] OtherTables rendering. pageName=color.php tablesLength=1
+2026-07-05 12:05:45 - [ReactLog] mountPageSpecific path: color.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:05:45 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 12:05:46 - [ReactLog] mountPageSpecific path: color.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:05:46 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:05:46 - [ReactLog] OtherTables rendering. pageName=color.php tablesLength=1
+2026-07-05 12:05:46 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:05:46 - [ReactLog] OtherTables rendering. pageName=color.php tablesLength=1
+2026-07-05 12:30:12 - [ReactLog] mountPageSpecific path: color.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 12:30:12 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 12:30:13 - [ReactLog] mountPageSpecific path: color.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 12:30:13 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 12:30:13 - [ReactLog] OtherTables rendering. pageName=color.php tablesLength=1
+2026-07-05 13:12:22 - [ReactLog] mountPageSpecific path: delivery_list.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:12:22 - [ReactLog] otherTables block. table: null
+2026-07-05 13:12:22 - [ReactLog] otherTables block. table: null
+_list.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:12:25 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:12:25 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:12:28 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:12:28 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:30:29 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:30:29 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:38:20 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:38:21 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 13:38:22 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:22 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:23 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:23 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:23 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:23 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:24 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:24 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:24 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:24 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:24 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:24 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:25 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:25 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:26 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:26 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:26 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:26 - Uncaught TypeError: Cannot read properties of undefined (reading 'reload') at http://localhost/ecom/admin/order.php:1410
+2026-07-05 13:38:29 - [ReactLog] mountPageSpecific path: order-statistics.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:38:29 - [ReactLog] mountPageSpecific path: order-statistics.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 13:38:29 - [ReactLog] otherTables block. table: found id=ordersTable class=stats-orders-table
+2026-07-05 13:38:29 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:38:29 - [ReactLog] OtherTables rendering. pageName=order-statistics.php tablesLength=1
+2026-07-05 13:38:29 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:38:29 - [ReactLog] OtherTables rendering. pageName=order-statistics.php tablesLength=1
+2026-07-05 13:38:31 - [ReactLog] mountPageSpecific path: exchange-requests.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 13:38:31 - [ReactLog] otherTables block. table: found id= class=table table-bordered table-striped table-hover
+2026-07-05 13:38:31 - [ReactLog] mountPageSpecific path: exchange-requests.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:38:31 - [ReactLog] OtherTables rendering. pageName=exchange-requests.php tablesLength=1
+2026-07-05 13:38:31 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:38:32 - [ReactLog] mountPageSpecific path: incomplete-orders.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+
+2026-07-05 13:38:32 - [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover incomplete-table
+2026-07-05 13:38:32 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+orders.php tablesLength=1
+2026-07-05 13:38:33 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:38:33 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 13:38:33 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 13:38:33 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 13:38:33 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:53:03 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:53:03 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 13:53:04 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 13:53:04 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:53:04 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 13:53:06 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+t-root, exists: false
+2026-07-05 13:53:06 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 13:53:06 - [ReactLog] OtherTables rendering. pageName=top-category.php tablesLength=1
+2026-07-05 13:53:06 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:53:07 - [ReactLog] mountPageSpecific path: mid-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:53:07 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 13:53:07 - [ReactLog] mountPageSpecific path: mid-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 13:53:07 - [ReactLog] OtherTables rendering. pageName=mid-category.php tablesLength=1
+2026-07-05 13:53:07 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:53:07 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:53:07 - [ReactLog] OtherTables rendering. pageName=mid-category.php tablesLength=1
+2026-07-05 13:53:08 - [ReactLog] mountPageSpecific path: end-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 13:53:08 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 13:53:08 - [ReactLog] mountPageSpecific path: end-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 13:53:08 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:53:08 - [ReactLog] OtherTables rendering. pageName=end-category.php tablesLength=1
+2026-07-05 13:53:08 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 13:53:08 - [ReactLog] OtherTables rendering. pageName=end-category.php tablesLength=1
+2026-07-05 15:37:05 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 15:37:06 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 15:37:13 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 15:37:13 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 15:37:28 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 15:37:28 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 15:37:28 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:37:28 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 15:37:28 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:37:28 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 15:37:40 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 15:37:40 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 15:37:48 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 15:37:48 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 15:37:48 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:37:48 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 15:37:48 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:37:48 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 15:37:59 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 15:37:59 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 15:37:59 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:37:59 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 15:37:59 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 15:37:59 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:59:47 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 15:59:47 - [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover emp-table
+2026-07-05 15:59:47 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 15:59:47 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:59:47 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 15:59:47 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 15:59:47 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 16:01:17 - [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover emp-table
+bles-react-root, exists: false
+2026-07-05 16:01:17 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 16:01:17 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 16:01:17 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 16:01:57 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 16:01:57 - [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover emp-table
+2026-07-05 16:01:57 - [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 16:01:57 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 16:01:57 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 16:01:57 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 16:01:57 - [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-05 16:02:01 - [ReactLog] mountPageSpecific path: performance-settings.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: false
+2026-07-05 16:02:01 - [ReactLog] mountPageSpecific path: performance-settings.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: true
+2026-07-05 16:02:09 - [ReactLog] otherTables block. table: found id=users_table class=table table-hover
+: other-tables-react-root, exists: false
+2026-07-05 16:02:09 - [ReactLog] mountPageSpecific path: users.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 16:02:09 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 16:02:09 - [ReactLog] OtherTables rendering. pageName=users.php tablesLength=1
+2026-07-05 16:02:09 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 16:02:09 - [ReactLog] OtherTables rendering. pageName=users.php tablesLength=1
+2026-07-05 16:02:21 - [ReactLog] otherTables block. table: found id=users_table class=table table-hover
+: other-tables-react-root, exists: false
+2026-07-05 16:02:21 - [ReactLog] mountPageSpecific path: users.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 16:02:21 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 16:02:21 - [ReactLog] OtherTables rendering. pageName=users.php tablesLength=1
+2026-07-05 16:02:21 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 16:02:21 - [ReactLog] OtherTables rendering. pageName=users.php tablesLength=1
+2026-07-05 17:25:30 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 17:25:30 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 17:25:34 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 17:25:34 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 17:25:34 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 17:25:34 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 17:25:34 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 17:25:34 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 17:25:34 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 17:25:38 - [ReactLog] mountPageSpecific path: product-edit.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: false
+2026-07-05 17:25:38 - [ReactLog] mountPageSpecific path: product-edit.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: false
+2026-07-05 22:17:53 - [ReactLog] mountPageSpecific path: product-edit.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: false
+2026-07-05 22:17:54 - Uncaught SyntaxError: Failed to execute 'appendChild' on 'Node': Unexpected identifier '$dbRepo' at http://localhost/ecom/admin/product-edit.php?id=140:111
+2026-07-05 22:17:54 - [ReactLog] mountPageSpecific path: product-edit.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: true
+2026-07-05 22:17:58 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 22:17:58 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 22:17:59 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 22:17:59 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:17:59 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 22:17:59 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:17:59 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 22:39:43 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 22:39:43 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 22:39:43 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 22:39:43 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:39:43 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 22:39:43 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:39:43 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 22:47:53 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 22:47:53 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 22:47:53 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 22:47:53 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:47:53 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 22:47:53 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:47:53 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 22:56:12 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 22:56:12 - [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-05 22:56:14 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 22:56:14 - [ReactLog] mountPageSpecific path: order.php, pageType: orders, expectedRootId: orders-react-root, exists: false
+2026-07-05 22:56:17 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 22:56:17 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 22:56:17 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 22:56:17 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:56:17 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 22:56:18 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 22:56:18 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:00:41 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 23:00:41 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 23:00:41 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 23:00:41 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 23:00:41 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:00:42 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 23:00:42 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:41:28 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 23:41:28 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 23:41:28 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 23:41:28 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 23:41:28 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:41:29 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 23:41:29 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:42:13 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 23:42:13 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-05 23:42:13 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 23:42:13 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 23:42:13 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:44:09 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-05 23:44:09 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 23:44:09 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 23:44:09 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:59:54 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+t, exists: false
+2026-07-05 23:59:55 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-05 23:59:55 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-05 23:59:55 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-05 23:59:59 - [ReactLog] mountPageSpecific path: product-edit.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: false
+2026-07-05 23:59:59 - Uncaught SyntaxError: Failed to execute 'appendChild' on 'Node': Unexpected identifier '$dbRepo' at http://localhost/ecom/admin/product-edit.php?id=140:111
+2026-07-05 23:59:59 - [ReactLog] mountPageSpecific path: product-edit.php, pageType: productForm, expectedRootId: admin-form-react-root, exists: true
+2026-07-06 00:00:02 - [ReactLog] mountPageSpecific path: product.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 00:00:02 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 00:00:02 - [ReactLog] OtherTables rendering. pageName=product.php tablesLength=1
+2026-07-06 00:00:05 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-06 00:00:05 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-06 00:00:06 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 00:00:06 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 00:00:06 - [ReactLog] OtherTables rendering. pageName=top-category.php tablesLength=1
+2026-07-06 00:01:32 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-06 00:01:32 - [ReactLog] otherTables block. table: found id=example1 class=table table-bordered table-hover table-striped
+2026-07-06 00:01:32 - [ReactLog] mountPageSpecific path: top-category.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 00:01:32 - [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 00:01:32 - [ReactLog] OtherTables rendering. pageName=top-category.php tablesLength=1
+2026-07-06 19:27:12 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 19:27:12 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 19:27:12 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-06 19:27:12 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 19:27:12 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-06 19:40:23 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 19:40:23 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-06 19:40:23 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 19:40:24 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: true
+2026-07-06 19:40:24 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 19:40:24 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:38:27 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:38:27 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: false
+2026-07-06 20:38:27 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:38:28 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+: index.php, pageType: dashboard, expectedRootId: dashboard-react-root, exists: true
+2026-07-06 20:38:32 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-06 20:38:32 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover emp-table
+2026-07-06 20:38:32 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:38:32 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:38:32 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:38:32 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 20:38:32 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:38:33 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 20:38:33 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-06 20:38:36 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:38:36 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover emp-table
+bles-react-root, exists: false
+2026-07-06 20:38:36 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:38:36 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 20:38:36 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:38:36 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 20:38:36 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-06 20:38:43 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover emp-table
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 20:39:25 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-06 20:39:26 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+ic path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-06 20:39:26 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+le: found id= class=table table-bordered table-hover emp-table
+2026-07-06 20:39:26 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:39:26 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:39:26 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 20:39:26 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 20:39:26 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] otherTables block. table: found id= class=table table-bordered table-hover emp-table
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: false
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountShell OK
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific OK
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] mountPageSpecific path: employees.php, pageType: otherTables, expectedRootId: other-tables-react-root, exists: true
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables scrapeTables: found 1 tables.
+2026-07-06 20:39:48 | IP: ::1 | UA: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/149.0.0.0 Safari/537.36 | [ReactLog] OtherTables rendering. pageName=employees.php tablesLength=1

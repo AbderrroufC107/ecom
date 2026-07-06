@@ -9,16 +9,16 @@ class RestoreService
 {
     public static function createRequest(PDO $pdo, int $backupId, int $requestedBy,
         ?int $storeId = null, ?string $notes = null): int
-    {
-        $stmt = $pdo->prepare("INSERT INTO tbl_restore_request (backup_id, store_id, requested_by, status, notes)
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_restore_request (backup_id, store_id, requested_by, status, notes)
             VALUES (?, ?, ?, 'pending', ?)");
         $stmt->execute([$backupId, $storeId, $requestedBy, $notes]);
-        return (int) $pdo->lastInsertId();
+        return (int) $dbRepo->lastInsertId();
     }
 
     public static function getRequest(PDO $pdo, int $requestId): ?array
-    {
-        $stmt = $pdo->prepare("SELECT r.*, b.file_path, b.file_size, b.type AS backup_type,
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT r.*, b.file_path, b.file_size, b.type AS backup_type,
             b.checksum, s.name AS store_name
             FROM tbl_restore_request r
             LEFT JOIN tbl_backup_job b ON r.backup_id = b.id
@@ -30,7 +30,7 @@ class RestoreService
     }
 
     public static function updateRequest(PDO $pdo, int $requestId, array $data): void
-    {
+    { global $dbRepo;
         $allowed = ['status', 'approved_by', 'approved_at', 'executed_at', 'notes'];
         $sets = [];
         $params = [];
@@ -44,13 +44,13 @@ class RestoreService
             return;
         }
         $params[] = $requestId;
-        $stmt = $pdo->prepare("UPDATE tbl_restore_request SET " . implode(', ', $sets) . " WHERE id = ?");
+        $stmt = $dbRepo->prepare("UPDATE tbl_restore_request SET " . implode(', ', $sets) . " WHERE id = ?");
         $stmt->execute($params);
     }
 
     public static function getRequests(PDO $pdo, int $page = 1, int $perPage = 20,
         ?string $statusFilter = null): array
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
         if ($statusFilter) {
@@ -58,7 +58,7 @@ class RestoreService
             $params[] = $statusFilter;
         }
         $offset = ($page - 1) * $perPage;
-        $stmt = $pdo->prepare("SELECT r.*, b.file_path, b.type AS backup_type,
+        $stmt = $dbRepo->prepare("SELECT r.*, b.file_path, b.type AS backup_type,
             b.file_size, s.name AS store_name
             FROM tbl_restore_request r
             LEFT JOIN tbl_backup_job b ON r.backup_id = b.id
@@ -70,20 +70,20 @@ class RestoreService
     }
 
     public static function getRequestCount(PDO $pdo, ?string $statusFilter = null): int
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
         if ($statusFilter) {
             $where .= ' AND status = ?';
             $params[] = $statusFilter;
         }
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_restore_request WHERE {$where}");
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_restore_request WHERE {$where}");
         $stmt->execute($params);
         return (int) $stmt->fetchColumn();
     }
 
     public static function approve(PDO $pdo, int $requestId, int $approvedBy): void
-    {
+    { global $dbRepo;
         self::updateRequest($pdo, $requestId, [
             'status'      => 'approved',
             'approved_by' => $approvedBy,
@@ -92,12 +92,12 @@ class RestoreService
     }
 
     public static function reject(PDO $pdo, int $requestId): void
-    {
+    { global $dbRepo;
         self::updateRequest($pdo, $requestId, ['status' => 'rejected']);
     }
 
     public static function execute(PDO $pdo, int $requestId): bool
-    {
+    { global $dbRepo;
         $request = self::getRequest($pdo, $requestId);
         if (!$request || $request['status'] !== 'approved') {
             throw new RuntimeException('Restore request must be approved first');

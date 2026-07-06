@@ -25,57 +25,65 @@ if(!isset($_SESSION['customer'])) {
                             </div>
                         </div>
                         <div class="col-md-9">
-                            <div class="table-responsive">
-                                <table class="table table-bordered">
-                                    <thead>
-                                        <tr>
-                                            <th>رقم الطلب</th>
-                                            <th>المنتج</th>
-                                            <th>السعر</th>
-                                            <th>الكمية</th>
-                                            <th>المجموع</th>
-                                            <th>التاريخ</th>
-                                            <th>الحالة</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody>
-                                        <?php
-                                        // استخدام customer_name بدلاً من customer_id
-                                        $statement = $pdo->prepare("SELECT * FROM tbl_order WHERE customer_name=? ORDER BY id DESC");
-                                        $statement->execute(array($_SESSION['customer']['cust_name']));
-                                        $result = $statement->fetchAll(PDO::FETCH_ASSOC);
-                                        if($statement->rowCount() == 0) {
-                                            echo '<tr><td colspan="7" class="text-center">لا توجد طلبات</td></tr>';
-                                        } else {
-                                            foreach($result as $row) {
-                                                ?>
-                                                <tr>
-                                                    <td><?php echo $row['id']; ?></td>
-                                                    <td><?php echo $row['product_name']; ?></td>
-                                                    <td><?php echo $row['unit_price']; ?> دج</td>
-                                                    <td><?php echo $row['quantity']; ?></td>
-                                                    <td><?php echo $row['total_price']; ?> دج</td>
-                                                    <td><?php echo date('d/m/Y H:i', strtotime($row['order_date'])); ?></td>
-                                                    <td>
-                                                        <?php 
-                                                        if($row['order_status'] == 'Pending') {
-                                                            echo '<span class="badge badge-warning">غير مؤكد</span>';
-                                                        } elseif($row['order_status'] == 'Confirmed') {
-                                                            echo '<span class="badge badge-info">مؤكد</span>';
-                                                        } elseif($row['order_status'] == 'Completed') {
-                                                            echo '<span class="badge badge-success">مكتمل</span>';
-                                                        } elseif($row['order_status'] == 'Cancelled') {
-                                                            echo '<span class="badge badge-danger">ملغي</span>';
-                                                        }
-                                                        ?>
-                                                    </td>
-                                                </tr>
-                                                <?php
-                                            }
+                            <div class="orders-list">
+                                <?php
+                                // استخدام customer_name بدلاً من customer_id
+                                $statement = $pdo->prepare("SELECT * FROM tbl_order WHERE customer_name=? ORDER BY id DESC");
+                                $statement->execute(array($_SESSION['customer']['cust_name']));
+                                $result = $statement->fetchAll(PDO::FETCH_ASSOC);
+                                if($statement->rowCount() == 0) {
+                                    echo '<div class="empty-state">لا توجد طلبات</div>';
+                                } else {
+                                    foreach($result as $row) {
+                                        $statusText = 'غير مؤكد';
+                                        $statusClass = 'status-pending';
+
+                                        if($row['order_status'] == 'Confirmed') {
+                                            $statusText = 'مؤكد';
+                                            $statusClass = 'status-confirmed';
+                                        } elseif($row['order_status'] == 'Completed') {
+                                            $statusText = 'مكتمل';
+                                            $statusClass = 'status-completed';
+                                        } elseif($row['order_status'] == 'Cancelled') {
+                                            $statusText = 'ملغي';
+                                            $statusClass = 'status-cancelled';
                                         }
                                         ?>
-                                    </tbody>
-                                </table>
+                                        <div class="order-card">
+                                            <div class="order-card-header">
+                                                <div>
+                                                    <div class="order-label">رقم الطلب</div>
+                                                    <div class="order-value">#<?php echo $row['id']; ?></div>
+                                                </div>
+                                                <span class="status-badge <?php echo $statusClass; ?>"><?php echo $statusText; ?></span>
+                                            </div>
+                                            <div class="order-card-body">
+                                                <div class="order-info">
+                                                    <span class="order-info-label">المنتج</span>
+                                                    <span class="order-info-value"><?php echo $row['product_name']; ?></span>
+                                                </div>
+                                                <div class="order-info">
+                                                    <span class="order-info-label">السعر</span>
+                                                    <span class="order-info-value"><?php echo $row['unit_price']; ?> دج</span>
+                                                </div>
+                                                <div class="order-info">
+                                                    <span class="order-info-label">الكمية</span>
+                                                    <span class="order-info-value"><?php echo $row['quantity']; ?></span>
+                                                </div>
+                                                <div class="order-info">
+                                                    <span class="order-info-label">المجموع</span>
+                                                    <span class="order-info-value total-price"><?php echo $row['total_price']; ?> دج</span>
+                                                </div>
+                                            </div>
+                                            <div class="order-card-footer">
+                                                <span>التاريخ</span>
+                                                <strong><?php echo date('d/m/Y H:i', strtotime($row['order_date'])); ?></strong>
+                                            </div>
+                                        </div>
+                                        <?php
+                                    }
+                                }
+                                ?>
                             </div>
                         </div>
                     </div>
@@ -99,82 +107,131 @@ if(!isset($_SESSION['customer'])) {
     border-color: #007bff;
 }
 
-.badge {
-    padding: 8px 12px;
-    border-radius: 6px;
+.orders-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.order-card {
+    background: #fff;
+    border: 1px solid #e5e7eb;
+    border-radius: 16px;
+    padding: 18px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+}
+
+.order-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 14px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.order-label {
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.order-value {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #111827;
+}
+
+.status-badge {
+    padding: 7px 12px;
+    border-radius: 999px;
     font-size: 0.9rem;
     font-weight: 600;
 }
 
-.badge-warning {
-    background: #ffc107;
-    color: #000;
+.status-pending {
+    background: #fff3cd;
+    color: #8a6d3b;
 }
 
-.badge-success {
-    background: #28a745;
-    color: #fff;
+.status-confirmed {
+    background: #d1ecf1;
+    color: #0c5460;
 }
 
-.badge-danger {
-    background: #dc3545;
-    color: #fff;
+.status-completed {
+    background: #d4edda;
+    color: #155724;
 }
 
-.badge-info {
-    background: #17a2b8;
-    color: #fff;
+.status-cancelled {
+    background: #f8d7da;
+    color: #721c24;
 }
 
-.table {
-    border-radius: 10px;
-    overflow: hidden;
+.order-card-body {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
 }
 
-.table thead th {
-    background: #f8f9fa;
-    border-bottom: 2px solid #dee2e6;
+.order-info {
+    background: #f9fafb;
+    border-radius: 12px;
+    padding: 12px;
+}
+
+.order-info-label {
+    display: block;
+    font-size: 0.8rem;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.order-info-value {
+    display: block;
     font-weight: 600;
-    color: #333;
-    padding: 15px;
+    color: #111827;
 }
 
-.table tbody td {
-    padding: 12px 15px;
-    vertical-align: middle;
+.total-price {
+    color: #0d6efd;
+}
+
+.order-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid #f0f0f0;
+    color: #4b5563;
+    font-size: 0.95rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 24px;
+    border: 1px dashed #d1d5db;
+    border-radius: 12px;
+    background: #f9fafb;
+    color: #6b7280;
 }
 
 @media (max-width: 768px) {
-    .table-responsive {
-        border: 0;
+    .order-card {
+        padding: 16px;
     }
-    
-    .table thead {
-        display: none;
+
+    .order-card-header,
+    .order-card-footer {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
     }
-    
-    .table tbody tr {
-        display: block;
-        margin-bottom: 1rem;
-        border: 1px solid #dee2e6;
-        border-radius: 8px;
-    }
-    
-    .table tbody td {
-        display: block;
-        text-align: right;
-        padding: 10px;
-        border: none;
-        position: relative;
-        padding-right: 50%;
-    }
-    
-    .table tbody td:before {
-        content: attr(data-label);
-        position: absolute;
-        right: 10px;
-        font-weight: 600;
-        color: #666;
+
+    .order-card-body {
+        grid-template-columns: 1fr;
     }
 }
 </style>

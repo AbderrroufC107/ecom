@@ -6,7 +6,20 @@ import HeroCarousel from "../components/HeroCarousel";
 import { HeroSkeleton } from "../components/Skeleton";
 
 function isInternalUrl(url) {
-  return url && url.startsWith("/") && !url.includes(".php") && !url.startsWith("http");
+  if (!url || url.startsWith("http")) return false;
+  return true;
+}
+
+function toSpaPath(url) {
+  if (!url) return "/";
+  if (url.startsWith("http")) return url;
+  let path = url;
+  path = path.replace(/buy-now\.php/, "/buy-now");
+  path = path.replace(/landing_page_2\.php/, "/landing_page_2");
+  path = path.replace(/landing_page\.php/, "/landing_page");
+  path = path.replace(/product-category\.php/, "/category");
+  if (!path.startsWith("/")) path = "/" + path;
+  return path;
 }
 
 export default function HomePage() {
@@ -49,21 +62,12 @@ export default function HomePage() {
               {data?.hero?.subtitle || "نقدم لكم أفضل المنتجات الحصرية بجودة عالية وخدمة توصيل سريعة ودفع آمن عند الاستلام."}
             </p>
             {heroProduct ? (
-              isInternalUrl(heroProduct.url) ? (
-                <Link className="primaryLink" to={heroProduct.url}>
+                <Link className="primaryLink" to={toSpaPath(heroProduct.url)}>
                   اكتشف المنتجات الآن
                   <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" width="18" height="18" style={{ marginRight: "8px", transform: "scaleX(-1)" }}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
                   </svg>
                 </Link>
-              ) : (
-                <a className="primaryLink" href={heroProduct.url}>
-                  اكتشف المنتجات الآن
-                  <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2.5} stroke="currentColor" width="18" height="18" style={{ marginRight: "8px", transform: "scaleX(-1)" }}>
-                    <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-                  </svg>
-                </a>
-              )
             ) : null}
           </div>
           <div className="heroMedia">

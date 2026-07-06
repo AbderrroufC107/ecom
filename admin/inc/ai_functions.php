@@ -4,13 +4,13 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
 
     if (!function_exists('ai_ensure_tables')) {
         function ai_ensure_tables(PDO $pdo): void
-        {
+        { global $dbRepo;
             $lock_file = __DIR__ . '/../cache/ai_tables.lock';
             if (file_exists($lock_file)) {
                 return;
             }
 
-            $pdo->exec("
+            $dbRepo->executeCommand("
                 CREATE TABLE IF NOT EXISTS tbl_ai_reports (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     report_type VARCHAR(80) NOT NULL,
@@ -26,17 +26,17 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
 
     if (!function_exists('ai_save_report')) {
         function ai_save_report(PDO $pdo, string $type, $data): int
-        {
-            $stmt = $pdo->prepare("INSERT INTO tbl_ai_reports (report_type, report_data) VALUES (?, ?)");
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("INSERT INTO tbl_ai_reports (report_type, report_data) VALUES (?, ?)");
             $stmt->execute([$type, is_string($data) ? $data : json_encode($data, JSON_UNESCAPED_UNICODE)]);
-            return (int) $pdo->lastInsertId();
+            return (int) $dbRepo->lastInsertId();
         }
     }
 
     if (!function_exists('ai_get_last_report')) {
         function ai_get_last_report(PDO $pdo, string $type): ?array
-        {
-            $stmt = $pdo->prepare("SELECT * FROM tbl_ai_reports WHERE report_type = ? ORDER BY id DESC LIMIT 1");
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_ai_reports WHERE report_type = ? ORDER BY id DESC LIMIT 1");
             $stmt->execute([$type]);
             $row = $stmt->fetch(PDO::FETCH_ASSOC);
             return $row ?: null;
@@ -48,7 +48,7 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_analyze_cancellations')) {
         function ai_analyze_cancellations(PDO $pdo, int $days = 90): array
-        {
+        { global $dbRepo;
             $result = [
                 'by_reason' => [],
                 'by_employee' => [],
@@ -57,7 +57,7 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
                 'total_cancellations' => 0,
             ];
 
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 SELECT cr.reason, cr.employee_id, o.wilaya, o.product_name, e.full_name AS emp_name
                 FROM tbl_order_cancellation_reason cr
                 INNER JOIN tbl_order o ON o.id = cr.order_id
@@ -117,8 +117,8 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_analyze_product_risk')) {
         function ai_analyze_product_risk(PDO $pdo, int $days = 90): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT
                     o.product_name,
                     COUNT(*) AS total,
@@ -182,8 +182,8 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_analyze_employee_performance')) {
         function ai_analyze_employee_performance(PDO $pdo, int $days = 90): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT
                     e.id, e.full_name,
                     COUNT(DISTINCT oa.order_id) AS total,
@@ -287,8 +287,8 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_analyze_wilayas')) {
         function ai_analyze_wilayas(PDO $pdo, int $days = 180): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT
                     o.wilaya,
                     COUNT(*) AS total,
@@ -346,8 +346,8 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_analyze_offers')) {
         function ai_analyze_offers(PDO $pdo, int $days = 90): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT
                     o.product_name,
                     COUNT(*) AS total,
@@ -400,8 +400,8 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_analyze_response_time')) {
         function ai_analyze_response_time(PDO $pdo, int $days = 90): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT
                     e.id, e.full_name,
                     COALESCE(AVG(TIMESTAMPDIFF(HOUR, oa.assigned_at, 
@@ -455,8 +455,8 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_forecast_revenue')) {
         function ai_forecast_revenue(PDO $pdo): array
-        {
-            $stmt = $pdo->query("
+        { global $dbRepo;
+            $stmt = $dbRepo->query("
                 SELECT
                     DATE_FORMAT(order_date, '%Y-%m') AS month,
                     COALESCE(SUM(CASE WHEN order_status = 'Completed' THEN total_price ELSE 0 END), 0) AS revenue,
@@ -532,8 +532,8 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_predict_returns')) {
         function ai_predict_returns(PDO $pdo, int $days = 180): array
-        {
-            $stmt = $pdo->prepare("
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
                 SELECT
                     o.product_name,
                     o.wilaya,
@@ -591,7 +591,7 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
     // ----------------------------------------------------------------
     if (!function_exists('ai_build_morning_report')) {
         function ai_build_morning_report(PDO $pdo): string
-        {
+        { global $dbRepo;
             $cancellations = ai_analyze_cancellations($pdo);
             $products = ai_analyze_product_risk($pdo);
             $employees = ai_analyze_employee_performance($pdo);
@@ -674,9 +674,9 @@ if (!defined('AI_FUNCTIONS_LOADED')) {
 
     if (!function_exists('ai_send_morning_report')) {
         function ai_send_morning_report(PDO $pdo): array
-        {
+        { global $dbRepo;
             if (!function_exists('telegram_send_message')) {
-                require_once __DIR__ . '/telegram_bot.php';
+                if (file_exists(__DIR__ . '/telegram_bot.php')) { require_once __DIR__ . '/telegram_bot.php'; }
             }
 
             $chat_id = defined('EVENT_BOT_CHAT_ID') ? trim(EVENT_BOT_CHAT_ID) : '';

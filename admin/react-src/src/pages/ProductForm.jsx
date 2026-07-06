@@ -32,15 +32,9 @@ import {
 
 import { PageHeader, Surface, ToolbarButton } from '../components/Enterprise.jsx'
 import { cleanText, decodeText } from '../lib/text.js'
-import { getPageTitle } from '../lib/pageMeta.js'
+import { getPageTitle, getLanguage, pageTranslations } from '../lib/pageMeta.js'
 
-const sections = [
-  { id: 'basics', label: 'الأساسيات', description: 'اسم المنتج والتصنيف', icon: IconPackage },
-  { id: 'pricing', label: 'التسعير والمخزون', description: 'الأسعار والكميات', icon: IconTag },
-  { id: 'content', label: 'المحتوى', description: 'الوصف والملاحظات', icon: IconInfoCircle },
-  { id: 'media', label: 'الصور والملفات', description: 'الصور الرئيسية والمعرض', icon: IconPhoto },
-  { id: 'options', label: 'النشر والتتبع', description: 'الحالة والخيارات', icon: IconSettings },
-]
+
 
 function inferSection(input) {
   const name = (input.getAttribute('name') || '').toLowerCase()
@@ -96,10 +90,23 @@ function scrapeFormFields(form) {
   return fields
 }
 
-export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOverride = '', eyebrow = 'المتجر والمنتجات' }) {
+export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOverride = '', eyebrow = '' }) {
+  const lang = getLanguage()
+  const trans = pageTranslations[lang] || pageTranslations['ar']
+
   const [fields, setFields] = React.useState([])
   const [values, setValues] = React.useState({})
   const [activeStep, setActiveStep] = React.useState(0)
+
+  const localizedSections = React.useMemo(() => {
+    return [
+      { id: 'basics', label: trans.basics, description: trans.basicsDesc, icon: IconPackage },
+      { id: 'pricing', label: trans.pricing, description: trans.pricingDesc, icon: IconTag },
+      { id: 'content', label: trans.contentTab, description: trans.contentTabDesc, icon: IconInfoCircle },
+      { id: 'media', label: trans.media, description: trans.mediaDesc, icon: IconPhoto },
+      { id: 'options', label: trans.options, description: trans.optionsDesc, icon: IconSettings },
+    ]
+  }, [trans])
 
   React.useEffect(() => {
     if (!sourceForm) return
@@ -152,7 +159,22 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
 
   if (!fields.length) return null
 
-  const title = titleOverride || (pageName ? getPageTitle(pageName, isEdit ? 'تعديل البيانات' : 'إضافة البيانات') : (isEdit ? 'تعديل بيانات المنتج' : 'إضافة منتج جديد'))
+  const isRtl = lang === 'ar'
+  const prevIcon = isRtl ? <IconArrowRight size={16} /> : <IconArrowLeft size={16} />
+  const nextIcon = isRtl ? <IconArrowLeft size={16} /> : <IconArrowRight size={16} />
+
+  const titleFallback = isEdit ? trans.editData : trans.addData
+  const defaultFormTitle = isEdit ? trans.editProductDetails : trans.addNewProduct
+  const title = titleOverride || (pageName ? getPageTitle(pageName, titleFallback) : defaultFormTitle)
+
+  const eyebrowVal = eyebrow || '\u0627\u0644\u0645\u062a\u062c\u0631 \u0648\u0627\u0644\u0645\u0646\u062a\u062c\u0627\u062a'
+  const eyebrowTranslated = eyebrowVal === '\u0627\u0644\u0645\u062a\u062c\u0631 \u0648\u0627\u0644\u0645\u0646\u062a\u062c\u0627\u062a' ? (trans.catalog || eyebrowVal) : eyebrowVal
+
+  const submit = () => {
+    const submitButton = sourceForm.querySelector('button[name="form1"], input[name="form1"], button[type="submit"], input[type="submit"]')
+    if (submitButton) submitButton.click()
+    else sourceForm.submit()
+  }
 
   const updateField = (field, value) => {
     setValues((prev) => ({ ...prev, [field.id]: value }))
@@ -172,13 +194,7 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
     }
   }
 
-  const submit = () => {
-    const submitButton = sourceForm.querySelector('button[name="form1"], input[name="form1"], button[type="submit"], input[type="submit"]')
-    if (submitButton) submitButton.click()
-    else sourceForm.submit()
-  }
-
-  const grouped = sections.map((section) => ({
+  const grouped = localizedSections.map((section) => ({
     ...section,
     fields: fields.filter((field) => field.section === section.id),
   })).filter((section) => section.fields.length)
@@ -186,16 +202,16 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
   const activeSection = grouped[activeStep] || grouped[0]
 
   return (
-    <main className="saas-page" dir="rtl">
+    <main className="saas-page" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <PageHeader
-        eyebrow={eyebrow}
+        eyebrow={eyebrowTranslated}
         title={title}
-        description="نموذج حديث متزامن مع النموذج الأصلي لضمان بقاء الحفظ، التحقق، والرفع كما هي في الخلفية."
+        description={trans.formDesc}
         metrics={[
-          { label: 'الحقول', value: fields.length },
-          { label: 'الاكتمال', value: `${progress}%` },
+          { label: trans.fields, value: fields.length },
+          { label: trans.completeness, value: `${progress}%` },
         ]}
-        actions={<ToolbarButton icon={IconCheck} variant="filled" onClick={submit}>{isEdit ? 'حفظ التعديلات' : 'حفظ'}</ToolbarButton>}
+        actions={<ToolbarButton icon={IconCheck} variant="filled" onClick={submit}>{isEdit ? trans.saveChanges : trans.save}</ToolbarButton>}
       />
 
       <Grid gutter="md">
@@ -224,7 +240,7 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
             </Tabs>
 
             <div className="saas-form-grid">
-              {activeSection.fields.map((field) => renderField(field, values[field.id], updateField))}
+              {activeSection.fields.map((field) => renderField(field, values[field.id], updateField, trans))}
             </div>
 
             <Group justify="space-between" mt="xl">
@@ -232,23 +248,23 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
                 variant="default"
                 radius="md"
                 disabled={activeStep === 0}
-                rightSection={<IconArrowRight size={16} />}
+                rightSection={prevIcon}
                 onClick={() => setActiveStep((value) => Math.max(0, value - 1))}
               >
-                السابق
+                {trans.previous}
               </Button>
               {activeStep < grouped.length - 1 ? (
                 <Button
                   color="indigo"
                   radius="md"
-                  leftSection={<IconArrowLeft size={16} />}
+                  leftSection={nextIcon}
                   onClick={() => setActiveStep((value) => Math.min(grouped.length - 1, value + 1))}
                 >
-                  التالي
+                  {trans.next}
                 </Button>
               ) : (
                 <Button color="teal" radius="md" leftSection={<IconCheck size={16} />} onClick={submit}>
-                  تأكيد وحفظ
+                  {trans.confirmSave}
                 </Button>
               )}
             </Group>
@@ -262,16 +278,16 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
                 <IconPackage size={18} />
               </ThemeIcon>
               <div>
-                <Text fw={850}>ملخص النموذج</Text>
-                <Text size="xs" c="dimmed">يتزامن مع نموذج PHP الأصلي</Text>
+                <Text fw={850}>{trans.formSummary}</Text>
+                <Text size="xs" c="dimmed">{trans.syncDesc}</Text>
               </div>
             </Group>
 
-            <Text size="xs" c="dimmed" mb={6}>نسبة الاكتمال</Text>
+            <Text size="xs" c="dimmed" mb={6}>{trans.compRatio}</Text>
             <Group justify="space-between" mb="xs">
               <Text fw={900} size="xl" c="indigo.7">{progress}%</Text>
               <Badge variant="light" color={progress > 75 ? 'teal' : progress > 40 ? 'orange' : 'red'}>
-                {progress > 75 ? 'جاهز' : 'يحتاج مراجعة'}
+                {progress > 75 ? trans.ready : trans.needsReview}
               </Badge>
             </Group>
             <Progress value={progress} radius="xl" size={8} mb="lg" />
@@ -291,11 +307,12 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
   )
 }
 
-function renderField(field, value, updateField) {
+function renderField(field, value, updateField, trans) {
   const common = {
     label: field.label,
-    description: field.required ? 'مطلوب' : undefined,
+    description: field.required ? trans.required : undefined,
     placeholder: field.placeholder,
+    size: 'md',
   }
 
   if (field.type === 'select') {
@@ -331,6 +348,7 @@ function renderField(field, value, updateField) {
         key={field.id}
         label={field.label}
         checked={Boolean(value)}
+        size="md"
         onChange={(event) => updateField(field, event.currentTarget.checked)}
       />
     )
@@ -342,6 +360,7 @@ function renderField(field, value, updateField) {
         key={field.id}
         label={field.label}
         checked={Boolean(value)}
+        size="md"
         onChange={(event) => updateField(field, event.currentTarget.checked)}
       />
     )
@@ -350,11 +369,11 @@ function renderField(field, value, updateField) {
   if (field.type === 'file') {
     return (
       <Box key={field.id} className="saas-file-field">
-        <Text size="sm" fw={750} mb={6}>{field.label}</Text>
-        <Button variant="default" radius="md" leftSection={<IconUpload size={16} />} onClick={() => field.legacyInput.click()}>
-          اختيار ملف
+        <Text size="md" fw={750} mb={6}>{field.label}</Text>
+        <Button size="md" variant="default" radius="md" leftSection={<IconUpload size={18} />} onClick={() => field.legacyInput.click()}>
+          {trans.chooseFile}
         </Button>
-        <Text size="xs" c="dimmed" mt={6}>{value || 'لم يتم اختيار ملف'}</Text>
+        <Text size="sm" c="dimmed" mt={6}>{value || trans.noFileChosen}</Text>
       </Box>
     )
   }
@@ -391,3 +410,4 @@ function renderField(field, value, updateField) {
     />
   )
 }
+

@@ -1,0 +1,226 @@
+[
+    {
+        "wilaya_id": 1,
+        "wilaya_name": "Adrar"
+    },
+    {
+        "wilaya_id": 2,
+        "wilaya_name": "Chlef"
+    },
+    {
+        "wilaya_id": 3,
+        "wilaya_name": "Laghouat"
+    },
+    {
+        "wilaya_id": 4,
+        "wilaya_name": "Oum El Bouaghi"
+    },
+    {
+        "wilaya_id": 5,
+        "wilaya_name": "Batna"
+    },
+    {
+        "wilaya_id": 6,
+        "wilaya_name": "Béjaïa"
+    },
+    {
+        "wilaya_id": 7,
+        "wilaya_name": "Biskra"
+    },
+    {
+        "wilaya_id": 8,
+        "wilaya_name": "Béchar"
+    },
+    {
+        "wilaya_id": 9,
+        "wilaya_name": "Blida"
+    },
+    {
+        "wilaya_id": 10,
+        "wilaya_name": "Bouira"
+    },
+    {
+        "wilaya_id": 11,
+        "wilaya_name": "Tamanrasset"
+    },
+    {
+        "wilaya_id": 12,
+        "wilaya_name": "Tébessa"
+    },
+    {
+        "wilaya_id": 13,
+        "wilaya_name": "Tlemcen"
+    },
+    {
+        "wilaya_id": 14,
+        "wilaya_name": "Tiaret"
+    },
+    {
+        "wilaya_id": 15,
+        "wilaya_name": "Tizi Ouzou"
+    },
+    {
+        "wilaya_id": 16,
+        "wilaya_name": "Alger"
+    },
+    {
+        "wilaya_id": 17,
+        "wilaya_name": "Djelfa"
+    },
+    {
+        "wilaya_id": 18,
+        "wilaya_name": "Jijel"
+    },
+    {
+        "wilaya_id": 19,
+        "wilaya_name": "Sétif"
+    },
+    {
+        "wilaya_id": 20,
+        "wilaya_name": "Saïda"
+    },
+    {
+        "wilaya_id": 21,
+        "wilaya_name": "Skikda"
+    },
+    {
+        "wilaya_id": 22,
+        "wilaya_name": "Sidi Bel Abbès"
+    },
+    {
+        "wilaya_id": 23,
+        "wilaya_name": "Annaba"
+    },
+    {
+        "wilaya_id": 24,
+        "wilaya_name": "Guelma"
+    },
+    {
+        "wilaya_id": 25,
+        "wilaya_name": "Constantine"
+    },
+    {
+        "wilaya_id": 26,
+        "wilaya_name": "Médéa"
+    },
+    {
+        "wilaya_id": 27,
+        "wilaya_name": "Mostaganem"
+    },
+    {
+        "wilaya_id": 28,
+        "wilaya_name": "M'Sila"
+    },
+    {
+        "wilaya_id": 29,
+        "wilaya_name": "Mascara"
+    },
+    {
+        "wilaya_id": 30,
+        "wilaya_name": "Ouargla"
+    },
+    {
+        "wilaya_id": 31,
+        "wilaya_name": "Oran"
+    },
+    {
+        "wilaya_id": 32,
+        "wilaya_name": "El Bayadh"
+    },
+    {
+        "wilaya_id": 33,
+        "wilaya_name": "Illizi"
+    },
+    {
+        "wilaya_id": 34,
+        "wilaya_name": "Bordj Bou Arreridj"
+    },
+    {
+        "wilaya_id": 35,
+        "wilaya_name": "Boumerdès"
+    },
+    {
+        "wilaya_id": 36,
+        "wilaya_name": "El Tarf"
+    },
+    {
+        "wilaya_id": 37,
+        "wilaya_name": "Tindouf"
+    },
+    {
+        "wilaya_id": 38,
+        "wilaya_name": "Tissemsilt"
+    },
+    {
+        "wilaya_id": 39,
+        "wilaya_name": "El Oued"
+    },
+    {
+        "wilaya_id": 40,
+        "wilaya_name": "Khenchela"
+    },
+    {
+        "wilaya_id": 41,
+        "wilaya_name": "Souk Ahras"
+    },
+    {
+        "wilaya_id": 42,
+        "wilaya_name": "Tipaza"
+    },
+    {
+        "wilaya_id": 43,
+        "wilaya_name": "Mila"
+    },
+    {
+        "wilaya_id": 44,
+        "wilaya_name": "Aïn Defla"
+    },
+    {
+        "wilaya_id": 45,
+        "wilaya_name": "Naâma"
+    },
+    {
+        "wilaya_id": 46,
+        "wilaya_name": "Aïn Témouchent"
+    },
+    {
+        "wilaya_id": 47,
+        "wilaya_name": "Ghardaïa"
+    },
+    {
+        "wilaya_id": 48,
+        "wilaya_name": "Relizane"
+    },
+    {
+        "wilaya_id": 49,
+        "wilaya_name": "Timimoun"
+    },
+    {
+        "wilaya_id": 51,
+        "wilaya_name": "Ouled Djellal"
+    },
+    {
+        "wilaya_id": 52,
+        "wilaya_name": "Beni Abbes"
+    },
+    {
+        "wilaya_id": 53,
+        "wilaya_name": "In Salah"
+    },
+    {
+        "wilaya_id": 55,
+        "wilaya_name": "Touggourt"
+    },
+    {
+        "wilaya_id": 56,
+        "wilaya_name": "Djanet"
+    },
+    {
+        "wilaya_id": 57,
+        "wilaya_name": "El M'Ghair"
+    },
+    {
+        "wilaya_id": 58,
+        "wilaya_name": "El Meniaa"
+    }
+]

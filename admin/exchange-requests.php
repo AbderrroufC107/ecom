@@ -18,7 +18,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? '') === 'POST') {
             throw new RuntimeException('بيانات تحديث الحالة غير صحيحة.');
         }
 
-        $stmt = $pdo->prepare("UPDATE exchange_requests SET status = ?, updated_at = NOW() WHERE id = ? LIMIT 1");
+        $stmt = $dbRepo->prepare("UPDATE exchange_requests SET status = ?, updated_at = NOW() WHERE id = ? LIMIT 1");
         $stmt->execute([$status, $request_id]);
         $success_message = 'تم تحديث حالة طلب التبديل.';
     } catch (Throwable $e) {
@@ -38,7 +38,7 @@ if ($filter !== '') {
     $params[] = $filter;
 }
 
-$stmt = $pdo->prepare("
+$stmt = $dbRepo->prepare("
     SELECT er.*, o.ecotrack_tracking, o.ecotrack_remote_status, o.ecotrack_remote_time
     FROM exchange_requests er
     LEFT JOIN tbl_order o ON o.id = er.order_id
@@ -49,7 +49,9 @@ $stmt->execute($params);
 $requests = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 function exchange_admin_status_class($status)
-{
+{ global $dbRepo;
+    global $dbRepo;
+
     $map = [
         'pending' => 'label-warning',
         'approved' => 'label-success',

@@ -21,7 +21,7 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {    	
 		// updating into the database
-		$statement = $pdo->prepare("UPDATE tbl_end_category SET ecat_name=?,mcat_id=? WHERE ecat_id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_end_category SET ecat_name=?,mcat_id=? WHERE ecat_id=?");
 		$statement->execute(array($_POST['ecat_name'],$_POST['mcat_id'],$_REQUEST['id']));
 
     	$success_message = 'End Level Category is updated successfully.';
@@ -35,7 +35,7 @@ if(!isset($_REQUEST['id'])) {
 	exit;
 } else {
 	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * 
+	$statement = $dbRepo->prepare("SELECT * 
                             FROM tbl_end_category t1
                             JOIN tbl_mid_category t2
                             ON t1.mcat_id = t2.mcat_id
@@ -102,7 +102,7 @@ foreach ($result as $row) {
                         <select name="tcat_id" class="form-control select2 top-cat">
                             <option value="">Select Top Level Category</option>
                             <?php
-                            $statement = $pdo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
+                            $statement = $dbRepo->prepare("SELECT * FROM tbl_top_category ORDER BY tcat_name ASC");
                             $statement->execute();
                             $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
                             foreach ($result as $row) {
@@ -120,7 +120,7 @@ foreach ($result as $row) {
                         <select name="mcat_id" class="form-control select2 mid-cat">
                             <option value="">Select Mid Level Category</option>
                             <?php
-                            $statement = $pdo->prepare("SELECT * FROM tbl_mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
+                            $statement = $dbRepo->prepare("SELECT * FROM tbl_mid_category WHERE tcat_id = ? ORDER BY mcat_name ASC");
                             $statement->execute(array($tcat_id));
                             $result = $statement->fetchAll(PDO::FETCH_ASSOC);   
                             foreach ($result as $row) {

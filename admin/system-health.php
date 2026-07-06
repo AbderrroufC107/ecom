@@ -9,7 +9,7 @@ $health = [];
 
 $db_check = ['status' => 'healthy', 'message' => ''];
 try {
-    $pdo->query("SELECT 1");
+    $dbRepo->query("SELECT 1");
     $db_check['message'] = 'قاعدة البيانات تعمل';
 } catch (Exception $e) {
     $db_check['status'] = 'critical';
@@ -24,7 +24,7 @@ try {
         $last_run = telegram_get_event_setting($pdo, 'last_event_monitor_run');
     }
     if ($last_run === '') {
-        $stmt = $pdo->query("SELECT config_value FROM tbl_event_settings WHERE config_key = 'last_event_monitor_run' LIMIT 1");
+        $stmt = $dbRepo->query("SELECT config_value FROM tbl_event_settings WHERE config_key = 'last_event_monitor_run' LIMIT 1");
         $last_run = (string) $stmt->fetchColumn();
     }
     if ($last_run !== '') {
@@ -47,9 +47,9 @@ $health['cron'] = $cron_check;
 
 $ecotrack_check = ['status' => 'warning', 'message' => 'لم يتم التحقق'];
 try {
-    $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_order WHERE ecotrack_sent_at IS NOT NULL AND ecotrack_sent_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+    $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_order WHERE ecotrack_sent_at IS NOT NULL AND ecotrack_sent_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
     $recent_syncs = (int) $stmt->fetchColumn();
-    $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_order WHERE ecotrack_last_error != '' AND ecotrack_last_error IS NOT NULL AND ecotrack_updated_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+    $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_order WHERE ecotrack_last_error != '' AND ecotrack_last_error IS NOT NULL AND ecotrack_updated_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
     $recent_errors = (int) $stmt->fetchColumn();
 
     if ($recent_syncs > 0 && $recent_errors === 0) {
@@ -69,9 +69,9 @@ $health['ecotrack'] = $ecotrack_check;
 
 $telegram_check = ['status' => 'warning', 'message' => 'لم يتم التحقق'];
 try {
-    $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_telegram_delivery_log WHERE delivery_status = 'failed' AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+    $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_telegram_delivery_log WHERE delivery_status = 'failed' AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
     $failed_1h = (int) $stmt->fetchColumn();
-    $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_telegram_delivery_log WHERE delivery_status = 'sent' AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
+    $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_telegram_delivery_log WHERE delivery_status = 'sent' AND created_at >= DATE_SUB(NOW(), INTERVAL 1 HOUR)");
     $sent_1h = (int) $stmt->fetchColumn();
 
     if ($failed_1h === 0 && $sent_1h > 0) {
@@ -124,10 +124,10 @@ $health['recovery'] = $recovery_check;
 $errors_check = error_logger_check_health($pdo);
 $health['errors'] = $errors_check;
 
-$stmt = $pdo->query("SELECT COUNT(*) FROM tbl_audit_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+$stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_audit_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
 $audit_24h = (int) $stmt->fetchColumn();
 
-$stmt = $pdo->query("SELECT COUNT(*) FROM tbl_system_error_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+$stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_system_error_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
 $error_24h = (int) $stmt->fetchColumn();
 ?>
 <style>
@@ -276,7 +276,7 @@ $error_24h = (int) $stmt->fetchColumn();
             <?php
             $pending_jobs = [];
             try {
-                $stmt = $pdo->query("SELECT task_type, COUNT(*) AS cnt FROM tbl_recovery_tasks WHERE status = 'pending' AND scheduled_at IS NOT NULL AND scheduled_at <= NOW() GROUP BY task_type ORDER BY cnt DESC LIMIT 10");
+                $stmt = $dbRepo->query("SELECT task_type, COUNT(*) AS cnt FROM tbl_recovery_tasks WHERE status = 'pending' AND scheduled_at IS NOT NULL AND scheduled_at <= NOW() GROUP BY task_type ORDER BY cnt DESC LIMIT 10");
                 $pending_jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } catch (Exception $e) {}
             ?>
@@ -298,7 +298,7 @@ $error_24h = (int) $stmt->fetchColumn();
             <?php
             $failed_jobs = [];
             try {
-                $stmt = $pdo->query("SELECT component, COUNT(*) AS cnt FROM tbl_system_error_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR) GROUP BY component ORDER BY cnt DESC LIMIT 10");
+                $stmt = $dbRepo->query("SELECT component, COUNT(*) AS cnt FROM tbl_system_error_log WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR) GROUP BY component ORDER BY cnt DESC LIMIT 10");
                 $failed_jobs = $stmt->fetchAll(PDO::FETCH_ASSOC);
             } catch (Exception $e) {}
             ?>

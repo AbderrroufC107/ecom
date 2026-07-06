@@ -9,7 +9,7 @@ if(isset($_POST['form1'])) {
         $error_message .= "Size Name can not be empty<br>";
     } else {
     	// Duplicate Category checking
-    	$statement = $pdo->prepare("SELECT * FROM tbl_size WHERE size_name=?");
+    	$statement = $dbRepo->prepare("SELECT * FROM tbl_size WHERE size_name=?");
     	$statement->execute(array($_POST['size_name']));
     	$total = $statement->rowCount();
     	if($total)
@@ -22,7 +22,7 @@ if(isset($_POST['form1'])) {
     if($valid == 1) {
 
 		// Saving data into the main table tbl_size
-		$statement = $pdo->prepare("INSERT INTO tbl_size (size_name) VALUES (?)");
+		$statement = $dbRepo->prepare("INSERT INTO tbl_size (size_name) VALUES (?)");
 		$statement->execute(array($_POST['size_name']));
 	
     	$success_message = 'Size is added successfully.';

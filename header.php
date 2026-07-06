@@ -7,14 +7,59 @@ mb_regex_encoding('UTF-8');
 header('Content-Type: text/html; charset=utf-8');
 header('Cache-Control: public, max-age=3600, must-revalidate');
 
-ob_start('ob_gzhandler');
+require_once __DIR__ . '/admin/inc/config.php';
 if (session_status() !== PHP_SESSION_ACTIVE) {
 	session_start();
 }
-require_once __DIR__ . '/admin/inc/config.php';
+
+// Security Headers
+$isHttps = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || ((int)($_SERVER['SERVER_PORT'] ?? 80) === 443);
+if ($isHttps) {
+    header('Strict-Transport-Security: max-age=31536000; includeSubDomains; preload');
+}
+header('X-Frame-Options: SAMEORIGIN');
+header('X-Content-Type-Options: nosniff');
+header('Referrer-Policy: strict-origin-when-cross-origin');
+header("Permissions-Policy: geolocation=(), microphone=(), camera=()");
+
+// Content Security Policy Nonce
+$csp_nonce = bin2hex(random_bytes(16));
+header("Content-Security-Policy: default-src 'self'; script-src 'self' 'nonce-" . $csp_nonce . "' 'unsafe-inline' 'unsafe-eval' https://connect.facebook.net https://analytics.tiktok.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' data: https:; connect-src 'self' https://www.facebook.com https://analytics.tiktok.com ws://127.0.0.1:* http://127.0.0.1:* https:; frame-src 'self' https://www.facebook.com; object-src 'none'; base-uri 'self'");
+
+// Output Buffering (Stacked)
+ob_start('ob_gzhandler');
+ob_start(function($buffer) use ($csp_nonce) {
+    if (empty($buffer)) {
+        return '';
+    }
+    return preg_replace_callback('/<script\b([^>]*)>/i', function($matches) use ($csp_nonce) {
+        $attrs = $matches[1];
+        if (preg_match('/nonce\s*=/i', $attrs)) {
+            return $matches[0];
+        }
+        return '<script' . $attrs . ' nonce="' . $csp_nonce . '">';
+    }, $buffer);
+});
+
 require_once __DIR__ . '/admin/inc/functions.php';
 require_once __DIR__ . '/admin/inc/CSRF_Protect.php';
 $csrf = new CSRF_Protect();
+
+// Auto-verify CSRF token on all public POST requests (excluding endpoints validated manually)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $script = basename($_SERVER['SCRIPT_NAME']);
+    $exempt = ['buy-now.php', 'save-incomplete-order.php', 'update-incomplete-order.php', 'update-abandoned-cart.php'];
+    if (!in_array($script, $exempt, true)) {
+        if (!isset($_POST['_csrf']) || !$csrf->isTokenValid($_POST['_csrf'])) {
+            require_once __DIR__ . '/admin/inc/audit.php';
+            audit_log_security($pdo, 0, 'csrf_failed', null, ['uri' => $_SERVER['REQUEST_URI'] ?? '', 'ip' => $_SERVER['REMOTE_ADDR'] ?? ''], 'public_site');
+            
+            http_response_code(403);
+            die('خطأ في التحقق من صحة الطلب (CSRF validation failed). يرجى العودة وإعادة المحاولة.');
+        }
+    }
+}
+
 
 // -------------------------------------------------------
 // Asset versioning helper for cache busting
@@ -86,6 +131,8 @@ $before_head = $settings['before_head'] ?? '';
 $after_body = $settings['after_body'] ?? '';
 $facebook_pixel_id = $settings['facebook_pixel_id'] ?? '';
 $tiktok_pixel_id = $settings['tiktok_pixel_id'] ?? '';
+$snapchat_pixel_id = $settings['snapchat_pixel_id'] ?? '';
+$google_analytics_id = $settings['google_analytics_id'] ?? '';
 $telegram_bot_token = $settings['telegram_bot_token'] ?? '';
 $telegram_chat_id = $settings['telegram_chat_id'] ?? '';
 $telegram_orders_enabled = isset($settings['telegram_orders_enabled']) ? (int)$settings['telegram_orders_enabled'] : 0;
@@ -471,6 +518,10 @@ if (empty($page_preload_image) && $cur_page === 'index.php') {
 // Dynamic Product Pixels
 $has_dynamic_facebook = false;
 $has_dynamic_tiktok = false;
+$has_dynamic_snapchat = false;
+$has_dynamic_google = false;
+$google_pixel_id = '';
+$snapchat_pixel_id = '';
 $product_pixels = [];
 $p_id_for_pixel = 0;
 if (isset($_REQUEST['id'])) {
@@ -495,10 +546,18 @@ if (!empty($product_pixels)) {
             $has_dynamic_facebook = true;
             $adv_json = $meta_adv_match_json;
             $adv_json = addslashes($adv_json);
-            echo "<!-- Facebook Pixel Dynamic -->\n<script>\n!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window, document,'script',\n'https://connect.facebook.net/en_US/fbevents.js');\nfbq('init', '{$pid}', {$adv_json});\nfbq('set', 'autoConfig', false, '{$pid}');\nfbq('track', 'PageView');\n</script>\n<noscript><img height=\"1\" width=\"1\" style=\"display:none\"\nsrc=\"https://www.facebook.com/tr?id={$pid}&ev=PageView&noscript=1\"\n/></noscript>\n<!-- End Facebook Pixel -->\n";
+            echo "<!-- Facebook Pixel Dynamic -->\n<script>\n!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window, document,'script',\n'https://connect.facebook.net/en_US/fbevents.js');\nfbq('init', '{$pid}', {$adv_json});\nfbq('set', 'autoConfig', false, '{$pid}');\nfbq('track', 'PageView');\n</script>\n<noscript><img height=\"1\" width=\"1\" style=\"display:none\"\nsrc=\"https://www.facebook.com/tr?id={$pid}&amp;ev=PageView&amp;noscript=1\"\n/></noscript>\n<!-- End Facebook Pixel -->\n";
         } elseif ($network === 'tiktok') {
             $has_dynamic_tiktok = true;
             echo "<!-- TikTok Pixel Dynamic -->\n<script>\n!function (w, d, t) {\n  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=[\"page\",\"track\",\"identify\",\"instances\",\"debug\",\"on\",\"off\",\"once\",\"ready\",\"alias\",\"group\",\"enableCookie\",\"disableCookie\",\"holdConsent\",\"revokeConsent\",\"grantConsent\"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(\nvar e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r=\"https://analytics.tiktok.com/i18n/pixel/events.js\",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement(\"script\")\n;n.type=\"text/javascript\",n.async=!0,n.src=r+\"?sdkid=\"+e+\"&lib=\"+t;e=document.getElementsByTagName(\"script\")[0];e.parentNode.insertBefore(n,e)};\n  ttq.load('{$pid}');\n  ttq.page();\n}(window, document, 'ttq');\n</script>\n<!-- End TikTok Pixel -->\n";
+        } elseif ($network === 'snapchat') {
+            $has_dynamic_snapchat = true;
+            $snapchat_pixel_id = $pid;
+            echo "<!-- Snapchat Pixel Dynamic -->\n<script>\n!function(e,t,n,u,s,a,r){e.trackerObject=s;e[s]=e[s]||function(){(e[s].q=e[s].q||[]).push(arguments)};a=t.createElement(n);a.async=!0;a.src=u;r=t.getElementsByTagName(n)[0];r.parentNode.insertBefore(a,r)}(window,document,'script','https://sc-static.net/scevt.min.js','trk');\nwindow.trk('init','{$pid}');\nwindow.trk('track','PAGE_VIEW');\n</script>\n<!-- End Snapchat Pixel -->\n";
+        } elseif ($network === 'google') {
+            $has_dynamic_google = true;
+            $google_pixel_id = $pid;
+            echo "<!-- Google Analytics Dynamic -->\n<script async src=\"https://www.googletagmanager.com/gtag/js?id={$pid}\"></script>\n<script>\nwindow.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', '{$pid}');\n</script>\n<!-- End Google Analytics -->\n";
         } elseif (!empty($px['pixel_script'])) {
             echo "<!-- Custom Pixel Dynamic -->\n" . $px['pixel_script'] . "\n<!-- End Custom Pixel -->\n";
         }
@@ -521,7 +580,7 @@ fbq('set', 'autoConfig', false, '<?php echo addslashes($facebook_pixel_id); ?>')
 fbq('track', 'PageView');
 </script>
 <noscript><img height="1" width="1" style="display:none"
-src="https://www.facebook.com/tr?id=<?php echo urlencode($facebook_pixel_id); ?>&ev=PageView&noscript=1"
+src="https://www.facebook.com/tr?id=<?php echo urlencode($facebook_pixel_id); ?>&amp;ev=PageView&amp;noscript=1"
 /></noscript>
 <!-- End Facebook Pixel Code -->
 <?php endif; ?>
@@ -542,9 +601,33 @@ var e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n
 <!-- TikTok Pixel Code End -->
 <?php endif; ?>
 
+<?php if (!empty($snapchat_pixel_id) && empty($has_dynamic_snapchat)): ?>
+<!-- Snapchat Pixel Code Start -->
+<script>
+!function(e,t,n,u,s,a,r){e.trackerObject=s;e[s]=e[s]||function(){(e[s].q=e[s].q||[]).push(arguments)};a=t.createElement(n);a.async=!0;a.src=u;r=t.getElementsByTagName(n)[0];r.parentNode.insertBefore(a,r)}(window,document,'script','https://sc-static.net/scevt.min.js','trk');
+window.trk('init','<?php echo addslashes($snapchat_pixel_id); ?>');
+window.trk('track','PAGE_VIEW');
+</script>
+<!-- Snapchat Pixel Code End -->
+<?php endif; ?>
+
+<?php if (!empty($google_analytics_id) && empty($has_dynamic_google)): ?>
+<!-- Google Analytics Code Start -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo htmlspecialchars($google_analytics_id, ENT_QUOTES, 'UTF-8'); ?>"></script>
+<script>
+window.dataLayer = window.dataLayer || [];
+function gtag(){dataLayer.push(arguments);}
+gtag('js', new Date());
+gtag('config', '<?php echo addslashes($google_analytics_id); ?>');
+</script>
+<!-- Google Analytics Code End -->
+<?php endif; ?>
+
 <script>
 window.__metaPixelEnabled = <?php echo (!empty($facebook_pixel_id) || !empty($has_dynamic_facebook)) ? 'true' : 'false'; ?>;
 window.__tiktokPixelEnabled = <?php echo (!empty($tiktok_pixel_id) || !empty($has_dynamic_tiktok)) ? 'true' : 'false'; ?>;
+window.__snapchatPixelEnabled = <?php echo (!empty($snapchat_pixel_id) || !empty($has_dynamic_snapchat)) ? 'true' : 'false'; ?>;
+window.__googleAnalyticsEnabled = <?php echo (!empty($google_analytics_id) || !empty($has_dynamic_google)) ? 'true' : 'false'; ?>;
 window.__pixelEventCache = window.__pixelEventCache || {};
 window.__pixelNormalizeEventData = window.__pixelNormalizeEventData || function (data) {
   var normalized = data && typeof data === 'object' ? Object.assign({}, data) : {};
@@ -624,6 +707,31 @@ window.__pixelTrackStandardEvent = window.__pixelTrackStandardEvent || function 
     }
     window.ttq.track(tiktokEvent, window.__pixelBuildTikTokPayload(normalized));
   }
+  if (window.__snapchatPixelEnabled && typeof window.trk === 'function') {
+    var snapEvent = 'PAGE_VIEW';
+    var snapEventMap = { 'ViewContent': 'VIEW_CONTENT', 'AddToCart': 'ADD_CART', 'InitiateCheckout': 'INITIATE_CHECKOUT', 'Purchase': 'PURCHASE' };
+    snapEvent = snapEventMap[eventName] || 'PAGE_VIEW';
+    window.trk('track', snapEvent, {
+      price: normalized.value,
+      currency: normalized.currency,
+      content_type: normalized.content_type,
+      content_name: normalized.content_name,
+      number_items: normalized.quantity,
+      description: normalized.content_name
+    });
+  }
+  if (window.__googleAnalyticsEnabled && typeof window.gtag === 'function') {
+    var gaEventMap = {
+      'ViewContent': { event: 'view_item', params: { value: normalized.value, currency: normalized.currency, items: normalized.content_ids.map(function(id) { return { item_id: id, item_name: normalized.content_name }; }) } },
+      'AddToCart': { event: 'add_to_cart', params: { value: normalized.value, currency: normalized.currency, items: normalized.content_ids.map(function(id) { return { item_id: id, item_name: normalized.content_name, quantity: normalized.quantity }; }) } },
+      'InitiateCheckout': { event: 'begin_checkout', params: { value: normalized.value, currency: normalized.currency, items: normalized.content_ids.map(function(id) { return { item_id: id, item_name: normalized.content_name, quantity: normalized.quantity }; }) } },
+      'Purchase': { event: 'purchase', params: { value: normalized.value, currency: normalized.currency, transaction_id: '', items: normalized.content_ids.map(function(id) { return { item_id: id, item_name: normalized.content_name, quantity: normalized.quantity }; }) } }
+    };
+    var gaMapping = gaEventMap[eventName];
+    if (gaMapping) {
+      window.gtag('event', gaMapping.event, gaMapping.params);
+    }
+  }
   return true;
 };
 window.__trackViewContent = window.__trackViewContent || function (data, options) {
@@ -636,7 +744,7 @@ window.__trackInitiateCheckout = window.__trackInitiateCheckout || function (dat
 
 <?php
 $purchase_pixel_payload = $_SESSION['purchase_pixel_data'] ?? null;
-$purchase_pixel_fire = !empty($purchase_pixel_payload) && (!empty($facebook_pixel_id) || !empty($tiktok_pixel_id));
+$purchase_pixel_fire = !empty($purchase_pixel_payload) && (!empty($facebook_pixel_id) || !empty($tiktok_pixel_id) || !empty($snapchat_pixel_id) || !empty($google_analytics_id) || !empty($has_dynamic_facebook) || !empty($has_dynamic_tiktok) || !empty($has_dynamic_snapchat) || !empty($has_dynamic_google));
 $pixel_debug_enabled = isset($_GET['pixel_debug']) && $_GET['pixel_debug'] === '1';
 if ($purchase_pixel_fire) {
     $purchase_pixel_json = json_encode(
@@ -669,6 +777,23 @@ if ($purchase_pixel_fire) {
         . '      quantity: payload.num_items'
         . '    });'
         . '  }'
+        . '  if (typeof window.trk === "function") {'
+        . '    window.trk("track", "PURCHASE", {'
+        . '      price: payload.value,'
+        . '      currency: payload.currency,'
+        . '      content_type: payload.content_type,'
+        . '      content_name: payload.content_name,'
+        . '      number_items: payload.num_items'
+        . '    });'
+        . '  }'
+        . '  if (typeof window.gtag === "function") {'
+        . '    window.gtag("event", "purchase", {'
+        . '      value: payload.value,'
+        . '      currency: payload.currency,'
+        . '      transaction_id: "",'
+        . '      items: payload.content_ids.map(function(id) { return { item_id: id, item_name: payload.content_name, quantity: payload.num_items }; })'
+        . '    });'
+        . '  }'
         . '};'
         . 'window.addEventListener("load", function () {'
         . '  if (!window.__purchasePixelData) { return; }'
@@ -683,22 +808,27 @@ if ($purchase_pixel_fire) {
 }
 ?>
 
-<?php if ($pixel_debug_enabled && !empty($facebook_pixel_id)): ?>
+<?php if ($pixel_debug_enabled && (!empty($facebook_pixel_id) || !empty($tiktok_pixel_id) || !empty($snapchat_pixel_id) || !empty($google_analytics_id))): ?>
 <script>
 window.addEventListener('load', function () {
   window.setTimeout(function () {
     var hasFbq = typeof window.fbq === 'function';
-    var fbScript = document.querySelector('script[src*="connect.facebook.net/en_US/fbevents.js"]');
+    var hasTtq = typeof window.ttq === 'object' && typeof window.ttq.track === 'function';
+    var hasTrk = typeof window.trk === 'function';
+    var hasGtag = typeof window.gtag === 'function';
     var debugBox = document.createElement('div');
-    debugBox.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:999999;background:#111;color:#fff;padding:14px 16px;border-radius:12px;font:13px/1.6 Arial,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:360px;direction:ltr;text-align:left;';
-    debugBox.innerHTML =
-      '<strong style="display:block;margin-bottom:8px;">Meta Pixel Debug</strong>' +
-      '<div>Pixel ID: <?php echo addslashes($facebook_pixel_id); ?></div>' +
-      '<div>fbq available: ' + (hasFbq ? 'YES' : 'NO') + '</div>' +
-      '<div>script tag found: ' + (fbScript ? 'YES' : 'NO') + '</div>' +
-      '<div>purchase payload: ' + (window.__purchasePixelData ? 'YES' : 'NO') + '</div>' +
-      '<div>purchase sent: ' + (window.__purchasePixelSent ? 'YES' : 'NO') + '</div>' +
-      '<div style="margin-top:8px;color:#9ad1ff;">Disable ad blockers/privacy shields if fbq = NO.</div>';
+    debugBox.style.cssText = 'position:fixed;left:16px;bottom:16px;z-index:999999;background:#111;color:#fff;padding:14px 16px;border-radius:12px;font:13px/1.6 Arial,sans-serif;box-shadow:0 10px 30px rgba(0,0,0,.35);max-width:400px;direction:ltr;text-align:left;';
+    var html = '<strong style="display:block;margin-bottom:8px;">Pixel Debug Panel</strong>';
+    html += '<div style="border-bottom:1px solid #333;padding-bottom:6px;margin-bottom:6px;">';
+    html += '<div><strong>Meta:</strong> ' + (window.__metaPixelEnabled ? 'ON' : 'OFF') + ' | fbq: ' + (hasFbq ? 'YES' : 'NO') + '</div>';
+    html += '<div><strong>TikTok:</strong> ' + (window.__tiktokPixelEnabled ? 'ON' : 'OFF') + ' | ttq: ' + (hasTtq ? 'YES' : 'NO') + '</div>';
+    html += '<div><strong>Snapchat:</strong> ' + (window.__snapchatPixelEnabled ? 'ON' : 'OFF') + ' | trk: ' + (hasTrk ? 'YES' : 'NO') + '</div>';
+    html += '<div><strong>Google:</strong> ' + (window.__googleAnalyticsEnabled ? 'ON' : 'OFF') + ' | gtag: ' + (hasGtag ? 'YES' : 'NO') + '</div>';
+    html += '</div>';
+    html += '<div>purchase payload: ' + (window.__purchasePixelData ? 'YES' : 'NO') + '</div>';
+    html += '<div>purchase sent: ' + (window.__purchasePixelSent ? 'YES' : 'NO') + '</div>';
+    html += '<div style="margin-top:8px;color:#9ad1ff;">Disable ad blockers/privacy shields if scripts = NO.</div>';
+    debugBox.innerHTML = html;
     document.body.appendChild(debugBox);
   }, 1800);
 });
@@ -837,6 +967,33 @@ window.addEventListener('load', function () {
 <?php if (!empty($page_stylesheet)): ?>
 <link rel="stylesheet" href="<?php echo asset_url(ltrim($page_stylesheet, '/')); ?>">
 <?php endif; ?>
+<script nonce="<?php echo $csp_nonce; ?>">
+window.csrfToken = '<?php echo $csrf->getToken(); ?>';
+(function() {
+    document.addEventListener('DOMContentLoaded', function() {
+        var forms = document.querySelectorAll('form[method="post"]');
+        for (var i = 0; i < forms.length; i++) {
+            if (!forms[i].querySelector('input[name="_csrf"]')) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '_csrf';
+                input.value = window.csrfToken;
+                forms[i].appendChild(input);
+            }
+        }
+    });
+})();
+</script>
+<style>
+.table td, .table th {
+    word-break: break-word;
+}
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+}
+</style>
 </head>
 <body class="<?php echo isset($body_class) ? htmlspecialchars($body_class) : ''; ?>">
 

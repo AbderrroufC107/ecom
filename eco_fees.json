@@ -1,0 +1,1438 @@
+{
+    "livraison": [
+        {
+            "wilaya_id": 1,
+            "tarif": "1050",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 2,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 3,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 4,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 5,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 6,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 7,
+            "tarif": "790",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 8,
+            "tarif": "1050",
+            "tarif_stopdesk": "550"
+        },
+        {
+            "wilaya_id": 9,
+            "tarif": "450",
+            "tarif_stopdesk": "350"
+        },
+        {
+            "wilaya_id": 10,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 11,
+            "tarif": "1250",
+            "tarif_stopdesk": "790"
+        },
+        {
+            "wilaya_id": 12,
+            "tarif": "790",
+            "tarif_stopdesk": "450"
+        },
+        {
+            "wilaya_id": 13,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 14,
+            "tarif": "750",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 15,
+            "tarif": "650",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 16,
+            "tarif": "450",
+            "tarif_stopdesk": "330"
+        },
+        {
+            "wilaya_id": 17,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 18,
+            "tarif": "600",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 19,
+            "tarif": "390",
+            "tarif_stopdesk": "250"
+        },
+        {
+            "wilaya_id": 20,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 21,
+            "tarif": "650",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 22,
+            "tarif": "800",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 23,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 24,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 25,
+            "tarif": "590",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 26,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 27,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 28,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 29,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 30,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 31,
+            "tarif": "650",
+            "tarif_stopdesk": "380"
+        },
+        {
+            "wilaya_id": 32,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 33,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 34,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 35,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 36,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 37,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 38,
+            "tarif": "790",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 39,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 40,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 41,
+            "tarif": "790",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 42,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 43,
+            "tarif": "600",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 44,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 45,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 46,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 47,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 48,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 49,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 51,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 52,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 53,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 55,
+            "tarif": "890",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 56,
+            "tarif": "2100",
+            "tarif_stopdesk": "1500"
+        },
+        {
+            "wilaya_id": 57,
+            "tarif": "890",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 58,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        }
+    ],
+    "pickup": [
+        {
+            "wilaya_id": 1,
+            "tarif": "1050",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 2,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 3,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 4,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 5,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 6,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 7,
+            "tarif": "790",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 8,
+            "tarif": "1050",
+            "tarif_stopdesk": "550"
+        },
+        {
+            "wilaya_id": 9,
+            "tarif": "450",
+            "tarif_stopdesk": "350"
+        },
+        {
+            "wilaya_id": 10,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 11,
+            "tarif": "1250",
+            "tarif_stopdesk": "790"
+        },
+        {
+            "wilaya_id": 12,
+            "tarif": "790",
+            "tarif_stopdesk": "450"
+        },
+        {
+            "wilaya_id": 13,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 14,
+            "tarif": "750",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 15,
+            "tarif": "650",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 16,
+            "tarif": "450",
+            "tarif_stopdesk": "330"
+        },
+        {
+            "wilaya_id": 17,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 18,
+            "tarif": "600",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 19,
+            "tarif": "390",
+            "tarif_stopdesk": "250"
+        },
+        {
+            "wilaya_id": 20,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 21,
+            "tarif": "650",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 22,
+            "tarif": "800",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 23,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 24,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 25,
+            "tarif": "590",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 26,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 27,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 28,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 29,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 30,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 31,
+            "tarif": "650",
+            "tarif_stopdesk": "380"
+        },
+        {
+            "wilaya_id": 32,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 33,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 34,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 35,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 36,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 37,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 38,
+            "tarif": "790",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 39,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 40,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 41,
+            "tarif": "790",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 42,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 43,
+            "tarif": "600",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 44,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 45,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 46,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 47,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 48,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 49,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 51,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 52,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 53,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 55,
+            "tarif": "890",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 56,
+            "tarif": "2100",
+            "tarif_stopdesk": "1500"
+        },
+        {
+            "wilaya_id": 57,
+            "tarif": "890",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 58,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        }
+    ],
+    "echange": [
+        {
+            "wilaya_id": 1,
+            "tarif": "1050",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 2,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 3,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 4,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 5,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 6,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 7,
+            "tarif": "790",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 8,
+            "tarif": "1050",
+            "tarif_stopdesk": "550"
+        },
+        {
+            "wilaya_id": 9,
+            "tarif": "450",
+            "tarif_stopdesk": "350"
+        },
+        {
+            "wilaya_id": 10,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 11,
+            "tarif": "1250",
+            "tarif_stopdesk": "790"
+        },
+        {
+            "wilaya_id": 12,
+            "tarif": "790",
+            "tarif_stopdesk": "450"
+        },
+        {
+            "wilaya_id": 13,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 14,
+            "tarif": "750",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 15,
+            "tarif": "650",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 16,
+            "tarif": "450",
+            "tarif_stopdesk": "330"
+        },
+        {
+            "wilaya_id": 17,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 18,
+            "tarif": "600",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 19,
+            "tarif": "390",
+            "tarif_stopdesk": "250"
+        },
+        {
+            "wilaya_id": 20,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 21,
+            "tarif": "650",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 22,
+            "tarif": "800",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 23,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 24,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 25,
+            "tarif": "590",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 26,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 27,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 28,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 29,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 30,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 31,
+            "tarif": "650",
+            "tarif_stopdesk": "380"
+        },
+        {
+            "wilaya_id": 32,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 33,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 34,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 35,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 36,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 37,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 38,
+            "tarif": "790",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 39,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 40,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 41,
+            "tarif": "790",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 42,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 43,
+            "tarif": "600",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 44,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 45,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 46,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 47,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 48,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 49,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 51,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 52,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 53,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 55,
+            "tarif": "890",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 56,
+            "tarif": "2100",
+            "tarif_stopdesk": "1500"
+        },
+        {
+            "wilaya_id": 57,
+            "tarif": "890",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 58,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        }
+    ],
+    "recouvrement": [
+        {
+            "wilaya_id": 1,
+            "tarif": "1050",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 2,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 3,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 4,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 5,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 6,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 7,
+            "tarif": "790",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 8,
+            "tarif": "1050",
+            "tarif_stopdesk": "550"
+        },
+        {
+            "wilaya_id": 9,
+            "tarif": "450",
+            "tarif_stopdesk": "350"
+        },
+        {
+            "wilaya_id": 10,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 11,
+            "tarif": "1250",
+            "tarif_stopdesk": "790"
+        },
+        {
+            "wilaya_id": 12,
+            "tarif": "790",
+            "tarif_stopdesk": "450"
+        },
+        {
+            "wilaya_id": 13,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 14,
+            "tarif": "750",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 15,
+            "tarif": "650",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 16,
+            "tarif": "450",
+            "tarif_stopdesk": "330"
+        },
+        {
+            "wilaya_id": 17,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 18,
+            "tarif": "600",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 19,
+            "tarif": "390",
+            "tarif_stopdesk": "250"
+        },
+        {
+            "wilaya_id": 20,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 21,
+            "tarif": "650",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 22,
+            "tarif": "800",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 23,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 24,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 25,
+            "tarif": "590",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 26,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 27,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 28,
+            "tarif": "690",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 29,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 30,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 31,
+            "tarif": "650",
+            "tarif_stopdesk": "380"
+        },
+        {
+            "wilaya_id": 32,
+            "tarif": "990",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 33,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 34,
+            "tarif": "590",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 35,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 36,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 37,
+            "tarif": "1250",
+            "tarif_stopdesk": "590"
+        },
+        {
+            "wilaya_id": 38,
+            "tarif": "790",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 39,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 40,
+            "tarif": "690",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 41,
+            "tarif": "790",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 42,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 43,
+            "tarif": "600",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 44,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 45,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        },
+        {
+            "wilaya_id": 46,
+            "tarif": "790",
+            "tarif_stopdesk": "400"
+        },
+        {
+            "wilaya_id": 47,
+            "tarif": "900",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 48,
+            "tarif": "690",
+            "tarif_stopdesk": "390"
+        },
+        {
+            "wilaya_id": 49,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 51,
+            "tarif": "890",
+            "tarif_stopdesk": "490"
+        },
+        {
+            "wilaya_id": 52,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 53,
+            "tarif": "1250",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 55,
+            "tarif": "890",
+            "tarif_stopdesk": "600"
+        },
+        {
+            "wilaya_id": 56,
+            "tarif": "2100",
+            "tarif_stopdesk": "1500"
+        },
+        {
+            "wilaya_id": 57,
+            "tarif": "890",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 58,
+            "tarif": "990",
+            "tarif_stopdesk": "500"
+        }
+    ],
+    "retours": [
+        {
+            "wilaya_id": 1,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 2,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 3,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 4,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 5,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 6,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 7,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 8,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 9,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 10,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 11,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 12,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 13,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 14,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 15,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 16,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 17,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 18,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 19,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 20,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 21,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 22,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 23,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 24,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 25,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 26,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 27,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 28,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 29,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 30,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 31,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 32,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 33,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 34,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 35,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 36,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 37,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 38,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 39,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 40,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 41,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 42,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 43,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 44,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 45,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 46,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 47,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 48,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 49,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 51,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 52,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 53,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 55,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 56,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 57,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        },
+        {
+            "wilaya_id": 58,
+            "tarif": "0",
+            "tarif_stopdesk": "0"
+        }
+    ],
+    "poids": {
+        "livraison": {
+            "surfacturation_a_domicile_DA": "50",
+            "surfacturation_stopdesk_DA": "50",
+            "pour_chaque_KG": "1.00",
+            "a_partir_de_KG": "5.00"
+        },
+        "pickup": {
+            "surfacturation_a_domicile_DA": "50",
+            "surfacturation_stopdesk_DA": "50",
+            "pour_chaque_KG": "1.00",
+            "a_partir_de_KG": "5.00"
+        },
+        "echange": {
+            "surfacturation_a_domicile_DA": "50",
+            "surfacturation_stopdesk_DA": "50",
+            "pour_chaque_KG": "1.00",
+            "a_partir_de_KG": "5.00"
+        },
+        "recouvrement": {
+            "surfacturation_a_domicile_DA": "50",
+            "surfacturation_stopdesk_DA": "50",
+            "pour_chaque_KG": "1.00",
+            "a_partir_de_KG": "5.00"
+        }
+    }
+}

@@ -1,0 +1,164 @@
+/* 
+ * Enterprise UI Framework - Drawer
+ * Professional Drawer System for Right-Side Slide-in Panels
+ */
+
+/* Drawer Overlay & Positioning */
+.professional-drawer {
+    display: none;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: var(--e-ui-z-drawer);
+    background: rgba(18, 35, 52, 0.4);
+    backdrop-filter: blur(4px);
+    overflow: hidden; /* Prevent body scroll bleed */
+}
+
+.professional-drawer.in {
+    display: block;
+    animation: drawerFadeIn 0.2s ease-out forwards;
+}
+
+.professional-drawer.out {
+    animation: drawerFadeOut 0.2s ease-in forwards;
+}
+
+/* Drawer Container */
+.professional-drawer .drawer-dialog {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: -1200px; /* Hidden initially, controlled by animation */
+    margin: 0;
+    height: 100vh;
+    background: var(--e-ui-bg-panel);
+    box-shadow: var(--e-ui-shadow-drawer);
+    display: flex;
+    flex-direction: column;
+    transition: right 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.professional-drawer.in .drawer-dialog {
+    right: 0; /* Slide in from right (RTL direction) */
+}
+
+/* Width Constraints */
+.professional-drawer .drawer-dialog {
+    width: 1100px; /* Default Desktop */
+    max-width: 100%;
+}
+
+@media (max-width: 1200px) {
+    .professional-drawer .drawer-dialog { width: 1000px; }
+}
+@media (max-width: 1024px) {
+    .professional-drawer .drawer-dialog { width: 90%; }
+}
+@media (max-width: 768px) {
+    .professional-drawer .drawer-dialog { width: 100%; }
+}
+
+/* Content Wrapper (Flex layout for sticky header/footer) */
+.professional-drawer .drawer-content {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    box-shadow: none;
+}
+
+/* Header */
+.professional-drawer .drawer-header {
+    flex: 0 0 auto;
+    padding: var(--e-ui-spacing-md) var(--e-ui-spacing-lg);
+    background: var(--e-ui-bg-panel);
+    border-bottom: 1px solid var(--e-ui-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--e-ui-spacing-md);
+    z-index: 2;
+}
+
+.professional-drawer .drawer-header .drawer-title {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--e-ui-text-main);
+    display: flex;
+    align-items: center;
+    gap: var(--e-ui-spacing-sm);
+    flex-wrap: wrap;
+}
+
+.professional-drawer .drawer-header .close-btn {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: var(--e-ui-text-muted);
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    transition: color 0.2s;
+}
+.professional-drawer .drawer-header .close-btn:hover {
+    color: var(--e-ui-danger);
+}
+
+/* Body (Scrollable Area) */
+.professional-drawer .drawer-body {
+    flex: 1 1 auto;
+    padding: 0; /* Padding is usually handled inside tabs/content */
+    background: var(--e-ui-bg-body);
+    overflow-y: auto;
+    overflow-x: hidden;
+    position: relative;
+    /* Custom Scrollbar for sleek look */
+    scrollbar-width: thin;
+    scrollbar-color: var(--e-ui-border) transparent;
+}
+.professional-drawer .drawer-body::-webkit-scrollbar {
+    width: 6px;
+}
+.professional-drawer .drawer-body::-webkit-scrollbar-track {
+    background: transparent;
+}
+.professional-drawer .drawer-body::-webkit-scrollbar-thumb {
+    background-color: var(--e-ui-border);
+    border-radius: 10px;
+}
+
+/* Footer */
+.professional-drawer .drawer-footer {
+    flex: 0 0 auto;
+    padding: var(--e-ui-spacing-md) var(--e-ui-spacing-lg);
+    background: var(--e-ui-bg-panel);
+    border-top: 1px solid var(--e-ui-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* Usually actions on right, cancel on left */
+    gap: var(--e-ui-spacing-md);
+    z-index: 2;
+}
+
+.professional-drawer .drawer-footer-actions {
+    display: flex;
+    gap: var(--e-ui-spacing-sm);
+    flex-wrap: wrap;
+}
+
+/* Animations */
+@keyframes drawerFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes drawerFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}

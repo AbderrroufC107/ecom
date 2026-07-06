@@ -52,31 +52,22 @@ foreach ($config_keys as $key => $label) {
                 <div class="box-header with-border">
                     <h3 class="box-title">نقاط التقييم والخصومات</h3>
                 </div>
-                <form method="post">
+                <form method="post" class="form-horizontal">
                     <div class="box-body">
-                        <table class="table table-bordered">
-                            <thead>
-                                <tr>
-                                    <th>الإعداد</th>
-                                    <th style="width:200px;">القيمة</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php foreach ($config_keys as $key => $label): ?>
-                                    <tr>
-                                        <td><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></td>
-                                        <td>
-                                            <input type="text" name="<?php echo htmlspecialchars($key, ENT_QUOTES, 'UTF-8'); ?>"
-                                                value="<?php echo htmlspecialchars($settings[$key], ENT_QUOTES, 'UTF-8'); ?>"
-                                                class="form-control">
-                                        </td>
-                                    </tr>
-                                <?php endforeach; ?>
-                            </tbody>
-                        </table>
+                        <?php foreach ($config_keys as $key => $label): ?>
+                            <div class="form-group">
+                                <label for="<?php echo $key; ?>" class="col-sm-3 control-label"><?php echo htmlspecialchars($label, ENT_QUOTES, 'UTF-8'); ?></label>
+                                <div class="col-sm-9">
+                                    <input type="text" name="<?php echo htmlspecialchars($key, ENT_QUOTES, 'UTF-8'); ?>"
+                                        id="<?php echo $key; ?>"
+                                        value="<?php echo htmlspecialchars($settings[$key], ENT_QUOTES, 'UTF-8'); ?>"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                     <div class="box-footer">
-                        <button type="submit" name="save_settings" class="btn btn-primary">حفظ الإعدادات</button>
+                        <button type="submit" name="save_settings" class="btn btn-primary pull-right">حفظ الإعدادات</button>
                     </div>
                 </form>
             </div>

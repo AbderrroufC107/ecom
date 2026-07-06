@@ -162,6 +162,18 @@ if ((int)($home_settings['home_popular_product_on_off'] ?? 1) === 1 && $total_po
 }
 
 $top_categories = [];
+try {
+    $stmt_tcats = $pdo->query("SELECT tcat_id, tcat_name FROM tbl_top_category ORDER BY tcat_id ASC");
+    foreach ($stmt_tcats->fetchAll(PDO::FETCH_ASSOC) as $tcRow) {
+        $top_categories[] = [
+            'id' => (int)($tcRow['tcat_id'] ?? 0),
+            'name' => trim((string)($tcRow['tcat_name'] ?? '')),
+            'url' => 'product-category.php?id=' . (int)($tcRow['tcat_id'] ?? 0) . '&type=top-category'
+        ];
+    }
+} catch (Exception $e) {
+    $top_categories = [];
+}
 
 $active_products_count = 0;
 try {
@@ -224,36 +236,9 @@ $home_payload = [
 
 <div id="react-home-root" dir="rtl"></div>
 <script id="react-home-data" type="application/json"><?php echo json_encode($home_payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES | JSON_HEX_TAG | JSON_HEX_APOS | JSON_HEX_AMP | JSON_HEX_QUOT); ?></script>
-<?php if (is_file(__DIR__ . '/assets/dist/app.min.js')): ?>
 <script>document.getElementById('react-home-root')&&(document.getElementById('react-home-root').innerHTML='<div class="react-boot">جاري تحميل واجهة المتجر...</div>');</script>
-<?php else: ?>
-<script>
-(function () {
-    var root = document.getElementById('react-home-root');
-    if (root) {
-        root.innerHTML = '<div class="react-boot">جاري تحميل واجهة المتجر...</div>';
-    }
-
-    function loadScript(src, done) {
-        var script = document.createElement('script');
-        script.src = src;
-        script.async = true;
-        script.onload = done;
-        script.onerror = function () {
-            if (root && !root.getAttribute('data-react-ready')) {
-                root.innerHTML = '<div class="react-boot react-boot-error">تعذر تحميل React. تحقق من الاتصال ثم أعد تحديث الصفحة.</div>';
-            }
-        };
-        document.head.appendChild(script);
-    }
-
-    loadScript('https://unpkg.com/react@18/umd/react.production.min.js', function () {
-        loadScript('https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', function () {
-            loadScript('assets/js/index-react-home.js?v=<?php echo filemtime(__DIR__ . "/assets/js/index-react-home.js"); ?>', function () {});
-        });
-    });
-})();
-</script>
-<?php endif; ?>
+<script src="assets/js/react.production.min.js?v=<?php echo @filemtime(__DIR__ . '/assets/js/react.production.min.js'); ?>"></script>
+<script src="assets/js/react-dom.production.min.js?v=<?php echo @filemtime(__DIR__ . '/assets/js/react-dom.production.min.js'); ?>"></script>
+<script src="assets/js/index-react-home.js?v=<?php echo @filemtime(__DIR__ . '/assets/js/index-react-home.js'); ?>"></script>
 
 <?php require_once('footer.php'); ?>

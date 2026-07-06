@@ -13,7 +13,7 @@ class RetentionService
     ];
 
     public static function getPolicy(PDO $pdo): array
-    {
+    { global $dbRepo;
         $config = BackupService::getAllConfigs($pdo);
         return [
             'daily_keep'   => (int) ($config['retention_daily'] ?? self::$defaultPolicy['daily_keep']),
@@ -23,7 +23,7 @@ class RetentionService
     }
 
     public static function apply(PDO $pdo): int
-    {
+    { global $dbRepo;
         $policy = self::getPolicy($pdo);
         $deleted = 0;
 
@@ -35,8 +35,8 @@ class RetentionService
     }
 
     private static function pruneDaily(PDO $pdo, int $keep): int
-    {
-        $stmt = $pdo->prepare("
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("
             DELETE FROM tbl_backup_job WHERE id IN (
                 SELECT id FROM (
                     SELECT id FROM tbl_backup_job
@@ -49,7 +49,7 @@ class RetentionService
         $count = $stmt->rowCount();
 
         if ($count > 0) {
-            $stmt = $pdo->prepare("DELETE FROM tbl_backup_job WHERE id IN (
+            $stmt = $dbRepo->prepare("DELETE FROM tbl_backup_job WHERE id IN (
                 SELECT id FROM (
                     SELECT id FROM tbl_backup_job
                     WHERE status = 'completed' AND DATE(completed_at) = DATE_SUB(CURDATE(), INTERVAL 1 DAY)
@@ -65,12 +65,12 @@ class RetentionService
     }
 
     private static function pruneWeekly(PDO $pdo, int $keep): int
-    {
+    { global $dbRepo;
         $count = 0;
         for ($w = 0; $w < 4; $w++) {
             $weekStart = date('Y-m-d', strtotime("-{$w} week monday"));
             $weekEnd = date('Y-m-d', strtotime("-{$w} week sunday"));
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 DELETE FROM tbl_backup_job WHERE id IN (
                     SELECT id FROM (
                         SELECT id FROM tbl_backup_job
@@ -86,12 +86,12 @@ class RetentionService
     }
 
     private static function pruneMonthly(PDO $pdo, int $keep): int
-    {
+    { global $dbRepo;
         $count = 0;
         for ($m = 0; $m < 12; $m++) {
             $monthStart = date('Y-m-01', strtotime("-{$m} month"));
             $monthEnd = date('Y-m-t', strtotime("-{$m} month"));
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 DELETE FROM tbl_backup_job WHERE id IN (
                     SELECT id FROM (
                         SELECT id FROM tbl_backup_job

@@ -46,7 +46,10 @@
                 <a href="products.php"><i class="fas fa-box me-2"></i>المنتجات</a>
                 <a href="orders.php"><i class="fas fa-shopping-cart me-2"></i>الطلبات</a>
                 <a href="users.php"><i class="fas fa-users me-2"></i>المستخدمين</a>
+                <a href="marketing-center.php"><i class="fas fa-bullhorn me-2"></i>التسويق</a>
+                <a href="marketing-ai.php"><i class="fas fa-brain me-2"></i>الذكاء الاصطناعي</a>
                 <a href="settings.php"><i class="fas fa-cog me-2"></i>الإعدادات</a>
+                <a href="omni-guide.php"><i class="fas fa-book me-2"></i>دليل الاستخدام</a>
                 <a href="logout.php"><i class="fas fa-sign-out-alt me-2"></i>تسجيل الخروج</a>
             </nav>
         </div>

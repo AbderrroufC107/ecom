@@ -95,17 +95,17 @@ if (isset($_SESSION['store_user']) && !isset($_SESSION['user'])) {
 	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
 	<link rel="stylesheet" href="css/select2.min.css">
 	<link rel="stylesheet" href="css/dataTables.bootstrap.css">
-	<link rel="stylesheet" href="css/jquery.fancybox.css">
 	<link rel="stylesheet" href="css/AdminLTE.min.css">
 	<link rel="stylesheet" href="css/_all-skins.min.css">
 	<link rel="stylesheet" href="css/on-off-switch.css"/>
-	<link rel="stylesheet" href="css/summernote.css">
 	<link rel="stylesheet" href="style.css?v=react-admin-20260516-2">
+	<?php if(!isset($_GET['iframe'])): ?>
 	<?php foreach (glob(__DIR__ . '/dist/admin-react-vendor-*.css') ?: array() as $admin_react_vendor_css): ?>
 		<link rel="stylesheet" href="dist/<?php echo htmlspecialchars(basename($admin_react_vendor_css), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo filemtime($admin_react_vendor_css); ?>">
 	<?php endforeach; ?>
 	<?php $admin_react_css_version = file_exists(__DIR__ . '/dist/admin-react.css') ? filemtime(__DIR__ . '/dist/admin-react.css') : time(); ?>
 	<link rel="stylesheet" href="dist/admin-react.css?v=<?php echo $admin_react_css_version; ?>">
+	<?php endif; ?>
 	<style id="admin-react-critical-css">
 		@font-face {
 			font-family: 'InterLocal';
@@ -242,12 +242,93 @@ if (window.self !== window.top) {
     });
 })();
 </script>
+    <script>
+        window.csrfToken = "<?= isset($csrf) ? $csrf->getToken() : '' ?>";
+    </script>
 </head>
 
 <body class="hold-transition fixed skin-blue sidebar-mini admin-pro-theme admin-ltr-layout admin-react-pending">
-	<div id="admin-react-shell" data-admin-name="<?php echo htmlspecialchars($_SESSION['user']['full_name'] ?? $_SESSION['store_user']['name'] ?? 'المدير', ENT_QUOTES, 'UTF-8'); ?>"></div>
+	<link rel="stylesheet" href="assets/ui/main-ui.css?v=<?php echo time(); ?>">
+	<div id="admin-react-shell" data-admin-name="<?php echo htmlspecialchars($_SESSION['user']['full_name'] ?? $_SESSION['store_user']['name'] ?? 'المدير', ENT_QUOTES, 'UTF-8'); ?>" data-current-lang="<?php echo htmlspecialchars($current_lang, ENT_QUOTES, 'UTF-8'); ?>"></div>
 
 	<div class="wrapper">
+	<style>
+		/* Hide legacy title headers globally to avoid duplication with React topbar */
+		section.content-header { display: none !important; }
+		
+		/* Enterprise UI overrides for legacy pages (Global) */
+		.content-wrapper, .wrapper { direction: rtl !important; text-align: right !important; }
+		.box { border-radius: 12px !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important; border: 1px solid #e2e8f0 !important; background: #fff !important; margin-bottom: 20px !important; }
+		.box-header { border-bottom: 1px solid #e2e8f0 !important; padding: 15px 20px !important; }
+		.box-title { font-weight: 700 !important; color: #1e293b !important; font-size: 16px !important; margin: 0 !important; display: inline-block; }
+		
+		.nav-tabs { border-bottom: 2px solid #e2e8f0 !important; margin: 0 0 15px 0 !important; padding: 0 10px !important; display: flex !important; gap: 8px !important; flex-wrap: wrap !important; list-style: none !important; }
+		.nav-tabs > li { float: none !important; margin-bottom: -2px !important; }
+		.nav-tabs > li > a { border: none !important; color: #64748b !important; font-weight: 600 !important; padding: 10px 16px !important; border-radius: 8px 8px 0 0 !important; transition: all 0.2s !important; background: transparent !important; margin: 0 !important; display: block; }
+		.nav-tabs > li > a:hover { color: #3b82f6 !important; background: #f8fafc !important; text-decoration: none !important; }
+		.nav-tabs > li.active > a, .nav-tabs > li.active > a:hover, .nav-tabs > li.active > a:focus { color: #3b82f6 !important; border: none !important; border-bottom: 2px solid #3b82f6 !important; background: transparent !important; cursor: default !important; text-decoration: none !important; }
+		
+		.table { margin-bottom: 0 !important; }
+		.table-bordered { border: 1px solid #e2e8f0 !important; }
+		.table-bordered > thead > tr > th { background: #f8fafc !important; color: #475569 !important; font-weight: 600 !important; border-bottom: 2px solid #e2e8f0 !important; border-top: none !important; padding: 12px 15px !important; }
+		.table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th { border-color: #f1f5f9 !important; vertical-align: middle !important; color: #334155 !important; padding: 12px 15px !important; }
+		
+		.btn { border-radius: 8px !important; font-weight: 600 !important; padding: 8px 16px !important; transition: all 0.2s !important; box-shadow: none !important; border: none !important; outline: none !important; }
+		.btn-primary { background: #3b82f6 !important; color: #fff !important; }
+		.btn-primary:hover { background: #2563eb !important; box-shadow: 0 4px 12px rgba(59,130,246,0.3) !important; }
+		.btn-success { background: #10b981 !important; color: #fff !important; }
+		.btn-success:hover { background: #059669 !important; box-shadow: 0 4px 12px rgba(16,185,129,0.3) !important; }
+		.btn-danger { background: #ef4444 !important; color: #fff !important; }
+		.btn-danger:hover { background: #dc2626 !important; box-shadow: 0 4px 12px rgba(239,68,68,0.3) !important; }
+		.btn-default { background: #f1f5f9 !important; color: #475569 !important; }
+		.btn-default:hover { background: #e2e8f0 !important; color: #1e293b !important; }
+		
+		.form-control { border-radius: 8px !important; border: 1px solid #cbd5e1 !important; padding: 10px 14px !important; height: auto !important; box-shadow: none !important; transition: border-color 0.2s !important; outline: none !important; }
+		.form-control:focus { border-color: #3b82f6 !important; box-shadow: 0 0 0 3px rgba(59,130,246,0.1) !important; }
+		
+		.label { border-radius: 4px !important; padding: 4px 8px !important; font-weight: 600 !important; font-size: 11px !important; }
+		h4 { font-weight: 700 !important; color: #1e293b !important; margin-bottom: 15px !important; }
+		
+		.nav-tabs-custom { background: transparent !important; box-shadow: none !important; }
+
+		/* Fix Tailwind preflight breaking lists */
+		ul.nav, ul.nav-tabs { list-style: none !important; padding: 0 !important; margin: 0 !important; }
+	</style>
+		   
+		<?php if(!isset($_GET['iframe'])): ?>
+		<?php foreach (glob(__DIR__ . '/dist/admin-react-vendor-*.css') ?: array() as $admin_react_vendor_css): ?>
+			<link rel="stylesheet" href="dist/<?php echo htmlspecialchars(basename($admin_react_vendor_css), ENT_QUOTES, 'UTF-8'); ?>?v=<?php echo filemtime($admin_react_vendor_css); ?>">
+		<?php endforeach; ?>
+		<?php $admin_react_css_version = file_exists(__DIR__ . '/dist/admin-react.css') ? filemtime(__DIR__ . '/dist/admin-react.css') : time(); ?>
+		<link rel="stylesheet" href="dist/admin-react.css?v=<?php echo $admin_react_css_version; ?>">
+		<?php endif; ?>
+		<script>
+		document.addEventListener('DOMContentLoaded', function() {
+			window.setTimeout(function() {
+				if (!document.body.classList.contains('admin-react-ready')) {
+					var reactScript = document.querySelector('script[type="module"][src*="admin-react"]');
+					var diag = {
+						reactScriptFound: !!reactScript,
+						reactScriptSrc: reactScript ? reactScript.src : null,
+						bodyClasses: document.body.className,
+						shellExists: !!document.getElementById('admin-react-shell'),
+						pendingRemoved: true
+					};
+					try { fetch('log_error.php?err=' + encodeURIComponent('[Fallback] React not ready after 3.5s: ' + JSON.stringify(diag))); } catch(e) {}
+					document.body.classList.remove('admin-react-pending');
+				}
+			}, 3500);
+		});
+		</script>
+	
+	<script>
+	// Prevent nested UI if an iframe redirects without the iframe=1 parameter
+	if (window.self !== window.top) {
+		if (window.location.href.indexOf('iframe=1') === -1) {
+			window.parent.location.href = window.location.href;
+		}
+	}
+	</script>
 
 		<header class="main-header">
 
@@ -327,6 +408,81 @@ if (window.self !== window.top) {
 		          </ul>
 		        </li>
 
+		        <!-- الذكاء الاصطناعي -->
+		        <li class="treeview <?php if(in_array($cur_page, ['ai-products.php','ai-campaigns.php','ai-settings.php','ai-keywords.php','ai-faqs.php','ai-rules.php','ai-analytics.php','ai-chat-logs.php'])) {echo 'active';} ?>">
+		          <a href="#">
+		            <i class="fa fa-magic text-purple"></i>
+		            <span>🤖 الذكاء الاصطناعي</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="ai-agents.php"><i class="fa fa-circle-o"></i> إدارة العملاء الآليين</a></li>
+		            <li><a href="ai-tasks.php"><i class="fa fa-circle-o"></i> سجل المهام</a></li>
+		            <li><a href="ai-analytics.php"><i class="fa fa-circle-o"></i> الإحصائيات</a></li>
+		            <li><a href="ai-chat-logs.php"><i class="fa fa-circle-o"></i> سجلات المحادثات</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- AI Knowledge -->
+		        <li class="treeview <?php if($cur_page == 'ai-knowledge.php') {echo 'active';} ?>">
+		          <a href="#">
+		            <i class="fa fa-book text-aqua"></i>
+		            <span>🧠 مركز المعرفة (AI)</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="ai-knowledge.php"><i class="fa fa-circle-o"></i> قاعدة المعرفة</a></li>
+		            <li><a href="ai-knowledge.php?category=sales"><i class="fa fa-circle-o"></i> قواعد المبيعات</a></li>
+		            <li><a href="ai-knowledge.php?category=company"><i class="fa fa-circle-o"></i> سياسات الشركة</a></li>
+		            <li><a href="ai-knowledge.php?category=shipping"><i class="fa fa-circle-o"></i> سياسات الشحن</a></li>
+		            <li><a href="ai-knowledge.php?category=returns"><i class="fa fa-circle-o"></i> سياسات الاسترجاع</a></li>
+		            <li><a href="ai-knowledge.php?category=payments"><i class="fa fa-circle-o"></i> سياسات الدفع</a></li>
+		            <li><a href="ai-knowledge.php?category=products"><i class="fa fa-circle-o"></i> أدلة المنتجات</a></li>
+		            <li><a href="ai-knowledge.php?category=marketing"><i class="fa fa-circle-o"></i> أدلة العلامة التجارية</a></li>
+		            <li><a href="ai-knowledge.php?category=style"><i class="fa fa-circle-o"></i> أسلوب الكتابة</a></li>
+		            <li><a href="ai-knowledge.php?category=variables"><i class="fa fa-circle-o"></i> متغيرات التلقين</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- OmniChannel Hub -->
+		        <li class="treeview <?php if(in_array($cur_page, ['omni-channels.php','omni-inbox.php','omni-meta-monitor.php','omni-settings.php','omni-guide.php'])) {echo 'active';} ?>">
+		          <a href="#">
+		            <i class="fa fa-comments text-aqua"></i>
+		            <span>💬 مركز الرسائل الشامل</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="omni-inbox.php"><i class="fa fa-inbox"></i> صندوق الوارد الموحد</a></li>
+		            <li><a href="omni-channels.php"><i class="fa fa-plug"></i> إدارة القنوات</a></li>
+		            <li><a href="omni-meta-monitor.php"><i class="fa fa-heartbeat text-danger"></i> مراقبة العمليات</a></li>
+		            <li><a href="omni-settings.php"><i class="fa fa-cog"></i> إعدادات الربط</a></li>
+		            <li><a href="omni-guide.php"><i class="fa fa-book text-warning"></i> استفسارات وتوضيحات</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- Marketing Center -->
+		        <li class="treeview <?php if(in_array($cur_page, ['marketing-center.php','marketing-campaigns.php','marketing-accounts.php','marketing-adsets.php','marketing-ads.php','marketing-creatives.php','marketing-leads.php','marketing-analytics.php','marketing-ai.php','marketing-automation.php','marketing-ab-testing.php','marketing-pixel-center.php','marketing-audience.php','marketing-settings.php','marketing-campaign-wizard.php'])) {echo 'active';} ?>">
+		          <a href="#">
+		            <i class="fa fa-rocket" style="color:#1877f2"></i>
+		            <span>🚀 مركز التسويق</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="marketing-center.php"><i class="fa fa-dashboard"></i> لوحة التحكم</a></li>
+		            <li><a href="marketing-campaigns.php"><i class="fa fa-bullhorn"></i> الحملات</a></li>
+		            <li><a href="marketing-audience.php"><i class="fa fa-users"></i> إدارة الجماهير</a></li>
+		            <li><a href="marketing-creatives.php"><i class="fa fa-paint-brush"></i> استوديو الإبداع</a></li>
+		            <li><a href="marketing-leads.php"><i class="fa fa-user-plus"></i> نماذج العملاء</a></li>
+		            <li><a href="marketing-analytics.php"><i class="fa fa-line-chart"></i> الإحصائيات والعوائد</a></li>
+		            <li><a href="marketing-ai.php"><i class="fa fa-brain text-info"></i> منسق الذكاء الاصطناعي</a></li>
+		            <li><a href="marketing-automation.php"><i class="fa fa-bolt text-warning"></i> الأتمتة</a></li>
+		            <li><a href="marketing-ab-testing.php"><i class="fa fa-flask"></i> اختبارات A/B</a></li>
+		            <li><a href="marketing-pixel-center.php"><i class="fa fa-circle-o"></i> مركز البكسل</a></li>
+		            <li><a href="marketing-accounts.php"><i class="fa fa-plug"></i> الحسابات الإعلانية</a></li>
+		            <li><a href="marketing-campaign-wizard.php"><i class="fa fa-plus-circle text-success"></i> حملة جديدة</a></li>
+		          </ul>
+		        </li>
+
 		        <!-- الطلبات -->
 		        <li class="treeview <?php if(in_array($cur_page, ['order.php','order-details.php','order-statistics.php','exchange-requests.php','incomplete-orders.php'])) {echo 'active';} ?>">
 		          <a href="#">
@@ -394,7 +550,7 @@ if (window.self !== window.top) {
 		        </li>
 
 		        <!-- النظام -->
-		        <li class="treeview <?php if(in_array($cur_page, ['site-security.php','audit-log.php','system-health.php','ai-insights.php','users.php'])) {echo 'active';} ?>">
+		        <li class="treeview <?php if(in_array($cur_page, ['site-security.php','audit-log.php','system-health.php','ai-insights.php','users.php','n8n-integration.php'])) {echo 'active';} ?>">
 		          <a href="#">
 		            <i class="fa fa-cog"></i>
 		            <span>النظام</span>
@@ -405,6 +561,7 @@ if (window.self !== window.top) {
 		            <li><a href="audit-log.php"><i class="fa fa-circle-o"></i> سجل التدقيق</a></li>
 		            <li><a href="system-health.php"><i class="fa fa-circle-o"></i> صحة النظام</a></li>
 		            <li><a href="ai-insights.php"><i class="fa fa-circle-o"></i> PHI Insights</a></li>
+		            <li><a href="n8n-integration.php"><i class="fa fa-plug text-aqua"></i> تكامل n8n</a></li>
 		            <?php if(isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin'): ?>
 		            <li><a href="users.php"><i class="fa fa-circle-o"></i> إدارة المستخدمين</a></li>
 		            <?php endif; ?>

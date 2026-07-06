@@ -5,11 +5,24 @@ require_once __DIR__ . '/next-common.php';
 
 next_api_headers();
 
+if (isset($pdo)) { next_api_rate_limit($pdo, basename(__FILE__)); }
+
 try {
     $mode = trim((string) ($_GET['mode'] ?? 'home'));
     $settings = function_exists('front_get_settings') ? front_get_settings($pdo) : [];
 
+    $tops = $pdo->query("SELECT * FROM tbl_top_category ORDER BY tcat_id ASC")->fetchAll(PDO::FETCH_ASSOC);
+    $mids = $pdo->query("SELECT * FROM tbl_mid_category ORDER BY mcat_id ASC")->fetchAll(PDO::FETCH_ASSOC);
+    $ends = $pdo->query("SELECT * FROM tbl_end_category ORDER BY ecat_id ASC")->fetchAll(PDO::FETCH_ASSOC);
+
     $topCategories = [];
+    foreach ($tops as $topRow) {
+        $topCategories[] = [
+            'id' => (int) $topRow['tcat_id'],
+            'name' => next_text($topRow['tcat_name'] ?? ''),
+            'url' => '/category?id=' . (int) $topRow['tcat_id'] . '&type=top-category',
+        ];
+    }
 
     if ($mode === 'category') {
         $categoryId = (int) ($_GET['id'] ?? 0);
@@ -17,10 +30,6 @@ try {
         if ($categoryId <= 0 || !in_array($categoryType, ['top-category', 'mid-category', 'end-category'], true)) {
             next_json(['success' => false, 'message' => 'تصنيف غير صحيح.'], 400);
         }
-
-        $tops = $pdo->query("SELECT * FROM tbl_top_category ORDER BY tcat_id ASC")->fetchAll(PDO::FETCH_ASSOC);
-        $mids = $pdo->query("SELECT * FROM tbl_mid_category ORDER BY mcat_id ASC")->fetchAll(PDO::FETCH_ASSOC);
-        $ends = $pdo->query("SELECT * FROM tbl_end_category ORDER BY ecat_id ASC")->fetchAll(PDO::FETCH_ASSOC);
 
         $topById = [];
         $midById = [];

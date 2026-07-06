@@ -7,6 +7,8 @@ require_once __DIR__ . '/../websocket/broadcast.php';
 
 next_api_headers();
 
+if (isset($pdo)) { next_api_rate_limit($pdo, basename(__FILE__)); }
+
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     next_json(['success' => false, 'message' => 'طريقة الطلب غير صحيحة.'], 405);
 }
@@ -148,6 +150,14 @@ try {
     ]);
     $orderId = (int) $pdo->lastInsertId();
     $pdo->commit();
+
+    // Central Order Assignment
+    if (file_exists(__DIR__ . '/../admin/inc/employee_functions.php')) {
+        require_once __DIR__ . '/../admin/inc/employee_functions.php';
+        if (function_exists('assign_order_by_strategy')) {
+            assign_order_by_strategy($pdo, $orderId, 'next_api');
+        }
+    }
 
     // WebSocket broadcast - notify admin of new order
     ws_broadcast_order_new([

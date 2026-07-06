@@ -11,7 +11,7 @@ class LoginThrottle {
     }
 
     public function ensure_tables(): void {
-        $this->pdo->exec("CREATE TABLE IF NOT EXISTS tbl_login_attempts (
+        (new \SaaS\Repositories\DatabaseRepository($this->pdo))->executeCommand("CREATE TABLE IF NOT EXISTS tbl_login_attempts (
             id INT AUTO_INCREMENT PRIMARY KEY,
             ip_address VARCHAR(45) NOT NULL,
             user_agent VARCHAR(500) DEFAULT '',
@@ -28,20 +28,20 @@ class LoginThrottle {
         $sql = "SELECT COUNT(*) FROM tbl_login_attempts
                 WHERE (ip_address = ? OR login_identifier = ?)
                 AND attempt_time >= ? AND success = 0";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$ip, $login, $window]);
         return $stmt->fetchColumn() >= $this->max_attempts;
     }
 
     public function record_attempt(string $ip, string $login, string $user_agent, bool $success): void {
-        $stmt = $this->pdo->prepare(
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
             "INSERT INTO tbl_login_attempts (ip_address, user_agent, login_identifier, success) VALUES (?, ?, ?, ?)"
         );
         $stmt->execute([$ip, $login, $user_agent, $success ? 1 : 0]);
     }
 
     public function clear_attempts(string $ip, string $login): void {
-        $stmt = $this->pdo->prepare(
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
             "DELETE FROM tbl_login_attempts WHERE (ip_address = ? OR login_identifier = ?)"
         );
         $stmt->execute([$ip, $login]);
@@ -52,7 +52,7 @@ class LoginThrottle {
         $sql = "SELECT MAX(attempt_time) FROM tbl_login_attempts
                 WHERE (ip_address = ? OR login_identifier = ?)
                 AND attempt_time >= ? AND success = 0";
-        $stmt = $this->pdo->prepare($sql);
+        $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare($sql);
         $stmt->execute([$ip, $login, $window]);
         $last_attempt = $stmt->fetchColumn();
         if (!$last_attempt) return 0;

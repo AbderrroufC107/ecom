@@ -1,0 +1,17 @@
+/* 
+ * Enterprise UI Framework - Main UI
+ * Imports all required CSS components for the Professional UI System
+ */
+
+@import url('css/variables.css');
+@import url('css/drawer.css');
+@import url('css/modal.css');
+
+/* Ensure RTL global resets for UI components if needed */
+html[dir="rtl"] .professional-drawer .drawer-dialog {
+    left: auto;
+    right: -1200px;
+}
+html[dir="rtl"] .professional-drawer.in .drawer-dialog {
+    right: 0;
+}

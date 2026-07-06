@@ -15,7 +15,7 @@
 
 if (!function_exists('recovery_engine_ensure_tables')) {
     function recovery_engine_ensure_tables(PDO $pdo): void
-    {
+    { global $dbRepo;
         static $done = false;
         if ($done) return;
 
@@ -29,7 +29,7 @@ if (!function_exists('recovery_engine_ensure_tables')) {
             require_once __DIR__ . '/audit.php';
         }
 
-        $pdo->exec("
+        $dbRepo->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_order_contact_attempt (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 order_id INT NOT NULL,
@@ -49,7 +49,7 @@ if (!function_exists('recovery_engine_ensure_tables')) {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         ");
 
-        $pdo->exec("
+        $dbRepo->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_recovery_tasks (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 order_id INT NOT NULL,
@@ -71,7 +71,7 @@ if (!function_exists('recovery_engine_ensure_tables')) {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         ");
 
-        $pdo->exec("
+        $dbRepo->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_recovery_queue (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 order_id INT NOT NULL,
@@ -91,7 +91,7 @@ if (!function_exists('recovery_engine_ensure_tables')) {
             ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
         ");
 
-        $pdo->exec("
+        $dbRepo->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_customer_risk_timeline (
                 id INT AUTO_INCREMENT PRIMARY KEY,
                 customer_phone VARCHAR(32) NOT NULL DEFAULT '',
@@ -123,7 +123,7 @@ if (!function_exists('recovery_engine_ensure_tables')) {
 
 if (!function_exists('recovery_engine_sub_status_action')) {
     function recovery_engine_sub_status_action(string $sub_status): array
-    {
+    { global $dbRepo;
         $actions = [
             'no_answer' => [
                 'task_type' => 'retry_call',
@@ -200,7 +200,7 @@ if (!function_exists('recovery_engine_sub_status_action')) {
 
 if (!function_exists('recovery_engine_normalize_sub_status')) {
     function recovery_engine_normalize_sub_status(string $raw): string
-    {
+    { global $dbRepo;
         $raw = trim(mb_strtolower($raw, 'UTF-8'));
         $map = [
             'no answer' => 'no_answer',
@@ -261,7 +261,7 @@ if (!function_exists('recovery_engine_normalize_sub_status')) {
 
 if (!function_exists('recovery_engine_parse_ecotrack_attempts')) {
     function recovery_engine_parse_ecotrack_attempts(PDO $pdo, array $tracking_data, string $tracking_number, int $order_id, array $order = []): array
-    {
+    { global $dbRepo;
         recovery_engine_ensure_tables($pdo);
 
         $inserted = 0;
@@ -274,8 +274,8 @@ if (!function_exists('recovery_engine_parse_ecotrack_attempts')) {
             $history = $tracking_data['activities'];
         }
 
-        $check_stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_order_contact_attempt WHERE order_id = ? AND attempt_number = ? AND status = ?");
-        $insert_stmt = $pdo->prepare("
+        $check_stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_order_contact_attempt WHERE order_id = ? AND attempt_number = ? AND status = ?");
+        $insert_stmt = $dbRepo->prepare("
             INSERT IGNORE INTO tbl_order_contact_attempt
             (order_id, tracking_number, status, sub_status, comment, attempt_number, employee_id, attempt_date, raw_payload)
             VALUES (?, ?, ?, ?, ?, ?, 0, ?, ?)
@@ -332,10 +332,10 @@ if (!function_exists('recovery_engine_parse_ecotrack_attempts')) {
         }
 
         if ($inserted > 0) {
-            $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_order_contact_attempt WHERE order_id = ?");
+            $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_order_contact_attempt WHERE order_id = ?");
             $stmt->execute([$order_id]);
             $total = (int) $stmt->fetchColumn();
-            $pdo->prepare("UPDATE tbl_order SET total_contact_attempts = ?, last_contact_attempt_at = ?, last_sub_status = ? WHERE id = ?")
+            $dbRepo->prepare("UPDATE tbl_order SET total_contact_attempts = ?, last_contact_attempt_at = ?, last_sub_status = ? WHERE id = ?")
                 ->execute([$total, $attempt_date ?? date('Y-m-d H:i:s'), $latest_sub_status, $order_id]);
         }
 
@@ -345,7 +345,7 @@ if (!function_exists('recovery_engine_parse_ecotrack_attempts')) {
 
 if (!function_exists('recovery_engine_process_sub_status')) {
     function recovery_engine_process_sub_status(PDO $pdo, int $order_id, string $tracking_number, string $sub_status, string $note = '', array $order = []): array
-    {
+    { global $dbRepo;
         recovery_engine_ensure_tables($pdo);
 
         $action = recovery_engine_sub_status_action($sub_status);
@@ -353,7 +353,7 @@ if (!function_exists('recovery_engine_process_sub_status')) {
 
         $results['action'] = $action;
 
-        $stmt = $pdo->prepare("SELECT id FROM tbl_recovery_tasks WHERE order_id = ? AND sub_status = ? AND status = 'pending' LIMIT 1");
+        $stmt = $dbRepo->prepare("SELECT id FROM tbl_recovery_tasks WHERE order_id = ? AND sub_status = ? AND status = 'pending' LIMIT 1");
         $stmt->execute([$order_id, $sub_status]);
         if ($stmt->fetchColumn()) {
             return ['skipped' => true, 'reason' => 'task_exists', 'action' => $action];
@@ -370,7 +370,7 @@ if (!function_exists('recovery_engine_process_sub_status')) {
         $phone = trim((string) ($order['customer_phone'] ?? ''));
         $name = trim((string) ($order['customer_name'] ?? ''));
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             INSERT INTO tbl_recovery_tasks
             (order_id, tracking_number, task_type, sub_status, status, assigned_to, notes, scheduled_at)
             VALUES (?, ?, ?, ?, 'pending', 0, ?, ?)
@@ -383,25 +383,25 @@ if (!function_exists('recovery_engine_process_sub_status')) {
             $note,
             $scheduled_at,
         ]);
-        $task_id = (int) $pdo->lastInsertId();
+        $task_id = (int) $dbRepo->lastInsertId();
     $results['task_id'] = $task_id;
 
     if (function_exists('audit_log_recovery')) {
         audit_log_recovery($pdo, $task_id, 'recovery_task_created', null, json_encode(['order_id' => $order_id, 'sub_status' => $sub_status, 'task_type' => $action['task_type'], 'note' => $note], JSON_UNESCAPED_UNICODE), 'recovery_engine');
     }
 
-    $pdo->prepare("UPDATE tbl_order SET recovery_status = ? WHERE id = ?")->execute([$action['task_type'], $order_id]);
+    $dbRepo->prepare("UPDATE tbl_order SET recovery_status = ? WHERE id = ?")->execute([$action['task_type'], $order_id]);
 
     if ($action['task_type'] === 'recovery_review') {
             $phone = trim((string) ($order['customer_phone'] ?? ''));
             $name = trim((string) ($order['customer_name'] ?? ''));
-            $queue_stmt = $pdo->prepare("
+            $queue_stmt = $dbRepo->prepare("
                 INSERT IGNORE INTO tbl_recovery_queue
                 (order_id, tracking_number, customer_phone, customer_name, refusal_reason, sub_status, action_taken, created_at)
                 VALUES (?, ?, ?, ?, ?, ?, 'pending_review', NOW())
             ");
             $queue_stmt->execute([$order_id, $tracking_number, $phone, $name, $note, $sub_status]);
-            $results['queue_id'] = (int) $pdo->lastInsertId();
+            $results['queue_id'] = (int) $dbRepo->lastInsertId();
         }
 
         if ($action['risk_impact'] > 0) {
@@ -413,7 +413,7 @@ if (!function_exists('recovery_engine_process_sub_status')) {
             telegram_queue_recovery_notification($pdo, $order_id, $tracking_number, $sub_status, $action['label_ar'], $note);
         }
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             INSERT INTO tbl_customer_risk_timeline
             (customer_phone, customer_name, event_type, event_label, order_id, metadata, created_at)
             VALUES (?, ?, 'recovery_task_created', ?, ?, ?, ?, NOW())
@@ -432,7 +432,7 @@ if (!function_exists('recovery_engine_process_sub_status')) {
 
 if (!function_exists('recovery_engine_update_risk_score')) {
     function recovery_engine_update_risk_score(PDO $pdo, string $phone, string $name, string $sub_status, int $impact, int $order_id = 0): array
-    {
+    { global $dbRepo;
         if ($phone === '') {
             return ['updated' => false, 'reason' => 'no_phone'];
         }
@@ -441,7 +441,7 @@ if (!function_exists('recovery_engine_update_risk_score')) {
         $max_risk_before_blacklist = (int) ($settings['max_risk_before_blacklist'] ?? 3);
 
         $risk_count = 0;
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_customer_risk_timeline WHERE customer_phone = ? AND event_type IN ('risk_increase', 'recovery_task_created')");
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_customer_risk_timeline WHERE customer_phone = ? AND event_type IN ('risk_increase', 'recovery_task_created')");
         $stmt->execute([$phone]);
         $risk_count = (int) $stmt->fetchColumn();
 
@@ -459,7 +459,7 @@ if (!function_exists('recovery_engine_update_risk_score')) {
 
         $previous_level = $new_risk_level;
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             INSERT INTO tbl_customer_risk_timeline
             (customer_phone, customer_name, event_type, event_label, order_id, previous_risk, new_risk, metadata, created_at)
             VALUES (?, ?, 'risk_increase', ?, ?, ?, ?, ?, NOW())
@@ -496,26 +496,26 @@ if (!function_exists('recovery_engine_update_risk_score')) {
 
 if (!function_exists('recovery_engine_auto_blacklist')) {
     function recovery_engine_auto_blacklist(PDO $pdo, string $phone, string $name, int $risk_count, int $order_id = 0): array
-    {
+    { global $dbRepo;
         if (!function_exists('site_security_normalize_phone')) {
             require_once dirname(dirname(__DIR__)) . '/inc/site-security.php';
         }
 
         $normalized = function_exists('site_security_normalize_phone') ? site_security_normalize_phone($phone) : preg_replace('/[^\d]/', '', $phone);
 
-        $stmt = $pdo->prepare("SELECT id FROM site_security_blacklist WHERE normalized_phone = ? LIMIT 1");
+        $stmt = $dbRepo->prepare("SELECT id FROM site_security_blacklist WHERE normalized_phone = ? LIMIT 1");
         $stmt->execute([$normalized]);
         $existing = $stmt->fetchColumn();
 
         if ($existing) {
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 UPDATE site_security_blacklist
                 SET status = 'banned', rejected_orders_count = GREATEST(rejected_orders_count, ?), notes = CONCAT_WS('\n', notes, ?), updated_at = NOW()
                 WHERE id = ?
             ");
             $stmt->execute([$risk_count, 'تلقائي: تراكم مخاطر التوصيل (' . $risk_count . ')', $existing]);
         } else {
-            $stmt = $pdo->prepare("
+            $stmt = $dbRepo->prepare("
                 INSERT INTO site_security_blacklist
                 (phone, normalized_phone, customer_name, status, notes, rejected_orders_count, is_active, created_at)
                 VALUES (?, ?, ?, 'banned', ?, ?, 1, NOW())
@@ -523,7 +523,7 @@ if (!function_exists('recovery_engine_auto_blacklist')) {
             $stmt->execute([$phone, $normalized, $name, 'تلقائي: تراكم مخاطر التوصيل (' . $risk_count . ')', $risk_count]);
         }
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             INSERT INTO tbl_customer_risk_timeline
             (customer_phone, customer_name, event_type, event_label, order_id, metadata, created_at)
             VALUES (?, ?, 'auto_blacklisted', ?, ?, ?, NOW())
@@ -541,7 +541,7 @@ if (!function_exists('recovery_engine_auto_blacklist')) {
 
 if (!function_exists('recovery_engine_get_settings')) {
     function recovery_engine_get_settings(PDO $pdo): array
-    {
+    { global $dbRepo;
         $defaults = [
             'max_risk_before_blacklist' => '3',
             'recovery_auto_retry_enabled' => '1',
@@ -552,7 +552,7 @@ if (!function_exists('recovery_engine_get_settings')) {
         ];
 
         $settings = [];
-        $stmt = $pdo->query("SELECT config_key, config_value FROM tbl_recovery_settings");
+        $stmt = $dbRepo->query("SELECT config_key, config_value FROM tbl_recovery_settings");
         while ($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
             $settings[$row['config_key']] = $row['config_value'];
         }
@@ -569,8 +569,8 @@ if (!function_exists('recovery_engine_get_settings')) {
 
 if (!function_exists('recovery_engine_save_settings')) {
     function recovery_engine_save_settings(PDO $pdo, array $settings): void
-    {
-        $stmt = $pdo->prepare("INSERT INTO tbl_recovery_settings (config_key, config_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE config_value = VALUES(config_value)");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_recovery_settings (config_key, config_value) VALUES (?, ?) ON DUPLICATE KEY UPDATE config_value = VALUES(config_value)");
         foreach ($settings as $key => $value) {
             $stmt->execute([trim((string) $key), trim((string) $value)]);
         }
@@ -579,10 +579,10 @@ if (!function_exists('recovery_engine_save_settings')) {
 
 if (!function_exists('recovery_engine_ensure_settings_table')) {
     function recovery_engine_ensure_settings_table(PDO $pdo): void
-    {
+    { global $dbRepo;
         static $done = false;
         if ($done) return;
-        $pdo->exec("
+        $dbRepo->executeCommand("
             CREATE TABLE IF NOT EXISTS tbl_recovery_settings (
                 config_key VARCHAR(100) PRIMARY KEY,
                 config_value TEXT NULL,
@@ -596,15 +596,15 @@ if (!function_exists('recovery_engine_ensure_settings_table')) {
 
 if (!function_exists('recovery_engine_get_customer_history')) {
     function recovery_engine_get_customer_history(PDO $pdo, string $phone): array
-    {
+    { global $dbRepo;
         $phone = trim($phone);
         if ($phone === '') return ['phone' => '', 'events' => [], 'orders' => [], 'attempts' => [], 'tasks' => []];
 
-        $events = $pdo->prepare("SELECT * FROM tbl_customer_risk_timeline WHERE customer_phone = ? ORDER BY created_at DESC LIMIT 100");
+        $events = $dbRepo->prepare("SELECT * FROM tbl_customer_risk_timeline WHERE customer_phone = ? ORDER BY created_at DESC LIMIT 100");
         $events->execute([$phone]);
         $events = $events->fetchAll(PDO::FETCH_ASSOC);
 
-        $orders = $pdo->prepare("SELECT id, order_status, ecotrack_tracking, ecotrack_remote_status, total_contact_attempts, last_sub_status, recovery_status, product_name, total_price, order_date FROM tbl_order WHERE customer_phone = ? ORDER BY order_date DESC LIMIT 50");
+        $orders = $dbRepo->prepare("SELECT id, order_status, ecotrack_tracking, ecotrack_remote_status, total_contact_attempts, last_sub_status, recovery_status, product_name, total_price, order_date FROM tbl_order WHERE customer_phone = ? ORDER BY order_date DESC LIMIT 50");
         $orders->execute([$phone]);
         $orders = $orders->fetchAll(PDO::FETCH_ASSOC);
 
@@ -613,17 +613,17 @@ if (!function_exists('recovery_engine_get_customer_history')) {
         $tasks = [];
         if (!empty($order_ids)) {
             $placeholders = implode(',', array_fill(0, count($order_ids), '?'));
-            $attempts_stmt = $pdo->prepare("SELECT * FROM tbl_order_contact_attempt WHERE order_id IN ($placeholders) ORDER BY attempt_date DESC LIMIT 200");
+            $attempts_stmt = $dbRepo->prepare("SELECT * FROM tbl_order_contact_attempt WHERE order_id IN ($placeholders) ORDER BY attempt_date DESC LIMIT 200");
             $attempts_stmt->execute($order_ids);
             $attempts = $attempts_stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            $tasks_stmt = $pdo->prepare("SELECT * FROM tbl_recovery_tasks WHERE order_id IN ($placeholders) ORDER BY created_at DESC LIMIT 100");
+            $tasks_stmt = $dbRepo->prepare("SELECT * FROM tbl_recovery_tasks WHERE order_id IN ($placeholders) ORDER BY created_at DESC LIMIT 100");
             $tasks_stmt->execute($order_ids);
             $tasks = $tasks_stmt->fetchAll(PDO::FETCH_ASSOC);
         }
 
         $blacklist = null;
-        $bl_stmt = $pdo->prepare("SELECT * FROM site_security_blacklist WHERE normalized_phone = ? LIMIT 1");
+        $bl_stmt = $dbRepo->prepare("SELECT * FROM site_security_blacklist WHERE normalized_phone = ? LIMIT 1");
         $bl_stmt->execute([preg_replace('/[^\d]/', '', $phone)]);
         $blacklist = $bl_stmt->fetch(PDO::FETCH_ASSOC) ?: null;
 
@@ -640,10 +640,10 @@ if (!function_exists('recovery_engine_get_customer_history')) {
 
 if (!function_exists('recovery_engine_feed_ai_insights')) {
     function recovery_engine_feed_ai_insights(PDO $pdo): array
-    {
+    { global $dbRepo;
         $seven_days_ago = date('Y-m-d H:i:s', strtotime('-7 days'));
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             SELECT sub_status, COUNT(*) AS cnt
             FROM tbl_order_contact_attempt
             WHERE created_at >= ?
@@ -653,7 +653,7 @@ if (!function_exists('recovery_engine_feed_ai_insights')) {
         $stmt->execute([$seven_days_ago]);
         $sub_status_counts = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             SELECT o.wilaya, ca.sub_status, COUNT(*) AS cnt
             FROM tbl_order_contact_attempt ca
             INNER JOIN tbl_order o ON o.id = ca.order_id
@@ -665,7 +665,7 @@ if (!function_exists('recovery_engine_feed_ai_insights')) {
         $stmt->execute([$seven_days_ago]);
         $wilaya_substatus = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        $stmt = $pdo->prepare("
+        $stmt = $dbRepo->prepare("
             SELECT ca.sub_status, COUNT(DISTINCT ca.order_id) AS order_count, COUNT(*) AS attempt_count
             FROM tbl_order_contact_attempt ca
             INNER JOIN tbl_order o ON o.id = ca.order_id
@@ -685,22 +685,22 @@ if (!function_exists('recovery_engine_feed_ai_insights')) {
 
 if (!function_exists('recovery_engine_get_queue_counts')) {
     function recovery_engine_get_queue_counts(PDO $pdo): array
-    {
+    { global $dbRepo;
         return [
-            'pending' => (int) $pdo->query("SELECT COUNT(*) FROM tbl_recovery_tasks WHERE status = 'pending'")->fetchColumn(),
-            'overdue' => (int) $pdo->query("SELECT COUNT(*) FROM tbl_recovery_tasks WHERE status = 'pending' AND scheduled_at IS NOT NULL AND scheduled_at <= NOW()")->fetchColumn(),
-            'review' => (int) $pdo->query("SELECT COUNT(*) FROM tbl_recovery_queue WHERE action_taken = 'pending_review'")->fetchColumn(),
-            'refused' => (int) $pdo->query("SELECT COUNT(*) FROM tbl_recovery_queue")->fetchColumn(),
-            'total_attempts' => (int) $pdo->query("SELECT COUNT(*) FROM tbl_order_contact_attempt")->fetchColumn(),
-            'recent_failures' => (int) $pdo->query("SELECT COUNT(*) FROM tbl_order_contact_attempt WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND sub_status IN ('no_answer','busy','unreachable','refused_by_customer')")->fetchColumn(),
+            'pending' => (int) $dbRepo->query("SELECT COUNT(*) FROM tbl_recovery_tasks WHERE status = 'pending'")->fetchColumn(),
+            'overdue' => (int) $dbRepo->query("SELECT COUNT(*) FROM tbl_recovery_tasks WHERE status = 'pending' AND scheduled_at IS NOT NULL AND scheduled_at <= NOW()")->fetchColumn(),
+            'review' => (int) $dbRepo->query("SELECT COUNT(*) FROM tbl_recovery_queue WHERE action_taken = 'pending_review'")->fetchColumn(),
+            'refused' => (int) $dbRepo->query("SELECT COUNT(*) FROM tbl_recovery_queue")->fetchColumn(),
+            'total_attempts' => (int) $dbRepo->query("SELECT COUNT(*) FROM tbl_order_contact_attempt")->fetchColumn(),
+            'recent_failures' => (int) $dbRepo->query("SELECT COUNT(*) FROM tbl_order_contact_attempt WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR) AND sub_status IN ('no_answer','busy','unreachable','refused_by_customer')")->fetchColumn(),
         ];
     }
 }
 
 if (!function_exists('recovery_engine_resolve_task')) {
     function recovery_engine_resolve_task(PDO $pdo, int $task_id, string $resolution, string $note = '', int $resolved_by = 0): bool
-    {
-        $stmt = $pdo->prepare("UPDATE tbl_recovery_tasks SET status = ?, notes = CONCAT_WS('\n', notes, ?), completed_at = NOW() WHERE id = ?");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("UPDATE tbl_recovery_tasks SET status = ?, notes = CONCAT_WS('\n', notes, ?), completed_at = NOW() WHERE id = ?");
         $stmt->execute([$resolution, $note, $task_id]);
         $ok = $stmt->rowCount() > 0;
         if ($ok && function_exists('audit_log_recovery')) {
@@ -712,8 +712,8 @@ if (!function_exists('recovery_engine_resolve_task')) {
 
 if (!function_exists('recovery_engine_resolve_queue_item')) {
     function recovery_engine_resolve_queue_item(PDO $pdo, int $queue_id, string $action_taken, string $note = '', int $reviewed_by = 0): bool
-    {
-        $stmt = $pdo->prepare("UPDATE tbl_recovery_queue SET action_taken = ?, notes = CONCAT_WS('\n', notes, ?), reviewed_by = ?, reviewed_at = NOW() WHERE id = ?");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("UPDATE tbl_recovery_queue SET action_taken = ?, notes = CONCAT_WS('\n', notes, ?), reviewed_by = ?, reviewed_at = NOW() WHERE id = ?");
         $stmt->execute([$action_taken, $note, $reviewed_by, $queue_id]);
         return $stmt->rowCount() > 0;
     }

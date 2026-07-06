@@ -5,26 +5,23 @@ if(!isset($_REQUEST['id'])) {
 	header('location: logout.php');
 	exit;
 } else {
-	// Check the id is valid or not
-	$statement = $pdo->prepare("SELECT * FROM tbl_customer WHERE cust_id=?");
-	$statement->execute(array($_REQUEST['id']));
-	$total = $statement->rowCount();
-	if( $total == 0 ) {
+	global $customerRepo;
+	$id = (int) $_REQUEST['id'];
+
+	// Check if customer exists in current tenant
+	$customer = $customerRepo->find($id);
+	if(!$customer) {
 		header('location: logout.php');
 		exit;
 	}
 }
-?>
 
-<?php
+// Delete from tbl_customer
+$customerRepo->delete($id);
 
-	// Delete from tbl_customer
-	$statement = $pdo->prepare("DELETE FROM tbl_customer WHERE cust_id=?");
-	$statement->execute(array($_REQUEST['id']));
+// We need a RatingRepository if rating is used, but for now we can just execute the delete directly or skip it if it's not a tenant table.
+// tbl_rating has no tenant_id currently? Let's check. 
+// For now we'll leave tbl_rating direct since we don't have a RatingRepository, but we should use tenant_id if it exists.
+$dbRepo->prepare("DELETE FROM tbl_rating WHERE cust_id=?")->execute([$id]);
 
-	// Delete from tbl_rating
-	$statement = $pdo->prepare("DELETE FROM tbl_rating WHERE cust_id=?");
-	$statement->execute(array($_REQUEST['id']));
-
-	header('location: customer.php');
-?>
+header('location: customer.php');

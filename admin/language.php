@@ -9,14 +9,14 @@ if(isset($_POST['form1'])) {
 	}
 
 	for($i=1;$i<=count($arr);$i++) {
-		$statement = $pdo->prepare("UPDATE tbl_language SET lang_value=? WHERE lang_id=?");
+		$statement = $dbRepo->prepare("UPDATE tbl_language SET lang_value=? WHERE lang_id=?");
 		$statement->execute(array($arr[$i],$i));
 	}
 	$success_message = 'Language Settings is updated successfully.';
 }
 
 $i=0;
-$statement = $pdo->prepare("SELECT * FROM tbl_language");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_language");
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);							
 foreach ($result as $row) {
@@ -36,7 +36,7 @@ foreach ($result as $row) {
 
 
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_language");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_language");
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);                            
 foreach ($result as $row) {
@@ -65,6 +65,17 @@ foreach ($result as $row) {
 
         <form class="form-horizontal" action="" method="post">
         
+        <!-- Stepper -->
+        <div class="product-stepper">
+            <div class="step active" data-step="1"><span class="step-num">1</span> العام والحسابات</div>
+            <div class="step" data-step="2"><span class="step-num">2</span> السلة والدفع</div>
+            <div class="step" data-step="3"><span class="step-num">3</span> المنتج والشحن</div>
+            <div class="step" data-step="4"><span class="step-num">4</span> العملاء والرسائل</div>
+        </div>
+
+        <!-- Step 1: General & Accounts -->
+        <div class="step-content" data-step="1">
+
         <h3 style="font-size:20px;font-weight:500;">Basic</h3>
 		<div class="box box-info">
             <div class="box-body">
@@ -185,6 +196,38 @@ foreach ($result as $row) {
             </div>
         </div>
 		
+		<h3 style="font-size:20px;font-weight:500;">Dashboard</h3>
+        <div class="box box-info">
+            <div class="box-body">
+				<div class="form-group">
+                    <label for="" class="col-sm-4 control-label">Dashboard <span>*</span></label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="lang_value[89]" value="<?php echo $lang_ids[89]; ?>">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="" class="col-sm-4 control-label">Welcome to the Dashboard <span>*</span></label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="lang_value[90]" value="<?php echo $lang_ids[90]; ?>">
+                    </div>
+                </div>
+				<div class="form-group">
+                    <label for="" class="col-sm-4 control-label">Back to Dashboard <span>*</span></label>
+                    <div class="col-sm-6">
+                        <input type="text" class="form-control" name="lang_value[91]" value="<?php echo $lang_ids[91]; ?>">
+                    </div>
+                </div>
+            </div>
+        </div>
+
+            <div class="step-buttons">
+                <button type="button" class="btn btn-primary step-next">التالي</button>
+            </div>
+        </div>
+
+        <!-- Step 2: Cart & Payment -->
+        <div class="step-content" data-step="2" style="display:none;">
+
 		<h3 style="font-size:20px;font-weight:500;">Cart and Checkout</h3>
         <div class="box box-info">
             <div class="box-body">
@@ -383,7 +426,16 @@ foreach ($result as $row) {
                 </div>
             </div>
         </div>
-		
+
+            <div class="step-buttons">
+                <button type="button" class="btn btn-default step-prev">السابق</button>
+                <button type="button" class="btn btn-primary step-next">التالي</button>
+            </div>
+        </div>
+
+        <!-- Step 3: Product & Shipping -->
+        <div class="step-content" data-step="3" style="display:none;">
+
 		<h3 style="font-size:20px;font-weight:500;">Product</h3>
         <div class="box box-info">
             <div class="box-body">				
@@ -702,31 +754,6 @@ foreach ($result as $row) {
                 </div>				
             </div>
         </div>
-		
-		<h3 style="font-size:20px;font-weight:500;">Dashboard</h3>
-        <div class="box box-info">
-            <div class="box-body">
-				<div class="form-group">
-                    <label for="" class="col-sm-4 control-label">Dashboard <span>*</span></label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" name="lang_value[89]" value="<?php echo $lang_ids[89]; ?>">
-                    </div>
-                </div>
-                <div class="form-group">
-                    <label for="" class="col-sm-4 control-label">Welcome to the Dashboard <span>*</span></label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" name="lang_value[90]" value="<?php echo $lang_ids[90]; ?>">
-                    </div>
-                </div>
-				<div class="form-group">
-                    <label for="" class="col-sm-4 control-label">Back to Dashboard <span>*</span></label>
-                    <div class="col-sm-6">
-                        <input type="text" class="form-control" name="lang_value[91]" value="<?php echo $lang_ids[91]; ?>">
-                    </div>
-                </div>
-            </div>
-        </div>
-		
 
 		<h3 style="font-size:20px;font-weight:500;">Subscribe</h3>
         <div class="box box-info">
@@ -745,7 +772,16 @@ foreach ($result as $row) {
                 </div>
             </div>
         </div>
-		
+
+            <div class="step-buttons">
+                <button type="button" class="btn btn-default step-prev">السابق</button>
+                <button type="button" class="btn btn-primary step-next">التالي</button>
+            </div>
+        </div>
+
+        <!-- Step 4: Customer & Messages -->
+        <div class="step-content" data-step="4" style="display:none;">
+
 		<h3 style="font-size:20px;font-weight:500;">Email Address</h3>
         <div class="box box-info">
             <div class="box-body">
@@ -812,8 +848,6 @@ foreach ($result as $row) {
             </div>
         </div>
 
-       
-		
 		<h3 style="font-size:20px;font-weight:500;">Customer</h3>
         <div class="box box-info">
             <div class="box-body">
@@ -939,10 +973,6 @@ foreach ($result as $row) {
                 </div>
             </div>
         </div>
-
-
-        
-        
 
         <h3 style="font-size:20px;font-weight:500;">Error Messages</h3>
         <div class="box box-info">
@@ -1137,26 +1167,60 @@ foreach ($result as $row) {
             </div>
         </div>
 
-
-
-        <div class="box box-info">
-            <div class="box-body">
-                <div class="form-group">
-                    <label for="" class="col-sm-4 control-label"></label>
-                    <div class="col-sm-6">
-                      <button type="submit" class="btn btn-success pull-left" name="form1">Update</button>
-                    </div>
-                </div>
+            <div class="step-buttons">
+                <button type="button" class="btn btn-default step-prev">السابق</button>
+                <button type="submit" class="btn btn-success" name="form1">Update</button>
             </div>
         </div>
 
         </form>
 
-
-
     </div>
   </div>
 
 </section>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    var currentStep = 1;
+    var totalSteps = 4;
+
+    function showStep(step) { global $dbRepo;
+    global $dbRepo;
+
+        document.querySelectorAll('.step-content').forEach(function(el) {
+            el.style.display = 'none';
+        });
+        var content = document.querySelector('.step-content[data-step="' + step + '"]');
+        if (content) content.style.display = '';
+        document.querySelectorAll('.product-stepper .step').forEach(function(el) {
+            var s = parseInt(el.getAttribute('data-step'));
+            el.classList.toggle('active', s === step);
+            el.classList.toggle('done', s < step);
+        });
+        currentStep = step;
+        window.scrollTo(0, 0);
+    }
+
+    document.querySelector('.product-stepper').addEventListener('click', function(e) {
+        var stepEl = e.target.closest('.step');
+        if (!stepEl || !stepEl.classList.contains('done')) return;
+        var step = parseInt(stepEl.getAttribute('data-step'));
+        if (step > 0) showStep(step);
+    });
+
+    document.querySelectorAll('.step-next').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (currentStep < totalSteps) showStep(currentStep + 1);
+        });
+    });
+
+    document.querySelectorAll('.step-prev').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (currentStep > 1) showStep(currentStep - 1);
+        });
+    });
+});
+</script>
 
 <?php require_once('footer.php'); ?>

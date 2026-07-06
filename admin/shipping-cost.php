@@ -28,15 +28,15 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {
         foreach ($shipping_amounts as $wilaya_id => $amount) {
-            $statement = $pdo->prepare("SELECT id FROM tbl_shipping_cost WHERE wilaya_id = ?");
+            $statement = $dbRepo->prepare("SELECT id FROM tbl_shipping_cost WHERE wilaya_id = ?");
             $statement->execute([$wilaya_id]);
             $existing = $statement->fetch(PDO::FETCH_ASSOC);
             
             if ($existing) {
-                $statement = $pdo->prepare("UPDATE tbl_shipping_cost SET amount = ? WHERE wilaya_id = ?");
+                $statement = $dbRepo->prepare("UPDATE tbl_shipping_cost SET amount = ? WHERE wilaya_id = ?");
                 $statement->execute([$amount, $wilaya_id]);
             } else {
-                $statement = $pdo->prepare("INSERT INTO tbl_shipping_cost (wilaya_id, amount) VALUES (?, ?)");
+                $statement = $dbRepo->prepare("INSERT INTO tbl_shipping_cost (wilaya_id, amount) VALUES (?, ?)");
                 $statement->execute([$wilaya_id, $amount]);
             }
         }
@@ -45,7 +45,7 @@ if(isset($_POST['form1'])) {
     }
 }
 
-$statement = $pdo->prepare("SELECT id, name FROM tbl_wilaya");
+$statement = $dbRepo->prepare("SELECT id, name FROM tbl_wilaya");
 $statement->execute();
 $all_wilayas = $statement->fetchAll(PDO::FETCH_ASSOC);
 ?>

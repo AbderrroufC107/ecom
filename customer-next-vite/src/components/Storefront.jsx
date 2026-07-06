@@ -66,7 +66,7 @@ export function StoreHeader({ store, categories = [], actions = null }) {
           <div className="headerMenuPanel">
             <Link to="/">الرئيسية</Link>
             {visibleCategories.map((category) => (
-              <a key={category.id} href={category.url}>{category.name}</a>
+              <Link key={category.id} to={toSpaPath(category.url)}>{category.name}</Link>
             ))}
             <a href={`${phpBase}/customer-order.php`}>طلباتي</a>
             <a href={`${phpBase}/contact.php`}>الدعم</a>
@@ -124,7 +124,7 @@ export function StoreHeader({ store, categories = [], actions = null }) {
 
       <nav>
         {visibleCategories.map((category) => (
-          <a key={category.id} href={category.url}>{category.name}</a>
+          <Link key={category.id} to={toSpaPath(category.url)}>{category.name}</Link>
         ))}
       </nav>
 
@@ -137,7 +137,22 @@ export function StoreHeader({ store, categories = [], actions = null }) {
 }
 
 function isInternalUrl(url) {
-  return url && url.startsWith("/") && !url.includes(".php") && !url.startsWith("http");
+  if (!url || url.startsWith("http")) return false;
+  if (url.startsWith("/") && !url.includes(".php")) return true;
+  if (url.includes(".php")) return true;
+  return false;
+}
+
+function toSpaPath(url) {
+  if (!url) return "/";
+  if (url.startsWith("http")) return url;
+  let path = url;
+  path = path.replace(/buy-now\.php/, "/buy-now");
+  path = path.replace(/landing_page_2\.php/, "/landing_page_2");
+  path = path.replace(/landing_page\.php/, "/landing_page");
+  path = path.replace(/product-category\.php/, "/category");
+  if (!path.startsWith("/")) path = "/" + path;
+  return path;
 }
 
 function ProductCard({ product }) {
@@ -172,11 +187,7 @@ function ProductCard({ product }) {
 
   return (
     <article className="productTile" itemScope itemType="https://schema.org/Product">
-      {isInternalUrl(product.url) ? (
-        <Link className="productImage" to={product.url} tabIndex={-1}>{imgContent}</Link>
-      ) : (
-        <a className="productImage" href={product.url} tabIndex={-1}>{imgContent}</a>
-      )}
+      <Link className="productImage" to={toSpaPath(product.url)} tabIndex={-1}>{imgContent}</Link>
       <div className="productInfo">
         <h3 itemProp="name">{product.name}</h3>
         <div className="productMeta" itemProp="offers" itemScope itemType="https://schema.org/Offer">
@@ -185,15 +196,9 @@ function ProductCard({ product }) {
         </div>
         <div className="tileFooter">
           <small><Icon name="star" /> {product.views || 0}</small>
-          {isInternalUrl(product.url) ? (
-            <Link to={product.url} aria-label={`اطلب ${product.name}`}>
-              اطلب الآن <Icon name="arrow" />
-            </Link>
-          ) : (
-            <a href={product.url} aria-label={`اطلب ${product.name}`}>
-              اطلب الآن <Icon name="arrow" />
-            </a>
-          )}
+          <Link to={toSpaPath(product.url)} aria-label={`اطلب ${product.name}`}>
+            اطلب الآن <Icon name="arrow" />
+          </Link>
         </div>
       </div>
     </article>

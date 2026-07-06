@@ -5,11 +5,15 @@ require_once('inc/performance_functions.php');
 
 performance_ensure_tables($pdo);
 
+$current_manager_id = (int)($_SESSION['user']['id'] ?? 0);
+$is_super_admin = (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin');
+$effective_manager_id = $is_super_admin ? null : $current_manager_id;
+
 $period = trim((string) ($_GET['period'] ?? 'all'));
 $limit = 50;
-$ranking = performance_get_ranking($pdo, $limit, $period);
+$ranking = performance_get_ranking($pdo, $limit, $period, $effective_manager_id);
 
-$widgets = performance_get_dashboard_widgets($pdo);
+$widgets = performance_get_dashboard_widgets($pdo, $effective_manager_id);
 ?>
 <section class="content-header">
     <h1>ترتيب الموظفين</h1>
@@ -111,7 +115,7 @@ $widgets = performance_get_dashboard_widgets($pdo);
                                         <td><?php echo $emp['delivery_success_rate']; ?>%</td>
                                         <td><?php echo $emp['cancellation_rate']; ?>%</td>
                                         <td><?php echo $emp['avg_processing_hours']; ?> ساعة</td>
-                                        <td><a href="employee-details.php?id=<?php echo (int) $emp['id']; ?>" class="btn btn-default btn-xs"><i class="fa fa-eye"></i></a></td>
+                                        <td><a href="employee-details.php?id=<?php echo (int) $emp['id']; ?>" class="btn btn-default btn-xs"><i class="fa fa-eye"></i> عرض</a></td>
                                     </tr>
                                 <?php endforeach; ?>
                             <?php endif; ?>

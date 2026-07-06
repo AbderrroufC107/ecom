@@ -1,0 +1,2479 @@
+
+<!DOCTYPE html>
+<html lang="ar" dir="ltr">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta http-equiv="X-Frame-Options" content="SAMEORIGIN">
+	<meta http-equiv="X-Content-Type-Options" content="nosniff">
+	<meta name="referrer" content="strict-origin-when-cross-origin">
+	<title>لوحة التحكم | متجر الثقة</title>
+
+	<meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+	<link rel="stylesheet" href="css/select2.min.css">
+	<link rel="stylesheet" href="css/dataTables.bootstrap.css">
+	<link rel="stylesheet" href="css/jquery.fancybox.css">
+	<link rel="stylesheet" href="css/AdminLTE.min.css">
+	<link rel="stylesheet" href="css/_all-skins.min.css">
+	<link rel="stylesheet" href="css/on-off-switch.css"/>
+	<link rel="stylesheet" href="css/summernote.css">
+	<link rel="stylesheet" href="style.css?v=react-admin-20260516-2">
+		<style id="admin-react-critical-css">
+		@font-face {
+			font-family: 'InterLocal';
+			src: url('../assets/fonts/inter-400.woff2') format('woff2');
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: 'InterLocal';
+			src: url('../assets/fonts/inter-600.woff2') format('woff2');
+			font-weight: 600;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: 'InterLocal';
+			src: url('../assets/fonts/inter-700.woff2') format('woff2');
+			font-weight: 700;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: 'CairoLocal';
+			src: url('../assets/fonts/cairo-400.woff2') format('woff2');
+			font-weight: 400;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: 'CairoLocal';
+			src: url('../assets/fonts/cairo-500.woff2') format('woff2');
+			font-weight: 500;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		@font-face {
+			font-family: 'CairoLocal';
+			src: url('../assets/fonts/cairo-700.woff2') format('woff2');
+			font-weight: 700;
+			font-style: normal;
+			font-display: swap;
+		}
+
+		body.admin-react-pending .main-header,
+		body.admin-react-pending .main-sidebar {
+			display: none !important;
+		}
+
+		body.admin-react-pending .content-wrapper,
+		body.admin-react-pending .right-side,
+		body.admin-react-pending .main-footer {
+			visibility: hidden !important;
+			margin-right: 288px !important;
+			margin-left: 0 !important;
+			padding-top: 92px !important;
+		}
+
+		body.admin-react-pending #admin-react-shell:before {
+			content: "";
+			position: fixed;
+			top: 0;
+			bottom: 0;
+			right: 0;
+			z-index: 1043;
+			width: 288px;
+			background: #ffffff;
+			border-left: 1px solid #e2e8f0;
+			box-shadow: -12px 0 34px rgba(15, 23, 42, 0.06);
+		}
+
+		body.admin-react-pending #admin-react-shell:after {
+			content: "";
+			position: fixed;
+			top: 0;
+			right: 288px;
+			left: 0;
+			z-index: 1042;
+			height: 72px;
+			background: rgba(255,255,255,0.94);
+			border-bottom: 1px solid rgba(226, 232, 240, 0.92);
+			box-shadow: 0 10px 28px rgba(15, 23, 42, 0.04);
+		}
+
+		@media (max-width: 900px) {
+			body.admin-react-pending .content-wrapper,
+			body.admin-react-pending .right-side,
+			body.admin-react-pending .main-footer {
+				margin-right: 0 !important;
+				margin-left: 0 !important;
+				padding-top: 72px !important;
+			}
+
+			body.admin-react-pending #admin-react-shell:before {
+				transform: translateX(100%);
+			}
+
+			body.admin-react-pending #admin-react-shell:after {
+				right: 0;
+				height: 72px;
+			}
+		}
+
+		.sidebar-menu li:has(> a[href="top-category.php"]),
+		.sidebar-menu li:has(> a[href="mid-category.php"]),
+		.sidebar-menu li:has(> a[href="end-category.php"]) {
+			display: none !important;
+		}
+	</style>
+
+<script>
+if (window.self !== window.top) {
+    document.write('<style>.main-header, .main-sidebar, .main-footer { display: none !important; } .content-wrapper { margin-left: 0 !important; margin-top: 0 !important; padding-top: 0 !important; z-index: 9999; } body { background: #ecf0f5; padding-top: 0 !important; }</style>');
+}
+// CSRF token injection for all POST forms
+(function() {
+    var csrfToken = 'ebfaea5121c6283eecef886a2e0631f244f1d763246928f3678d66eecf8988b4';
+    document.addEventListener('DOMContentLoaded', function() {
+        var forms = document.querySelectorAll('form[method="post"]');
+        for (var i = 0; i < forms.length; i++) {
+            if (!forms[i].querySelector('input[name="_csrf"]')) {
+                var input = document.createElement('input');
+                input.type = 'hidden';
+                input.name = '_csrf';
+                input.value = csrfToken;
+                forms[i].appendChild(input);
+            }
+        }
+    });
+})();
+</script>
+</head>
+
+<body class="hold-transition fixed skin-blue sidebar-mini admin-pro-theme admin-ltr-layout admin-react-pending">
+	<link rel="stylesheet" href="assets/ui/main-ui.css?v=1782305122">
+	<div id="admin-react-shell" data-admin-name="Admin" data-current-lang=""></div>
+
+	<div class="wrapper">
+		<style>
+		.main-header, .main-sidebar, .main-footer, #admin-react-shell { display: none !important; }
+		.content-wrapper { margin-left: 0 !important; padding-top: 0 !important; background: transparent !important; min-height: auto !important;}
+		body { background: transparent !important; padding: 0 !important; }
+		section.content-header { display: none !important; }
+		section.content { padding: 0 !important; margin: 0 !important; }
+		html, body { overflow-x: hidden; }
+	</style>
+	<script>
+	// Prevent nested UI if an iframe redirects without the iframe=1 parameter
+	if (window.self !== window.top) {
+		if (window.location.href.indexOf('iframe=1') === -1) {
+			if (typeof window.parent.closeIframeDrawer === 'function') {
+				window.parent.closeIframeDrawer();
+			} else {
+				window.parent.location.reload();
+			}
+		}
+	}
+	</script>
+	
+		<header class="main-header">
+
+			<a href="index.php" class="logo">
+				<span class="logo-mini admin-logo-mini">MT</span>
+				<span class="logo-lg admin-logo-text">متجر الثقة</span>
+			</a>
+
+			<nav class="navbar navbar-static-top">
+				<a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+					<span class="sr-only">إظهار أو إخفاء القائمة</span>
+				</a>
+
+				<span class="admin-navbar-title">لوحة التحكم</span>
+
+				<div class="navbar-custom-menu admin-user-menu">
+					<ul class="nav navbar-nav ml-auto">
+						<li class="nav-item dropdown no-arrow">
+							<a class="nav-link dropdown-toggle admin-user-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+								<span class="mr-2 d-none d-lg-inline text-gray-600 small admin-user-name">
+									Admin								</span>
+								<i class="fa fa-user-circle-o"></i>
+							</a>
+							<div class="dropdown-menu dropdown-menu-right shadow animated--grow-in admin-user-dropdown" aria-labelledby="userDropdown">
+								<a class="dropdown-item" href="profile-edit.php">
+									<i class="fa fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+									الملف الشخصي
+								</a>
+								<div class="dropdown-divider"></div>
+								<a class="dropdown-item" href="logout.php">
+									<i class="fa fa-sign-out fa-sm fa-fw mr-2 text-gray-400"></i>
+									تسجيل الخروج
+								</a>
+							</div>
+						</li>
+					</ul>
+				</div>
+
+			</nav>
+		</header>
+
+  		  		<aside class="main-sidebar">
+    		<section class="sidebar">
+      			<ul class="sidebar-menu">
+
+		        
+		        
+		        <li class="treeview ">
+		          <a href="index.php">
+		            <i class="fa fa-home"></i> <span>الرئيسية</span>
+		          </a>
+		        </li>
+
+		        <!-- المنتجات -->
+		        <li class="treeview ">
+		          <a href="#">
+		            <i class="fa fa-shopping-bag"></i>
+		            <span>المنتجات</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="product.php"><i class="fa fa-circle-o"></i> إدارة المنتجات</a></li>
+		            <li><a href="top-category.php"><i class="fa fa-circle-o"></i> الفئات الرئيسية</a></li>
+		            <li><a href="mid-category.php"><i class="fa fa-circle-o"></i> الفئات الفرعية</a></li>
+		            <li><a href="end-category.php"><i class="fa fa-circle-o"></i> الفئات النهائية</a></li>
+		            <li><a href="size.php"><i class="fa fa-circle-o"></i> المقاسات</a></li>
+		            <li><a href="color.php"><i class="fa fa-circle-o"></i> الألوان</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- الطلبات -->
+		        <li class="treeview active">
+		          <a href="#">
+		            <i class="fa fa-sticky-note"></i>
+		            <span>الطلبات</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="order.php"><i class="fa fa-circle-o"></i> إدارة الطلبات</a></li>
+		            <li><a href="order-statistics.php"><i class="fa fa-circle-o"></i> الإحصائيات</a></li>
+		            <li><a href="exchange-requests.php"><i class="fa fa-circle-o"></i> طلبات التبديل</a></li>
+		            <li><a href="incomplete-orders.php"><i class="fa fa-circle-o"></i> الطلبات المعلقة</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- المتجر -->
+		        <li class="treeview ">
+		          <a href="#">
+		            <i class="fa fa-shopping-cart"></i>
+		            <span>المتجر</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="settings.php"><i class="fa fa-circle-o"></i> الإعدادات</a></li>
+		            <li><a href="slider.php"><i class="fa fa-circle-o"></i> السلايدر</a></li>
+		            <li><a href="country.php"><i class="fa fa-circle-o"></i> الولايات / الدول</a></li>
+		            <li><a href="shipping-cost.php"><i class="fa fa-circle-o"></i> تكاليف التوصيل</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- العملاء والموظفين -->
+		        <li class="treeview ">
+		          <a href="#">
+		            <i class="fa fa-users"></i>
+		            <span>العملاء والموظفين</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="customer.php"><i class="fa fa-circle-o"></i> العملاء</a></li>
+		            <li><a href="employees.php"><i class="fa fa-circle-o"></i> الموظفين</a></li>
+		            <li><a href="employee-ranking.php"><i class="fa fa-circle-o"></i> ترتيب الموظفين</a></li>
+		            <li><a href="commission-settings.php"><i class="fa fa-circle-o"></i> العمولات</a></li>
+		            <li><a href="performance-settings.php"><i class="fa fa-circle-o"></i> إعدادات التقييم</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- التوصيل -->
+		        <li class="treeview ">
+		          <a href="delivery_list.php">
+		            <i class="fa fa-truck"></i> <span>شركات التوصيل</span>
+		          </a>
+		        </li>
+
+		        <!-- الأحداث والتتبع -->
+		        <li class="treeview ">
+		          <a href="#">
+		            <i class="fa fa-bell"></i>
+		            <span>الأحداث والتتبع</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="event-settings.php"><i class="fa fa-circle-o"></i> مراقبة الأحداث</a></li>
+		            <li><a href="pixel.php"><i class="fa fa-circle-o"></i> بكسلات التتبع</a></li>
+		          </ul>
+		        </li>
+
+		        <!-- النظام -->
+		        <li class="treeview ">
+		          <a href="#">
+		            <i class="fa fa-cog"></i>
+		            <span>النظام</span>
+		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+		          </a>
+		          <ul class="treeview-menu">
+		            <li><a href="site-security.php"><i class="fa fa-circle-o"></i> أمان الموقع</a></li>
+		            <li><a href="audit-log.php"><i class="fa fa-circle-o"></i> سجل التدقيق</a></li>
+		            <li><a href="system-health.php"><i class="fa fa-circle-o"></i> صحة النظام</a></li>
+		            <li><a href="ai-insights.php"><i class="fa fa-circle-o"></i> PHI Insights</a></li>
+		            		            <li><a href="users.php"><i class="fa fa-circle-o"></i> إدارة المستخدمين</a></li>
+		            		          </ul>
+		        </li>
+
+        </ul>
+      </section>
+    </aside>
+    
+   		<div class="content-wrapper">
+   		
+<style>
+.order-details-linkbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin: 0 0 14px;
+}
+.order-details-linkbar .btn {
+    border-radius: 10px;
+    font-weight: 700;
+    border: 1px solid #dbe4ee;
+    background: #fff;
+    color: #1f2937;
+}
+.order-details-linkbar .btn.btn-primary {
+    border-color: #2563eb;
+    background: linear-gradient(135deg, #2563eb, #3b82f6);
+    color: #fff;
+}
+
+.order-details-ecotrack-hero {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 16px;
+    padding: 14px 16px;
+    border: 1px solid #dbe4ee;
+    border-radius: 14px;
+    background: linear-gradient(135deg, #f8fbff 0%, #edf5ff 100%);
+}
+.order-details-ecotrack-hero h4 {
+    margin: 0;
+    font-size: 17px;
+    font-weight: 800;
+    color: #0f172a;
+}
+.order-details-ecotrack-hero p {
+    margin: 4px 0 0;
+    color: #475467;
+    font-size: 13px;
+}
+
+.order-details-ecotrack-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 14px;
+    margin-bottom: 14px;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.05);
+}
+.order-details-ecotrack-card h4 {
+    margin: 0 0 12px;
+    font-size: 15px;
+    font-weight: 800;
+    color: #1e293b;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+#tab_ecotrack .ecotrack-summary-table-wrap {
+    width: 100%;
+    overflow-x: auto;
+    border: 1px solid #dbe4ee;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.06);
+}
+
+#tab_ecotrack .ecotrack-summary-table {
+    width: 100%;
+    min-width: 760px;
+    border-collapse: separate;
+    border-spacing: 0;
+    table-layout: fixed;
+}
+
+#tab_ecotrack .ecotrack-summary-table-wrap.ecotrack-card-grid-wide .ecotrack-summary-table {
+    min-width: 960px;
+}
+
+#tab_ecotrack .ecotrack-summary-table th,
+#tab_ecotrack .ecotrack-summary-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e4ebf3;
+    vertical-align: top;
+}
+
+#tab_ecotrack .ecotrack-summary-table tr:last-child th,
+#tab_ecotrack .ecotrack-summary-table tr:last-child td {
+    border-bottom: 0;
+}
+
+#tab_ecotrack .ecotrack-summary-table-label {
+    width: 13%;
+    min-width: 120px;
+    background: #f8fafc;
+    color: #475467;
+    font-size: 12px;
+    font-weight: 800;
+    white-space: nowrap;
+}
+
+#tab_ecotrack .ecotrack-summary-table-value {
+    width: 20%;
+    background: #ffffff;
+    color: #101828;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 1.8;
+    word-break: break-word;
+}
+
+#tab_ecotrack .ecotrack-summary-table-value .label {
+    display: inline-block;
+    margin-top: 2px;
+}
+
+#tab_ecotrack .ecotrack-summary-table-label-empty,
+#tab_ecotrack .ecotrack-summary-table-value-empty {
+    background: #ffffff;
+}
+
+#tab_ecotrack .ecotrack-actions-panel {
+    background: linear-gradient(180deg, #f8fbff 0%, #f3f8ff 100%);
+    border: 1px solid #d4e3f4;
+    border-radius: 18px;
+    padding: 16px;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.07);
+}
+
+#tab_ecotrack .ecotrack-actions-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+#tab_ecotrack .ecotrack-actions-row:last-child {
+    margin-bottom: 0;
+}
+
+#tab_ecotrack .ecotrack-actions-row form,
+#tab_ecotrack .ecotrack-actions-row a {
+    display: inline-flex;
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn {
+    min-height: 44px;
+    padding: 10px 16px;
+    border-radius: 14px;
+    font-size: 14px;
+    font-weight: 800;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    border: 1px solid transparent;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.10);
+    transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn:hover,
+#tab_ecotrack .ecotrack-actions-row .btn:focus {
+    transform: translateY(-1px);
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.14);
+    filter: saturate(1.05);
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn-default {
+    background: #ffffff;
+    border-color: #d0dbe7;
+    color: #1f2937;
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn-primary {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+    color: #ffffff;
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn-info {
+    background: linear-gradient(135deg, #0891b2 0%, #0e7490 100%);
+    color: #ffffff;
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn-success {
+    background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+    color: #ffffff;
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn-warning {
+    background: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
+    color: #ffffff;
+}
+
+#tab_ecotrack .ecotrack-actions-row .btn-danger {
+    background: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
+    color: #ffffff;
+}
+
+#tab_ecotrack .ecotrack-actions-row .checkbox-inline {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px solid #d0dbe7;
+    border-radius: 14px;
+    background: #ffffff;
+    color: #344054;
+    font-weight: 700;
+    box-shadow: 0 6px 14px rgba(15, 23, 42, 0.06);
+}
+
+#tab_ecotrack .ecotrack-actions-row .text-muted {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 10px 14px;
+    border: 1px dashed #cbd5e1;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.72);
+    color: #667085 !important;
+}
+
+#tab_ecotrack .ecotrack-timeline {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+#tab_ecotrack .ecotrack-timeline-item {
+    background: #fff;
+    border: 1px solid #dbe4ee;
+    border-right: 4px solid #2e90fa;
+    border-radius: 14px;
+    padding: 14px;
+    box-shadow: 0 1px 2px rgba(16, 24, 40, 0.05);
+}
+
+#tab_ecotrack .ecotrack-timeline-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+
+#tab_ecotrack .ecotrack-timeline-meta-item {
+    background: #eff8ff;
+    color: #175cd3;
+    border: 1px solid #b2ddff;
+    border-radius: 999px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 700;
+}
+
+#tab_ecotrack .ecotrack-timeline-fields {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+}
+
+#tab_ecotrack .ecotrack-timeline-field {
+    background: #f8fafc;
+    border-radius: 10px;
+    padding: 10px 12px;
+}
+
+#tab_ecotrack .ecotrack-timeline-field-label {
+    color: #667085;
+    font-size: 12px;
+    font-weight: 700;
+    margin-bottom: 6px;
+}
+
+#tab_ecotrack .ecotrack-timeline-field-value {
+    color: #101828;
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.6;
+    word-break: break-word;
+}
+
+#tab_ecotrack .ecotrack-actions-row form,
+#tab_ecotrack .ecotrack-actions-row a,
+#tab_ecotrack .ecotrack-actions-row .checkbox-inline {
+    margin: 0 !important;
+}
+
+@media (max-width: 991px) {
+    #tab_ecotrack .ecotrack-summary-table {
+        min-width: 680px;
+    }
+}
+
+#ecotrackActionOverlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 23, 42, 0.55);
+    display: none;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+    padding: 20px;
+}
+
+#ecotrackActionOverlay.is-visible {
+    display: flex;
+}
+
+.ecotrack-action-dialog {
+    width: min(520px, 100%);
+    background: #fff;
+    border-radius: 16px;
+    padding: 22px;
+    box-shadow: 0 24px 48px rgba(15, 23, 42, 0.25);
+}
+
+.ecotrack-action-dialog-head {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 14px;
+}
+
+.ecotrack-action-dialog-spinner {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    border: 4px solid #dbeafe;
+    border-top-color: #0284c7;
+    animation: ecotrack-spin 0.9s linear infinite;
+    flex: 0 0 42px;
+}
+
+.ecotrack-action-dialog.is-done .ecotrack-action-dialog-spinner {
+    animation: none;
+    border-color: #dcfce7;
+    border-top-color: #16a34a;
+    position: relative;
+}
+
+.ecotrack-action-dialog.is-done .ecotrack-action-dialog-spinner::after {
+    content: '\f00c';
+    font-family: FontAwesome;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #16a34a;
+    font-size: 18px;
+}
+
+.ecotrack-action-dialog.is-error .ecotrack-action-dialog-spinner {
+    animation: none;
+    border-color: #fee2e2;
+    border-top-color: #dc2626;
+    position: relative;
+}
+
+.ecotrack-action-dialog.is-error .ecotrack-action-dialog-spinner::after {
+    content: '\f00d';
+    font-family: FontAwesome;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #dc2626;
+    font-size: 18px;
+}
+
+.ecotrack-action-dialog-title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.ecotrack-action-dialog-text {
+    font-size: 15px;
+    line-height: 1.9;
+    color: #334155;
+    margin-bottom: 14px;
+    word-break: break-word;
+}
+
+.ecotrack-action-dialog-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+}
+
+@keyframes ecotrack-spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+@media (max-width: 767px) {
+    #tab_ecotrack .ecotrack-card-grid,
+    #tab_ecotrack .ecotrack-card-grid-wide {
+        grid-template-columns: 1fr;
+    }
+}
+</style>
+
+<section class="content-header">
+    <div class="content-header-left">
+        <h1>تفاصيل الطلب</h1>
+    </div>
+    <div class="content-header-right">
+        <a href="order.php" class="btn btn-default btn-sm">رجوع إلى الطلبات</a>
+    </div>
+</section>
+
+<section class="content">
+    <div class="order-details-linkbar">
+        <a href="order.php" class="btn"><i class="fa fa-list"></i> إدارة الطلبات</a>
+                <a href="order-statistics.php" class="btn"><i class="fa fa-bar-chart"></i> إحصائيات الطلبات</a>
+        <a href="order-statistics.php#ordersTable" class="btn btn-primary"><i class="fa fa-truck"></i> تتبع الشحنات</a>
+        <a href="ecotrack-diagnostics.php" class="btn"><i class="fa fa-stethoscope"></i> تشخيص ECOTRACK</a>
+        <a href="zrexpress-diagnostics.php" class="btn"><i class="fa fa-stethoscope"></i> تشخيص ZRexpress</a>
+            </div>
+        <ul class="nav nav-tabs" id="orderDetailsTabs" role="tablist">
+        <li class="active"><a href="#tab_summary" data-toggle="tab">ملخص الطلب</a></li>
+        <li><a href="#tab_edit" data-toggle="tab">تعديل الطلب</a></li>
+                <li><a href="#tab_ecotrack" data-toggle="tab">ECOTRACK</a></li>
+        <li><a href="#tab_zrexpress" data-toggle="tab">ZRexpress</a></li>
+        <li><a href="#tab_telegram" data-toggle="tab">تلغرام</a></li>
+        <li><a href="#tab_audit" data-toggle="tab"><i class="fa fa-history"></i> سجل التدقيق</a></li>
+        <li><a href="#tab_timeline" data-toggle="tab"><i class="fa fa-clock-o"></i> السجل الزمني للطلب (ERP)</a></li>
+        <li><a href="#tab_api_logs" data-toggle="tab"><i class="fa fa-exchange"></i> سجل API (ERP)</a></li>
+            </ul>
+    <div class="tab-content" style="margin-top:15px;">
+        <div class="tab-pane active" id="tab_summary">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">بيانات الطلب</h3>
+                </div>
+                <div class="box-body">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>رقم الطلب</th>
+                                        <td>871</td>
+                                    </tr>
+                                    <tr>
+                                        <th>المنتج</th>
+                                        <td>سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود</td>
+                                    </tr>
+                                    <tr>
+                                        <th>السعر</th>
+                                        <td>1300 دج</td>
+                                    </tr>
+                                    <tr>
+                                        <th>الكمية</th>
+                                        <td>1</td>
+                                    </tr>
+                                    <tr>
+                                        <th>المجموع</th>
+                                        <td>2550 دج</td>
+                                    </tr>
+                                    <tr>
+                                        <th>الحالة</th>
+                                        <td>
+                                            <span class="label label-default">pending</span>
+                                                                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-6">
+                            <table class="table table-bordered">
+                                <tbody>
+                                    <tr>
+                                        <th>اسم العميل</th>
+                                        <td>abdou</td>
+                                    </tr>
+                                    <tr>
+                                        <th>نوع العميل</th>
+                                        <td>طلب مباشر</td>
+                                    </tr>
+                                    <tr>
+                                        <th>رقم الهاتف</th>
+                                        <td>0779624100</td>
+                                    </tr>
+                                    <tr>
+                                        <th>العنوان</th>
+                                        <td>تمنراست - عين قزام<br></td>
+                                    </tr>
+                                    <tr>
+                                        <th>نوع التوصيل</th>
+                                        <td>إلى المنزل</td>
+                                    </tr>
+                                    <tr>
+                                        <th>تاريخ الطلب</th>
+                                        <td>14/04/2026 11:41</td>
+                                    </tr>
+                                    <tr>
+                                        <th>اللون</th>
+                                        <td>لا يوجد</td>
+                                    </tr>
+                                    <tr>
+                                        <th>المقاس</th>
+                                        <td>لا يوجد</td>
+                                    </tr>
+                                    <tr>
+                                        <th>الموظف المسؤول</th>
+                                        <td>
+                                                                                            <strong style="color:#0369a1;">test</strong>
+                                                <small style="display:block;color:#64748b;font-size:11px;">منذ 22/06/2026 12:33</small>
+                                                                                    </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+
+        <div class="tab-pane" id="tab_edit">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info" id="edit-order">
+                <div class="box-header with-border">
+                    <h3 class="box-title">تعديل معلومات الطلب</h3>
+                </div>
+                <div class="box-body">
+                                        <form method="post" action="order-details.php?id=871">
+                        <input type="hidden" name="_csrf" value="ebfaea5121c6283eecef886a2e0631f244f1d763246928f3678d66eecf8988b4" />                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>اسم المنتج</label>
+                                    <input type="text" name="product_name" class="form-control" value="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>الكمية</label>
+                                    <input type="number" name="quantity" id="editOrderQuantity" class="form-control" min="1" step="1" value="1" required>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="form-group">
+                                    <label>نوع التوصيل</label>
+                                                                        <select name="delivery_type" id="editOrderDeliveryType" class="form-control" required>
+                                        <option value="منزل" selected>توصيل إلى المنزل</option>
+                                        <option value="مكتب" >توصيل إلى المكتب</option>
+                                        <option value="مجاني" >توصيل مجاني</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>سعر الوحدة</label>
+                                    <input type="number" name="unit_price" id="editOrderUnitPrice" class="form-control" min="0" step="0.01" value="1300" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>الإجمالي</label>
+                                    <div class="input-group">
+                                        <input type="number" name="total_price" id="editOrderTotalPrice" class="form-control" min="0" step="0.01" value="2550" required>
+                                        <span class="input-group-btn">
+                                            <button type="button" class="btn btn-default" id="editOrderRecalculate">حساب تلقائي</button>
+                                        </span>
+                                    </div>
+                                    <small class="text-muted">يمكنك تعديل الإجمالي يدويًا إذا كان يشمل الشحن أو أي تعديل إضافي.</small>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>رقم الهاتف</label>
+                                    <input type="text" name="customer_phone" class="form-control" value="0779624100" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>اسم الزبون</label>
+                                    <input type="text" name="customer_name" class="form-control" value="abdou" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>الولاية</label>
+                                    <input type="text" name="wilaya" id="editOrderWilaya" class="form-control" value="تمنراست" required>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label>البلدية</label>
+                                    <input type="text" name="commune" class="form-control" value="عين قزام" required>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>العنوان التفصيلي</label>
+                            <textarea name="address" class="form-control" rows="3" placeholder="اكتب العنوان الكامل كما تريد أن يظهر في الطلب."></textarea>
+                        </div>
+                        <button type="submit" name="form_edit_order" class="btn btn-primary"><i class="fa fa-save"></i> حفظ التعديلات</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+        </div>
+
+        <div class="tab-pane" id="tab_ecotrack">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">ECOTRACK</h3>
+                </div>
+                <div class="box-body">
+                    <div id="ecotrackPanelContent">
+                    <div class="order-details-ecotrack-hero">
+                        <div>
+                            <h4><i class="fa fa-truck"></i> تفاصيل الشحنة المرتبطة بالطلب</h4>
+                            <p>مراجعة الحالة الحالية، تنفيذ إجراءات الربط، وتتبع آخر تحديثات ECOTRACK.</p>
+                        </div>
+                    </div>
+                    
+                    <div id="ecotrackAjaxFeedback"></div>
+                    <div id="ecotrackToolbarTop"></div>
+                    <div class="row">
+                        <div class="col-md-7">
+                                                        <div class="order-details-ecotrack-card">
+                                <h4><i class="fa fa-info-circle"></i> معلومات الشحنة</h4>
+                                <div class="ecotrack-summary-table-wrap"><table class="ecotrack-summary-table"><tbody><tr><th class="ecotrack-summary-table-label">حالة الربط</th><td class="ecotrack-summary-table-value"><span class="label label-default" style="padding: 4px 10px; border-radius: 4px;">غير مربوط بعد</span></td><th class="ecotrack-summary-table-label">المرجع المحلي</th><td class="ecotrack-summary-table-value">ORD-000871</td><th class="ecotrack-summary-table-label">رقم التتبع</th><td class="ecotrack-summary-table-value">غير متوفر</td></tr><tr><th class="ecotrack-summary-table-label">الحالة البعيدة</th><td class="ecotrack-summary-table-value">لم تتم المزامنة بعد</td><th class="ecotrack-summary-table-label">آخر إرسال</th><td class="ecotrack-summary-table-value">لم يرسل بعد</td><th class="ecotrack-summary-table-label ecotrack-summary-table-label-empty"></th><td class="ecotrack-summary-table-value ecotrack-summary-table-value-empty"></td></tr></tbody></table></div>                            </div>
+                        </div>
+                        <div class="col-md-5">
+                                                            <div class="callout callout-success" style="border-radius: 8px; box-shadow: none; background: #ecfdf5; border-color: #10b981; color: #065f46;">
+                                    <i class="fa fa-check-circle"></i> لا توجد أخطاء حالياً. الربط سليم.
+                                </div>
+                            
+                                                    </div>
+                    </div>
+
+                    <!-- الأزرار والإجراءات نرفعها للأعلى لتكون واضحة -->
+                    <div id="ecotrackLiveBlocks" class="order-details-ecotrack-card">
+                        <h4><i class="fa fa-cogs"></i> الإجراءات المتاحة</h4>
+                        <div id="ecotrackActionsBlock" class="ecotrack-actions-panel" style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                                                                                <form method="post" action="order-ecotrack-action.php">
+                                        <input type="hidden" name="_csrf" value="ebfaea5121c6283eecef886a2e0631f244f1d763246928f3678d66eecf8988b4" />                                        <input type="hidden" name="order_id" value="871">
+                                        <input type="hidden" name="action" value="create">
+                                        <input type="hidden" name="redirect" value="order-details.php?id=871">
+                                        <button type="submit" class="btn btn-success" style="padding: 8px 20px; font-weight: bold;"><i class="fa fa-paper-plane"></i> إرسال إلى ECOTRACK</button>
+                                    </form>
+                                                                                    </div>
+                    </div>
+
+                    <details style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                        <summary style="cursor:pointer; font-weight: bold; color: #334155; font-size: 15px;"><i class="fa fa-database"></i> تفاصيل بيانات الحمولة (Payload)</summary>
+                        <div style="margin-top: 15px;">
+                            <div class="ecotrack-summary-table-wrap"><table class="ecotrack-summary-table"><tbody><tr><th class="ecotrack-summary-table-label">المرجع</th><td class="ecotrack-summary-table-value">ORD-000871</td><th class="ecotrack-summary-table-label">اسم العميل</th><td class="ecotrack-summary-table-value">abdou</td><th class="ecotrack-summary-table-label">الهاتف</th><td class="ecotrack-summary-table-value">0779624100</td></tr><tr><th class="ecotrack-summary-table-label">العنوان</th><td class="ecotrack-summary-table-value">عين قزام - تمنراست</td><th class="ecotrack-summary-table-label">البلدية</th><td class="ecotrack-summary-table-value">عين قزام</td><th class="ecotrack-summary-table-label">المبلغ</th><td class="ecotrack-summary-table-value">2550</td></tr><tr><th class="ecotrack-summary-table-label">المنتج</th><td class="ecotrack-summary-table-value">سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود</td><th class="ecotrack-summary-table-label">الكمية</th><td class="ecotrack-summary-table-value">1</td><th class="ecotrack-summary-table-label ecotrack-summary-table-label-empty"></th><td class="ecotrack-summary-table-value ecotrack-summary-table-value-empty"></td></tr></tbody></table></div>                            <details style="margin-top:10px;">
+                                <summary style="cursor:pointer; color:#64748b;">عرض الكود البرمجي (JSON)</summary>
+                                <textarea class="form-control" rows="5" style="font-family:monospace; font-size:12px; margin-top:5px;" readonly>{
+    &quot;orders&quot;: [
+        {
+            &quot;reference&quot;: &quot;ORD-000871&quot;,
+            &quot;nom_client&quot;: &quot;abdou&quot;,
+            &quot;telephone&quot;: &quot;0779624100&quot;,
+            &quot;telephone_2&quot;: &quot;&quot;,
+            &quot;adresse&quot;: &quot;عين قزام - تمنراست&quot;,
+            &quot;code_postal&quot;: &quot;&quot;,
+            &quot;commune&quot;: &quot;عين قزام&quot;,
+            &quot;code_wilaya&quot;: &quot;11&quot;,
+            &quot;montant&quot;: &quot;2550&quot;,
+            &quot;remarque&quot;: &quot;لا توجد&quot;,
+            &quot;produit&quot;: &quot;سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود&quot;,
+            &quot;stock&quot;: 0,
+            &quot;quantite&quot;: &quot;1&quot;,
+            &quot;produit_a_recuperer&quot;: &quot;&quot;,
+            &quot;boutique&quot;: &quot;BoomStore&quot;,
+            &quot;type&quot;: &quot;1&quot;,
+            &quot;stop_desk&quot;: 0,
+            &quot;gps_link&quot;: &quot;&quot;
+        }
+    ]
+}</textarea>
+                            </details>
+                        </div>
+                    </details>
+                    
+                                        <details style="margin-top: 15px; background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px;">
+                        <summary style="cursor:pointer; font-weight: bold; color: #64748b; font-size: 14px;"><i class="fa fa-wrench"></i> خيارات وأدوات متقدمة</summary>
+                        <div style="margin-top: 15px; display: flex; flex-wrap: wrap; gap: 8px; align-items: center;">
+                                                        <button type="button" class="btn btn-default btn-sm" id="copyEcotrackPayload"><i class="fa fa-copy"></i> نسخ الحمولة</button>
+                            <a href="ecotrack-diagnostics.php" class="btn btn-default btn-sm"><i class="fa fa-stethoscope"></i> فحص تشخيصي</a>
+                        </div>
+                    </details>
+
+                    
+                    <div id="ecotrackResultsBlock">
+                    
+                                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        </div>
+    </div>
+        </div>
+
+        <div class="tab-pane" id="tab_zrexpress">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="box box-info">
+                        <div class="box-header with-border">
+                            <h3 class="box-title">ZRexpress</h3>
+                        </div>
+                        <div class="box-body">
+                            <div class="order-details-ecotrack-hero">
+                                <div>
+                                    <h4><i class="fa fa-truck"></i> تفاصيل الشحنة المرتبطة بالطلب (ZRexpress)</h4>
+                                    <p>مراجعة الحالة الحالية، تنفيذ إجراءات الربط، وتتبع آخر تحديثات ZRexpress.</p>
+                                </div>
+                            </div>
+                                                            <div class="callout callout-warning">
+                                إعداد ZRexpress غير مكتمل بعد. أضف التوكن والمفتاح من <a href="settings.php#tab_zrexpress">إعدادات الموقع</a> أولاً.
+                                </div>
+                            
+                            <div id="zrexpressAjaxFeedback"></div>
+                            
+                            <div class="row">
+                                <div class="col-md-7">
+                                                                        <div class="order-details-ecotrack-card">
+                                        <h4><i class="fa fa-info-circle"></i> معلومات الشحنة</h4>
+                                        <div class="ecotrack-summary-table-wrap"><table class="ecotrack-summary-table"><tbody><tr><th class="ecotrack-summary-table-label">حالة الربط</th><td class="ecotrack-summary-table-value"><span class="label label-default" style="padding: 4px 10px; border-radius: 4px;">غير مربوط بعد</span></td><th class="ecotrack-summary-table-label">المرجع المحلي</th><td class="ecotrack-summary-table-value">ZREX-871</td><th class="ecotrack-summary-table-label">رقم التتبع</th><td class="ecotrack-summary-table-value">غير متوفر</td></tr><tr><th class="ecotrack-summary-table-label">الحالة البعيدة</th><td class="ecotrack-summary-table-value">لم تتم المزامنة بعد</td><th class="ecotrack-summary-table-label">آخر إرسال</th><td class="ecotrack-summary-table-value">لم يرسل بعد</td><th class="ecotrack-summary-table-label ecotrack-summary-table-label-empty"></th><td class="ecotrack-summary-table-value ecotrack-summary-table-value-empty"></td></tr></tbody></table></div>                                    </div>
+                                </div>
+                                <div class="col-md-5">
+                                                                            <div class="callout callout-success" style="border-radius: 8px; box-shadow: none; background: #ecfdf5; border-color: #10b981; color: #065f46;">
+                                            <i class="fa fa-check-circle"></i> لا توجد أخطاء حالياً. الربط سليم.
+                                        </div>
+                                    
+                                                                    </div>
+                            </div>
+
+                            <div class="order-details-ecotrack-card">
+                                <h4><i class="fa fa-cogs"></i> الإجراءات المتاحة</h4>
+                                <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+                                                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="tab-pane" id="tab_telegram">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">نشاط التلغرام</h3>
+                </div>
+                <div class="box-body">
+                    
+                    
+                    
+                                        
+                                            <div class="text-muted text-center" style="padding:20px;">
+                            <i class="fa fa-telegram" style="font-size:48px;color:#cbd5e1;display:block;margin-bottom:12px;"></i>
+                            لا توجد إجراءات تلغرام لهذا الطلب.
+                        </div>
+                                    </div>
+            </div>
+        </div>
+    </div>
+        </div>
+
+        <div class="tab-pane" id="tab_audit">
+    <div class="row">
+        <div class="col-md-12">
+            <div class="box box-info">
+                <div class="box-header with-border">
+                    <h3 class="box-title">سجل التدقيق (Audit Trail)</h3>
+                </div>
+                <div class="box-body">
+                                                            <div class="text-muted text-center" style="padding:20px;">
+                        <i class="fa fa-history" style="font-size:48px;color:#cbd5e1;display:block;margin-bottom:12px;"></i>
+                        لا توجد إجراءات تدقيق لهذا الطلب.
+                    </div>
+                                    </div>
+            </div>
+        </div>
+    </div>
+        </div>
+
+        <!-- ERP Phase 8: Timeline Tab -->
+        <div class="tab-pane" id="tab_timeline">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title">السجل الزمني للطلب (Timeline)</h3>
+                </div>
+                <div class="box-body">
+                                                                <p class="text-center text-muted">لا توجد أحداث مسجلة لهذا الطلب.</p>
+                                    </div>
+            </div>
+        </div>
+
+        <!-- ERP Phase 8: API Logs Tab -->
+        <div class="tab-pane" id="tab_api_logs">
+            <div class="box box-warning">
+                <div class="box-header with-border">
+                    <h3 class="box-title">سجل التخاطب مع شركة التوصيل (API Logs)</h3>
+                </div>
+                <div class="box-body table-responsive">
+                                                                <p class="text-center text-muted">لا توجد سجلات API لهذا الطلب.</p>
+                                    </div>
+            </div>
+        </div>
+
+
+    </div>
+</section>
+
+<div id="ecotrackActionOverlay" aria-hidden="true">
+    <div class="ecotrack-action-dialog" id="ecotrackActionDialog">
+        <div class="ecotrack-action-dialog-head">
+            <div class="ecotrack-action-dialog-spinner"></div>
+            <div class="ecotrack-action-dialog-title" id="ecotrackActionDialogTitle">تنفيذ عملية ECOTRACK</div>
+        </div>
+        <div class="ecotrack-action-dialog-text" id="ecotrackActionDialogText">جارٍ تنفيذ العملية...</div>
+        <div class="ecotrack-action-dialog-actions">
+            <button type="button" class="btn btn-default" id="ecotrackActionDialogClose" style="display:none;">إغلاق</button>
+        </div>
+    </div>
+</div>
+
+<script>
+window.addEventListener('load', function() {
+    var orderDetailsStateKey = 'order-details-view-state-871';
+    var ecotrackActionOverlay = document.getElementById('ecotrackActionOverlay');
+    var ecotrackActionDialog = document.getElementById('ecotrackActionDialog');
+    var ecotrackActionDialogTitle = document.getElementById('ecotrackActionDialogTitle');
+    var ecotrackActionDialogText = document.getElementById('ecotrackActionDialogText');
+    var ecotrackActionDialogClose = document.getElementById('ecotrackActionDialogClose');
+
+    function escapeHtml(value) {
+        return String(value || '')
+            .replace(/&/g, '&amp;')
+            .replace(/</g, '&lt;')
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#039;');
+    }
+
+    function arrangeEcotrackTab() {
+        var ecotrackToolbarTop = document.getElementById('ecotrackToolbarTop');
+        var ecotrackActionsBlock = document.getElementById('ecotrackActionsBlock');
+
+        if (ecotrackToolbarTop && ecotrackActionsBlock && ecotrackToolbarTop.parentNode) {
+            if (ecotrackToolbarTop.nextElementSibling !== ecotrackActionsBlock) {
+                ecotrackToolbarTop.parentNode.insertBefore(ecotrackActionsBlock, ecotrackToolbarTop.nextSibling);
+            }
+        }
+    }
+
+    function openEcotrackActionOverlay(title, text) {
+        if (!ecotrackActionOverlay || !ecotrackActionDialog) {
+            return;
+        }
+
+        ecotrackActionDialog.classList.remove('is-done', 'is-error');
+        if (ecotrackActionDialogTitle) {
+            ecotrackActionDialogTitle.textContent = title || 'تنفيذ عملية ECOTRACK';
+        }
+        if (ecotrackActionDialogText) {
+            ecotrackActionDialogText.textContent = text || 'جارٍ تنفيذ العملية...';
+        }
+        if (ecotrackActionDialogClose) {
+            ecotrackActionDialogClose.style.display = 'none';
+        }
+        ecotrackActionOverlay.classList.add('is-visible');
+        ecotrackActionOverlay.setAttribute('aria-hidden', 'false');
+    }
+
+    function finishEcotrackActionOverlay(state, text) {
+        if (!ecotrackActionOverlay || !ecotrackActionDialog) {
+            return;
+        }
+
+        ecotrackActionDialog.classList.remove('is-done', 'is-error');
+        if (state === 'success') {
+            ecotrackActionDialog.classList.add('is-done');
+        } else if (state === 'error') {
+            ecotrackActionDialog.classList.add('is-error');
+        }
+
+        if (ecotrackActionDialogText) {
+            ecotrackActionDialogText.textContent = text || '';
+        }
+        if (ecotrackActionDialogClose) {
+            ecotrackActionDialogClose.style.display = 'inline-block';
+        }
+    }
+
+    function closeEcotrackActionOverlay() {
+        if (!ecotrackActionOverlay) {
+            return;
+        }
+
+        ecotrackActionOverlay.classList.remove('is-visible');
+        ecotrackActionOverlay.setAttribute('aria-hidden', 'true');
+    }
+
+    function showEcotrackAjaxFeedback(type, message) {
+        var feedbackContainer = document.getElementById('ecotrackAjaxFeedback');
+        if (!feedbackContainer) {
+            return;
+        }
+
+        if (!message) {
+            feedbackContainer.innerHTML = '';
+            return;
+        }
+
+        feedbackContainer.innerHTML = '<div class="callout callout-' + escapeHtml(type || 'info') + '" style="margin-bottom:12px;">' + escapeHtml(message) + '</div>';
+    }
+
+    arrangeEcotrackTab();
+
+    if (ecotrackActionDialogClose) {
+        ecotrackActionDialogClose.addEventListener('click', closeEcotrackActionOverlay);
+    }
+
+    function getActiveOrderDetailsTab() {
+        var activeTabLink = document.querySelector('#orderDetailsTabs li.active a[href^="#"]')
+            || document.querySelector('#orderDetailsTabs a[aria-expanded="true"][href^="#"]');
+        if (activeTabLink && activeTabLink.getAttribute('href')) {
+            return activeTabLink.getAttribute('href');
+        }
+
+        if (window.location.hash && document.querySelector('#orderDetailsTabs a[href="' + window.location.hash + '"]')) {
+            return window.location.hash;
+        }
+
+        return '#tab_summary';
+    }
+
+    function updateOrderDetailsHash(hash) {
+        if (!hash) {
+            return;
+        }
+
+        if (window.history && typeof window.history.replaceState === 'function') {
+            window.history.replaceState(null, '', window.location.pathname + window.location.search + hash);
+            return;
+        }
+
+        window.location.hash = hash;
+    }
+
+    function persistOrderDetailsViewState() {
+        var state = {
+            hash: getActiveOrderDetailsTab(),
+            scrollY: window.pageYOffset || document.documentElement.scrollTop || 0
+        };
+
+        try {
+            sessionStorage.setItem(orderDetailsStateKey, JSON.stringify(state));
+        } catch (error) {
+        }
+
+        document.querySelectorAll('input[name="redirect"]').forEach(function(input) {
+            var baseRedirect = input.getAttribute('data-base-redirect');
+            if (!baseRedirect) {
+                baseRedirect = String(input.value || '').replace(/#.*/, '');
+                input.setAttribute('data-base-redirect', baseRedirect);
+            }
+
+            if (/^order-details\.php\?id=\d+$/.test(baseRedirect)) {
+                input.value = baseRedirect + state.hash;
+            }
+        });
+    }
+
+    function readStoredOrderDetailsViewState() {
+        try {
+            var rawState = sessionStorage.getItem(orderDetailsStateKey);
+            if (!rawState) {
+                return null;
+            }
+
+            var parsedState = JSON.parse(rawState);
+            sessionStorage.removeItem(orderDetailsStateKey);
+            return parsedState && typeof parsedState === 'object' ? parsedState : null;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    var restoredOrderDetailsState = readStoredOrderDetailsViewState();
+    if (!window.location.hash && restoredOrderDetailsState && restoredOrderDetailsState.hash && document.querySelector('#orderDetailsTabs a[href="' + restoredOrderDetailsState.hash + '"]')) {
+        updateOrderDetailsHash(restoredOrderDetailsState.hash);
+    }
+
+    document.querySelectorAll('form').forEach(function(form) {
+        form.addEventListener('submit', function() {
+            persistOrderDetailsViewState();
+        });
+    });
+
+    document.querySelectorAll('#tab_ecotrack a.btn[href]').forEach(function(link) {
+        if (String(link.getAttribute('target') || '').toLowerCase() === '_blank') {
+            return;
+        }
+
+        link.addEventListener('click', function() {
+            persistOrderDetailsViewState();
+        });
+    });
+
+    if (typeof jQuery === 'undefined') {
+        if (restoredOrderDetailsState && Number.isFinite(parseInt(restoredOrderDetailsState.scrollY, 10))) {
+            window.scrollTo(0, parseInt(restoredOrderDetailsState.scrollY, 10));
+        }
+        return;
+    }
+
+    (function($) {
+        var tabSwitchScrollY = null;
+
+        if (window.location.hash) {
+            var hash = window.location.hash;
+            if ($(hash).length) {
+                $('#orderDetailsTabs a[href="' + hash + '"]').tab('show');
+            }
+        }
+
+        $('#orderDetailsTabs a[data-toggle="tab"]').on('click', function() {
+            tabSwitchScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+        });
+
+        $('#orderDetailsTabs a[data-toggle="tab"]').on('shown.bs.tab', function(e) {
+            if (e.target && e.target.getAttribute) {
+                var target = e.target.getAttribute('href');
+                if (target) {
+                    updateOrderDetailsHash(target);
+                }
+            }
+
+            if (tabSwitchScrollY !== null) {
+                var preservedScrollY = tabSwitchScrollY;
+                var restoreOrderDetailsScroll = function() {
+                    window.scrollTo(0, preservedScrollY);
+                };
+
+                window.requestAnimationFrame(restoreOrderDetailsScroll);
+                setTimeout(restoreOrderDetailsScroll, 60);
+                tabSwitchScrollY = null;
+            }
+        });
+
+        $('#orderDetailsTabs a[data-toggle="tab"]').on('hide.bs.tab', function() {
+            if (tabSwitchScrollY === null) {
+                tabSwitchScrollY = window.pageYOffset || document.documentElement.scrollTop || 0;
+            }
+        });
+
+        if (!window.location.hash && restoredOrderDetailsState && restoredOrderDetailsState.hash && $(restoredOrderDetailsState.hash).length) {
+            var restoredScrollBeforeTabShow = Number.isFinite(parseInt(restoredOrderDetailsState.scrollY, 10))
+                ? parseInt(restoredOrderDetailsState.scrollY, 10)
+                : (window.pageYOffset || document.documentElement.scrollTop || 0);
+            tabSwitchScrollY = restoredScrollBeforeTabShow;
+            $('#orderDetailsTabs a[href="' + restoredOrderDetailsState.hash + '"]').tab('show');
+        } else if (window.location.hash && $('#orderDetailsTabs a[href="' + window.location.hash + '"]').length) {
+            updateOrderDetailsHash(window.location.hash);
+            if (tabSwitchScrollY !== null) {
+                window.scrollTo(0, tabSwitchScrollY);
+                tabSwitchScrollY = null;
+            }
+        }
+
+        if (!window.location.hash && restoredOrderDetailsState && Number.isFinite(parseInt(restoredOrderDetailsState.scrollY, 10))) {
+            var restoredScrollY = parseInt(restoredOrderDetailsState.scrollY, 10);
+            var restoreScrollPosition = function() {
+                window.scrollTo(0, restoredScrollY);
+            };
+
+            window.requestAnimationFrame(restoreScrollPosition);
+            setTimeout(restoreScrollPosition, 120);
+            setTimeout(restoreScrollPosition, 350);
+        }
+
+        if (!restoredOrderDetailsState && !window.location.hash) {
+            updateOrderDetailsHash(getActiveOrderDetailsTab());
+        } else if (!restoredOrderDetailsState && window.location.hash) {
+            updateOrderDetailsHash(window.location.hash);
+        }
+
+        var smsTemplates = [];
+        var smsContext = {
+            order_id: "871",
+            customer_name: "abdou",
+            customer_phone: "0779624100",
+            phone: "0779624100",
+            phone_local: "0779624100",
+            phone_e164: "0779624100",
+            product_name: "سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود",
+            quantity: "1",
+            total_price: "2550.00",
+            total_price_formatted: "2550.00",
+            status: "pending",
+            wilaya: "تمنراست",
+            commune: "عين قزام",
+            address: "",
+            site_name: "GoldenStore"        };
+
+        function renderSmsTemplate(template, context) {
+            var output = template || '';
+            Object.keys(context).forEach(function(key) {
+                output = output.split('{{' + key + '}}').join(context[key] || '');
+            });
+            return output;
+        }
+
+        function reloadEcotrackPanel(responsePayload, afterReload) {
+            $('#ecotrackPanelContent').load('order-details.php?id=871 #ecotrackPanelContent > *', function(response, status) {
+                arrangeEcotrackTab();
+                if (responsePayload && responsePayload.message) {
+                    showEcotrackAjaxFeedback(responsePayload.type || (responsePayload.success ? 'success' : 'danger'), responsePayload.message);
+                }
+                if (typeof afterReload === 'function') {
+                    afterReload(status === 'success');
+                }
+            });
+        }
+
+        // تم حذف تبويب SMS من هذه الصفحة، نترك هذا الحارس لتفادي أخطاء JS إن وُجدت عناصر بالصدفة.
+        if ($('#detailsSmsTemplate').length) {
+            $('#detailsSmsTemplate').on('change', function() {
+                var selectedId = $(this).val();
+                var match = smsTemplates.find(function(template) {
+                    return String(template.id || '') === String(selectedId || '');
+                });
+                $('#detailsSmsMessage').val(match ? renderSmsTemplate(match.body || '', smsContext) : '');
+            });
+        }
+
+        var orderEditShippingFees = {"أدرار":{"منزل":1050,"مكتب":600},"الشلف":{"منزل":690,"مكتب":390},"الأغواط":{"منزل":900,"مكتب":490},"أم البواقي":{"منزل":690,"مكتب":490},"باتنة":{"منزل":590,"مكتب":400},"بجاية":{"منزل":590,"مكتب":400},"بسكرة":{"منزل":790,"مكتب":500},"بشار":{"منزل":1050,"مكتب":550},"البليدة":{"منزل":450,"مكتب":350},"البويرة":{"منزل":690,"مكتب":400},"تمنراست":{"منزل":1250,"مكتب":790},"تبسة":{"منزل":790,"مكتب":450},"تلمسان":{"منزل":790,"مكتب":400},"تيارت":{"منزل":750,"مكتب":400},"تيزي وزو":{"منزل":650,"مكتب":390},"الجزائر":{"منزل":450,"مكتب":330},"الجلفة":{"منزل":890,"مكتب":490},"جيجل":{"منزل":600,"مكتب":400},"سطيف":{"منزل":390,"مكتب":250},"سعيدة":{"منزل":790,"مكتب":400},"سكيكدة":{"منزل":650,"مكتب":400},"سيدي بلعباس":{"منزل":800,"مكتب":400},"عنابة":{"منزل":690,"مكتب":400},"قالمة":{"منزل":690,"مكتب":400},"قسنطينة":{"منزل":590,"مكتب":390},"المدية":{"منزل":690,"مكتب":400},"مستغانم":{"منزل":690,"مكتب":390},"المسيلة":{"منزل":690,"مكتب":400},"معسكر":{"منزل":690,"مكتب":390},"ورقلة":{"منزل":990,"مكتب":490},"وهران":{"منزل":650,"مكتب":380},"البيض":{"منزل":990,"مكتب":490},"إليزي":{"منزل":1250,"مكتب":590},"برج بوعريريج":{"منزل":590,"مكتب":400},"بومرداس":{"منزل":690,"مكتب":390},"الطارف":{"منزل":690,"مكتب":390},"تندوف":{"منزل":1250,"مكتب":590},"تيسمسيلت":{"منزل":790,"مكتب":390},"الوادي":{"منزل":900,"مكتب":490},"خنشلة":{"منزل":690,"مكتب":490},"سوق أهراس":{"منزل":790,"مكتب":490},"تيبازة":{"منزل":690,"مكتب":390},"ميلة":{"منزل":600,"مكتب":390},"عين الدفلى":{"منزل":690,"مكتب":390},"النعامة":{"منزل":990,"مكتب":500},"عين تموشنت":{"منزل":790,"مكتب":400},"غرداية":{"منزل":900,"مكتب":490},"غليزان":{"منزل":690,"مكتب":390},"تيميمون":{"منزل":1250,"مكتب":600},"أولاد جلال":{"منزل":890,"مكتب":490},"بني عباس":{"منزل":1250,"مكتب":600},"عين صالح":{"منزل":1250,"مكتب":600},"تقرت":{"منزل":890,"مكتب":600},"المغير":{"منزل":890,"مكتب":890},"المنيعة":{"منزل":990,"مكتب":500}};
+        var editQty = document.getElementById('editOrderQuantity');
+        var editUnitPrice = document.getElementById('editOrderUnitPrice');
+        var editTotalPrice = document.getElementById('editOrderTotalPrice');
+        var editRecalculateButton = document.getElementById('editOrderRecalculate');
+        var editDeliveryType = document.getElementById('editOrderDeliveryType');
+        var editWilaya = document.getElementById('editOrderWilaya');
+
+        function getEditShippingFee() {
+            if (!editDeliveryType) {
+                return 0;
+            }
+
+            var deliveryType = String(editDeliveryType.value || '').trim();
+            if (deliveryType === 'مجاني') {
+                return 0;
+            }
+
+            if (!editWilaya) {
+                return 0;
+            }
+
+            var wilaya = String(editWilaya.value || '').trim();
+            if (!wilaya || !orderEditShippingFees || typeof orderEditShippingFees !== 'object') {
+                return 0;
+            }
+
+            var wilayaFees = orderEditShippingFees[wilaya];
+            if (!wilayaFees || typeof wilayaFees !== 'object') {
+                return 0;
+            }
+
+            var fee = Number(wilayaFees[deliveryType] || 0);
+            return isFinite(fee) && fee > 0 ? fee : 0;
+        }
+
+        function recalculateEditOrderTotal() {
+            if (!editQty || !editUnitPrice || !editTotalPrice) {
+                return;
+            }
+
+            var quantity = parseInt(editQty.value || '0', 10);
+            var unitPrice = parseFloat(editUnitPrice.value || '0');
+            if (!isFinite(quantity) || quantity < 1 || !isFinite(unitPrice) || unitPrice < 0) {
+                return;
+            }
+
+            var shippingFee = getEditShippingFee();
+            editTotalPrice.value = ((quantity * unitPrice) + shippingFee).toFixed(2);
+        }
+
+        if (editRecalculateButton) {
+            editRecalculateButton.addEventListener('click', recalculateEditOrderTotal);
+        }
+
+        // حساب تلقائي مباشر عند تغيير الكمية أو سعر الوحدة (بدون انتظار الضغط على الزر).
+        if (editQty) {
+            editQty.addEventListener('input', recalculateEditOrderTotal);
+            editQty.addEventListener('change', recalculateEditOrderTotal);
+        }
+        if (editUnitPrice) {
+            editUnitPrice.addEventListener('input', recalculateEditOrderTotal);
+            editUnitPrice.addEventListener('change', recalculateEditOrderTotal);
+        }
+        if (editDeliveryType) {
+            editDeliveryType.addEventListener('change', recalculateEditOrderTotal);
+        }
+        if (editWilaya) {
+            editWilaya.addEventListener('input', recalculateEditOrderTotal);
+            editWilaya.addEventListener('change', recalculateEditOrderTotal);
+        }
+
+        $(document).on('click', '#copyEcotrackPayload', function() {
+            var ecotrackPayloadPreview = document.getElementById('ecotrackPayloadPreview');
+            var copyEcotrackPayloadButton = this;
+            if (!ecotrackPayloadPreview) {
+                return;
+            }
+
+            ecotrackPayloadPreview.focus();
+            ecotrackPayloadPreview.select();
+
+            try {
+                document.execCommand('copy');
+                copyEcotrackPayloadButton.innerHTML = '<i class="fa fa-check"></i> تم النسخ';
+                setTimeout(function() {
+                    copyEcotrackPayloadButton.innerHTML = '<i class="fa fa-copy"></i> نسخ الحمولة';
+                }, 1800);
+            } catch (error) {
+                copyEcotrackPayloadButton.innerHTML = '<i class="fa fa-times"></i> تعذر النسخ';
+            }
+        });
+
+        $(document).on('click', '#tab_ecotrack form[action="order-ecotrack-action.php"] button[type="submit"]', function() {
+            $(this.form).data('submitLabel', $.trim($(this).text()).replace(/\s+/g, ' '));
+        });
+
+        $(document).on('submit', '#tab_ecotrack form[action="order-ecotrack-action.php"]', function(event) {
+            event.preventDefault();
+
+            var $form = $(this);
+            var actionValue = String($form.find('input[name="action"]').val() || '').toLowerCase();
+            var submitLabel = String($form.data('submitLabel') || 'تنفيذ عملية ECOTRACK');
+            var noteInput = $form.find('input[name="content"]');
+            var noteValue = noteInput.length ? $.trim(noteInput.val()) : '';
+
+            if (actionValue === 'add_note') {
+                if (!noteValue) {
+                    showEcotrackAjaxFeedback('warning', 'أدخل ملاحظة التتبع أولاً.');
+                    return;
+                }
+                if (noteValue.length > 255) {
+                    showEcotrackAjaxFeedback('warning', 'ملاحظة التتبع يجب ألا تتجاوز 255 حرفًا.');
+                    return;
+                }
+            }
+
+            openEcotrackActionOverlay(submitLabel, 'جارٍ تنفيذ العملية داخل ECOTRACK...');
+
+            var payload = $form.serializeArray();
+            payload.push({ name: 'ajax', value: '1' });
+
+            $.ajax({
+                url: $form.attr('action'),
+                method: 'POST',
+                data: $.param(payload),
+                dataType: 'json',
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            }).done(function(response) {
+                reloadEcotrackPanel(response, function(reloadOk) {
+                    if (reloadOk) {
+                        finishEcotrackActionOverlay(response && response.success ? 'success' : 'error', response && response.message ? response.message : 'تم تنفيذ العملية.');
+                    } else {
+                        finishEcotrackActionOverlay('error', 'تم تنفيذ العملية لكن تعذر تحديث قسم ECOTRACK تلقائيًا.');
+                    }
+
+                    if (response && response.success) {
+                        setTimeout(closeEcotrackActionOverlay, 1400);
+                    }
+                });
+            }).fail(function(xhr) {
+                var errorMessage = 'تعذر تنفيذ العملية حاليًا.';
+
+                if (xhr && xhr.responseJSON && xhr.responseJSON.message) {
+                    errorMessage = xhr.responseJSON.message;
+                }
+
+                finishEcotrackActionOverlay('error', errorMessage);
+                showEcotrackAjaxFeedback('danger', errorMessage);
+            });
+        });
+    })(jQuery);
+});
+</script>
+
+
+<script>
+window.addEventListener("load", function() {
+    if (window.location.hash) {
+        var $targetTab = $('#orderDetailsTabs a[href="' + window.location.hash + '"]');
+        if ($targetTab.length) {
+            $targetTab.tab("show");
+        }
+    }
+});
+</script>
+
+		</div>
+
+	</div>
+
+	<script src="js/jquery-2.2.4.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/jquery.dataTables.min.js"></script>
+	<script src="js/dataTables.bootstrap.min.js"></script>
+	<script src="js/select2.full.min.js"></script>
+	<script src="js/jquery.inputmask.js"></script>
+	<script src="js/jquery.inputmask.date.extensions.js"></script>
+	<script src="js/jquery.inputmask.extensions.js"></script>
+	<script src="js/moment.min.js"></script>
+	<script src="js/bootstrap-datepicker.js"></script>
+	<script src="js/icheck.min.js"></script>
+	<script src="js/fastclick.js"></script>
+	<script src="js/jquery.sparkline.min.js"></script>
+	<script src="js/jquery.slimscroll.min.js"></script>
+	<script src="js/jquery.fancybox.pack.js"></script>
+	<script src="js/app.min.js"></script>
+	<script src="js/jscolor.js"></script>
+	<script src="js/on-off-switch.js"></script>
+    <script src="js/on-off-switch-onload.js"></script>
+    <script src="js/clipboard.min.js"></script>
+	<script src="js/demo.js"></script>
+	<script src="js/summernote.js"></script>
+	<script src="js/spa-navigation.js"></script>
+
+	<script>
+		$(document).ready(function() {
+	        $('#editor1').summernote({
+	        	height: 300
+	        });
+	        $('#editor2').summernote({
+	        	height: 300
+	        });
+	        $('#editor3').summernote({
+	        	height: 300
+	        });
+	        $('#editor4').summernote({
+	        	height: 300
+	        });
+	        $('#editor5').summernote({
+	        	height: 300
+	        });
+	    });
+		$(".top-cat").on('change',function(){
+			var id=$(this).val();
+			var dataString = 'id='+ id;
+			$.ajax
+			({
+				type: "POST",
+				url: "get-mid-category.php",
+				data: dataString,
+				cache: false,
+				success: function(html)
+				{
+					$(".mid-cat").html(html);
+				}
+			});			
+		});
+		$(".mid-cat").on('change',function(){
+			var id=$(this).val();
+			var dataString = 'id='+ id;
+			$.ajax
+			({
+				type: "POST",
+				url: "get-end-category.php",
+				data: dataString,
+				cache: false,
+				success: function(html)
+				{
+					$(".end-cat").html(html);
+				}
+			});			
+		});
+	</script>
+
+	<script>
+	  $(function () {
+
+	    //Initialize Select2 Elements
+	    $(".select2").select2();
+
+	    //Datemask dd/mm/yyyy
+	    $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
+	    //Datemask2 mm/dd/yyyy
+	    $("#datemask2").inputmask("mm-dd-yyyy", {"placeholder": "mm-dd-yyyy"});
+	    //Money Euro
+	    $("[data-mask]").inputmask();
+
+	    //Date picker
+	    $('#datepicker').datepicker({
+	      autoclose: true,
+	      format: 'dd-mm-yyyy',
+	      todayBtn: 'linked',
+	    });
+
+	    $('#datepicker1').datepicker({
+	      autoclose: true,
+	      format: 'dd-mm-yyyy',
+	      todayBtn: 'linked',
+	    });
+
+	    //iCheck for checkbox and radio inputs
+	    $('input[type="checkbox"].minimal, input[type="radio"].minimal').iCheck({
+	      checkboxClass: 'icheckbox_minimal-blue',
+	      radioClass: 'iradio_minimal-blue'
+	    });
+	    //Red color scheme for iCheck
+	    $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
+	      checkboxClass: 'icheckbox_minimal-red',
+	      radioClass: 'iradio_minimal-red'
+	    });
+	    //Flat red color scheme for iCheck
+	    $('input[type="checkbox"].flat-red, input[type="radio"].flat-red').iCheck({
+	      checkboxClass: 'icheckbox_flat-green',
+	      radioClass: 'iradio_flat-green'
+	    });
+
+
+
+	    $("#example1").DataTable();
+	    $('#example2').DataTable({
+	      "paging": true,
+	      "lengthChange": false,
+	      "searching": false,
+	      "ordering": true,
+	      "info": true,
+	      "autoWidth": false
+	    });
+
+	    $('#confirm-delete').on('show.bs.modal', function(e) {
+	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	    });
+		
+		$('#confirm-approve').on('show.bs.modal', function(e) {
+	      $(this).find('.btn-ok').attr('href', $(e.relatedTarget).data('href'));
+	    });
+ 
+	  });
+
+		function confirmDelete()
+	    {
+	        return confirm("Are you sure want to delete this data?");
+	    }
+	    function confirmActive()
+	    {
+	        return confirm("Are you sure want to Active?");
+	    }
+	    function confirmInactive()
+	    {
+	        return confirm("Are you sure want to Inactive?");
+	    }
+
+	</script>
+
+	<script type="text/javascript">
+		function showDiv(elem){
+			if(elem.value == 0) {
+		      	document.getElementById('photo_div').style.display = "none";
+		      	document.getElementById('icon_div').style.display = "none";
+		   	}
+		   	if(elem.value == 1) {
+		      	document.getElementById('photo_div').style.display = "block";
+		      	document.getElementById('photo_div_existing').style.display = "block";
+		      	document.getElementById('icon_div').style.display = "none";
+		   	}
+		   	if(elem.value == 2) {
+		      	document.getElementById('photo_div').style.display = "none";
+		      	document.getElementById('photo_div_existing').style.display = "none";
+		      	document.getElementById('icon_div').style.display = "block";
+    }
+    }
+    <!--
+=== PROFILER REPORT ===
+Total Time: 178.68ms
+
+bootstrap_complete            :    63.27ms
+sidebar_rendered              :     1.09ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+-->		function showContentInputArea(elem){
+		   if(elem.value == 'Full Width Page Layout') {
+		      	document.getElementById('showPageContent').style.display = "block";
+		   } else {
+		   		document.getElementById('showPageContent').style.display = "none";
+		   }
+		}
+	</script>
+
+	<script type="text/javascript">
+
+        $(document).ready(function () {
+
+            $("#btnAddNew").click(function () {
+
+		        var rowNumber = $("#ProductTable tbody tr").length;
+
+		        var trNew = "";              
+
+		        var addLink = "<div class=\"upload-btn" + rowNumber + "\"><input type=\"file\" name=\"photo[]\"  style=\"margin-bottom:5px;\"></div>";
+		           
+		        var deleteRow = "<a href=\"javascript:void()\" class=\"Delete btn btn-danger btn-xs\">X</a>";
+
+		        trNew = trNew + "<tr> ";
+
+		        trNew += "<td>" + addLink + "</td>";
+		        trNew += "<td style=\"width:28px;\">" + deleteRow + "</td>";
+
+		        trNew = trNew + " </tr>";
+
+		        $("#ProductTable tbody").append(trNew);
+
+		    });
+
+		    $('#ProductTable').delegate('a.Delete', 'click', function () {
+		        $(this).parent().parent().fadeOut('slow').remove();
+		        return false;
+		    });
+
+        });
+
+
+
+        var items = [];
+        for( i=1; i<=24; i++ ) {
+        	items[i] = document.getElementById("tabField"+i);
+        }
+
+        if (items[1]) {
+			items[1].style.display = 'block';
+			items[2].style.display = 'block';
+			items[3].style.display = 'block';
+			items[4].style.display = 'none';
+
+			items[5].style.display = 'block';
+			items[6].style.display = 'block';
+			items[7].style.display = 'block';
+			items[8].style.display = 'none';
+
+			items[9].style.display = 'block';
+			items[10].style.display = 'block';
+			items[11].style.display = 'block';
+			items[12].style.display = 'none';
+
+			items[13].style.display = 'block';
+			items[14].style.display = 'block';
+			items[15].style.display = 'block';
+			items[16].style.display = 'none';
+
+			items[17].style.display = 'block';
+			items[18].style.display = 'block';
+			items[19].style.display = 'block';
+			items[20].style.display = 'none';
+
+			items[21].style.display = 'block';
+			items[22].style.display = 'block';
+			items[23].style.display = 'block';
+			items[24].style.display = 'none';
+        }
+
+		function funcTab1(elem) {
+			var txt = elem.value;
+			if(txt == 'Image Advertisement') {
+				items[1].style.display = 'block';
+		       	items[2].style.display = 'block';
+		       	items[3].style.display = 'block';
+		       	items[4].style.display = 'none';
+			} 
+			if(txt == 'Adsense Code') {
+				items[1].style.display = 'none';
+		       	items[2].style.display = 'none';
+		       	items[3].style.display = 'none';
+		       	items[4].style.display = 'block';
+			}
+		};
+
+		function funcTab2(elem) {
+			var txt = elem.value;
+			if(txt == 'Image Advertisement') {
+				items[5].style.display = 'block';
+		       	items[6].style.display = 'block';
+		       	items[7].style.display = 'block';
+		       	items[8].style.display = 'none';
+			} 
+			if(txt == 'Adsense Code') {
+				items[5].style.display = 'none';
+		       	items[6].style.display = 'none';
+		       	items[7].style.display = 'none';
+		       	items[8].style.display = 'block';
+			}
+		};
+
+		function funcTab3(elem) {
+			var txt = elem.value;
+			if(txt == 'Image Advertisement') {
+				items[9].style.display = 'block';
+		       	items[10].style.display = 'block';
+		       	items[11].style.display = 'block';
+		       	items[12].style.display = 'none';
+			} 
+			if(txt == 'Adsense Code') {
+				items[9].style.display = 'none';
+		       	items[10].style.display = 'none';
+		       	items[11].style.display = 'none';
+		       	items[12].style.display = 'block';
+			}
+		};
+
+		function funcTab4(elem) {
+			var txt = elem.value;
+			if(txt == 'Image Advertisement') {
+				items[13].style.display = 'block';
+		       	items[14].style.display = 'block';
+		       	items[15].style.display = 'block';
+		       	items[16].style.display = 'none';
+			} 
+			if(txt == 'Adsense Code') {
+				items[13].style.display = 'none';
+		       	items[14].style.display = 'none';
+		       	items[15].style.display = 'none';
+		       	items[16].style.display = 'block';
+			}
+		};
+
+		function funcTab5(elem) {
+			var txt = elem.value;
+			if(txt == 'Image Advertisement') {
+				items[17].style.display = 'block';
+		       	items[18].style.display = 'block';
+		       	items[19].style.display = 'block';
+		       	items[20].style.display = 'none';
+			} 
+			if(txt == 'Adsense Code') {
+				items[17].style.display = 'none';
+		       	items[18].style.display = 'none';
+		       	items[19].style.display = 'none';
+		       	items[20].style.display = 'block';
+			}
+		};
+
+		function funcTab6(elem) {
+			var txt = elem.value;
+			if(txt == 'Image Advertisement') {
+				items[21].style.display = 'block';
+		       	items[22].style.display = 'block';
+		       	items[23].style.display = 'block';
+		       	items[24].style.display = 'none';
+			} 
+			if(txt == 'Adsense Code') {
+				items[21].style.display = 'none';
+		       	items[22].style.display = 'none';
+		       	items[23].style.display = 'none';
+		       	items[24].style.display = 'block';
+			}
+		};
+
+
+
+        
+    </script>
+
+<style>
+		.admin-live-refresh-toast {
+			position: fixed;
+			left: 20px;
+			bottom: 20px;
+			z-index: 9999;
+			display: none;
+			max-width: 340px;
+			padding: 10px 14px;
+			border-radius: 10px;
+			background: rgba(28, 36, 52, 0.94);
+			color: #fff;
+			font-size: 13px;
+			line-height: 1.5;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, 0.22);
+		}
+		.admin-live-refresh-toast.is-visible {
+			display: block;
+		}
+	</style>
+	<script>
+		(function(config, $) {
+			if (!config || !config.enabled || typeof $ === 'undefined') {
+				return;
+			}
+
+			var currentVersion = String(config.version || '');
+			var pollInterval = parseInt(config.interval_ms || 20000, 10);
+			var pollInFlight = false;
+			var pendingReload = false;
+			var hasDirtyForm = false;
+			var toast = null;
+
+			if (pollInterval < 10000) {
+				pollInterval = 10000;
+			}
+
+			function ensureToast() {
+				if (toast) {
+					return toast;
+				}
+
+				toast = document.createElement('div');
+				toast.className = 'admin-live-refresh-toast';
+				toast.id = 'admin-live-refresh-toast';
+				document.body.appendChild(toast);
+				return toast;
+			}
+
+			function showPendingToast() {
+				var node = ensureToast();
+				node.textContent = config.pending_text || 'يوجد تحديث جديد وسيتم تطبيقه تلقائياً';
+				node.className = 'admin-live-refresh-toast is-visible';
+			}
+
+			function hidePendingToast() {
+				if (!toast) {
+					return;
+				}
+
+				toast.className = 'admin-live-refresh-toast';
+			}
+
+			function canReloadNow() {
+				if (document.hidden) {
+					return false;
+				}
+
+				if (hasDirtyForm) {
+					return false;
+				}
+
+				if ($('.modal.in, .modal.show').length > 0) {
+					return false;
+				}
+
+				return true;
+			}
+
+			function reloadIfSafe() {
+				if (!pendingReload || !canReloadNow()) {
+					return;
+				}
+
+				hidePendingToast();
+				window.location.reload();
+			}
+
+			function markDirty() {
+				hasDirtyForm = true;
+			}
+
+			function clearDirty() {
+				hasDirtyForm = false;
+				reloadIfSafe();
+			}
+
+			function requestVersion() {
+				if (pollInFlight) {
+					return;
+				}
+
+				pollInFlight = true;
+
+				$.ajax({
+					url: config.endpoint || 'live-update-status.php',
+					type: 'GET',
+					dataType: 'json',
+					cache: false,
+					data: config.params || {}
+				}).done(function(response) {
+					if (!response || !response.success) {
+						return;
+					}
+
+					var nextVersion = String(response.version || '');
+					if (currentVersion === '') {
+						currentVersion = nextVersion;
+						return;
+					}
+
+					if (nextVersion !== '' && nextVersion !== currentVersion) {
+						pendingReload = true;
+						showPendingToast();
+						reloadIfSafe();
+					}
+				}).always(function() {
+					pollInFlight = false;
+				});
+			}
+
+			$(document).on('input change', 'form input:not([type="hidden"]):not([type="submit"]):not([type="button"]):not([type="reset"]), form textarea, form select', markDirty);
+			$(document).on('submit', 'form', clearDirty);
+			$(document).on('click', '.modal .btn, [data-dismiss="modal"]', function() {
+				window.setTimeout(reloadIfSafe, 300);
+			});
+
+			document.addEventListener('visibilitychange', function() {
+				if (!document.hidden) {
+					if (pendingReload) {
+						reloadIfSafe();
+					} else {
+						requestVersion();
+					}
+				}
+			});
+
+			window.setInterval(function() {
+				if (pendingReload) {
+					reloadIfSafe();
+					return;
+				}
+
+				requestVersion();
+			}, pollInterval);
+		})({"enabled":true,"scope":"order_details","endpoint":"live-update-status.php","interval_ms":15000,"params":{"scope":"order_details","order_id":871},"version":"f7778f26dadb8c42cd72bd3ba70ca7ccb71926cc","active_text":"التحديث التلقائي مفعل","pending_text":"يوجد تحديث جديد وسيتم تطبيقه تلقائياً"}, window.jQuery);
+	</script>
+	
+	<script>
+	// ECOTRACK Auto-Sync Engine
+	(function($) {
+		if (typeof $ === 'undefined') return;
+		function runEcotrackAutoSync() {
+			$.ajax({
+				url: 'ajax-ecotrack-autosync.php',
+				method: 'GET',
+				dataType: 'json',
+				success: function(response) {
+					if (response && response.synced > 0) {
+						console.log('Ecotrack Auto-Sync:', response.message);
+						// Optionally, trigger a live-refresh if configured
+						if (window.adminAutoRefreshTrigger) window.adminAutoRefreshTrigger();
+					}
+				}
+			});
+		}
+		// Run after 5 seconds, then every 3 minutes
+		setTimeout(runEcotrackAutoSync, 5000);
+		setInterval(runEcotrackAutoSync, 180000);
+	})(window.jQuery);
+	</script>
+		<script>
+		document.body.classList.remove('admin-react-pending');
+		document.body.style.background = 'transparent';
+	</script>
+	
+	<!-- Sidebar Chevron Init (CSS grid controlled by React state) -->
+	<script>
+	(function() {
+		function init() {
+			document.querySelectorAll('.saas-nav-item').forEach(function(item) {
+				if (item._subnavInit) return;
+				item._subnavInit = true;
+				var btn = item.querySelector('.saas-nav-link[role="button"]');
+				if (!btn) return;
+				var chevron = btn.querySelector('svg:last-child');
+				var hasActive = item.querySelector('.is-active');
+				if (chevron) chevron.classList.toggle('is-open', !!hasActive);
+			});
+		}
+		var observer = new MutationObserver(function() { init(); });
+		observer.observe(document.body, { childList: true, subtree: true });
+		init();
+	})();
+	</script>
+
+	<!-- WebSocket Real-time Updates -->
+	<script>
+	(function() {
+		var WS_HOST = '127.0.0.1';
+		var WS_PORT = 9001;
+		var WS_URL = 'ws://' + WS_HOST + ':' + WS_PORT;
+		var ws = null;
+		var reconnectDelay = 2000;
+		var maxReconnectDelay = 30000;
+
+		function connect() {
+			try {
+				ws = new WebSocket(WS_URL);
+
+				ws.onopen = function() {
+					console.log('[WS] Connected to WebSocket server');
+					reconnectDelay = 2000;
+					showToast('تم الاتصال بالخادم', 'success', 2000);
+				};
+
+				ws.onmessage = function(event) {
+					try {
+						var msg = JSON.parse(event.data);
+						handleMessage(msg);
+					} catch(e) {
+						console.log('[WS] Parse error:', e);
+					}
+				};
+
+				ws.onclose = function() {
+					console.log('[WS] Disconnected, reconnecting in ' + (reconnectDelay/1000) + 's...');
+					setTimeout(connect, reconnectDelay);
+					reconnectDelay = Math.min(reconnectDelay * 1.5, maxReconnectDelay);
+				};
+
+				ws.onerror = function(err) {
+					console.log('[WS] Error:', err);
+					ws.close();
+				};
+			} catch(e) {
+				console.log('[WS] Connection failed:', e);
+				setTimeout(connect, reconnectDelay);
+			}
+		}
+
+		function handleMessage(msg) {
+			var type = msg.type || '';
+			var payload = msg.payload || msg;
+
+			switch(type) {
+				case 'order.new':
+					handleNewOrder(payload);
+					break;
+				case 'order.status':
+					handleOrderStatus(payload);
+					break;
+				case 'stock.update':
+					handleStockUpdate(payload);
+					break;
+				case 'connected':
+					console.log('[WS] Server:', payload.message);
+					break;
+				case 'pong':
+					break;
+			}
+		}
+
+		function handleNewOrder(order) {
+			var name = order.customer_name || 'عميل';
+			var total = parseInt(order.total_price || 0);
+			var phone = order.customer_phone || '';
+			var wilaya = order.wilaya || '';
+			var product = order.product_name || '';
+			var orderId = order.id || '';
+
+			var body = '<strong>عميل:</strong> ' + name + '<br>' +
+			           '<strong>الهاتف:</strong> ' + phone + '<br>' +
+			           '<strong>المنتج:</strong> ' + product + '<br>' +
+			           '<strong>المبلغ:</strong> ' + total.toLocaleString('ar-DZ') + ' د.ج<br>' +
+			           '<strong>الولاية:</strong> ' + wilaya;
+
+			showNotification('طلب جديد #' + orderId, body, 'order');
+
+			// Play notification sound
+			playNotificationSound();
+
+			// Request browser notification
+			if ('Notification' in window && Notification.permission === 'granted') {
+				new Notification('طلب جديد #' + orderId, {
+					body: name + ' - ' + total.toLocaleString('ar-DZ') + ' د.ج',
+				});
+			}
+
+			// Reload if on orders page
+			if (window.location.pathname.indexOf('order.php') !== -1) {
+				pendingReload = true;
+				showToast('طلب جديد - سيتم التحديث...', 'info', 3000);
+				setTimeout(function() { window.location.reload(); }, 2000);
+			}
+		}
+
+		function handleOrderStatus(order) {
+			var name = order.customer_name || 'عميل';
+			var newStatus = order.new_status || '';
+			var prevStatus = order.previous_status || '';
+			var orderId = order.id || '';
+
+			showToast('تم تغيير حالة الطلب #' + orderId + ' من "' + prevStatus + '" إلى "' + newStatus + '"', 'info', 4000);
+
+			// Reload if on orders page
+			if (window.location.pathname.indexOf('order.php') !== -1 ||
+			    window.location.pathname.indexOf('order-details.php') !== -1) {
+				pendingReload = true;
+				setTimeout(function() { window.location.reload(); }, 1500);
+			}
+		}
+
+		function handleStockUpdate(product) {
+			showToast('تم تحديث مخزون: ' + (product.name || 'منتج') + ' - الكمية: ' + (product.qty || 0), 'info', 3000);
+		}
+
+		function showNotification(title, body, type) {
+			var container = getNotificationContainer();
+			var el = document.createElement('div');
+			el.className = 'ws-notification ws-notification-' + (type || 'info');
+			el.innerHTML = '<div class="ws-notification-header"><span class="ws-notification-title">' + title + '</span><button class="ws-notification-close" onclick="this.parentElement.parentElement.remove()">×</button></div><div class="ws-notification-body">' + body + '</div>';
+			container.appendChild(el);
+
+			// Auto remove after 10 seconds
+			setTimeout(function() {
+				if (el.parentElement) {
+					el.style.opacity = '0';
+					el.style.transform = 'translateX(-100%)';
+					setTimeout(function() { el.remove(); }, 300);
+				}
+			}, 10000);
+		}
+
+		function showToast(message, type, duration) {
+			type = type || 'info';
+			duration = duration || 3000;
+
+			var existing = document.getElementById('ws-toast');
+			if (existing) existing.remove();
+
+			var toast = document.createElement('div');
+			toast.id = 'ws-toast';
+			toast.className = 'ws-toast ws-toast-' + type;
+			toast.textContent = message;
+			toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;padding:12px 24px;border-radius:8px;color:#fff;font-size:14px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:all 0.3s;opacity:1;';
+
+			var colors = { success: '#10b981', info: '#3b82f6', warning: '#f59e0b', danger: '#ef4444' };
+			toast.style.background = colors[type] || colors.info;
+
+			document.body.appendChild(toast);
+			setTimeout(function() {
+				toast.style.opacity = '0';
+				toast.style.top = '0';
+				setTimeout(function() { toast.remove(); }, 300);
+			}, duration);
+		}
+
+		function getNotificationContainer() {
+			var c = document.getElementById('ws-notifications');
+			if (!c) {
+				c = document.createElement('div');
+				c.id = 'ws-notifications';
+				c.style.cssText = 'position:fixed;top:80px;left:20px;z-index:99998;width:360px;max-height:calc(100vh - 100px);overflow-y:auto;display:flex;flex-direction:column;gap:10px;';
+				document.body.appendChild(c);
+			}
+			return c;
+		}
+
+		function playNotificationSound() {
+			try {
+				var ctx = new (window.AudioContext || window.webkitAudioContext)();
+				var osc = ctx.createOscillator();
+				var gain = ctx.createGain();
+				osc.connect(gain);
+				gain.connect(ctx.destination);
+				osc.frequency.value = 800;
+				osc.type = 'sine';
+				gain.gain.value = 0.3;
+				osc.start();
+				osc.stop(ctx.currentTime + 0.2);
+			} catch(e) {}
+		}
+
+		// Request notification permission
+		if ('Notification' in window && Notification.permission === 'default') {
+			Notification.requestPermission();
+		}
+
+		// Heartbeat
+		setInterval(function() {
+			if (ws && ws.readyState === WebSocket.OPEN) {
+				ws.send(JSON.stringify({type: 'ping'}));
+			}
+		}, 30000);
+
+		// Connect
+		connect();
+	})();
+	</script>
+	<style>
+		.ws-notification {
+			background: #1e293b;
+			border-radius: 10px;
+			padding: 14px;
+			color: #fff;
+			box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+			transition: all 0.3s;
+			border-right: 4px solid #3b82f6;
+		}
+		.ws-notification-order { border-right-color: #10b981; }
+		.ws-notification-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 8px;
+		}
+		.ws-notification-title {
+			font-weight: 700;
+			font-size: 14px;
+		}
+		.ws-notification-close {
+			background: none;
+			border: none;
+			color: #94a3b8;
+			font-size: 18px;
+			cursor: pointer;
+			padding: 0 4px;
+		}
+		.ws-notification-close:hover { color: #fff; }
+		.ws-notification-body {
+			font-size: 13px;
+			line-height: 1.6;
+			color: #cbd5e1;
+		}
+	</style>
+</body>
+</html>

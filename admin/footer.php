@@ -6,44 +6,39 @@
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/jquery.dataTables.min.js"></script>
 	<script src="js/dataTables.bootstrap.min.js"></script>
-	<script src="js/select2.full.min.js"></script>
-	<script src="js/jquery.inputmask.js"></script>
-	<script src="js/jquery.inputmask.date.extensions.js"></script>
-	<script src="js/jquery.inputmask.extensions.js"></script>
-	<script src="js/moment.min.js"></script>
-	<script src="js/bootstrap-datepicker.js"></script>
-	<script src="js/icheck.min.js"></script>
-	<script src="js/fastclick.js"></script>
-	<script src="js/jquery.sparkline.min.js"></script>
-	<script src="js/jquery.slimscroll.min.js"></script>
-	<script src="js/jquery.fancybox.pack.js"></script>
-	<script src="js/app.min.js"></script>
-	<script src="js/jscolor.js"></script>
-	<script src="js/on-off-switch.js"></script>
-    <script src="js/on-off-switch-onload.js"></script>
-    <script src="js/clipboard.min.js"></script>
-	<script src="js/demo.js"></script>
-	<script src="js/summernote.js"></script>
-	<script src="js/spa-navigation.js"></script>
+	<script>
+	if (window.jQuery && window.jQuery.fn) {
+		var dummyApi = {
+			search: function() { return this; },
+			draw: function() { return this; },
+			columns: function() { return this; },
+			adjust: function() { return this; },
+			on: function() { return this; },
+			row: function() { return this; },
+			rows: function() { return this; },
+			data: function() { return this; },
+			column: function() { return this; },
+			settings: function() { return [{}]; }
+		};
+		var dummyFn = function() { return dummyApi; };
+		dummyFn.isDataTable = function() { return true; };
+		dummyFn.fnIsDataTable = function() { return true; };
+		window.jQuery.fn.DataTable = dummyFn;
+		window.jQuery.fn.dataTable = dummyFn;
+	}
+	</script>
+	<script src="js/select2.full.min.js" defer></script>
+	<script src="js/moment.min.js" defer></script>
+	<script src="js/bootstrap-datepicker.js" defer></script>
+	<script src="js/icheck.min.js" defer></script>
+	<script src="js/jquery.slimscroll.min.js" defer></script>
+	<script src="js/app.min.js" defer></script>
+	<script src="js/on-off-switch.js" defer></script>
+	<script src="js/on-off-switch-onload.js" defer></script>
+	<!-- spa-navigation.js disabled: conflicts with React shell causing double-render/flickering -->
 
 	<script>
 		$(document).ready(function() {
-	        $('#editor1').summernote({
-	        	height: 300
-	        });
-	        $('#editor2').summernote({
-	        	height: 300
-	        });
-	        $('#editor3').summernote({
-	        	height: 300
-	        });
-	        $('#editor4').summernote({
-	        	height: 300
-	        });
-	        $('#editor5').summernote({
-	        	height: 300
-	        });
-	    });
 		$(".top-cat").on('change',function(){
 			var id=$(this).val();
 			var dataString = 'id='+ id;
@@ -81,13 +76,6 @@
 
 	    //Initialize Select2 Elements
 	    $(".select2").select2();
-
-	    //Datemask dd/mm/yyyy
-	    $("#datemask").inputmask("dd-mm-yyyy", {"placeholder": "dd-mm-yyyy"});
-	    //Datemask2 mm/dd/yyyy
-	    $("#datemask2").inputmask("mm-dd-yyyy", {"placeholder": "mm-dd-yyyy"});
-	    //Money Euro
-	    $("[data-mask]").inputmask();
 
 	    //Date picker
 	    $('#datepicker').datepicker({
@@ -446,7 +434,7 @@
 				}
 
 				hidePendingToast();
-				window.location.reload();
+				showToast('يوجد تحديث جديد<br><button onclick="window.location.reload()" style="margin-top:6px;padding:4px 12px;border-radius:4px;border:none;background:#fff;color:#3b82f6;cursor:pointer;font-weight:700;">تحديث الصفحة</button>', 'info', 15000);
 			}
 
 			function markDirty() {
@@ -543,15 +531,28 @@
 		setInterval(runEcotrackAutoSync, 180000);
 	})(window.jQuery);
 	</script>
+	<?php if(!isset($_GET['iframe'])): ?>
 	<script>
-		window.setTimeout(function() {
-			if (!document.body.classList.contains('admin-react-ready')) {
-				document.body.classList.remove('admin-react-pending');
-			}
-		}, 3500);
+		document.addEventListener('DOMContentLoaded', function() {
+			window.setTimeout(function() {
+				if (!document.body.classList.contains('admin-react-ready')) {
+					document.body.classList.remove('admin-react-pending');
+				}
+			}, 3500);
+		});
 	</script>
 	<?php $admin_react_js_version = file_exists(__DIR__ . '/dist/admin-react.js') ? filemtime(__DIR__ . '/dist/admin-react.js') : time(); ?>
-	<script type="module" src="dist/admin-react.js?v=<?php echo $admin_react_js_version; ?>"></script>
+	<script type="module" src="dist/admin-react.js?v=<?php echo $admin_react_js_version; ?>" onerror="try{fetch('log_error.php?err='+encodeURIComponent('[LoadError] admin-react.js failed to load: '+this.src))}catch(e){}document.body.classList.remove('admin-react-pending');"></script>
+	<script nomodule>
+		try{fetch('log_error.php?err='+encodeURIComponent('[LoadError] Module scripts not supported, falling back'))}catch(e){}
+		document.body.classList.remove('admin-react-pending');
+	</script>
+	<?php else: ?>
+	<script>
+		document.body.classList.remove('admin-react-pending');
+		document.body.style.background = 'transparent';
+	</script>
+	<?php endif; ?>
 
 	<!-- Sidebar Chevron Init (CSS grid controlled by React state) -->
 	<script>
@@ -666,11 +667,9 @@
 				});
 			}
 
-			// Reload if on orders page
+			// Show notification on orders page (no auto-reload)
 			if (window.location.pathname.indexOf('order.php') !== -1) {
-				pendingReload = true;
-				showToast('طلب جديد - سيتم التحديث...', 'info', 3000);
-				setTimeout(function() { window.location.reload(); }, 2000);
+				showToast('<strong>طلب جديد #' + orderId + '</strong><br><button onclick="window.location.reload()" style="margin-top:6px;padding:4px 12px;border-radius:4px;border:none;background:#00a65a;color:#fff;cursor:pointer;font-weight:700;">تحديث الصفحة</button>', 'info', 8000);
 			}
 		}
 
@@ -682,11 +681,10 @@
 
 			showToast('تم تغيير حالة الطلب #' + orderId + ' من "' + prevStatus + '" إلى "' + newStatus + '"', 'info', 4000);
 
-			// Reload if on orders page
+			// Show notification on orders page (no auto-reload)
 			if (window.location.pathname.indexOf('order.php') !== -1 ||
 			    window.location.pathname.indexOf('order-details.php') !== -1) {
-				pendingReload = true;
-				setTimeout(function() { window.location.reload(); }, 1500);
+				showToast('تم تغيير حالة الطلب #' + orderId + ' من "' + prevStatus + '" إلى "' + newStatus + '"<br><button onclick="window.location.reload()" style="margin-top:6px;padding:4px 12px;border-radius:4px;border:none;background:#00a65a;color:#fff;cursor:pointer;font-weight:700;">تحديث</button>', 'info', 8000);
 			}
 		}
 
@@ -721,7 +719,7 @@
 			var toast = document.createElement('div');
 			toast.id = 'ws-toast';
 			toast.className = 'ws-toast ws-toast-' + type;
-			toast.textContent = message;
+			toast.innerHTML = message;
 			toast.style.cssText = 'position:fixed;top:20px;left:50%;transform:translateX(-50%);z-index:99999;padding:12px 24px;border-radius:8px;color:#fff;font-size:14px;font-weight:500;box-shadow:0 4px 20px rgba(0,0,0,0.3);transition:all 0.3s;opacity:1;';
 
 			var colors = { success: '#10b981', info: '#3b82f6', warning: '#f59e0b', danger: '#ef4444' };

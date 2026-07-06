@@ -248,8 +248,8 @@ $catalog_payload = [
         };
         document.head.appendChild(script);
     }
-    loadScript('https://unpkg.com/react@18/umd/react.production.min.js', function () {
-        loadScript('https://unpkg.com/react-dom@18/umd/react-dom.production.min.js', function () {
+    loadScript('assets/js/react.production.min.js', function () {
+        loadScript('assets/js/react-dom.production.min.js', function () {
             loadScript('assets/js/category-react-page.js?v=20260516-1', function () {});
         });
     });

@@ -6,6 +6,8 @@ require_once __DIR__ . '/../inc/exchange-requests.php';
 
 next_api_headers();
 
+if (isset($pdo)) { next_api_rate_limit($pdo, basename(__FILE__)); }
+
 if (($_SERVER['REQUEST_METHOD'] ?? '') !== 'POST') {
     next_json(['success' => false, 'message' => 'طريقة الطلب غير صحيحة.'], 405);
 }
@@ -204,6 +206,13 @@ try {
     $token = bin2hex(random_bytes(5));
     $fileName = 'exchange-' . $orderId . '-' . time() . '-' . $token . '.' . $ext;
     $target = $uploadDir . '/' . $fileName;
+    
+    // Security: MIME type validation
+    $allowed_types = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!in_array(mime_content_type($tmp), $allowed_types)) {
+        echo json_encode(['success' => false, 'error' => 'نوع الملف غير مسموح.']);
+        exit;
+    }
     if (!move_uploaded_file($tmp, $target)) {
         exchange_api_fail('تعذر حفظ صورة التبديل.', 500);
     }

@@ -1,1273 +1,765 @@
 <?php require_once('header.php'); ?>
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 0);
+ini_set('log_errors', 1);
+ini_set('error_log', __DIR__ . '/php_error.log');
+
+register_shutdown_function(function() {
+    $error = error_get_last();
+    if ($error && in_array($error['type'], [E_ERROR, E_PARSE, E_COMPILE_ERROR, E_CORE_ERROR])) {
+        file_put_contents(__DIR__ . '/php_error.log', date('Y-m-d H:i:s') . ' FATAL: ' . $error['message'] . ' in ' . $error['file'] . ':' . $error['line'] . PHP_EOL, FILE_APPEND);
+    }
+});
+
 if (!function_exists('admin_dashboard_status_meta')) {
-    function admin_dashboard_status_meta($status) {
+    function admin_dashboard_status_meta($status) { global $dbRepo;
+
         $map = array(
-            'Pending' => array('label' => 'معلّق', 'class' => 'is-pending', 'icon' => 'fa-clock-o'),
-            'Confirmed' => array('label' => 'مؤكد', 'class' => 'is-confirmed', 'icon' => 'fa-check-circle-o'),
-            'Completed' => array('label' => 'مكتمل', 'class' => 'is-completed', 'icon' => 'fa-check-circle'),
-            'Cancelled' => array('label' => 'ملغي', 'class' => 'is-cancelled', 'icon' => 'fa-times-circle')
+            'Pending' => array('label' => 'معلّق', 'class' => 'is-pending', 'icon' => 'fa-clock-o', 'color' => '#b45309', 'bg' => '#fef3c7'),
+            'Confirmed' => array('label' => 'مؤكد', 'class' => 'is-confirmed', 'icon' => 'fa-check-circle-o', 'color' => '#1d4ed8', 'bg' => '#dbeafe'),
+            'Shipped' => array('label' => 'قيد الشحن', 'class' => 'is-shipped', 'icon' => 'fa-truck', 'color' => '#3730a3', 'bg' => '#e0e7ff'),
+            'Delivered' => array('label' => 'مُسلّم', 'class' => 'is-completed', 'icon' => 'fa-check-circle', 'color' => '#166534', 'bg' => '#dcfce7'),
+            'Completed' => array('label' => 'مكتمل', 'class' => 'is-completed', 'icon' => 'fa-check-circle', 'color' => '#166534', 'bg' => '#dcfce7'),
+            'Returned' => array('label' => 'مرتجع', 'class' => 'is-returned', 'icon' => 'fa-undo', 'color' => '#9d174d', 'bg' => '#fce7f3'),
+            'Cancelled' => array('label' => 'ملغي', 'class' => 'is-cancelled', 'icon' => 'fa-times-circle', 'color' => '#991b1b', 'bg' => '#fee2e2')
         );
-
-        return isset($map[$status]) ? $map[$status] : array(
-            'label' => 'غير محدد',
-            'class' => 'is-neutral',
-            'icon' => 'fa-info-circle'
-        );
+        return isset($map[$status]) ? $map[$status] : array('label' => 'غير محدد', 'class' => 'is-neutral', 'icon' => 'fa-info-circle', 'color' => '#475569', 'bg' => '#f1f5f9');
     }
 }
-
 if (!function_exists('admin_format_amount')) {
-    function admin_format_amount($amount) {
-        return number_format((float) $amount, 0, '.', ' ') . ' دج';
+    function admin_format_amount($amount) { global $dbRepo;
+
+        return number_format((float) $amount, 0, '.', ' ') . ' د.ج';
     }
 }
 
-$admin_name = trim((string) ($_SESSION['user']['full_name'] ?? 'المدير'));
-$dashboard_refresh_time = date('d/m/Y - H:i');
-$admin_auto_refresh = admin_build_live_refresh_config($pdo, 'dashboard', ['interval_ms' => 20000]);
-
-$order_summary = array(
-    'total_orders' => 0,
-    'today_orders' => 0,
-    'pending_orders' => 0,
-    'confirmed_orders' => 0,
-    'completed_orders' => 0,
-    'cancelled_orders' => 0,
-    'completed_revenue' => 0,
-    'today_revenue' => 0,
-    'registered_orders' => 0,
-    'direct_orders' => 0
-);
-
-$statement = $pdo->query("
-    SELECT
-        COUNT(*) AS total_orders,
-        SUM(CASE WHEN DATE(order_date) = CURDATE() THEN 1 ELSE 0 END) AS today_orders,
-        SUM(CASE WHEN order_status = 'Pending' THEN 1 ELSE 0 END) AS pending_orders,
-        SUM(CASE WHEN order_status = 'Confirmed' THEN 1 ELSE 0 END) AS confirmed_orders,
-        SUM(CASE WHEN order_status = 'Completed' THEN 1 ELSE 0 END) AS completed_orders,
-        SUM(CASE WHEN order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled_orders,
-        COALESCE(SUM(CASE WHEN order_status = 'Completed' THEN total_price ELSE 0 END), 0) AS completed_revenue,
-        COALESCE(SUM(CASE WHEN DATE(order_date) = CURDATE() AND order_status = 'Completed' THEN total_price ELSE 0 END), 0) AS today_revenue,
-        SUM(CASE WHEN customer_type = 'registered' THEN 1 ELSE 0 END) AS registered_orders,
-        SUM(CASE WHEN customer_type = 'direct' THEN 1 ELSE 0 END) AS direct_orders
-    FROM tbl_order
-");
-$order_summary_raw = $statement->fetch(PDO::FETCH_ASSOC);
-if ($order_summary_raw) {
-    $order_summary = array_merge($order_summary, $order_summary_raw);
-}
-
-$product_summary = array(
-    'total_products' => 0,
-    'active_products' => 0,
-    'low_stock_products' => 0
-);
-$statement = $pdo->query("
-    SELECT
-        COUNT(*) AS total_products,
-        SUM(CASE WHEN p_is_active = 1 THEN 1 ELSE 0 END) AS active_products,
-        SUM(CASE WHEN p_qty <= 5 THEN 1 ELSE 0 END) AS low_stock_products
-    FROM tbl_product
-");
-$product_summary_raw = $statement->fetch(PDO::FETCH_ASSOC);
-if ($product_summary_raw) {
-    $product_summary = array_merge($product_summary, $product_summary_raw);
-}
-
-$customer_summary = array(
-    'total_customers' => 0,
-    'active_customers' => 0
-);
-$statement = $pdo->query("
-    SELECT
-        COUNT(*) AS total_customers,
-        SUM(CASE WHEN cust_status = 1 THEN 1 ELSE 0 END) AS active_customers
-    FROM tbl_customer
-");
-$customer_summary_raw = $statement->fetch(PDO::FETCH_ASSOC);
-if ($customer_summary_raw) {
-    $customer_summary = array_merge($customer_summary, $customer_summary_raw);
-}
-
-require_once('inc/performance_functions.php');
-performance_ensure_tables($pdo);
-$perf_widgets = performance_get_dashboard_widgets($pdo);
-
-$incomplete_orders_count = 0;
-$recent_incomplete_orders = array();
+// Prefs
+$user_id = $_SESSION['user']['id'];
+$prefs = [];
 try {
-    $statement = $pdo->query("SELECT COUNT(*) FROM incomplete_orders");
-    $incomplete_orders_count = (int) $statement->fetchColumn();
+    $prefs_stmt = $dbRepo->prepare("SELECT dashboard_prefs FROM tbl_user WHERE id = ?");
+    $prefs_stmt->execute([$user_id]);
+    $dashboard_prefs_raw = $prefs_stmt->fetchColumn();
+    $prefs = $dashboard_prefs_raw ? json_decode($dashboard_prefs_raw, true) : [];
+    if (!is_array($prefs)) $prefs = [];
+} catch (Exception $e) {
+    $prefs = [];
+}
 
-    $statement = $pdo->query("
-        SELECT id, customer_name, customer_phone, product_name, total_price, created_at
-        FROM incomplete_orders
-        ORDER BY created_at DESC, id DESC
-        LIMIT 5
+    function is_widget_visible($key) { global $dbRepo;
+
+        global $prefs;
+    return !isset($prefs[$key]) || $prefs[$key] === true || $prefs[$key] === 'true';
+}
+
+$cache_file = __DIR__ . '/cache/dashboard_kpis_cache.json';
+$cache_ttl = 300; // 5 minutes cache
+$data_cached = false;
+
+if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_ttl) {
+    $cache_data = json_decode(file_get_contents($cache_file), true);
+    if ($cache_data) {
+        extract($cache_data);
+        $data_cached = true;
+    }
+}
+
+if (!$data_cached) {
+    // Check Unassigned Orders (If employee system is used)
+    // We assume an order is unassigned if it's Pending/Confirmed and not in tbl_order_assignment with status active
+    $unassigned_count = 0;
+    try {
+        $unassigned_stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_order o LEFT JOIN tbl_order_assignment oa ON o.id = oa.order_id WHERE o.order_status IN ('Pending', 'Confirmed') AND oa.id IS NULL");
+        $unassigned_count = $unassigned_stmt->fetchColumn();
+    } catch (Exception $e) {}
+
+    try {
+    // Stuck orders (Pending for more than 2 days)
+    $stuck_count = $dbRepo->query("SELECT COUNT(*) FROM tbl_order WHERE order_status = 'Pending' AND order_date < DATE_SUB(NOW(), INTERVAL 2 DAY)")->fetchColumn();
+
+    // Low stock
+    $low_stock_count = $dbRepo->query("SELECT COUNT(*) FROM tbl_product WHERE p_qty <= 5 AND p_is_active = 1")->fetchColumn();
+    $out_stock_count = $dbRepo->query("SELECT COUNT(*) FROM tbl_product WHERE p_qty <= 0")->fetchColumn();
+
+    // Unsent to delivery company (ecotrack/zrexpress failed)
+    $unsent_count = 0;
+    try { $unsent_count = $dbRepo->query("SELECT COUNT(*) FROM tbl_order WHERE sync_status = 'failed' OR ecotrack_status = 'failed'")->fetchColumn(); } catch (Exception $e) {}
+
+    // New Returns (last 48 hours)
+    $new_returns = $dbRepo->query("SELECT COUNT(*) FROM tbl_order WHERE order_status = 'Returned' AND DATE(order_date) >= DATE_SUB(CURDATE(), INTERVAL 2 DAY)")->fetchColumn();
+
+    // Data variables
+    $today = date('Y-m-d');
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $this_month = date('Y-m');
+    $last_month = date('Y-m', strtotime('-1 month'));
+
+    $stmt = $dbRepo->query("
+        SELECT 
+            COUNT(*) as total_orders,
+            SUM(CASE WHEN DATE(order_date) = '{$today}' THEN 1 ELSE 0 END) as today_orders,
+            SUM(CASE WHEN DATE(order_date) = '{$yesterday}' THEN 1 ELSE 0 END) as yesterday_orders,
+            SUM(CASE WHEN DATE(order_date) = '{$today}' AND order_status IN ('Completed', 'Delivered') THEN total_price ELSE 0 END) as today_sales,
+            SUM(CASE WHEN DATE(order_date) = '{$yesterday}' AND order_status IN ('Completed', 'Delivered') THEN total_price ELSE 0 END) as yesterday_sales,
+            SUM(CASE WHEN DATE_FORMAT(order_date, '%Y-%m') = '{$this_month}' AND order_status IN ('Completed', 'Delivered') THEN total_price ELSE 0 END) as month_sales,
+            SUM(CASE WHEN DATE_FORMAT(order_date, '%Y-%m') = '{$last_month}' AND order_status IN ('Completed', 'Delivered') THEN total_price ELSE 0 END) as last_month_sales,
+            SUM(CASE WHEN order_status = 'Pending' THEN 1 ELSE 0 END) as pending_orders,
+            SUM(CASE WHEN order_status IN ('Shipped', 'In Transit') THEN 1 ELSE 0 END) as shipped_orders,
+            SUM(CASE WHEN order_status = 'Returned' THEN 1 ELSE 0 END) as returned_orders,
+            SUM(CASE WHEN order_status IN ('Completed', 'Delivered') THEN 1 ELSE 0 END) as completed_orders
+        FROM tbl_order
     ");
-    $recent_incomplete_orders = $statement->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    error_log('Dashboard incomplete_orders query failed: ' . $e->getMessage());
+    $kpis = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    // Profit (Gross for now)
+    $tenant_id_val = 1; // Default
+    if (class_exists('\SaaS\TenantContext') && method_exists('\SaaS\TenantContext', 'getTenantId')) {
+        $tenant_id_val = \SaaS\TenantContext::getTenantId();
+    }
+    
+    $profit_stmt = $dbRepo->query("
+        SELECT SUM((o.unit_price - COALESCE(p.purchase_price, 0)) * o.quantity) as gross_profit 
+        FROM tbl_order o 
+        LEFT JOIN tbl_product p ON o.product_id = p.p_id 
+        WHERE o.tenant_id = " . intval($tenant_id_val) . " 
+        AND o.order_status IN ('Completed', 'Delivered')
+    ");
+    $gross_profit = $profit_stmt->fetchColumn() ?: 0;
+
+    // Recent Orders
+    $recent_orders = $dbRepo->query("
+        SELECT o.id, o.customer_name, c.name as company_name, o.order_status, o.total_price, o.order_date
+        FROM tbl_order o
+        LEFT JOIN tbl_delivery_company c ON o.delivery_company_id = c.id
+        ORDER BY o.id DESC LIMIT 10
+    ")->fetchAll(PDO::FETCH_ASSOC);
+
+    // Top Employees
+    $top_employees = [];
+    if (file_exists('inc/performance_functions.php')) {
+        try {
+            require_once('inc/performance_functions.php');
+            if (function_exists('performance_get_ranking')) {
+                performance_ensure_tables($pdo);
+                $top_employees = performance_get_ranking($pdo, 5);
+            }
+        } catch (Exception $e) {}
+    }
+
+    // Delivery Company
+    $top_company = $dbRepo->query("
+        SELECT c.name, COUNT(o.id) as total_shipments, 
+               SUM(CASE WHEN o.order_status IN ('Completed', 'Delivered') THEN 1 ELSE 0 END) as successful,
+               SUM(CASE WHEN o.order_status = 'Returned' THEN 1 ELSE 0 END) as returned
+        FROM tbl_order o
+        JOIN tbl_delivery_company c ON o.delivery_company_id = c.id
+        WHERE DATE(o.order_date) = CURDATE() AND o.order_status NOT IN ('Pending', 'Cancelled')
+        GROUP BY c.id ORDER BY total_shipments DESC LIMIT 1
+    ")->fetch(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $stuck_count = 0; $low_stock_count = 0; $out_stock_count = 0;
+        $unsent_count = 0; $new_returns = 0; $gross_profit = 0;
+        $recent_orders = []; $top_employees = []; $top_company = null;
+        $kpis = ['total_orders'=>0,'today_orders'=>0,'yesterday_orders'=>0,'today_sales'=>0,'yesterday_sales'=>0,'month_sales'=>0,'last_month_sales'=>0,'pending_orders'=>0,'shipped_orders'=>0,'returned_orders'=>0,'completed_orders'=>0];
+    }
+
+    $cache_data = compact(
+        'unassigned_count', 'stuck_count', 'low_stock_count', 'out_stock_count', 
+        'unsent_count', 'new_returns', 'kpis', 'gross_profit', 
+        'recent_orders', 'top_employees', 'top_company'
+    );
+    
+    // Ensure cache dir exists
+    if (!is_dir(__DIR__ . '/cache')) {
+        mkdir(__DIR__ . '/cache', 0777, true);
+    }
+    file_put_contents($cache_file, json_encode($cache_data));
 }
 
-$statement = $pdo->query("
-    SELECT id, customer_name, customer_phone, product_name, total_price, order_status, order_date, customer_type
-    FROM tbl_order
-    ORDER BY order_date DESC, id DESC
-    LIMIT 6
-");
-$recent_orders = $statement->fetchAll(PDO::FETCH_ASSOC);
+$alerts = [];
+if (($low_stock_count ?? 0) > 0) $alerts[] = ['type' => 'warning', 'icon' => 'fa-cube', 'title' => 'نقص في المخزون', 'desc' => "هناك {$low_stock_count} منتج قارب على النفاد."];
+if (($unsent_count ?? 0) > 0) $alerts[] = ['type' => 'danger', 'icon' => 'fa-exchange', 'title' => 'فشل مزامنة الشحن', 'desc' => "يوجد {$unsent_count} طلب فشل إرساله."];
+if (($unassigned_count ?? 0) > 0) $alerts[] = ['type' => 'warning', 'icon' => 'fa-user-times', 'title' => 'طلبات غير معينة', 'desc' => "هناك {$unassigned_count} طلب لم يتم تعيينها لموظف."];
+if (($stuck_count ?? 0) > 0) $alerts[] = ['type' => 'danger', 'icon' => 'fa-clock-o', 'title' => 'طلبات متأخرة', 'desc' => "يوجد {$stuck_count} طلب في حالة 'معلق' لأكثر من 48 ساعة."];
+if (($new_returns ?? 0) > 0) $alerts[] = ['type' => 'info', 'icon' => 'fa-undo', 'title' => 'مرتجعات جديدة', 'desc' => "تم تسجيل {$new_returns} مرتجع مؤخراً."];
 
-$statement = $pdo->query("
-    SELECT p_id, p_name, p_qty, p_current_price, p_is_active
-    FROM tbl_product
-    WHERE p_qty <= 5
-    ORDER BY p_qty ASC, p_id DESC
-    LIMIT 5
-");
-$low_stock_items = $statement->fetchAll(PDO::FETCH_ASSOC);
+if (!function_exists('get_percent_change')) {
+    function get_percent_change($current, $previous) { 
+        if ($previous == 0) return $current > 0 ? 100 : 0;
+        return round((($current - $previous) / $previous) * 100, 1);
+    }
+}
+$orders_change = get_percent_change($kpis['today_orders'] ?? 0, $kpis['yesterday_orders'] ?? 0);
+$sales_change = get_percent_change($kpis['today_sales'] ?? 0, $kpis['yesterday_sales'] ?? 0);
+$month_sales_change = get_percent_change($kpis['month_sales'] ?? 0, $kpis['last_month_sales'] ?? 0);
 
-$total_orders = (int) $order_summary['total_orders'];
-$today_orders = (int) $order_summary['today_orders'];
-$pending_orders = (int) $order_summary['pending_orders'];
-$confirmed_orders = (int) $order_summary['confirmed_orders'];
-$completed_orders = (int) $order_summary['completed_orders'];
-$cancelled_orders = (int) $order_summary['cancelled_orders'];
-$registered_orders = (int) $order_summary['registered_orders'];
-$direct_orders = (int) $order_summary['direct_orders'];
-$completed_revenue = (float) $order_summary['completed_revenue'];
-$today_revenue = (float) $order_summary['today_revenue'];
+if (!function_exists('format_change_badge')) {
+    function format_change_badge($change) { 
+        if ($change > 0) return '<span class="d-badge up"><i class="fa fa-arrow-up"></i> +' . $change . '%</span>';
+        if ($change < 0) return '<span class="d-badge down"><i class="fa fa-arrow-down"></i> ' . $change . '%</span>';
+        return '<span class="d-badge neutral">0%</span>';
+    }
+}
 
-$total_products = (int) $product_summary['total_products'];
-$active_products = (int) $product_summary['active_products'];
-$low_stock_products = (int) $product_summary['low_stock_products'];
+$comp_orders = $kpis['completed_orders'] ?? 0;
+$ret_orders = $kpis['returned_orders'] ?? 0;
+$month_sales = $kpis['month_sales'] ?? 0;
 
-$total_customers = (int) $customer_summary['total_customers'];
-$active_customers = (int) $customer_summary['active_customers'];
+$avg_order_value = $comp_orders > 0 ? ($month_sales / $comp_orders) : 0;
+$success_rate = ($comp_orders + $ret_orders) > 0 ? round(($comp_orders / ($comp_orders + $ret_orders)) * 100, 1) : 0;
 
-$attention_items = $pending_orders + $incomplete_orders_count + $low_stock_products;
-$completion_rate = $total_orders > 0 ? (int) round(($completed_orders / $total_orders) * 100) : 0;
-$active_customer_rate = $total_customers > 0 ? (int) round(($active_customers / $total_customers) * 100) : 0;
-$average_completed_order = $completed_orders > 0 ? $completed_revenue / $completed_orders : 0;
-
-$quick_links = array(
-    array('href' => 'index.php', 'icon' => 'fa-line-chart', 'title' => 'المتجر', 'text' => 'مراقبة المخزون والتنبيهات'),
-    array('href' => 'order.php', 'icon' => 'fa-sticky-note', 'title' => 'إدارة الطلبات', 'text' => 'فتح الطلبات الجديدة والمؤكدة'),
-    array('href' => 'product.php', 'icon' => 'fa-shopping-bag', 'title' => 'المنتجات', 'text' => 'تعديل المنتجات والمخزون'),
-    array('href' => 'incomplete-orders.php', 'icon' => 'fa-exclamation-triangle', 'title' => 'طلبات غير مكتملة', 'text' => 'متابعة الطلبات المتروكة'),
-    array('href' => 'customer.php', 'icon' => 'fa-users', 'title' => 'العملاء', 'text' => 'عرض الحسابات المسجلة'),
-    array('href' => 'delivery_list.php', 'icon' => 'fa-truck', 'title' => 'شركات التوصيل', 'text' => 'إدارة التوصيل والتسعير'),
-    array('href' => 'settings.php', 'icon' => 'fa-sliders', 'title' => 'إعدادات المتجر', 'text' => 'مراجعة الإعدادات العامة'),
-    array('href' => 'employee-ranking.php', 'icon' => 'fa-trophy', 'title' => 'ترتيب الموظفين', 'text' => 'عرض أداء الموظفين ونقاطهم'),
-    array('href' => 'commission-settings.php', 'icon' => 'fa-money', 'title' => 'العمولات', 'text' => 'إدارة العمولات والمدفوعات'),
-);
 ?>
-
-<section class="content-header admin-dashboard-header">
-    <div class="admin-dashboard-header-row">
-        <div>
-            <span class="admin-dashboard-eyebrow">لوحة المتابعة اليومية</span>
-            <h1>لوحة الإدارة</h1>
-            <p>نظرة سريعة على الطلبات والمبيعات والمخزون حتى تتمكن من اتخاذ القرار من الصفحة الرئيسية مباشرة.</p>
-        </div>
-        <div class="admin-dashboard-header-meta">
-            <span>آخر تحديث</span>
-            <strong><?php echo htmlspecialchars($dashboard_refresh_time, ENT_QUOTES, 'UTF-8'); ?></strong>
-            <small><?php echo htmlspecialchars($admin_name, ENT_QUOTES, 'UTF-8'); ?></small>
-        </div>
-    </div>
-</section>
-
-<section class="content admin-dashboard">
-    <div class="admin-dashboard-hero">
-        <div class="admin-dashboard-hero-main">
-            <span class="admin-dashboard-eyebrow is-light">ملخص تنفيذي</span>
-            <h2>أهلاً <?php echo htmlspecialchars($admin_name, ENT_QUOTES, 'UTF-8'); ?></h2>
-            <p>هناك <strong><?php echo $attention_items; ?></strong> عنصر يحتاج متابعة الآن بين الطلبات المعلقة، الطلبات غير المكتملة، وتنبيهات المخزون.</p>
-
-            <div class="admin-dashboard-actions">
-                <a href="order.php" class="btn btn-primary admin-dashboard-btn">
-                    <i class="fa fa-sticky-note"></i>
-                    فتح الطلبات
-                </a>
-                <a href="product.php" class="btn btn-default admin-dashboard-btn">
-                    <i class="fa fa-shopping-bag"></i>
-                    إدارة المنتجات
-                </a>
-                <a href="incomplete-orders.php" class="btn btn-default admin-dashboard-btn">
-                    <i class="fa fa-exclamation-circle"></i>
-                    الطلبات غير المكتملة
-                </a>
-            </div>
-        </div>
-
-        <div class="admin-dashboard-hero-stats">
-            <div class="admin-hero-stat">
-                <span>إيراد اليوم</span>
-                <strong><?php echo htmlspecialchars(admin_format_amount($today_revenue), ENT_QUOTES, 'UTF-8'); ?></strong>
-            </div>
-            <div class="admin-hero-stat">
-                <span>معدل الإنجاز</span>
-                <strong><?php echo $completion_rate; ?>%</strong>
-            </div>
-            <div class="admin-hero-stat">
-                <span>متوسط الطلب المكتمل</span>
-                <strong><?php echo htmlspecialchars(admin_format_amount($average_completed_order), ENT_QUOTES, 'UTF-8'); ?></strong>
-            </div>
-        </div>
-    </div>
-
-    <div class="row admin-kpi-grid">
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-kpi-card is-indigo">
-                <div class="admin-kpi-icon"><i class="fa fa-calendar"></i></div>
-                <div class="admin-kpi-copy">
-                    <span>طلبات اليوم</span>
-                    <strong><?php echo $today_orders; ?></strong>
-                    <small>عدد الطلبات المسجلة بتاريخ اليوم</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-kpi-card is-amber">
-                <div class="admin-kpi-icon"><i class="fa fa-clock-o"></i></div>
-                <div class="admin-kpi-copy">
-                    <span>طلبات معلّقة</span>
-                    <strong><?php echo $pending_orders; ?></strong>
-                    <small>تحتاج مراجعة أو تأكيد</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-kpi-card is-emerald">
-                <div class="admin-kpi-icon"><i class="fa fa-money"></i></div>
-                <div class="admin-kpi-copy">
-                    <span>الإيراد المكتمل</span>
-                    <strong><?php echo htmlspecialchars(admin_format_amount($completed_revenue), ENT_QUOTES, 'UTF-8'); ?></strong>
-                    <small>قيمة الطلبات المكتملة فقط</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-kpi-card is-rose">
-                <div class="admin-kpi-icon"><i class="fa fa-users"></i></div>
-                <div class="admin-kpi-copy">
-                    <span>العملاء المسجلون</span>
-                    <strong><?php echo $total_customers; ?></strong>
-                    <small><?php echo $active_customers; ?> حساب نشط حالياً</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row admin-mini-grid">
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-mini-card">
-                <span>المنتجات النشطة</span>
-                <strong><?php echo $active_products; ?></strong>
-                <small>من أصل <?php echo $total_products; ?> منتج</small>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-mini-card">
-                <span>طلبات مكتملة</span>
-                <strong><?php echo $completed_orders; ?></strong>
-                <small>تمت معالجتها بنجاح</small>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-mini-card is-warning">
-                <span>طلبات غير مكتملة</span>
-                <strong><?php echo $incomplete_orders_count; ?></strong>
-                <small>عمليات تحتاج استرجاع أو متابعة</small>
-            </div>
-        </div>
-
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-mini-card is-danger">
-                <span>مخزون منخفض</span>
-                <strong><?php echo $low_stock_products; ?></strong>
-                <small>منتجات بكمية 5 أو أقل</small>
-            </div>
-        </div>
-    </div>
-
-    <div class="row admin-perf-strip">
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-perf-card is-leader">
-                <div class="admin-perf-icon"><i class="fa fa-trophy"></i></div>
-                <div class="admin-perf-body">
-                    <span>أفضل موظف</span>
-                    <strong><?php echo $perf_widgets['top_employee'] ? htmlspecialchars($perf_widgets['top_employee']['full_name'], ENT_QUOTES, 'UTF-8') : '--'; ?></strong>
-                    <small><?php echo $perf_widgets['top_employee'] ? ($perf_widgets['top_employee']['score'] . ' نقطة') : ''; ?></small>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-perf-card is-trailer">
-                <div class="admin-perf-icon"><i class="fa fa-exclamation-triangle"></i></div>
-                <div class="admin-perf-body">
-                    <span>أسوأ موظف</span>
-                    <strong><?php echo $perf_widgets['worst_employee'] ? htmlspecialchars($perf_widgets['worst_employee']['full_name'], ENT_QUOTES, 'UTF-8') : '--'; ?></strong>
-                    <small><?php echo $perf_widgets['worst_employee'] ? ($perf_widgets['worst_employee']['score'] . ' نقطة') : ''; ?></small>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-perf-card is-rate">
-                <div class="admin-perf-icon"><i class="fa fa-check-circle"></i></div>
-                <div class="admin-perf-body">
-                    <span>معدل التوصيل الإجمالي</span>
-                    <strong><?php echo $perf_widgets['delivery_rate']; ?>%</strong>
-                    <small>نسبة النجاح</small>
-                </div>
-            </div>
-        </div>
-        <div class="col-lg-3 col-sm-6">
-            <div class="admin-perf-card is-revenue">
-                <div class="admin-perf-icon"><i class="fa fa-money"></i></div>
-                <div class="admin-perf-body">
-                    <span>إيراد الشهر</span>
-                    <strong><?php echo number_format($perf_widgets['monthly_revenue'], 0); ?> دج</strong>
-                    <small>آخر 30 يوماً</small>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-8">
-            <div class="admin-panel-card">
-                <div class="admin-panel-head">
-                    <div>
-                        <span class="admin-panel-kicker">النشاط الأخير</span>
-                        <h3>آخر الطلبات</h3>
-                    </div>
-                    <a href="order.php" class="admin-panel-link">عرض جميع الطلبات</a>
-                </div>
-
-                <?php if (!empty($recent_orders)): ?>
-                    <div class="admin-order-list">
-                        <?php foreach ($recent_orders as $order): ?>
-                            <?php $status = admin_dashboard_status_meta($order['order_status'] ?? ''); ?>
-                            <article class="admin-order-item">
-                                <div class="admin-order-main">
-                                    <div class="admin-order-title-row">
-                                        <strong>#<?php echo (int) $order['id']; ?> - <?php echo htmlspecialchars((string) $order['product_name'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                                        <span class="admin-status-badge <?php echo htmlspecialchars($status['class'], ENT_QUOTES, 'UTF-8'); ?>">
-                                            <i class="fa <?php echo htmlspecialchars($status['icon'], ENT_QUOTES, 'UTF-8'); ?>"></i>
-                                            <?php echo htmlspecialchars($status['label'], ENT_QUOTES, 'UTF-8'); ?>
-                                        </span>
-                                    </div>
-                                    <p>
-                                        <?php echo htmlspecialchars((string) $order['customer_name'], ENT_QUOTES, 'UTF-8'); ?>
-                                        <span class="admin-order-dot"></span>
-                                        <?php echo htmlspecialchars((string) $order['customer_phone'], ENT_QUOTES, 'UTF-8'); ?>
-                                    </p>
-                                    <small>
-                                        <?php echo date('d/m/Y H:i', strtotime((string) $order['order_date'])); ?>
-                                        <span class="admin-order-dot"></span>
-                                        <?php echo ($order['customer_type'] ?? '') === 'registered' ? 'عميل مسجل' : 'طلب مباشر'; ?>
-                                    </small>
-                                </div>
-                                <div class="admin-order-side">
-                                    <strong><?php echo htmlspecialchars(admin_format_amount($order['total_price'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></strong>
-                                    <a href="order-details.php?id=<?php echo (int) $order['id']; ?>" class="btn btn-default btn-xs">تفاصيل</a>
-                                </div>
-                            </article>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="admin-empty-state">
-                        <i class="fa fa-inbox"></i>
-                        <div>
-                            <h4>لا توجد طلبات حتى الآن</h4>
-                            <p>عند تسجيل أول طلب سيظهر هنا آخر نشاط خاص بالطلبات.</p>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="col-lg-4">
-            <div class="admin-panel-card">
-                <div class="admin-panel-head">
-                    <div>
-                        <span class="admin-panel-kicker">روابط مباشرة</span>
-                        <h3>إجراءات سريعة</h3>
-                    </div>
-                </div>
-
-                <div class="admin-quick-links">
-                    <?php foreach ($quick_links as $link): ?>
-                        <a href="<?php echo htmlspecialchars($link['href'], ENT_QUOTES, 'UTF-8'); ?>" class="admin-quick-link">
-                            <i class="fa <?php echo htmlspecialchars($link['icon'], ENT_QUOTES, 'UTF-8'); ?>"></i>
-                            <div>
-                                <strong><?php echo htmlspecialchars($link['title'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                                <span><?php echo htmlspecialchars($link['text'], ENT_QUOTES, 'UTF-8'); ?></span>
-                            </div>
-                        </a>
-                    <?php endforeach; ?>
-                </div>
-            </div>
-
-            <div class="admin-panel-card">
-                <div class="admin-panel-head">
-                    <div>
-                        <span class="admin-panel-kicker">تشغيل المتجر</span>
-                        <h3>مؤشرات تنفيذية</h3>
-                    </div>
-                </div>
-
-                <div class="admin-metric-stack">
-                    <div class="admin-metric-row">
-                        <span>معدل الإنجاز</span>
-                        <strong><?php echo $completion_rate; ?>%</strong>
-                    </div>
-                    <div class="admin-progress"><span style="width: <?php echo $completion_rate; ?>%;"></span></div>
-
-                    <div class="admin-metric-row">
-                        <span>العملاء النشطون</span>
-                        <strong><?php echo $active_customers; ?> / <?php echo $total_customers; ?></strong>
-                    </div>
-                    <div class="admin-progress is-teal"><span style="width: <?php echo $active_customer_rate; ?>%;"></span></div>
-
-                    <div class="admin-metric-grid">
-                        <div class="admin-metric-box">
-                            <span>طلبات مباشرة</span>
-                            <strong><?php echo $direct_orders; ?></strong>
-                            <small>طلبات لم تسجل حساباً</small>
-                        </div>
-                        <div class="admin-metric-box">
-                            <span>طلبات المسجلين</span>
-                            <strong><?php echo $registered_orders; ?></strong>
-                            <small>من حسابات مسجلة</small>
-                        </div>
-                        <div class="admin-metric-box">
-                            <span>طلبات مؤكدة</span>
-                            <strong><?php echo $confirmed_orders; ?></strong>
-                            <small>بانتظار التجهيز والتوصيل</small>
-                        </div>
-                        <div class="admin-metric-box">
-                            <span>طلبات ملغاة</span>
-                            <strong><?php echo $cancelled_orders; ?></strong>
-                            <small>تم إلغاؤها من العميل أو الإدارة</small>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="row">
-        <div class="col-lg-6">
-            <div class="admin-panel-card">
-                <div class="admin-panel-head">
-                    <div>
-                        <span class="admin-panel-kicker">استرجاع العمليات</span>
-                        <h3>الطلبات غير المكتملة الأخيرة</h3>
-                    </div>
-                    <a href="incomplete-orders.php" class="admin-panel-link">فتح القائمة</a>
-                </div>
-
-                <?php if (!empty($recent_incomplete_orders)): ?>
-                    <div class="admin-compact-list">
-                        <?php foreach ($recent_incomplete_orders as $order): ?>
-                            <article class="admin-compact-item">
-                                <div class="admin-compact-main">
-                                    <strong><?php echo htmlspecialchars((string) $order['customer_name'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                                    <p><?php echo htmlspecialchars((string) ($order['product_name'] ?? 'بدون منتج محدد'), ENT_QUOTES, 'UTF-8'); ?></p>
-                                    <small>
-                                        <?php echo htmlspecialchars((string) $order['customer_phone'], ENT_QUOTES, 'UTF-8'); ?>
-                                        <span class="admin-order-dot"></span>
-                                        <?php echo date('d/m/Y H:i', strtotime((string) $order['created_at'])); ?>
-                                    </small>
-                                </div>
-                                <div class="admin-compact-side">
-                                    <strong><?php echo htmlspecialchars(admin_format_amount($order['total_price'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></strong>
-                                    <a href="order-add-from-incomplete.php?id=<?php echo (int) $order['id']; ?>" class="btn btn-success btn-xs">تحويل لطلب</a>
-                                </div>
-                            </article>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="admin-empty-state is-soft">
-                        <i class="fa fa-check-circle-o"></i>
-                        <div>
-                            <h4>لا توجد طلبات غير مكتملة</h4>
-                            <p>لا توجد حالياً عمليات متروكة تحتاج متابعة إضافية.</p>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-
-        <div class="col-lg-6">
-            <div class="admin-panel-card">
-                <div class="admin-panel-head">
-                    <div>
-                        <span class="admin-panel-kicker">تنبيهات المخزون</span>
-                        <h3>منتجات تحتاج متابعة</h3>
-                    </div>
-                    <a href="product.php" class="admin-panel-link">إدارة المنتجات</a>
-                </div>
-
-                <?php if (!empty($low_stock_items)): ?>
-                    <div class="admin-compact-list">
-                        <?php foreach ($low_stock_items as $product): ?>
-                            <article class="admin-compact-item">
-                                <div class="admin-compact-main">
-                                    <strong><?php echo htmlspecialchars((string) $product['p_name'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                                    <p><?php echo ((int) ($product['p_is_active'] ?? 0) === 1) ? 'منتج ظاهر في المتجر' : 'منتج غير مفعل حالياً'; ?></p>
-                                    <small>السعر الحالي: <?php echo htmlspecialchars(admin_format_amount($product['p_current_price'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></small>
-                                </div>
-                                <div class="admin-compact-side">
-                                    <span class="admin-stock-pill <?php echo ((int) ($product['p_qty'] ?? 0) === 0) ? 'is-zero' : ''; ?>">
-                                        الكمية: <?php echo (int) $product['p_qty']; ?>
-                                    </span>
-                                    <a href="product-edit.php?id=<?php echo (int) $product['p_id']; ?>" class="btn btn-default btn-xs">تعديل</a>
-                                </div>
-                            </article>
-                        <?php endforeach; ?>
-                    </div>
-                <?php else: ?>
-                    <div class="admin-empty-state is-soft">
-                        <i class="fa fa-cube"></i>
-                        <div>
-                            <h4>المخزون في وضع جيد</h4>
-                            <p>لا توجد منتجات بكمية منخفضة في الوقت الحالي.</p>
-                        </div>
-                    </div>
-                <?php endif; ?>
-            </div>
-        </div>
-    </div>
-</section>
-
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Cairo:wght@500;700;800&display=swap" rel="stylesheet">
 <style>
-@import url("https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800&display=swap");
-
-.admin-dashboard-header,
-.admin-dashboard {
-    font-family: "Cairo", sans-serif;
-}
-
-.admin-dashboard-header {
-    padding-bottom: 8px;
-}
-
-.admin-dashboard-header-row {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
-.admin-dashboard-eyebrow,
-.admin-panel-kicker {
-    display: inline-block;
-    font-size: 13px;
-    font-weight: 800;
-    letter-spacing: 0.04em;
-    color: #475569;
-}
-
-.admin-dashboard-eyebrow.is-light {
-    color: rgba(255, 255, 255, 0.72);
-}
-
-.admin-dashboard-header h1 {
-    margin: 6px 0 10px;
-    padding: 0;
-    font-size: 34px;
-    font-weight: 800;
-    color: #0f172a;
-}
-
-.admin-dashboard-header h1:before {
-    display: none;
-}
-
-.admin-dashboard-header p {
-    margin: 0;
-    max-width: 780px;
-    color: #334155;
-    font-weight: 600;
-    line-height: 1.9;
-    font-size: 15px;
-}
-
-.admin-dashboard-header-meta {
-    min-width: 190px;
-    padding: 16px 18px;
-    border-radius: 18px;
-    background: #fff;
-    border: 1px solid rgba(148, 163, 184, 0.2);
-    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
-}
-
-.admin-dashboard-header-meta span,
-.admin-dashboard-header-meta small {
-    display: block;
-    color: #475569;
-    font-weight: 600;
-}
-
-.admin-dashboard-header-meta strong {
-    display: block;
-    margin: 6px 0 3px;
-    color: #0f172a;
-    font-size: 22px;
-    font-weight: 900;
-}
-
-.admin-dashboard-hero {
-    display: flex;
-    gap: 18px;
-    flex-wrap: wrap;
-    padding: 26px;
-    margin-bottom: 22px;
-    border-radius: 28px;
-    background: linear-gradient(135deg, #111827 0%, #1e293b 48%, #0f766e 100%);
-    box-shadow: 0 30px 70px rgba(15, 23, 42, 0.16);
-    color: #fff;
-    overflow: hidden;
-    position: relative;
-}
-
-.admin-dashboard-hero:before,
-.admin-dashboard-hero:after {
-    content: "";
-    position: absolute;
-    border-radius: 50%;
-    background: rgba(255, 255, 255, 0.06);
-}
-
-.admin-dashboard-hero:before {
-    width: 220px;
-    height: 220px;
-    top: -90px;
-    left: -40px;
-}
-
-.admin-dashboard-hero:after {
-    width: 150px;
-    height: 150px;
-    right: 30px;
-    bottom: -55px;
-}
-
-.admin-dashboard-hero-main,
-.admin-dashboard-hero-stats {
-    position: relative;
-    z-index: 1;
-}
-
-.admin-dashboard-hero-main {
-    flex: 1 1 520px;
-}
-
-.admin-dashboard-hero-main h2 {
-    margin: 8px 0 12px;
-    font-size: 34px;
-    font-weight: 800;
-}
-
-.admin-dashboard-hero-main p {
-    margin: 0;
-    max-width: 700px;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 16px;
-    font-weight: 600;
-    line-height: 1.9;
-}
-
-.admin-dashboard-actions {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    margin-top: 22px;
-}
-
-.admin-dashboard-btn {
-    border-radius: 999px;
-    padding: 11px 18px;
-    font-weight: 700;
-    box-shadow: none;
-}
-
-.admin-dashboard-btn i {
-    margin-left: 8px;
-}
-
-.admin-dashboard-hero-stats {
-    flex: 1 1 300px;
-    display: grid;
-    gap: 12px;
-    align-content: center;
-}
-
-.admin-hero-stat {
-    padding: 18px 20px;
-    border-radius: 20px;
-    background: rgba(255, 255, 255, 0.09);
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    backdrop-filter: blur(8px);
-}
-
-.admin-hero-stat span {
-    display: block;
-    color: rgba(255, 255, 255, 0.85);
-    font-size: 14px;
-    font-weight: 700;
-}
-
-.admin-hero-stat strong {
-    display: block;
-    margin-top: 6px;
-    font-size: 28px;
-    font-weight: 900;
-}
-
-.admin-kpi-grid .col-lg-3,
-.admin-mini-grid .col-lg-3 {
-    margin-bottom: 18px;
-}
-
-.admin-kpi-card,
-.admin-mini-card,
-.admin-panel-card {
-    background: #fff;
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    border-radius: 24px;
-    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
-}
-
-.admin-kpi-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 22px;
-    min-height: 146px;
-}
-
-.admin-kpi-icon {
-    width: 58px;
-    height: 58px;
-    flex: 0 0 58px;
-    border-radius: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 24px;
-}
-
-.admin-kpi-card.is-indigo .admin-kpi-icon {
-    background: #e0e7ff;
-    color: #4338ca;
-}
-
-.admin-kpi-card.is-amber .admin-kpi-icon {
-    background: #fef3c7;
-    color: #b45309;
-}
-
-.admin-kpi-card.is-emerald .admin-kpi-icon {
-    background: #dcfce7;
-    color: #15803d;
-}
-
-.admin-kpi-card.is-rose .admin-kpi-icon {
-    background: #ffe4e6;
-    color: #be123c;
-}
-
-.admin-kpi-copy span,
-.admin-mini-card span,
-.admin-metric-box span,
-.admin-metric-row span,
-.admin-compact-main small,
-.admin-order-main small {
-    display: block;
-    color: #334155;
-    font-size: 14px;
-    font-weight: 700;
-    letter-spacing: 0.01em;
-}
-
-.admin-kpi-copy strong,
-.admin-mini-card strong {
-    display: block;
-    margin: 6px 0;
-    color: #0f172a;
-    font-size: 32px;
-    font-weight: 900;
-    line-height: 1.2;
-}
-
-.admin-kpi-copy small,
-.admin-mini-card small {
-    color: #475569;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.8;
-}
-
-.admin-mini-card {
-    padding: 18px 20px;
-    min-height: 132px;
-}
-
-.admin-mini-card.is-warning {
-    background: linear-gradient(180deg, #fffaf0 0%, #ffffff 100%);
-}
-
-.admin-mini-card.is-danger {
-    background: linear-gradient(180deg, #fff5f5 0%, #ffffff 100%);
-}
-
-.admin-panel-card {
-    padding: 22px;
-    margin-bottom: 18px;
-}
-
-.admin-panel-head {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 18px;
-}
-
-.admin-panel-head h3,
-.admin-empty-state h4 {
-    margin: 6px 0 0;
-    color: #0f172a;
-    font-size: 26px;
-    font-weight: 900;
-}
-
-.admin-panel-link {
-    color: #0f766e;
-    font-weight: 700;
-}
-
-.admin-panel-link:hover,
-.admin-panel-link:focus {
-    color: #115e59;
-    text-decoration: none;
-}
-
-.admin-order-list,
-.admin-compact-list {
-    display: grid;
-    gap: 14px;
-}
-
-.admin-order-item,
-.admin-compact-item {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    flex-wrap: wrap;
-    padding: 18px;
-    border-radius: 18px;
-    background: #f8fafc;
-    border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.admin-order-main,
-.admin-compact-main {
-    flex: 1 1 360px;
-}
-
-.admin-order-title-row {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    margin-bottom: 8px;
-}
-
-.admin-order-main strong,
-.admin-compact-main strong {
-    color: #0f172a;
-    font-size: 16px;
-    font-weight: 900;
-}
-
-.admin-order-main p,
-.admin-compact-main p {
-    margin: 0 0 6px;
-    color: #334155;
-    font-weight: 600;
-    line-height: 1.8;
-}
-
-.admin-order-side,
-.admin-compact-side {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 8px;
-}
-
-.admin-order-side strong,
-.admin-compact-side strong {
-    color: #0f172a;
-    font-size: 20px;
-    font-weight: 900;
-}
-
-.admin-status-badge,
-.admin-stock-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 7px;
-    padding: 8px 12px;
-    border-radius: 999px;
-    font-size: 13px;
-    font-weight: 800;
-}
-
-.admin-status-badge.is-pending {
-    background: #fff7ed;
-    color: #c2410c;
-}
-
-.admin-status-badge.is-confirmed {
-    background: #eff6ff;
-    color: #1d4ed8;
-}
-
-.admin-status-badge.is-completed {
-    background: #ecfdf5;
-    color: #047857;
-}
-
-.admin-status-badge.is-cancelled {
-    background: #fef2f2;
-    color: #b91c1c;
-}
-
-.admin-status-badge.is-neutral {
-    background: #f1f5f9;
-    color: #334155;
-}
-
-.admin-order-dot {
-    display: inline-block;
-    width: 4px;
-    height: 4px;
-    margin: 0 8px;
-    border-radius: 50%;
-    background: #94a3b8;
-    vertical-align: middle;
-}
-
-.admin-quick-links {
-    display: grid;
-    gap: 12px;
-}
-
-.admin-quick-link {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    padding: 14px 16px;
-    border-radius: 18px;
-    color: #0f172a;
-    background: #f8fafc;
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
-}
-
-.admin-quick-link:hover,
-.admin-quick-link:focus {
-    color: #0f172a;
-    text-decoration: none;
-    transform: translateY(-2px);
-    box-shadow: 0 14px 24px rgba(15, 23, 42, 0.05);
-    border-color: rgba(15, 118, 110, 0.24);
-}
-
-.admin-quick-link i {
-    width: 44px;
-    height: 44px;
-    flex: 0 0 44px;
-    border-radius: 14px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #e2e8f0;
-    color: #0f172a;
-    font-size: 18px;
-}
-
-.admin-quick-link strong {
-    display: block;
-    margin-bottom: 4px;
-    font-size: 15px;
-    font-weight: 800;
-}
-
-.admin-quick-link span {
-    color: #475569;
-    font-size: 13px;
-    font-weight: 600;
-    line-height: 1.7;
-}
-
-.admin-metric-stack {
-    display: grid;
-    gap: 12px;
-}
-
-.admin-metric-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 12px;
-}
-
-.admin-metric-row strong {
-    color: #0f172a;
-    font-size: 18px;
-    font-weight: 900;
-}
-
-.admin-progress {
-    width: 100%;
-    height: 10px;
-    overflow: hidden;
-    border-radius: 999px;
-    background: #e2e8f0;
-}
-
-.admin-progress span {
-    display: block;
-    height: 100%;
-    background: linear-gradient(90deg, #10b981 0%, #22c55e 100%);
-}
-
-.admin-progress.is-teal span {
-    background: linear-gradient(90deg, #06b6d4 0%, #14b8a6 100%);
-}
-
-.admin-metric-grid {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-    margin-top: 8px;
-}
-
-.admin-metric-box {
-    padding: 14px;
-    border-radius: 16px;
-    background: #f8fafc;
-    border: 1px solid rgba(148, 163, 184, 0.14);
-}
-
-.admin-metric-box strong {
-    display: block;
-    margin-top: 6px;
-    color: #0f172a;
-    font-size: 24px;
-    font-weight: 900;
-}
-
-.admin-metric-box small {
-    display: block;
-    margin-top: 4px;
-    color: #475569;
-    font-size: 12px;
-    font-weight: 600;
-}
-
-.admin-stock-pill {
-    background: #fff7ed;
-    color: #c2410c;
-}
-
-.admin-stock-pill.is-zero {
-    background: #fef2f2;
-    color: #b91c1c;
-}
-
-.admin-empty-state {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px;
-    border-radius: 18px;
-    background: #f8fafc;
-    border: 1px dashed rgba(148, 163, 184, 0.4);
-}
-
-.admin-empty-state.is-soft {
-    background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%);
-}
-
-.admin-empty-state i {
-    width: 58px;
-    height: 58px;
-    border-radius: 18px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #e2e8f0;
-    color: #0f172a;
-    font-size: 24px;
-}
-
-.admin-empty-state p {
-    margin: 6px 0 0;
-    color: #475569;
-    font-weight: 600;
-    line-height: 1.8;
-}
-
-.admin-perf-strip {
-    margin-bottom: 18px;
-}
-
-.admin-perf-strip .col-lg-3,
-.admin-perf-strip .col-sm-6 {
-    margin-bottom: 12px;
-}
-
-.admin-perf-card {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 20px;
-    border-radius: 24px;
-    background: #fff;
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    box-shadow: 0 18px 45px rgba(15, 23, 42, 0.06);
-    min-height: 120px;
-}
-
-.admin-perf-icon {
-    width: 52px;
-    height: 52px;
-    flex: 0 0 52px;
-    border-radius: 16px;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 22px;
-}
-
-.admin-perf-card.is-leader .admin-perf-icon {
-    background: linear-gradient(135deg, #fbbf24, #f59e0b);
-    color: #fff;
-}
-
-.admin-perf-card.is-trailer .admin-perf-icon {
-    background: linear-gradient(135deg, #f87171, #ef4444);
-    color: #fff;
-}
-
-.admin-perf-card.is-rate .admin-perf-icon {
-    background: linear-gradient(135deg, #34d399, #10b981);
-    color: #fff;
-}
-
-.admin-perf-card.is-revenue .admin-perf-icon {
-    background: linear-gradient(135deg, #60a5fa, #3b82f6);
-    color: #fff;
-}
-
-.admin-perf-body span {
-    display: block;
-    color: #334155;
-    font-size: 13px;
-    font-weight: 700;
-}
-
-.admin-perf-body strong {
-    display: block;
-    margin: 4px 0 2px;
-    color: #0f172a;
-    font-size: 20px;
-    font-weight: 900;
-}
-
-.admin-perf-body small {
-    color: #475569;
-    font-size: 13px;
-    font-weight: 600;
-}
-
-@media (max-width: 991px) {
-    .admin-dashboard-header h1 {
-        font-size: 30px;
-    }
-
-    .admin-dashboard-hero {
-        padding: 22px;
-        border-radius: 24px;
-    }
-
-    .admin-dashboard-hero-main h2 {
-        font-size: 28px;
-    }
-}
-
-@media (max-width: 767px) {
-    .admin-dashboard-header-row,
-    .admin-panel-head,
-    .admin-order-item,
-    .admin-compact-item {
-        flex-direction: column;
-        align-items: stretch;
-    }
-
-    .admin-dashboard-header h1 {
-        font-size: 26px;
-    }
-
-    .admin-dashboard-hero {
-        padding: 18px;
-        border-radius: 22px;
-    }
-
-    .admin-dashboard-hero-main h2 {
-        font-size: 24px;
-    }
-
-    .admin-kpi-card,
-    .admin-mini-card,
-    .admin-panel-card {
-        border-radius: 20px;
-    }
-
-    .admin-kpi-card {
-        min-height: auto;
-    }
-
-    .admin-order-side,
-    .admin-compact-side {
-        width: 100%;
-        align-items: stretch;
-    }
-
-    .admin-metric-grid {
-        grid-template-columns: 1fr;
-    }
+:root {
+    --bg-main: #f3f4f6;
+    --card-bg: #ffffff;
+    --text-main: #111827;
+    --text-muted: #6b7280;
+    --border-color: #e5e7eb;
+    --primary: #4f46e5;
+    --primary-hover: #4338ca;
+    --radius: 12px;
+}
+body { background-color: var(--bg-main); }
+.dashboard-wrapper { font-family: 'Cairo', 'Inter', sans-serif; padding: 24px; max-width: 1600px; margin: 0 auto; direction: rtl; }
+.d-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 24px; }
+.d-header h1 { margin: 0; font-size: 26px; font-weight: 800; color: var(--text-main); }
+.d-btn { background: #fff; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; color: var(--text-main); font-weight: 700; cursor: pointer; transition: 0.2s; font-size: 14px; }
+.d-btn:hover { background: #f9fafb; border-color: #d1d5db; }
+.d-btn-primary { background: var(--primary); color: #fff; border: none; }
+.d-btn-primary:hover { background: var(--primary-hover); color: #fff; }
+
+.kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.kpi-card { background: var(--card-bg); border-radius: var(--radius); padding: 20px; border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); display: flex; flex-direction: column; justify-content: space-between; }
+.kpi-header { display: flex; justify-content: space-between; align-items: center; color: var(--text-muted); font-size: 14px; font-weight: 600; margin-bottom: 12px; }
+.kpi-icon { width: 32px; height: 32px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.kpi-value { font-size: 28px; font-weight: 800; color: var(--text-main); margin-bottom: 8px; line-height: 1; }
+.kpi-footer { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600; }
+
+.d-badge { padding: 4px 8px; border-radius: 6px; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; direction: ltr; }
+.d-badge.up { background: #dcfce7; color: #166534; }
+.d-badge.down { background: #fee2e2; color: #991b1b; }
+.d-badge.neutral { background: #f3f4f6; color: #4b5563; }
+.d-badge.soft { background: #f3f4f6; color: #6b7280; font-weight: 600; direction: rtl; }
+
+.alerts-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.alert-box { display: flex; gap: 16px; padding: 16px; border-radius: var(--radius); align-items: flex-start; }
+.alert-box.warning { background: #fffbeb; border: 1px solid #fef3c7; }
+.alert-box.danger { background: #fef2f2; border: 1px solid #fee2e2; }
+.alert-box.info { background: #eff6ff; border: 1px solid #dbeafe; }
+.alert-icon-wrap { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; }
+.alert-box.warning .alert-icon-wrap { background: #fef3c7; color: #b45309; }
+.alert-box.danger .alert-icon-wrap { background: #fee2e2; color: #b91c1c; }
+.alert-box.info .alert-icon-wrap { background: #dbeafe; color: #1d4ed8; }
+.alert-content h4 { margin: 0 0 4px 0; font-size: 15px; font-weight: 700; color: var(--text-main); }
+.alert-content p { margin: 0; font-size: 13px; color: var(--text-muted); font-weight: 500; }
+
+.charts-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; margin-bottom: 24px; }
+.panel { background: var(--card-bg); border-radius: var(--radius); border: 1px solid var(--border-color); box-shadow: 0 1px 3px rgba(0,0,0,0.05); overflow: hidden; }
+.panel-header { padding: 16px 20px; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.panel-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin: 0; }
+.panel-body { padding: 20px; }
+.chart-select { border: 1px solid var(--border-color); border-radius: 6px; padding: 4px 8px; font-family: inherit; font-size: 13px; outline: none; }
+
+.main-grid { display: grid; grid-template-columns: 2fr 1fr; gap: 24px; }
+.table-responsive { overflow-x: auto; }
+.d-table { width: 100%; border-collapse: collapse; text-align: right; }
+.d-table th { padding: 12px 20px; font-size: 13px; font-weight: 700; color: var(--text-muted); background: #f9fafb; border-bottom: 1px solid var(--border-color); }
+.d-table td { padding: 16px 20px; font-size: 14px; font-weight: 600; color: var(--text-main); border-bottom: 1px solid var(--border-color); }
+.d-table tr:last-child td { border-bottom: none; }
+
+.status-tag { padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; }
+
+.d-list { margin: 0; padding: 0; list-style: none; }
+.d-list li { display: flex; justify-content: space-between; align-items: center; padding: 16px 20px; border-bottom: 1px solid var(--border-color); }
+.d-list li:last-child { border-bottom: none; }
+.d-list-main strong { display: block; font-size: 14px; color: var(--text-main); margin-bottom: 4px; }
+.d-list-main span { font-size: 13px; color: var(--text-muted); font-weight: 500; }
+.d-list-side { text-align: left; }
+.d-list-side strong { display: block; font-size: 14px; color: var(--text-main); }
+
+/* Custom Modal */
+#customizeModal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center; backdrop-filter: blur(4px); }
+.c-modal { background: #fff; width: 100%; max-width: 480px; border-radius: 16px; padding: 24px; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+.c-modal h3 { margin: 0 0 20px; font-size: 20px; font-weight: 800; }
+.c-toggle { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid #f3f4f6; }
+.c-toggle span { font-size: 14px; font-weight: 600; color: #374151; }
+
+.switch { position: relative; display: inline-block; width: 40px; height: 22px; }
+.switch input { opacity: 0; width: 0; height: 0; }
+.slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .4s; border-radius: 34px; }
+.slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 2px; bottom: 2px; background-color: white; transition: .4s; border-radius: 50%; }
+input:checked + .slider { background-color: var(--primary); }
+input:checked + .slider:before { transform: translateX(18px); }
+
+@media (max-width: 1024px) {
+    .charts-grid, .main-grid { grid-template-columns: 1fr; }
 }
 </style>
 
-<?php Profiler::checkpoint('page_render_complete'); ?>
+<div class="dashboard-wrapper admin-dashboard">
+    <div class="d-header">
+        <h1>لوحة القيادة التنفيذية</h1>
+        <button class="d-btn" onclick="document.getElementById('customizeModal').style.display='flex'"><i class="fa fa-sliders"></i> تخصيص الواجهة</button>
+    </div>
+
+    <!-- KPIs -->
+    <div class="kpi-grid">
+        <?php if(is_widget_visible('kpi_orders')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">طلبات اليوم <div class="kpi-icon" style="background:#f3f4f6; color:#4b5563;"><i class="fa fa-shopping-bag"></i></div></div>
+            <div class="kpi-value"><?php echo number_format($kpis['today_orders'] ?? 0); ?></div>
+            <div class="kpi-footer"><?php echo format_change_badge($orders_change); ?> <span style="color:var(--text-muted);">مقارنة بالأمس</span></div>
+        </div>
+        <?php endif; ?>
+
+        <?php if(is_widget_visible('kpi_sales')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">مبيعات اليوم <div class="kpi-icon" style="background:#ecfdf5; color:#047857;"><i class="fa fa-money"></i></div></div>
+            <div class="kpi-value"><?php echo admin_format_amount($kpis['today_sales']); ?></div>
+            <div class="kpi-footer"><?php echo format_change_badge($sales_change); ?> <span style="color:var(--text-muted);">مقارنة بالأمس</span></div>
+        </div>
+        <?php endif; ?>
+
+        <?php if(is_widget_visible('kpi_sales_month')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">مبيعات الشهر <div class="kpi-icon" style="background:#eff6ff; color:#1d4ed8;"><i class="fa fa-line-chart"></i></div></div>
+            <div class="kpi-value"><?php echo admin_format_amount($kpis['month_sales']); ?></div>
+            <div class="kpi-footer"><?php echo format_change_badge($month_sales_change); ?> <span style="color:var(--text-muted);">مقارنة بالشهر الماضي</span></div>
+        </div>
+        <?php endif; ?>
+
+        <?php if(is_widget_visible('kpi_profit')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">إجمالي الأرباح <div class="kpi-icon" style="background:#fef3c7; color:#b45309;"><i class="fa fa-diamond"></i></div></div>
+            <div class="kpi-value"><?php echo admin_format_amount($gross_profit); ?></div>
+            <div class="kpi-footer"><span class="d-badge soft">قريباً: الأرباح الصافية الحقيقية</span></div>
+        </div>
+        <?php endif; ?>
+
+        <?php if(is_widget_visible('kpi_pending')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">طلبات معلقة <div class="kpi-icon" style="background:#fff7ed; color:#c2410c;"><i class="fa fa-clock-o"></i></div></div>
+            <div class="kpi-value"><?php echo number_format($kpis['pending_orders'] ?? 0); ?></div>
+            <div class="kpi-footer"><span class="d-badge soft">بانتظار المراجعة</span></div>
+        </div>
+        <?php endif; ?>
+
+        <?php if(is_widget_visible('kpi_shipped')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">طلبات قيد الشحن <div class="kpi-icon" style="background:#e0e7ff; color:#4338ca;"><i class="fa fa-truck"></i></div></div>
+            <div class="kpi-value"><?php echo number_format($kpis['shipped_orders'] ?? 0); ?></div>
+            <div class="kpi-footer"><span class="d-badge soft">مع شركات التوصيل</span></div>
+        </div>
+        <?php endif; ?>
+
+        <?php if(is_widget_visible('kpi_returned')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">طلبات مرتجعة <div class="kpi-icon" style="background:#fce7f3; color:#be185d;"><i class="fa fa-undo"></i></div></div>
+            <div class="kpi-value"><?php echo number_format($kpis['returned_orders'] ?? 0); ?></div>
+            <div class="kpi-footer"><span class="d-badge soft">إجمالي المرتجعات</span></div>
+        </div>
+        <?php endif; ?>
+
+        <?php if(is_widget_visible('kpi_lowstock')): ?>
+        <div class="kpi-card">
+            <div class="kpi-header">قليلة المخزون <div class="kpi-icon" style="background:#fef2f2; color:#b91c1c;"><i class="fa fa-cube"></i></div></div>
+            <div class="kpi-value"><?php echo number_format($low_stock_count ?? 0); ?></div>
+            <div class="kpi-footer"><span class="d-badge soft">تحتاج لإعادة تزويد</span></div>
+        </div>
+        <?php endif; ?>
+    </div>
+
+    <!-- Alerts -->
+    <?php if(!empty($alerts)): ?>
+    <div class="alerts-grid">
+        <?php foreach($alerts as $alert): ?>
+        <div class="alert-box <?php echo $alert['type']; ?>">
+            <div class="alert-icon-wrap"><i class="<?php echo $alert['icon']; ?>"></i></div>
+            <div class="alert-content">
+                <h4><?php echo $alert['title']; ?></h4>
+                <p><?php echo $alert['desc']; ?></p>
+            </div>
+        </div>
+        <?php endforeach; ?>
+    </div>
+    <?php endif; ?>
+
+    <!-- Charts -->
+    <?php if(is_widget_visible('charts')): ?>
+    <div class="charts-grid">
+        <div class="panel">
+            <div class="panel-header">
+                <h3 class="panel-title">تطور المبيعات</h3>
+                <select class="chart-select" id="salesRange" onchange="loadCharts()">
+                    <option value="today">اليوم</option>
+                    <option value="7_days">آخر 7 أيام</option>
+                    <option value="30_days" selected>آخر 30 يوماً</option>
+                    <option value="12_months">آخر 12 شهراً</option>
+                </select>
+            </div>
+            <div class="panel-body" style="height: 300px; display:flex; justify-content:center; align-items:center;">
+                <canvas id="salesChart"></canvas>
+            </div>
+        </div>
+        <div class="panel">
+            <div class="panel-header">
+                <h3 class="panel-title">الطلبات حسب الحالة</h3>
+            </div>
+            <div class="panel-body" style="height: 300px; display:flex; justify-content:center; align-items:center;">
+                <canvas id="statusChart"></canvas>
+            </div>
+        </div>
+    </div>
+    <?php endif; ?>
+
+    <!-- Main Content Grid -->
+    <div class="main-grid">
+        <!-- Left Column -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+            <?php if(is_widget_visible('recent_orders')): ?>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">آخر الطلبات</h3>
+                    <a href="order.php" class="d-btn">عرض جميع الطلبات</a>
+                </div>
+                <div class="table-responsive">
+                    <table class="d-table">
+                        <thead>
+                            <tr>
+                                <th>الطلب</th>
+                                <th>العميل</th>
+                                <th>شركة التوصيل</th>
+                                <th>الحالة</th>
+                                <th>المبلغ</th>
+                                <th>التاريخ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php foreach($recent_orders as $ro): 
+                                $st = admin_dashboard_status_meta($ro['order_status']);
+                            ?>
+                            <tr>
+                                <td><a href="order-details.php?id=<?php echo $ro['id']; ?>" style="color:var(--primary); font-weight:700;">#<?php echo $ro['id']; ?></a></td>
+                                <td><?php echo htmlspecialchars($ro['customer_name']); ?></td>
+                                <td><?php echo $ro['company_name'] ?: 'غير محدد'; ?></td>
+                                <td>
+                                    <span class="status-tag" style="background:<?php echo $st['bg']; ?>; color:<?php echo $st['color']; ?>;">
+                                        <i class="<?php echo $st['icon']; ?>"></i> <?php echo $st['label']; ?>
+                                    </span>
+                                </td>
+                                <td style="font-weight:800;"><?php echo admin_format_amount($ro['total_price']); ?></td>
+                                <td style="color:var(--text-muted); font-size:13px;"><?php echo date('Y-m-d H:i', strtotime($ro['order_date'])); ?></td>
+                            </tr>
+                            <?php endforeach; ?>
+                            <?php if(empty($recent_orders)): ?>
+                            <tr><td colspan="6" style="text-align:center;">لا توجد طلبات بعد</td></tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <?php endif; ?>
+        </div>
+
+        <!-- Right Column -->
+        <div style="display:flex; flex-direction:column; gap:24px;">
+            <?php if(is_widget_visible('top_employees')): ?>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">أفضل الموظفين</h3>
+                </div>
+                <ul class="d-list">
+                    <?php foreach($top_employees as $te): 
+                        $success = $te['total_assigned'] > 0 ? round(($te['completed'] / $te['total_assigned'])*100) : 0;
+                    ?>
+                    <li>
+                        <div class="d-list-main">
+                            <strong><?php echo htmlspecialchars($te['full_name']); ?></strong>
+                            <span>مؤكدة: <?php echo $te['total_assigned']; ?> | نجاح: <?php echo $success; ?>%</span>
+                            <span style="display:block; margin-top:2px; font-size:11px; color:#9ca3af;">قريباً: متوسط زمن المعالجة</span>
+                        </div>
+                        <div class="d-list-side">
+                            <strong style="color:var(--primary);"><?php echo $te['score']; ?> pt</strong>
+                        </div>
+                    </li>
+                    <?php endforeach; ?>
+                    <?php if(empty($top_employees)): ?>
+                    <li style="justify-content:center; color:var(--text-muted);">لا توجد بيانات للموظفين</li>
+                    <?php endif; ?>
+                </ul>
+            </div>
+            <?php endif; ?>
+
+            <?php if(is_widget_visible('top_companies')): ?>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">أداء التوصيل (اليوم)</h3>
+                </div>
+                <div class="panel-body">
+                    <?php if(!empty($top_company)): ?>
+                    <div style="text-align:center; margin-bottom:16px;">
+                        <h4 style="margin:0; font-size:20px; font-weight:800;"><?php echo htmlspecialchars($top_company['name'] ?: 'بدون شركة'); ?></h4>
+                        <span style="color:var(--text-muted); font-size:13px; font-weight:600;">الشركة الأكثر نشاطاً اليوم</span>
+                    </div>
+                    <div style="display:flex; gap:12px; text-align:center;">
+                        <div style="flex:1; background:var(--bg-main); padding:10px; border-radius:8px;">
+                            <strong style="display:block; font-size:18px; color:var(--text-main);"><?php echo $top_company['total_shipments']; ?></strong>
+                            <span style="font-size:12px; color:var(--text-muted);">شحنة</span>
+                        </div>
+                        <div style="flex:1; background:#ecfdf5; padding:10px; border-radius:8px;">
+                            <strong style="display:block; font-size:18px; color:#047857;"><?php echo $top_company['successful']; ?></strong>
+                            <span style="font-size:12px; color:#065f46;">ناجحة</span>
+                        </div>
+                        <div style="flex:1; background:#fef2f2; padding:10px; border-radius:8px;">
+                            <strong style="display:block; font-size:18px; color:#b91c1c;"><?php echo $top_company['returned']; ?></strong>
+                            <span style="font-size:12px; color:#991b1b;">مرتجعة</span>
+                        </div>
+                    </div>
+                    <?php else: ?>
+                    <div style="text-align:center; color:var(--text-muted);">لا يوجد نشاط توصيل اليوم</div>
+                    <?php endif; ?>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if(is_widget_visible('inventory_summary')): ?>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">حالة المخزون</h3>
+                    <a href="product.php" class="d-btn">إدارة المخزون</a>
+                </div>
+                <div class="panel-body" style="display:flex; gap:16px;">
+                    <div style="flex:1; border:1px solid #fef3c7; background:#fffbeb; padding:16px; border-radius:12px; text-align:center;">
+                        <strong style="display:block; font-size:24px; color:#b45309;"><?php echo $low_stock_count; ?></strong>
+                        <span style="font-size:13px; font-weight:700; color:#92400e;">قليل المخزون</span>
+                    </div>
+                    <div style="flex:1; border:1px solid #fee2e2; background:#fef2f2; padding:16px; border-radius:12px; text-align:center;">
+                        <strong style="display:block; font-size:24px; color:#b91c1c;"><?php echo $out_stock_count; ?></strong>
+                        <span style="font-size:13px; font-weight:700; color:#991b1b;">منتهي تماماً</span>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
+            <?php if(is_widget_visible('performance')): ?>
+            <div class="panel">
+                <div class="panel-header">
+                    <h3 class="panel-title">مؤشرات الأداء العامة</h3>
+                </div>
+                <ul class="d-list">
+                    <li>
+                        <div class="d-list-main"><strong>إجمالي طلبات اليوم</strong></div>
+                        <div class="d-list-side"><strong><?php echo number_format($kpis['today_orders'] ?? 0); ?></strong></div>
+                    </li>
+                    <li>
+                        <div class="d-list-main"><strong>نسبة نجاح التوصيل</strong><span>(المكتملة / (المكتملة + المرتجعة))</span></div>
+                        <div class="d-list-side"><strong style="color:#047857;"><?php echo $success_rate; ?>%</strong></div>
+                    </li>
+                    <li>
+                        <div class="d-list-main"><strong>متوسط قيمة الطلب</strong><span>لطلبات هذا الشهر المكتملة</span></div>
+                        <div class="d-list-side"><strong><?php echo admin_format_amount($avg_order_value); ?></strong></div>
+                    </li>
+                    <li>
+                        <div class="d-list-main"><strong>متوسط زمن المعالجة</strong><span>يعتمد على Order Timeline</span></div>
+                        <div class="d-list-side"><span class="d-badge soft">جاري التجميع</span></div>
+                    </li>
+                </ul>
+            </div>
+            <?php endif; ?>
+        </div>
+    </div>
+</div>
+
+<!-- Modal -->
+<div id="customizeModal">
+    <div class="c-modal">
+        <h3>تخصيص الواجهة</h3>
+        <form id="prefsForm">
+            <?php
+            $widgets = [
+                'kpi_orders' => 'طلبات اليوم',
+                'kpi_sales' => 'مبيعات اليوم',
+                'kpi_sales_month' => 'مبيعات الشهر',
+                'kpi_profit' => 'إجمالي الأرباح',
+                'kpi_pending' => 'الطلبات المعلقة',
+                'kpi_shipped' => 'الطلبات قيد الشحن',
+                'kpi_returned' => 'الطلبات المرتجعة',
+                'kpi_lowstock' => 'المنتجات قليلة المخزون',
+                'charts' => 'الرسوم البيانية (المبيعات والحالة)',
+                'recent_orders' => 'آخر الطلبات (10 طلبات)',
+                'top_employees' => 'أفضل 5 موظفين',
+                'top_companies' => 'أداء شركات التوصيل',
+                'inventory_summary' => 'حالة المخزون السريعة',
+                'performance' => 'مؤشرات الأداء العامة'
+            ];
+            foreach($widgets as $key => $label):
+                $checked = is_widget_visible($key) ? 'checked' : '';
+            ?>
+            <div class="c-toggle">
+                <span><?php echo $label; ?></span>
+                <label class="switch">
+                    <input type="checkbox" name="<?php echo $key; ?>" <?php echo $checked; ?>>
+                    <span class="slider"></span>
+                </label>
+            </div>
+            <?php endforeach; ?>
+            <div style="margin-top:24px; display:flex; gap:12px; justify-content:flex-end;">
+                <button type="button" class="d-btn" onclick="document.getElementById('customizeModal').style.display='none'">إلغاء</button>
+                <button type="button" class="d-btn d-btn-primary" onclick="saveCustomize()">حفظ الإعدادات</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+let salesChart = null;
+let statusChart = null;
+
+function loadCharts() {
+    if (!document.getElementById('salesChart')) return;
+    
+    const range = document.getElementById('salesRange').value;
+    
+    // Show loading
+    document.getElementById('salesChart').style.opacity = '0.5';
+    document.getElementById('statusChart').style.opacity = '0.5';
+
+    fetch('ajax-dashboard.php?action=charts&range=' + range)
+        .then(res => res.json())
+        .then(data => {
+            document.getElementById('salesChart').style.opacity = '1';
+            document.getElementById('statusChart').style.opacity = '1';
+            
+            // Sales Chart
+            const ctx1 = document.getElementById('salesChart').getContext('2d');
+            if(salesChart) salesChart.destroy();
+            salesChart = new Chart(ctx1, {
+                type: 'bar',
+                data: {
+                    labels: data.sales.map(i => i.label),
+                    datasets: [{
+                        label: 'الإيرادات',
+                        data: data.sales.map(i => i.revenue),
+                        backgroundColor: '#4f46e5',
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: { legend: { display: false } },
+                    scales: { y: { beginAtZero: true } }
+                }
+            });
+
+            // Status Chart
+            const ctx2 = document.getElementById('statusChart').getContext('2d');
+            if(statusChart) statusChart.destroy();
+            const colors = {
+                'Completed': '#166534', 'Delivered': '#166534',
+                'Pending': '#d97706',
+                'Confirmed': '#2563eb',
+                'Shipped': '#4f46e5', 'In Transit': '#4f46e5',
+                'Returned': '#be185d',
+                'Cancelled': '#b91c1c'
+            };
+            statusChart = new Chart(ctx2, {
+                type: 'doughnut',
+                data: {
+                    labels: data.status.map(i => i.order_status),
+                    datasets: [{
+                        data: data.status.map(i => i.count),
+                        backgroundColor: data.status.map(i => colors[i.order_status] || '#9ca3af'),
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    plugins: { legend: { position: 'right', rtl: true } }
+                }
+            });
+        });
+}
+
+document.addEventListener("DOMContentLoaded", function() {
+    loadCharts();
+});
+
+function saveCustomize() {
+    const form = document.getElementById('prefsForm');
+    const prefsObj = {};
+    form.querySelectorAll('input[type="checkbox"]').forEach(cb => {
+        prefsObj[cb.name] = cb.checked;
+    });
+
+    const fd = new FormData();
+    fd.append('prefs', JSON.stringify(prefsObj));
+
+    fetch('ajax-dashboard.php?action=save_prefs', {
+        method: 'POST',
+        body: fd
+    }).then(() => {
+        window.location.reload();
+    });
+}
+</script>
+
+
+<script>
+// Dashboard Real-time Polling for Critical Notifications
+$(document).ready(function() {
+    function fetchNotifications() {
+        $.ajax({
+            url: 'ajax-notifications.php',
+            type: 'POST',
+            dataType: 'json',
+            success: function(data) {
+                if (data.status === 'success') {
+                    // Update header bell if element exists
+                    if ($('.notification-badge').length) {
+                        $('.notification-badge').text(data.count > 0 ? data.count : '');
+                    }
+                    
+                    if (data.count > 0) {
+                        // Play sound if enabled
+                        if (data.sound == 1) {
+                            var audio = new Audio('../assets/sounds/notification.mp3');
+                            audio.play().catch(function(){}); // Catch browser autoplay policies
+                        }
+                        
+                        // Show popup
+                        data.notifications.forEach(function(notif) {
+                            if (typeof toastr !== 'undefined') {
+                                toastr[notif.type || 'info'](notif.message, notif.title);
+                            } else {
+                                alert(notif.title + '\n' + notif.message);
+                            }
+                        });
+                        
+                        // Mark as read so we don't spam
+                        $.post('ajax-notifications.php', {action: 'mark_read'});
+                    }
+                    
+                    // Setup next poll based on user settings
+                    var interval = (data.interval && data.interval >= 10) ? data.interval * 1000 : 30000;
+                    setTimeout(fetchNotifications, interval);
+                }
+            },
+            error: function() {
+                setTimeout(fetchNotifications, 60000); // Retry after 1 min on error
+            }
+        });
+    }
+    
+    // Start polling ONLY on dashboard
+    setTimeout(fetchNotifications, 5000); // First poll after 5s
+});
+</script>
+
 <?php require_once('footer.php'); ?>

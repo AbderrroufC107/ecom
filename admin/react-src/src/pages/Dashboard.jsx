@@ -26,6 +26,7 @@ import {
 
 import { LinkAction, MetricCard, PageHeader, StatusPill, Surface, ToolbarButton } from '../components/Enterprise.jsx'
 import { decodeText, parseNumeric } from '../lib/text.js'
+import { getLanguage, pageTranslations, legacyMappers } from '../lib/pageMeta.js'
 
 function text(selector) {
   return decodeText(document.querySelector(selector)?.textContent || '')
@@ -45,6 +46,20 @@ function parseScriptArray(name) {
   return result
 }
 
+function translateLegacyLabel(label, trans) {
+  const clean = label.trim()
+  if (legacyMappers.totalOrders.test(clean)) return trans.totalOrders
+  if (legacyMappers.revenue.test(clean)) return trans.revenue
+  if (legacyMappers.products.test(clean)) return trans.products
+  if (legacyMappers.customers.test(clean)) return trans.customers
+  if (legacyMappers.openOrders.test(clean)) return trans.openOrders
+  if (legacyMappers.pending.test(clean)) return trans.summaryPending
+  if (legacyMappers.today.test(clean)) return trans.summaryToday
+  if (legacyMappers.completed.test(clean)) return trans.summaryCompleted
+  if (legacyMappers.noData.test(clean)) return trans.noData
+  return label
+}
+
 function scrapeKpis() {
   const cards = Array.from(document.querySelectorAll('.admin-kpi-card, .sd-stat, .stat-widget'))
   return cards.map((card, index) => {
@@ -55,19 +70,19 @@ function scrapeKpis() {
     let icon = IconShoppingCart
     let tone = 'primary'
 
-    if (/money|line-chart|dollar/.test(iconClass) || /إيراد|القيمة|revenue/i.test(label)) {
+    if (/money|line-chart|dollar/.test(iconClass) || legacyMappers.kpiRevenue.test(label)) {
       icon = IconCurrencyDollar
       tone = 'success'
-    } else if (/user|employee|customer/.test(iconClass) || /عملاء|موظف/.test(label)) {
+    } else if (/user|employee|customer/.test(iconClass) || legacyMappers.kpiCustomers.test(label)) {
       icon = IconUsers
       tone = 'primary'
-    } else if (/cube|shopping-bag|product/.test(iconClass) || /منتج|مخزون/.test(label)) {
+    } else if (/cube|shopping-bag|product/.test(iconClass) || legacyMappers.kpiProducts.test(label)) {
       icon = IconPackage
-      tone = /منخفض|low/i.test(label) ? 'danger' : 'warning'
-    } else if (/clock|pending|warning/.test(iconClass) || /معلق|انتظار/.test(label)) {
+      tone = legacyMappers.kpiLow.test(label) ? 'danger' : 'warning'
+    } else if (/clock|pending|warning/.test(iconClass) || legacyMappers.kpiPending.test(label)) {
       icon = IconAlertTriangle
       tone = 'warning'
-    } else if (/check|completed/.test(iconClass) || /مكتمل|مؤكد/.test(label)) {
+    } else if (/check|completed/.test(iconClass) || legacyMappers.kpiCompleted.test(label)) {
       icon = IconCircleCheck
       tone = 'success'
     }
@@ -170,24 +185,38 @@ function scrapeLowStock() {
   })).filter((item) => item.name)
 }
 
-function scrapeQuickLinks() {
+function scrapeQuickLinks(trans) {
   const links = Array.from(document.querySelectorAll('.admin-quick-links .admin-quick-link')).map((link) => ({
     href: link.getAttribute('href') || '#',
     title: decodeText(link.querySelector('strong')?.textContent || link.textContent),
     description: decodeText(link.querySelector('span')?.textContent || ''),
   }))
 
-  if (links.length) return links
+  if (links.length) {
+    return links.map((link) => {
+      let title = link.title
+      if (legacyMappers.quickOrders.test(title)) {
+        title = trans.quickActionsOrders || title
+      } else if (legacyMappers.quickProduct.test(title)) {
+        title = trans.quickActionsNewProduct || title
+      } else if (legacyMappers.quickRecover.test(title)) {
+        title = trans.quickActionsRecoverOrders || title
+      } else if (legacyMappers.quickHealth.test(title)) {
+        title = trans.quickActionsSystemHealth || title
+      }
+      return { ...link, title }
+    })
+  }
 
   return [
-    { href: 'order.php', title: 'إدارة الطلبات', description: 'متابعة وتأكيد الطلبات' },
-    { href: 'product.php', title: 'المنتجات', description: 'المخزون والأسعار' },
-    { href: 'incomplete-orders.php', title: 'الاسترجاع', description: 'طلبات غير مكتملة' },
-    { href: 'settings.php', title: 'الإعدادات', description: 'إعدادات المتجر' },
+    { href: 'order.php', title: trans.quickActionsOrders, description: trans.ordersDesc },
+    { href: 'product.php', title: trans.products, description: trans.pricingDesc },
+    { href: 'incomplete-orders.php', title: trans.quickActionsRecoverOrders, description: trans.noOrdersDesc },
+    { href: 'settings.php', title: trans.storeSettings, description: trans.settingsDesc },
   ]
 }
 
-function scrapeDashboardData(legacyContainer) {
+function scrapeDashboardData(legacyContainer, trans) {
   if (!legacyContainer) return null
 
   const isStoreDash = Boolean(document.querySelector('.store-dash, .premium-dashboard'))
@@ -198,6 +227,18 @@ function scrapeDashboardData(legacyContainer) {
   const recentOrders = scrapeRecentOrders()
   const lowStock = scrapeLowStock()
   const miniCards = scrapeMiniCards()
+
+  const mappedKpis = kpis.map((kpi) => ({
+    ...kpi,
+    label: translateLegacyLabel(kpi.label, trans),
+    description: translateLegacyLabel(kpi.description, trans),
+  }))
+
+  const mappedMini = miniCards.map((c) => ({
+    ...c,
+    label: translateLegacyLabel(c.label, trans),
+    description: translateLegacyLabel(c.description, trans),
+  }))
 
   const chartData = chartLabels.length
     ? chartLabels.map((label, index) => ({
@@ -213,24 +254,27 @@ function scrapeDashboardData(legacyContainer) {
 
   return {
     isStoreDash,
-    title: isStoreDash ? text('.store-dash .sd-title') || 'لوحة المتجر' : 'لوحة الإدارة',
-    greeting: text('.admin-dashboard-hero-main h2') || text('.sd-hero h2') || 'مرحباً بك',
+    title: isStoreDash ? text('.store-dash .sd-title') || trans.storeCenter : trans.execSummary,
+    greeting: text('.admin-dashboard-hero-main h2') || text('.sd-hero h2') || trans.storeCenter,
     description: text('.admin-dashboard-hero-main p') || text('.sd-hero p') || text('.admin-dashboard-header p'),
     heroStats: Array.from(document.querySelectorAll('.admin-dashboard-hero-stats .admin-hero-stat, .hero-stats .hero-stat-item, .sd-hero-info')).map((stat) => ({
-      label: decodeText(stat.querySelector('span')?.textContent || ''),
+      label: translateLegacyLabel(decodeText(stat.querySelector('span')?.textContent || ''), trans),
       value: decodeText(stat.querySelector('strong')?.textContent || ''),
     })).filter((item) => item.label || item.value),
-    kpis,
-    miniCards,
+    kpis: mappedKpis,
+    miniCards: mappedMini,
     recentOrders,
     lowStock,
-    quickLinks: scrapeQuickLinks(),
+    quickLinks: scrapeQuickLinks(trans),
     chartData,
   }
 }
 
 export default function Dashboard({ legacyContainer }) {
-  const data = React.useMemo(() => scrapeDashboardData(legacyContainer), [legacyContainer])
+  const lang = getLanguage()
+  const trans = pageTranslations[lang] || pageTranslations['ar']
+
+  const data = React.useMemo(() => scrapeDashboardData(legacyContainer, trans), [legacyContainer, trans])
 
   React.useEffect(() => {
     if (!data) return
@@ -245,23 +289,25 @@ export default function Dashboard({ legacyContainer }) {
   const kpis = data.kpis.length
     ? data.kpis.slice(0, 4)
     : [
-        { id: 'orders', label: 'إجمالي الطلبات', value: '0', description: 'لا توجد بيانات', icon: IconClipboardList, tone: 'primary' },
-        { id: 'revenue', label: 'الإيراد', value: '0', description: 'لا توجد بيانات', icon: IconCurrencyDollar, tone: 'success' },
-        { id: 'products', label: 'المنتجات', value: '0', description: 'لا توجد بيانات', icon: IconPackage, tone: 'warning' },
-        { id: 'customers', label: 'العملاء', value: '0', description: 'لا توجد بيانات', icon: IconUsers, tone: 'primary' },
+        { id: 'orders', label: trans.totalOrders, value: '0', description: trans.noData, icon: IconClipboardList, tone: 'primary' },
+        { id: 'revenue', label: trans.revenue, value: '0', description: trans.noData, icon: IconCurrencyDollar, tone: 'success' },
+        { id: 'products', label: trans.products, value: '0', description: trans.noData, icon: IconPackage, tone: 'warning' },
+        { id: 'customers', label: trans.customers, value: '0', description: trans.noData, icon: IconUsers, tone: 'primary' },
       ]
 
+  const dateColLabel = trans.dateCol
+
   return (
-    <main className="saas-page" dir="rtl">
+    <main className="saas-page" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <PageHeader
-        eyebrow={data.isStoreDash ? 'مركز المتجر' : 'ملخص تنفيذي'}
-        title={data.greeting}
+        eyebrow={data.isStoreDash ? trans.storeCenter : trans.execSummary}
+        title={data.title}
         description={data.description}
         metrics={data.heroStats}
         actions={(
           <>
-            <ToolbarButton href="order.php" icon={IconClipboardList} variant="filled">فتح الطلبات</ToolbarButton>
-            <ToolbarButton href="product.php" icon={IconPackage}>المنتجات</ToolbarButton>
+            <ToolbarButton href="order.php" icon={IconClipboardList} variant="filled">{trans.openOrders}</ToolbarButton>
+            <ToolbarButton href="product.php" icon={IconPackage}>{trans.products}</ToolbarButton>
           </>
         )}
       />
@@ -297,9 +343,9 @@ export default function Dashboard({ legacyContainer }) {
       <Grid gutter="md" mb="md">
         <Grid.Col span={{ base: 12, lg: 8 }}>
           <Surface
-            title={data.isStoreDash ? 'منحنى الأداء' : 'قيمة أحدث الطلبات'}
+            title={data.isStoreDash ? trans.performanceCurve : trans.latestOrdersValue}
             eyebrow="Analytics"
-            action={<LinkAction href="order-statistics.php">الإحصائيات</LinkAction>}
+            action={<LinkAction href="order-statistics.php">{trans.analytics}</LinkAction>}
           >
             <div className="saas-chart">
               <ResponsiveContainer width="100%" height={300}>
@@ -314,7 +360,7 @@ export default function Dashboard({ legacyContainer }) {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                     <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
                     <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
-                    <Tooltip content={<ChartTooltip />} />
+                    <Tooltip content={<ChartTooltip trans={trans} />} />
                     <Area type="monotone" dataKey="revenue" stroke="#4f46e5" strokeWidth={3} fill="url(#revenueFill)" />
                     <Area type="monotone" dataKey="orders" stroke="#14b8a6" strokeWidth={2} fill="transparent" />
                   </AreaChart>
@@ -323,7 +369,7 @@ export default function Dashboard({ legacyContainer }) {
                     <CartesianGrid strokeDasharray="3 3" vertical={false} stroke="#e2e8f0" />
                     <XAxis dataKey="name" tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
                     <YAxis tickLine={false} axisLine={false} tick={{ fontSize: 11, fill: '#64748b' }} />
-                    <Tooltip content={<ChartTooltip />} />
+                    <Tooltip content={<ChartTooltip trans={trans} />} />
                     <Bar dataKey="revenue" radius={[6, 6, 0, 0]}>
                       {data.chartData.map((entry, index) => (
                         <Cell key={`${entry.name}-${index}`} fill={index === data.chartData.length - 1 ? '#4f46e5' : '#c7d2fe'} />
@@ -337,7 +383,7 @@ export default function Dashboard({ legacyContainer }) {
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, lg: 4 }}>
-          <Surface title="إجراءات سريعة" eyebrow="Workflow">
+          <Surface title={trans.quickActionsTitle} eyebrow="Workflow">
             <div className="saas-quick-grid">
               {data.quickLinks.slice(0, 6).map((link) => (
                 <a className="saas-quick-tile" href={link.href} key={`${link.href}-${link.title}`}>
@@ -355,16 +401,16 @@ export default function Dashboard({ legacyContainer }) {
 
       <Grid gutter="md">
         <Grid.Col span={{ base: 12, lg: 8 }}>
-          <Surface title="آخر الطلبات النشطة" eyebrow="Orders" action={<LinkAction href="order.php">عرض الكل</LinkAction>}>
+          <Surface title={trans.latestActiveOrders} eyebrow="Orders" action={<LinkAction href="order.php">{trans.viewAll}</LinkAction>}>
             <Table.ScrollContainer minWidth={720}>
               <Table className="saas-table" verticalSpacing="md">
                 <Table.Thead>
                   <Table.Tr>
-                    <Table.Th>الطلب</Table.Th>
-                    <Table.Th>العميل</Table.Th>
-                    <Table.Th>التاريخ</Table.Th>
-                    <Table.Th>الحالة</Table.Th>
-                    <Table.Th ta="left">القيمة</Table.Th>
+                    <Table.Th>{trans.orderCol}</Table.Th>
+                    <Table.Th>{trans.customerCol}</Table.Th>
+                    <Table.Th>{dateColLabel}</Table.Th>
+                    <Table.Th>{trans.statusCol}</Table.Th>
+                    <Table.Th ta="left">{trans.priceCol}</Table.Th>
                   </Table.Tr>
                 </Table.Thead>
                 <Table.Tbody>
@@ -376,7 +422,7 @@ export default function Dashboard({ legacyContainer }) {
                       </Table.Td>
                       <Table.Td><Text size="sm" fw={700}>{order.customer || '-'}</Text></Table.Td>
                       <Table.Td><Text size="xs" c="dimmed">{order.date || '-'}</Text></Table.Td>
-                      <Table.Td><StatusPill>{order.status || 'قيد المتابعة'}</StatusPill></Table.Td>
+                      <Table.Td><StatusPill>{order.status || '-'}</StatusPill></Table.Td>
                       <Table.Td ta="left"><Text size="sm" fw={800} c="indigo.7">{order.price || '-'}</Text></Table.Td>
                     </Table.Tr>
                   ))}
@@ -387,7 +433,7 @@ export default function Dashboard({ legacyContainer }) {
         </Grid.Col>
 
         <Grid.Col span={{ base: 12, lg: 4 }}>
-          <Surface title="تنبيهات المخزون" eyebrow="Inventory" action={<LinkAction href="product.php">إدارة</LinkAction>}>
+          <Surface title={trans.inventoryAlerts} eyebrow="Inventory" action={<LinkAction href="product.php">{trans.manage}</LinkAction>}>
             <div className="saas-alert-list">
               {data.lowStock.length ? data.lowStock.slice(0, 6).map((item) => (
                 <a className="saas-alert-row" href={item.href} key={`${item.name}-${item.qty}`}>
@@ -401,7 +447,7 @@ export default function Dashboard({ legacyContainer }) {
                   <Badge color={item.danger ? 'red' : 'orange'} variant="light">{item.qty}</Badge>
                 </a>
               )) : (
-                <Text c="dimmed" size="sm" ta="center" py="xl">لا توجد تنبيهات مخزون حالياً.</Text>
+                <Text c="dimmed" size="sm" ta="center" py="xl">{trans.noInventoryAlerts}</Text>
               )}
             </div>
           </Surface>
@@ -411,7 +457,7 @@ export default function Dashboard({ legacyContainer }) {
   )
 }
 
-function ChartTooltip({ active, payload, label }) {
+function ChartTooltip({ active, payload, label, trans }) {
   if (!active || !payload?.length) return null
   const row = payload[0]?.payload || {}
   return (
@@ -419,10 +465,11 @@ function ChartTooltip({ active, payload, label }) {
       <Text size="xs" fw={800}>{decodeText(label || row.name)}</Text>
       {payload.map((item) => (
         <Group justify="space-between" gap="lg" key={item.dataKey}>
-          <Text size="xs" c="dimmed">{item.dataKey === 'orders' ? 'الطلبات' : 'الإيراد'}</Text>
+          <Text size="xs" c="dimmed">{item.dataKey === 'orders' ? trans.orders : trans.revenue}</Text>
           <Text size="xs" fw={800}>{item.value}</Text>
         </Group>
       ))}
     </div>
   )
 }
+

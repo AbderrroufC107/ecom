@@ -444,6 +444,119 @@ if (isset($_POST['run_ecotrack_diagnostics'])) {
                 </div>
             </form>
 
+            <?php
+            $speed_results = [];
+            if (isset($_POST['run_speed_test'])) {
+                $csrf->verifyRequest();
+                $settings = ecotrack_normalize_settings(front_get_settings($pdo));
+                if (!ecotrack_is_configured($settings)) {
+                    $speed_results['error'] = 'ECOTRACK is not configured.';
+                } else {
+                    $times = [];
+                    $successes = 0;
+                    $failures = 0;
+                    for ($i = 1; $i <= 3; $i++) {
+                        $t0 = microtime(true);
+                        $req = ecotrack_api_request($pdo, $settings, 'GET', '/api/v1/validate/token', ['api_token' => $settings['ecotrack_api_token']], null, 'none');
+                        $elapsed = round((microtime(true) - $t0) * 1000);
+                        $times[] = $elapsed;
+                        if (!empty($req['success'])) {
+                            $successes++;
+                        } else {
+                            $failures++;
+                        }
+                    }
+                    $avg = round(array_sum($times) / count($times));
+                    $min = min($times);
+                    $max = max($times);
+                    $speed_results = [
+                        'times' => $times,
+                        'avg' => $avg,
+                        'min' => $min,
+                        'max' => $max,
+                        'successes' => $successes,
+                        'failures' => $failures,
+                    ];
+                }
+            }
+            ?>
+
+            <form method="post" action="">
+                <?php $csrf->echoInputField(); ?>
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title"><i class="fa fa-tachometer"></i> اختبار سرعة ECOTRACK</h3>
+                    </div>
+                    <div class="box-body">
+                        <p class="text-muted">يقوم باستدعاء 3 طلبات إلى ECOTRACK ويقيس متوسط وسطى وأقصى وقت استجابة.</p>
+                        <button type="submit" name="run_speed_test" class="btn btn-success">
+                            <i class="fa fa-bolt"></i> تشغيل اختبار السرعة
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            <?php if (!empty($speed_results) && !isset($speed_results['error'])): ?>
+                <div class="box box-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">نتائج اختبار السرعة</h3>
+                    </div>
+                    <div class="box-body">
+                        <div class="row" style="text-align:center;">
+                            <div class="col-md-3">
+                                <div class="description-block border-right">
+                                    <h5 class="description-header text-muted">المتوسط</h5>
+                                    <h3 class="description-text" style="color:<?php echo $speed_results['avg'] < 1000 ? '#00a65a' : ($speed_results['avg'] < 3000 ? '#f39c12' : '#dd4b39'); ?>;"><?php echo $speed_results['avg']; ?> ms</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="description-block border-right">
+                                    <h5 class="description-header text-muted">الأسرع</h5>
+                                    <h3 class="description-text text-green;"><?php echo $speed_results['min']; ?> ms</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="description-block border-right">
+                                    <h5 class="description-header text-muted">الأبطأ</h5>
+                                    <h3 class="description-text text-red;"><?php echo $speed_results['max']; ?> ms</h3>
+                                </div>
+                            </div>
+                            <div class="col-md-3">
+                                <div class="description-block">
+                                    <h5 class="description-header text-muted">النجاح / الفشل</h5>
+                                    <h3 class="description-text"><span class="text-green"><?php echo $speed_results['successes']; ?></span> / <span class="text-red"><?php echo $speed_results['failures']; ?></span></h3>
+                                </div>
+                            </div>
+                        </div>
+                        <br>
+                        <table class="table table-bordered table-striped">
+                            <thead><tr><th>المحاولة</th><th>الوقت (مللي ثانية)</th><th>التقييم</th></tr></thead>
+                            <tbody>
+                                <?php foreach ($speed_results['times'] as $idx => $ms): ?>
+                                    <tr>
+                                        <td>المحاولة #<?php echo $idx + 1; ?></td>
+                                        <td><strong><?php echo $ms; ?> ms</strong></td>
+                                        <td>
+                                            <?php if ($ms < 1000): ?>
+                                                <span class="label label-success">ممتاز</span>
+                                            <?php elseif ($ms < 3000): ?>
+                                                <span class="label label-warning">مقبول</span>
+                                            <?php else: ?>
+                                                <span class="label label-danger">بطيء</span>
+                                            <?php endif; ?>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            <?php elseif (!empty($speed_results['error'])): ?>
+                <div class="callout callout-danger">
+                    <p><?php echo htmlspecialchars($speed_results['error'], ENT_QUOTES, 'UTF-8'); ?></p>
+                </div>
+            <?php endif; ?>
+
             <?php if (!empty($results)): ?>
                 <div class="box box-info">
                     <div class="box-header with-border">

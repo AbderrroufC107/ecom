@@ -70,9 +70,9 @@ $logs = $result['data'];
 $total = $result['total'];
 $total_pages = $result['total_pages'];
 
-$entity_types = $pdo->query("SELECT DISTINCT entity_type FROM tbl_audit_log ORDER BY entity_type")->fetchAll(PDO::FETCH_COLUMN);
-$action_types = $pdo->query("SELECT DISTINCT action_type FROM tbl_audit_log ORDER BY action_type")->fetchAll(PDO::FETCH_COLUMN);
-$sources = $pdo->query("SELECT DISTINCT source FROM tbl_audit_log ORDER BY source")->fetchAll(PDO::FETCH_COLUMN);
+$entity_types = $dbRepo->query("SELECT DISTINCT entity_type FROM tbl_audit_log ORDER BY entity_type")->fetchAll(PDO::FETCH_COLUMN);
+$action_types = $dbRepo->query("SELECT DISTINCT action_type FROM tbl_audit_log ORDER BY action_type")->fetchAll(PDO::FETCH_COLUMN);
+$sources = $dbRepo->query("SELECT DISTINCT source FROM tbl_audit_log ORDER BY source")->fetchAll(PDO::FETCH_COLUMN);
 ?>
 <section class="content-header">
     <div class="content-header-left">

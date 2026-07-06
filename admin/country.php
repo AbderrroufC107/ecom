@@ -30,7 +30,7 @@
             <tbody>
             	<?php
             	$i=0;
-            	$statement = $pdo->prepare("SELECT * FROM tbl_country ORDER BY country_id ASC");
+            	$statement = $dbRepo->prepare("SELECT * FROM tbl_country ORDER BY country_id ASC");
             	$statement->execute();
             	$result = $statement->fetchAll(PDO::FETCH_ASSOC);							
             	foreach ($result as $row) {

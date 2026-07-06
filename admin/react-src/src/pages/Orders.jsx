@@ -29,6 +29,7 @@ import {
 
 import { EmptyState, IconOnlyAction, MetricCard, PageHeader, StatusPill, ToolbarButton } from '../components/Enterprise.jsx'
 import { cleanText, decodeText, parseNumeric } from '../lib/text.js'
+import { getLanguage, pageTranslations, legacyOrdersMappers } from '../lib/pageMeta.js'
 
 const PAGE_SIZE = 12
 
@@ -73,10 +74,10 @@ function scrapeOrdersData() {
       orders.push({
         id: orderId,
         tabId: pane.id,
-        product: decodeText(row.querySelector('.order-main strong')?.textContent || cells[1]?.textContent || 'طلب'),
+        product: decodeText(row.querySelector('.order-main strong')?.textContent || cells[1]?.textContent || '\u0637\u0644\u0628'),
         customerName: decodeText(cells[2]?.querySelector('strong')?.textContent || cells[2]?.textContent || ''),
         customerPhone: cleanText(cells[2]?.querySelector('a[href^="tel:"]')?.textContent || cells[2]?.querySelector('a')?.textContent || ''),
-        assignedEmployee: decodeText(cells[3]?.textContent || 'غير موزع'),
+        assignedEmployee: decodeText(cells[3]?.textContent || '\u063a\u064a\u0631 \u0645\u0648\u0632\u0639'),
         followup: decodeText(cells[4]?.querySelector('.pill')?.textContent || cells[4]?.textContent || ''),
         followupHint: decodeText(cells[4]?.querySelector('.callbox')?.textContent || ''),
         delivery: decodeText(cells[5]?.querySelector('.pill')?.textContent || cells[5]?.textContent || ''),
@@ -129,6 +130,9 @@ function sortRecords(records, sortStatus) {
 }
 
 export default function Orders() {
+  const lang = getLanguage()
+  const trans = pageTranslations[lang] || pageTranslations['ar']
+
   const scrapedData = React.useMemo(() => scrapeOrdersData(), [])
   const data = scrapedData || {
     tabs: [],
@@ -163,22 +167,22 @@ export default function Orders() {
 
   const employeeOptions = React.useMemo(() => {
     const options = [
-      { value: 'all', label: 'جميع الموظفين' },
-      { value: 'unassigned', label: 'غير موزع' },
+      { value: 'all', label: trans.allEmployees },
+      { value: 'unassigned', label: trans.unassigned },
     ]
     const seen = new Set()
     data.orders.forEach((order) => {
-      if (!order.assignedEmployee || /غير موزع/.test(order.assignedEmployee)) return
+      if (!order.assignedEmployee || legacyOrdersMappers.unassigned.test(order.assignedEmployee)) return
       if (!seen.has(order.assignedEmployee)) {
         seen.add(order.assignedEmployee)
         options.push({ value: order.assignedEmployee, label: order.assignedEmployee })
       }
     })
     return options
-  }, [data.orders])
+  }, [data.orders, trans])
 
   const deliveryOptions = React.useMemo(() => {
-    const options = [{ value: 'all', label: 'كل طرق التوصيل' }]
+    const options = [{ value: 'all', label: trans.allDeliveries }]
     const seen = new Set()
     data.orders.forEach((order) => {
       if (!order.delivery || seen.has(order.delivery)) return
@@ -186,12 +190,12 @@ export default function Orders() {
       options.push({ value: order.delivery, label: order.delivery })
     })
     return options
-  }, [data.orders])
+  }, [data.orders, trans])
 
   const filteredOrders = React.useMemo(() => {
     return data.orders.filter((order) => {
       if (order.tabId !== activeTab) return false
-      if (filterEmployee === 'unassigned' && !/غير موزع/.test(order.assignedEmployee)) return false
+      if (filterEmployee === 'unassigned' && !legacyOrdersMappers.unassigned.test(order.assignedEmployee)) return false
       if (filterEmployee !== 'all' && filterEmployee !== 'unassigned' && order.assignedEmployee !== filterEmployee) return false
       if (filterDelivery !== 'all' && order.delivery !== filterDelivery) return false
 
@@ -245,7 +249,7 @@ export default function Orders() {
     const separator = order.detailHref.includes('?') ? '&' : '?'
     setDrawer({
       opened: true,
-      title: `تفاصيل الطلب ${order.id}`,
+      title: `${trans.orderDetailTitle} ${order.id}`,
       url: `${order.detailHref}${separator}react_card=1`,
     })
   }
@@ -260,20 +264,20 @@ export default function Orders() {
   if (!scrapedData) return null
 
   return (
-    <main className="saas-page" dir="rtl">
+    <main className="saas-page" dir={lang === 'ar' ? 'rtl' : 'ltr'}>
       <PageHeader
-        eyebrow="المبيعات"
-        title="إدارة الطلبات"
-        description="مركز عمل موحد للمتابعة، التأكيد، الإلغاء، الإرجاع، والتصدير الجماعي."
+        eyebrow={trans.salesEyebrow}
+        title={trans.ordersManagement}
+        description={trans.ordersDesc}
         actions={(
           <>
-            <ToolbarButton href="order-statistics.php" icon={IconClipboardList}>الإحصائيات</ToolbarButton>
-            <ToolbarButton href="incomplete-orders.php" icon={IconAlertTriangle}>غير مكتملة</ToolbarButton>
+            <ToolbarButton href="order-statistics.php" icon={IconClipboardList}>{trans.statistics}</ToolbarButton>
+            <ToolbarButton href="incomplete-orders.php" icon={IconAlertTriangle}>{trans.incomplete}</ToolbarButton>
           </>
         )}
       />
 
-      <SimpleSummary data={data.summary} />
+      <SimpleSummary data={data.summary} trans={trans} />
 
       <Card className="saas-surface saas-orders-shell" withBorder>
         <Tabs value={activeTab} onChange={handleTabChange} className="saas-tabs">
@@ -290,7 +294,7 @@ export default function Orders() {
           <Grid.Col span={{ base: 12, lg: 5 }}>
             <TextInput
               leftSection={<IconSearch size={16} stroke={1.8} />}
-              placeholder="بحث بالرقم، العميل، الهاتف، المنتج، الموظف..."
+              placeholder={trans.searchOrdersPlaceholder}
               value={searchQuery}
               onChange={(event) => {
                 setSearchQuery(event.currentTarget.value)
@@ -322,14 +326,14 @@ export default function Orders() {
           </Grid.Col>
           <Grid.Col span={{ base: 12, lg: 1 }}>
             <Button variant="default" radius="md" fullWidth leftSection={<IconFilter size={15} />} onClick={resetFilters}>
-              تصفية
+              {trans.filter}
             </Button>
           </Grid.Col>
         </Grid>
 
         {selectedRecords.length ? (
           <Group className="saas-bulkbar" justify="space-between" mt="md">
-            <Text size="sm" fw={800}>{selectedRecords.length} طلب محدد</Text>
+            <Text size="sm" fw={800}>{selectedRecords.length} {trans.selectedOrdersCount}</Text>
             <Group gap="xs">
               {activeBulkOptions.map((option) => (
                 <Button size="xs" radius="md" variant="light" key={option.value} onClick={() => handleBulkAction(option.value)}>
@@ -352,7 +356,7 @@ export default function Orders() {
           columns={[
             {
               accessor: 'id',
-              title: 'الطلب',
+              title: trans.orderCol,
               sortable: true,
               width: 132,
               render: (order) => (
@@ -364,18 +368,18 @@ export default function Orders() {
             },
             {
               accessor: 'product',
-              title: 'المنتج',
+              title: trans.productCol,
               sortable: true,
               render: (order) => (
                 <div>
                   <Text fw={800} size="sm" lineClamp={2}>{order.product}</Text>
-                  {order.qty ? <Text c="dimmed" size="xs" mt={3}>الكمية: {order.qty}</Text> : null}
+                  {order.qty ? <Text c="dimmed" size="xs" mt={3}>{trans.quantityLabel}: {order.qty}</Text> : null}
                 </div>
               ),
             },
             {
               accessor: 'customerName',
-              title: 'العميل',
+              title: trans.customerCol,
               sortable: true,
               width: 190,
               render: (order) => (
@@ -394,39 +398,43 @@ export default function Orders() {
             },
             {
               accessor: 'assignedEmployee',
-              title: 'الموظف',
+              title: trans.employeeCol,
               sortable: true,
               width: 150,
-              render: (order) => <StatusPill tone={/غير موزع/.test(order.assignedEmployee) ? 'neutral' : 'primary'}>{order.assignedEmployee}</StatusPill>,
+              render: (order) => (
+                <StatusPill tone={(legacyOrdersMappers.unassigned.test(order.assignedEmployee) || /unassigned/i.test(order.assignedEmployee)) ? 'neutral' : 'primary'}>
+                  {legacyOrdersMappers.unassigned.test(order.assignedEmployee) ? trans.unassigned : order.assignedEmployee}
+                </StatusPill>
+              ),
             },
             {
               accessor: 'followup',
-              title: 'المتابعة',
+              title: trans.followupCol,
               sortable: true,
               width: 145,
               render: (order) => (
                 <Tooltip label={order.followupHint || order.followup} withArrow disabled={!order.followupHint}>
-                  <span><StatusPill>{order.followup || 'غير محدد'}</StatusPill></span>
+                  <span><StatusPill>{order.followup || trans.notSet}</StatusPill></span>
                 </Tooltip>
               ),
             },
             {
               accessor: 'delivery',
-              title: 'التوصيل',
+              title: trans.deliveryCol,
               sortable: true,
               width: 140,
               render: (order) => <StatusPill tone="success">{order.delivery || '-'}</StatusPill>,
             },
             {
               accessor: 'status',
-              title: 'الحالة',
+              title: trans.statusCol,
               sortable: true,
               width: 140,
               render: (order) => <StatusPill>{order.status || '-'}</StatusPill>,
             },
             {
               accessor: 'priceNumber',
-              title: 'القيمة',
+              title: trans.priceCol,
               sortable: true,
               textAlign: 'left',
               width: 130,
@@ -440,11 +448,11 @@ export default function Orders() {
               render: (order) => (
                 <Group gap={4} justify="flex-end" wrap="nowrap">
                   {order.primaryActionEl ? (
-                    <IconOnlyAction label="الإجراء الأساسي" icon={IconClipboardList} color="teal" onClick={() => order.primaryActionEl.click()} />
+                    <IconOnlyAction label={trans.actionPrimary} icon={IconClipboardList} color="teal" onClick={() => order.primaryActionEl.click()} />
                   ) : null}
-                  <IconOnlyAction label="تفاصيل" icon={IconEye} color="indigo" onClick={() => openDetails(order)} />
+                  <IconOnlyAction label={trans.actionDetails} icon={IconEye} color="indigo" onClick={() => openDetails(order)} />
                   {order.deleteHref ? (
-                    <IconOnlyAction label="حذف" icon={IconTrash} color="red" onClick={() => setDeleteTarget(order)} />
+                    <IconOnlyAction label={trans.actionDelete} icon={IconTrash} color="red" onClick={() => setDeleteTarget(order)} />
                   ) : null}
                 </Group>
               ),
@@ -461,8 +469,8 @@ export default function Orders() {
           }}
           selectedRecords={selectedRecords}
           onSelectedRecordsChange={handleSelectionChange}
-          emptyState={<EmptyState title="لا توجد طلبات" description="غير الفلاتر أو افتح تبويباً آخر لعرض الطلبات." />}
-          paginationText={({ from, to, totalRecords }) => `${from}-${to} من ${totalRecords}`}
+          emptyState={<EmptyState title={trans.noOrders} description={trans.noOrdersDesc} />}
+          paginationText={({ from, to, totalRecords }) => `${from}-${to} ${trans.paginationText} ${totalRecords}`}
         />
       </Card>
 
@@ -477,34 +485,35 @@ export default function Orders() {
         {drawer.opened ? <iframe src={drawer.url} title={drawer.title} className="saas-detail-frame" /> : null}
       </Drawer>
 
-      <Modal opened={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} title="تأكيد الحذف" centered>
+      <Modal opened={Boolean(deleteTarget)} onClose={() => setDeleteTarget(null)} title={trans.confirmDeleteTitle} centered>
         <Text size="sm" c="dimmed" mb="lg">
-          سيتم حذف الطلب {deleteTarget?.id}. هذا الإجراء يعتمد على مسار الحذف الحالي ولا يمكن التراجع عنه من هنا.
+          {trans.confirmDeleteDesc.replace('{id}', deleteTarget?.id || '')}
         </Text>
         <Group justify="flex-end">
-          <Button variant="default" radius="md" onClick={() => setDeleteTarget(null)}>إلغاء</Button>
-          <Button color="red" radius="md" onClick={() => { window.location.href = deleteTarget.deleteHref }}>حذف الطلب</Button>
+          <Button variant="default" radius="md" onClick={() => setDeleteTarget(null)}>{trans.cancel}</Button>
+          <Button color="red" radius="md" onClick={() => { window.location.href = deleteTarget.deleteHref }}>{trans.deleteOrder}</Button>
         </Group>
       </Modal>
     </main>
   )
 }
 
-function SimpleSummary({ data }) {
+function SimpleSummary({ data, trans }) {
   return (
     <Grid gutter="md" mb="md">
       <Grid.Col span={{ base: 12, sm: 6, lg: 3 }}>
-        <MetricCard label="إجمالي الطلبات" value={data.total} description="كل الحالات الحالية" icon={IconClipboardList} tone="primary" />
+        <MetricCard label={trans.summaryTotal} value={data.total} description={trans.summaryTotalDesc} icon={IconClipboardList} tone="primary" />
       </Grid.Col>
       <Grid.Col span={{ base: 12, sm: 6, lg: 3 }}>
-        <MetricCard label="طلبات اليوم" value={data.today} description="مسجلة بتاريخ اليوم" icon={IconClipboardList} tone="success" />
+        <MetricCard label={trans.summaryToday} value={data.today} description={trans.summaryTodayDesc} icon={IconClipboardList} tone="success" />
       </Grid.Col>
       <Grid.Col span={{ base: 12, sm: 6, lg: 3 }}>
-        <MetricCard label="بانتظار التأكيد" value={data.pending} description={`${data.pendingNoCalls} بلا اتصال`} icon={IconAlertTriangle} tone="warning" />
+        <MetricCard label={trans.summaryPending} value={data.pending} description={trans.summaryPendingDesc.replace('{count}', data.pendingNoCalls)} icon={IconAlertTriangle} tone="warning" />
       </Grid.Col>
       <Grid.Col span={{ base: 12, sm: 6, lg: 3 }}>
-        <MetricCard label="القيمة المؤكدة" value={data.completedAmount || '-'} description={`${data.pendingReady} جاهزة للتأكيد`} icon={IconClipboardList} tone="success" />
+        <MetricCard label={trans.summaryCompleted} value={data.completedAmount || '-'} description={trans.summaryCompletedDesc.replace('{count}', data.pendingReady)} icon={IconClipboardList} tone="success" />
       </Grid.Col>
     </Grid>
   )
 }
+

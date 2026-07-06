@@ -1,0 +1,98 @@
+[
+    {
+        "nom": "Adrar",
+        "wilaya_id": 1,
+        "code_postal": "101",
+        "has_stop_desk": 1
+    },
+    {
+        "nom": "Akabli",
+        "wilaya_id": 1,
+        "code_postal": "119",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Aoulef",
+        "wilaya_id": 1,
+        "code_postal": "112",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Bouda",
+        "wilaya_id": 1,
+        "code_postal": "122",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Fenoughil",
+        "wilaya_id": 1,
+        "code_postal": "115",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "In Zghmir",
+        "wilaya_id": 1,
+        "code_postal": "105",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Ouled Ahmed Timmi",
+        "wilaya_id": 1,
+        "code_postal": "121",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Reggane",
+        "wilaya_id": 1,
+        "code_postal": "104",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sali",
+        "wilaya_id": 1,
+        "code_postal": "118",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Sebaa",
+        "wilaya_id": 1,
+        "code_postal": "126",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamantit",
+        "wilaya_id": 1,
+        "code_postal": "114",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tamest",
+        "wilaya_id": 1,
+        "code_postal": "102",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Timekten",
+        "wilaya_id": 1,
+        "code_postal": "113",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tit",
+        "wilaya_id": 1,
+        "code_postal": "106",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Tsabit",
+        "wilaya_id": 1,
+        "code_postal": "108",
+        "has_stop_desk": 0
+    },
+    {
+        "nom": "Zaouiet Kounta",
+        "wilaya_id": 1,
+        "code_postal": "111",
+        "has_stop_desk": 0
+    }
+]

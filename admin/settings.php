@@ -1,29 +1,35 @@
-﻿<?php require_once('header.php'); ?>
+<?php require_once('header.php'); ?>
 
 <?php
 try {
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS facebook_pixel_id varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS tiktok_pixel_id varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_bot_token varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_chat_id varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_orders_enabled TINYINT(1) NOT NULL DEFAULT 1");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_incomplete_enabled TINYINT(1) NOT NULL DEFAULT 0");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_incomplete_chat_id varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_incomplete_bot_token varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_order_status_enabled TINYINT(1) NOT NULL DEFAULT 0");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_order_status_chat_id varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_order_status_bot_token varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_enabled TINYINT(1) NOT NULL DEFAULT 0");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_url TEXT NULL");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_method varchar(10) NOT NULL DEFAULT 'POST'");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_sender varchar(120) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_token varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_headers TEXT NULL");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_body_template TEXT NULL");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_success_keyword varchar(255) NOT NULL DEFAULT ''");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS ecotrack_enabled TINYINT(1) NOT NULL DEFAULT 0");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS ecotrack_api_token TEXT NULL");
-    $pdo->exec("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS ecotrack_base_url varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS facebook_pixel_id varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS tiktok_pixel_id varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS snapchat_pixel_id varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS google_analytics_id varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_bot_token varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_chat_id varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_orders_enabled TINYINT(1) NOT NULL DEFAULT 1");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_incomplete_enabled TINYINT(1) NOT NULL DEFAULT 0");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_incomplete_chat_id varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_incomplete_bot_token varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_order_status_enabled TINYINT(1) NOT NULL DEFAULT 0");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_order_status_chat_id varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS telegram_order_status_bot_token varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_enabled TINYINT(1) NOT NULL DEFAULT 0");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_url TEXT NULL");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_method varchar(10) NOT NULL DEFAULT 'POST'");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_sender varchar(120) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_token varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_headers TEXT NULL");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_body_template TEXT NULL");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS sms_gateway_success_keyword varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS ecotrack_enabled TINYINT(1) NOT NULL DEFAULT 0");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS ecotrack_api_token TEXT NULL");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS ecotrack_base_url varchar(255) NOT NULL DEFAULT ''");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS zrexpress_enabled TINYINT(1) NOT NULL DEFAULT 0");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS zrexpress_token TEXT NULL");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS zrexpress_key TEXT NULL");
+    $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS zrexpress_base_url varchar(255) NOT NULL DEFAULT ''");
 } catch (PDOException $e) {
     // ignore if columns already exist
 }
@@ -31,6 +37,9 @@ try {
 admin_ensure_sms_template_table($pdo);
 admin_ensure_sms_automation_table($pdo);
 admin_ensure_ecotrack_setting_columns($pdo);
+if (function_exists('admin_ensure_zrexpress_setting_columns')) {
+    admin_ensure_zrexpress_setting_columns($pdo);
+}
 if (function_exists('admin_ensure_telegram_order_status_columns')) {
     admin_ensure_telegram_order_status_columns($pdo);
 }
@@ -39,7 +48,9 @@ if (function_exists('admin_ensure_telegram_order_status_columns')) {
 <?php
 if (!function_exists('update_settings_image_by_url')) {
     function update_settings_image_by_url($pdo, $column, $url, &$error_message)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         $url = store_external_image_url($url, $error_message);
         if ($url === '') {
             return false;
@@ -50,12 +61,12 @@ if (!function_exists('update_settings_image_by_url')) {
             return false;
         }
 
-        $statement = $pdo->prepare("SELECT $column FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT $column FROM tbl_settings WHERE id=1");
         $statement->execute();
         $current_value = $statement->fetchColumn();
         delete_local_image_file($current_value, '../assets/uploads');
 
-        $statement = $pdo->prepare("UPDATE tbl_settings SET $column=? WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET $column=? WHERE id=1");
         $statement->execute(array($url));
 
         return true;
@@ -64,17 +75,19 @@ if (!function_exists('update_settings_image_by_url')) {
 
 if (!function_exists('clear_settings_image_column')) {
     function clear_settings_image_column($pdo, $column)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if (!preg_match('/^[a-zA-Z0-9_]+$/', (string)$column)) {
             return false;
         }
 
-        $statement = $pdo->prepare("SELECT $column FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT $column FROM tbl_settings WHERE id=1");
         $statement->execute();
         $current_value = $statement->fetchColumn();
         delete_local_image_file($current_value, '../assets/uploads');
 
-        $statement = $pdo->prepare("UPDATE tbl_settings SET $column='' WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET $column='' WHERE id=1");
         $statement->execute();
         return true;
     }
@@ -82,7 +95,9 @@ if (!function_exists('clear_settings_image_column')) {
 
 if (!function_exists('store_settings_uploaded_photo')) {
     function store_settings_uploaded_photo($path, $path_tmp, $target_base, &$error_message, $allowed_ext = null)
-    {
+    { global $dbRepo;
+    global $dbRepo;
+
         if ($allowed_ext === null) {
             $allowed_ext = ['jpg', 'jpeg', 'png', 'gif', 'webp'];
         }
@@ -123,7 +138,7 @@ if(isset($_POST['form6_7']) && !empty($_POST['remove_cta_photo'])) {
         $error_message .= 'Call to Action Read More URL can not be empty<br>';
     }
     if ($valid == 1 && clear_settings_image_column($pdo, 'cta_photo')) {
-        $statement = $pdo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=? WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=? WHERE id=1");
         $statement->execute(array($_POST['cta_title'],$_POST['cta_content'],$_POST['cta_read_more_text'],$_POST['cta_read_more_url']));
         $success_message = 'Call to Action Data is updated successfully.';
     }
@@ -170,12 +185,12 @@ if(isset($_POST['form6_7']) && !empty($_POST['cta_photo_url'])) {
     }
 
     if ($valid == 1) {
-        $statement = $pdo->prepare("SELECT cta_photo FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT cta_photo FROM tbl_settings WHERE id=1");
         $statement->execute();
         $current_cta = $statement->fetchColumn();
         delete_local_image_file($current_cta, '../assets/uploads');
 
-        $statement = $pdo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=?,cta_photo=? WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=?,cta_photo=? WHERE id=1");
         $statement->execute(array($_POST['cta_title'],$_POST['cta_content'],$_POST['cta_read_more_text'],$_POST['cta_read_more_url'],$cta_url));
         if($valid == 1) {
             $success_message = 'Call to Action Data is updated successfully.';
@@ -246,7 +261,7 @@ if(isset($_POST['form1'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -265,7 +280,7 @@ if(isset($_POST['form1'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET logo=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET logo=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -294,7 +309,7 @@ if(isset($_POST['form2'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -313,7 +328,7 @@ if(isset($_POST['form2'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET favicon=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET favicon=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -325,7 +340,7 @@ if(isset($_POST['form2'])) {
 if(isset($_POST['form3'])) {
     
     // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET newsletter_on_off=?, footer_copyright=?, contact_address=?, contact_email=?, contact_phone=?, contact_map_iframe=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET newsletter_on_off=?, footer_copyright=?, contact_address=?, contact_email=?, contact_phone=?, contact_map_iframe=? WHERE id=1");
     $statement->execute(array($_POST['newsletter_on_off'],$_POST['footer_copyright'],$_POST['contact_address'],$_POST['contact_email'],$_POST['contact_phone'],$_POST['contact_map_iframe']));
 
     $success_message = 'General content settings is updated successfully.';
@@ -334,7 +349,7 @@ if(isset($_POST['form3'])) {
 //Email Settings
 if(isset($_POST['form4'])) {
     // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET receive_email=?, receive_email_subject=?,receive_email_thank_you_message=?, forget_password_message=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET receive_email=?, receive_email_subject=?,receive_email_thank_you_message=?, forget_password_message=? WHERE id=1");
     $statement->execute(array($_POST['receive_email'],$_POST['receive_email_subject'],$_POST['receive_email_thank_you_message'],$_POST['forget_password_message']));
 
     $success_message = 'Contact form settings information is updated successfully.';
@@ -345,8 +360,10 @@ if(isset($_POST['form4'])) {
 if(isset($_POST['form_pixels'])) {
     $facebook_pixel_id = trim($_POST['facebook_pixel_id'] ?? '');
     $tiktok_pixel_id = trim($_POST['tiktok_pixel_id'] ?? '');
-    $statement = $pdo->prepare("UPDATE tbl_settings SET facebook_pixel_id=?, tiktok_pixel_id=? WHERE id=1");
-    $statement->execute(array($facebook_pixel_id, $tiktok_pixel_id));
+    $snapchat_pixel_id = trim($_POST['snapchat_pixel_id'] ?? '');
+    $google_analytics_id = trim($_POST['google_analytics_id'] ?? '');
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET facebook_pixel_id=?, tiktok_pixel_id=?, snapchat_pixel_id=?, google_analytics_id=? WHERE id=1");
+    $statement->execute(array($facebook_pixel_id, $tiktok_pixel_id, $snapchat_pixel_id, $google_analytics_id));
 
     $success_message = 'Pixel settings updated successfully.';
 }
@@ -363,7 +380,7 @@ if(isset($_POST['form_telegram'])) {
     $telegram_incomplete_enabled = isset($_POST['telegram_incomplete_enabled']) ? 1 : 0;
     $telegram_order_status_enabled = isset($_POST['telegram_order_status_enabled']) ? 1 : 0;
 
-    $statement = $pdo->prepare("UPDATE tbl_settings SET telegram_bot_token=?, telegram_chat_id=?, telegram_orders_enabled=?, telegram_incomplete_enabled=?, telegram_incomplete_chat_id=?, telegram_incomplete_bot_token=?, telegram_order_status_enabled=?, telegram_order_status_chat_id=?, telegram_order_status_bot_token=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET telegram_bot_token=?, telegram_chat_id=?, telegram_orders_enabled=?, telegram_incomplete_enabled=?, telegram_incomplete_chat_id=?, telegram_incomplete_bot_token=?, telegram_order_status_enabled=?, telegram_order_status_chat_id=?, telegram_order_status_bot_token=? WHERE id=1");
     $statement->execute(array($telegram_bot_token, $telegram_chat_id, $telegram_orders_enabled, $telegram_incomplete_enabled, $telegram_incomplete_chat_id, $telegram_incomplete_bot_token, $telegram_order_status_enabled, $telegram_order_status_chat_id, $telegram_order_status_bot_token));
 
     $success_message = 'Telegram settings updated successfully.';
@@ -382,7 +399,7 @@ if(isset($_POST['form_sms_gateway'])) {
     $sms_gateway_body_template = '';
     $sms_gateway_success_keyword = trim((string) ($_POST['sms_gateway_success_keyword'] ?? ''));
 
-    $statement = $pdo->prepare("UPDATE tbl_settings SET sms_gateway_enabled=?, sms_gateway_url=?, sms_gateway_method=?, sms_gateway_sender=?, sms_gateway_token=?, sms_gateway_headers=?, sms_gateway_body_template=?, sms_gateway_success_keyword=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET sms_gateway_enabled=?, sms_gateway_url=?, sms_gateway_method=?, sms_gateway_sender=?, sms_gateway_token=?, sms_gateway_headers=?, sms_gateway_body_template=?, sms_gateway_success_keyword=? WHERE id=1");
     $statement->execute([
         $sms_gateway_enabled,
         $sms_gateway_url,
@@ -404,7 +421,7 @@ if(isset($_POST['form_ecotrack'])) {
         ? ecotrack_normalize_base_url_value($_POST['ecotrack_base_url'] ?? '')
         : rtrim(trim((string) ($_POST['ecotrack_base_url'] ?? '')), '/');
 
-    $statement = $pdo->prepare("UPDATE tbl_settings SET ecotrack_enabled=?, ecotrack_api_token=?, ecotrack_base_url=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET ecotrack_enabled=?, ecotrack_api_token=?, ecotrack_base_url=? WHERE id=1");
     $statement->execute([
         $ecotrack_enabled,
         $ecotrack_api_token,
@@ -412,6 +429,27 @@ if(isset($_POST['form_ecotrack'])) {
     ]);
 
     $success_message = 'ECOTRACK settings updated successfully.';
+}
+
+if(isset($_POST['form_zrexpress'])) {
+    $zrexpress_enabled = isset($_POST['zrexpress_enabled']) ? 1 : 0;
+    $zrexpress_token = trim((string) ($_POST['zrexpress_token'] ?? ''));
+    $zrexpress_key = trim((string) ($_POST['zrexpress_key'] ?? ''));
+    $zrexpress_base_url = trim((string) ($_POST['zrexpress_base_url'] ?? ''));
+    if ($zrexpress_base_url === '') {
+        $zrexpress_base_url = 'https://procolis.com/api_v1';
+    }
+    $zrexpress_base_url = rtrim($zrexpress_base_url, '/');
+
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET zrexpress_enabled=?, zrexpress_token=?, zrexpress_key=?, zrexpress_base_url=? WHERE id=1");
+    $statement->execute([
+        $zrexpress_enabled,
+        $zrexpress_token,
+        $zrexpress_key,
+        $zrexpress_base_url
+    ]);
+
+    $success_message = 'ZRexpress settings updated successfully.';
 }
 
 if(isset($_POST['form_sms_template_add'])) {
@@ -423,7 +461,7 @@ if(isset($_POST['form_sms_template_add'])) {
     if ($template_name === '' || $template_body === '') {
         $error_message .= 'Template name and message body are required.<br>';
     } else {
-        $statement = $pdo->prepare("INSERT INTO tbl_sms_template (template_name, template_body, sort_order, is_active, created_at) VALUES (?, ?, ?, ?, NOW())");
+        $statement = $dbRepo->prepare("INSERT INTO tbl_sms_template (template_name, template_body, sort_order, is_active, created_at) VALUES (?, ?, ?, ?, NOW())");
         $statement->execute([$template_name, $template_body, $sort_order, $is_active]);
         $success_message = 'SMS template added successfully.';
     }
@@ -439,7 +477,7 @@ if(isset($_POST['form_sms_template_update'])) {
     if ($template_id <= 0 || $template_name === '' || $template_body === '') {
         $error_message .= 'Template data is incomplete.<br>';
     } else {
-        $statement = $pdo->prepare("UPDATE tbl_sms_template SET template_name=?, template_body=?, sort_order=?, is_active=?, updated_at=NOW() WHERE id=?");
+        $statement = $dbRepo->prepare("UPDATE tbl_sms_template SET template_name=?, template_body=?, sort_order=?, is_active=?, updated_at=NOW() WHERE id=?");
         $statement->execute([$template_name, $template_body, $sort_order, $is_active, $template_id]);
         $success_message = 'SMS template updated successfully.';
     }
@@ -448,7 +486,7 @@ if(isset($_POST['form_sms_template_update'])) {
 if(isset($_POST['form_sms_template_delete'])) {
     $template_id = (int) ($_POST['template_id'] ?? 0);
     if ($template_id > 0) {
-        $statement = $pdo->prepare("DELETE FROM tbl_sms_template WHERE id=?");
+        $statement = $dbRepo->prepare("DELETE FROM tbl_sms_template WHERE id=?");
         $statement->execute([$template_id]);
         $success_message = 'SMS template deleted successfully.';
     }
@@ -465,7 +503,7 @@ if(isset($_POST['form_sms_automation_update'])) {
 //Can not finish this section, leave it
 if(isset($_POST['form5'])) {
     // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET total_featured_product_home=?, total_latest_product_home=?, total_popular_product_home=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET total_featured_product_home=?, total_latest_product_home=?, total_popular_product_home=? WHERE id=1");
     $statement->execute(array($_POST['total_featured_product_home'],$_POST['total_latest_product_home'],$_POST['total_popular_product_home']));
 
     $success_message = 'Sidebar settings is updated successfully.';
@@ -474,7 +512,7 @@ if(isset($_POST['form5'])) {
 
 if(isset($_POST['form6_0'])) {
     // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET home_service_on_off=?, home_welcome_on_off=?, home_featured_product_on_off=?, home_latest_product_on_off=?, home_popular_product_on_off=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET home_service_on_off=?, home_welcome_on_off=?, home_featured_product_on_off=?, home_latest_product_on_off=?, home_popular_product_on_off=? WHERE id=1");
     $statement->execute(array($_POST['home_service_on_off'],$_POST['home_welcome_on_off'],$_POST['home_featured_product_on_off'],$_POST['home_latest_product_on_off'],$_POST['home_popular_product_on_off']));
 
     $success_message = 'Section On-Off Settings is updated successfully.';
@@ -483,7 +521,7 @@ if(isset($_POST['form6_0'])) {
 
 if(isset($_POST['form6'])) {
     // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET meta_title_home=?, meta_keyword_home=?, meta_description_home=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET meta_title_home=?, meta_keyword_home=?, meta_description_home=? WHERE id=1");
     $statement->execute(array($_POST['meta_title_home'],$_POST['meta_keyword_home'],$_POST['meta_description_home']));
 
     $success_message = 'Home Meta settings is updated successfully.';
@@ -529,7 +567,7 @@ if(isset($_POST['form6_7'])) {
 
         if($path != '') {
             // removing the existing photo
-            $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+            $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
             $statement->execute();
             $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
             foreach ($result as $row) {
@@ -548,12 +586,12 @@ if(isset($_POST['form6_7'])) {
 
             // updating the database
             if($valid == 1) {
-                $statement = $pdo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=?,cta_photo=? WHERE id=1");
+                $statement = $dbRepo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=?,cta_photo=? WHERE id=1");
                 $statement->execute(array($_POST['cta_title'],$_POST['cta_content'],$_POST['cta_read_more_text'],$_POST['cta_read_more_url'],$final_name));
             }
         } else {
             // updating the database
-            $statement = $pdo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET cta_title=?,cta_content=?,cta_read_more_text=?,cta_read_more_url=? WHERE id=1");
             $statement->execute(array($_POST['cta_title'],$_POST['cta_content'],$_POST['cta_read_more_text'],$_POST['cta_read_more_url']));
         }
 
@@ -568,18 +606,18 @@ if(isset($_POST['form6_4'])) {
 
     if(empty($_POST['featured_product_title'])) {
         $valid = 0;
-        $error_message .= 'Featured Product Title can not be empty<br>';
+        $error_message .= 'عنوان المنتجات المميزة can not be empty<br>';
     }
 
     if(empty($_POST['featured_product_subtitle'])) {
         $valid = 0;
-        $error_message .= 'Featured Product SubTitle can not be empty<br>';
+        $error_message .= 'وصف المنتجات المميزة can not be empty<br>';
     }
 
     if($valid == 1) {
 
         // updating the database
-        $statement = $pdo->prepare("UPDATE tbl_settings SET featured_product_title=?,featured_product_subtitle=? WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET featured_product_title=?,featured_product_subtitle=? WHERE id=1");
         $statement->execute(array($_POST['featured_product_title'],$_POST['featured_product_subtitle']));
 
         $success_message = 'Featured Product Data is updated successfully.';
@@ -593,18 +631,18 @@ if(isset($_POST['form6_5'])) {
 
     if(empty($_POST['latest_product_title'])) {
         $valid = 0;
-        $error_message .= 'Latest Product Title can not be empty<br>';
+        $error_message .= 'عنوان أحدث المنتجات can not be empty<br>';
     }
 
     if(empty($_POST['latest_product_subtitle'])) {
         $valid = 0;
-        $error_message .= 'Latest Product SubTitle can not be empty<br>';
+        $error_message .= 'وصف أحدث المنتجات can not be empty<br>';
     }
 
     if($valid == 1) {
 
         // updating the database
-        $statement = $pdo->prepare("UPDATE tbl_settings SET latest_product_title=?,latest_product_subtitle=? WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET latest_product_title=?,latest_product_subtitle=? WHERE id=1");
         $statement->execute(array($_POST['latest_product_title'],$_POST['latest_product_subtitle']));
 
         $success_message = 'Latest Product Data is updated successfully.';
@@ -618,18 +656,18 @@ if(isset($_POST['form6_6'])) {
 
     if(empty($_POST['popular_product_title'])) {
         $valid = 0;
-        $error_message .= 'Popular Product Title can not be empty<br>';
+        $error_message .= 'عنوان المنتجات الشائعة can not be empty<br>';
     }
 
     if(empty($_POST['popular_product_subtitle'])) {
         $valid = 0;
-        $error_message .= 'Popular Product SubTitle can not be empty<br>';
+        $error_message .= 'وصف المنتجات الشائعة can not be empty<br>';
     }
 
     if($valid == 1) {
 
         // updating the database
-        $statement = $pdo->prepare("UPDATE tbl_settings SET popular_product_title=?,popular_product_subtitle=? WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET popular_product_title=?,popular_product_subtitle=? WHERE id=1");
         $statement->execute(array($_POST['popular_product_title'],$_POST['popular_product_subtitle']));
 
         $success_message = 'Popular Product Data is updated successfully.';
@@ -641,7 +679,7 @@ if(isset($_POST['form6_6'])) {
 if(isset($_POST['form6_3'])) {
 
         // updating the database
-        $statement = $pdo->prepare("UPDATE tbl_settings SET newsletter_text=? WHERE id=1");
+        $statement = $dbRepo->prepare("UPDATE tbl_settings SET newsletter_text=? WHERE id=1");
         $statement->execute(array($_POST['newsletter_text']));
         
         $success_message = 'Newsletter Text is updated successfully.';
@@ -668,7 +706,7 @@ if(isset($_POST['form7_1'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -687,7 +725,7 @@ if(isset($_POST['form7_1'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_login=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_login=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -718,7 +756,7 @@ if(isset($_POST['form7_2'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -737,7 +775,7 @@ if(isset($_POST['form7_2'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_registration=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_registration=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -768,7 +806,7 @@ if(isset($_POST['form7_3'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -787,7 +825,7 @@ if(isset($_POST['form7_3'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_forget_password=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_forget_password=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -818,7 +856,7 @@ if(isset($_POST['form7_4'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -837,7 +875,7 @@ if(isset($_POST['form7_4'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_reset_password=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_reset_password=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -869,7 +907,7 @@ if(isset($_POST['form7_6'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -888,7 +926,7 @@ if(isset($_POST['form7_6'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_search=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_search=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -919,7 +957,7 @@ if(isset($_POST['form7_7'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -938,7 +976,7 @@ if(isset($_POST['form7_7'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_cart=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_cart=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -969,7 +1007,7 @@ if(isset($_POST['form7_8'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -988,7 +1026,7 @@ if(isset($_POST['form7_8'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_checkout=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_checkout=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -1019,7 +1057,7 @@ if(isset($_POST['form7_9'])) {
 
     if($valid == 1) {
         // removing the existing photo
-        $statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+        $statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
         $statement->execute();
         $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
         foreach ($result as $row) {
@@ -1038,7 +1076,7 @@ if(isset($_POST['form7_9'])) {
 
         // updating the database
         if($valid == 1) {
-            $statement = $pdo->prepare("UPDATE tbl_settings SET banner_product_category=? WHERE id=1");
+            $statement = $dbRepo->prepare("UPDATE tbl_settings SET banner_product_category=? WHERE id=1");
             $statement->execute(array($final_name));
         }
 
@@ -1073,7 +1111,7 @@ if(isset($_POST['form7_10'])) {
 
 if(isset($_POST['form10'])) {
     // updating the database
-    $statement = $pdo->prepare("UPDATE tbl_settings SET before_head=?, after_body=?, before_body=? WHERE id=1");
+    $statement = $dbRepo->prepare("UPDATE tbl_settings SET before_head=?, after_body=?, before_body=? WHERE id=1");
     $statement->execute(array($_POST['before_head'],$_POST['after_body'],$_POST['before_body'] ?? ''));
 
     $success_message = 'Head and Body Script is updated successfully.';
@@ -1084,12 +1122,12 @@ if(isset($_POST['form10'])) {
 
 <section class="content-header">
     <div class="content-header-left">
-        <h1>Website Settings</h1>
+        <h1>إعدادات المتجر</h1>
     </div>
 </section>
 
 <?php
-$statement = $pdo->prepare("SELECT * FROM tbl_settings WHERE id=1");
+$statement = $dbRepo->prepare("SELECT * FROM tbl_settings WHERE id=1");
 $statement->execute();
 $result = $statement->fetchAll(PDO::FETCH_ASSOC);                           
 foreach ($result as $row) {
@@ -1140,6 +1178,8 @@ foreach ($result as $row) {
     $after_body                      = $row['after_body'] ?? '';
     $facebook_pixel_id               = $row['facebook_pixel_id'] ?? '';
     $tiktok_pixel_id                 = $row['tiktok_pixel_id'] ?? '';
+    $snapchat_pixel_id               = $row['snapchat_pixel_id'] ?? '';
+    $google_analytics_id             = $row['google_analytics_id'] ?? '';
     $telegram_bot_token              = $row['telegram_bot_token'] ?? '';
     $telegram_chat_id                = $row['telegram_chat_id'] ?? '';
     $telegram_orders_enabled         = isset($row['telegram_orders_enabled']) ? $row['telegram_orders_enabled'] : 0;
@@ -1160,6 +1200,10 @@ foreach ($result as $row) {
     $ecotrack_enabled                = isset($row['ecotrack_enabled']) ? $row['ecotrack_enabled'] : 0;
     $ecotrack_api_token              = $row['ecotrack_api_token'] ?? '';
     $ecotrack_base_url               = $row['ecotrack_base_url'] ?? '';
+    $zrexpress_enabled               = isset($row['zrexpress_enabled']) ? $row['zrexpress_enabled'] : 0;
+    $zrexpress_token                 = $row['zrexpress_token'] ?? '';
+    $zrexpress_key                   = $row['zrexpress_key'] ?? '';
+    $zrexpress_base_url              = $row['zrexpress_base_url'] ?? '';
     $home_service_on_off             = $row['home_service_on_off'];
     $home_welcome_on_off             = $row['home_welcome_on_off'];
     $home_featured_product_on_off    = $row['home_featured_product_on_off'];
@@ -1204,17 +1248,18 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             
                 <div class="nav-tabs-custom">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a href="#tab_1" data-toggle="tab">Logo</a></li>
-                        <li><a href="#tab_2" data-toggle="tab">Favicon</a></li>
-                        <li><a href="#tab_3" data-toggle="tab">Footer & Contact</a></li>
-                        <li><a href="#tab_4" data-toggle="tab">Message Settings</a></li>
-                        <li><a href="#tab_5" data-toggle="tab">Products</a></li>
-                        <li><a href="#tab_6" data-toggle="tab">Home Settings</a></li>
-                        <li><a href="#tab_7" data-toggle="tab">Banner Settings</a></li>
-                        <li><a href="#tab_pixels" data-toggle="tab">Pixels</a></li>
-                        <li><a href="#tab_telegram" data-toggle="tab">Telegram</a></li>
+                        <li class="active"><a href="#tab_1" data-toggle="tab">الشعار</a></li>
+                        <li><a href="#tab_2" data-toggle="tab">أيقونة الموقع</a></li>
+                        <li><a href="#tab_3" data-toggle="tab">الفوتر والاتصال</a></li>
+                        <li><a href="#tab_4" data-toggle="tab">إعدادات الرسائل</a></li>
+                        <li><a href="#tab_5" data-toggle="tab">المنتجات</a></li>
+                        <li><a href="#tab_6" data-toggle="tab">إعدادات الرئيسية</a></li>
+                        <li><a href="#tab_7" data-toggle="tab">إعدادات البانر</a></li>
+                        <li><a href="#tab_pixels" data-toggle="tab">بيكسل (Pixels)</a></li>
+                        <li><a href="#tab_telegram" data-toggle="tab">تلغرام</a></li>
                         <li><a href="#tab_ecotrack" data-toggle="tab">ECOTRACK</a></li>
-                        <li><a href="#tab_10" data-toggle="tab">Head & Body Scripts</a></li>
+                        <li><a href="#tab_zrexpress" data-toggle="tab">ZRexpress</a></li>
+                        <li><a href="#tab_10" data-toggle="tab">أكواد Head & Body</a></li>
                     </ul>
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab_1">
@@ -1224,27 +1269,27 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <div class="box box-info">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Existing Photo</label>
+                                        <label for="" class="col-sm-2 control-label">الصورة الحالية</label>
                                         <div class="col-sm-6" style="padding-top:6px;">
                                             <img src="<?php echo htmlspecialchars(get_admin_image_url($logo), ENT_QUOTES); ?>" class="existing-photo" style="height:80px;">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">New Photo</label>
+                                        <label for="" class="col-sm-2 control-label">صورة جديدة</label>
                                         <div class="col-sm-6" style="padding-top:6px;">
                                             <input type="file" name="photo_logo">
                                             <br><br>
                                             <input type="text" class="form-control" name="photo_logo_url" placeholder="Or paste logo URL (https://...)" value="<?php echo is_external_image_url($logo) ? htmlspecialchars($logo, ENT_QUOTES) : ''; ?>">
                                             <br>
                                             <label style="font-weight:normal;">
-                                                <input type="checkbox" name="remove_photo_logo" value="1"> Delete existing logo
+                                                <input type="checkbox" name="remove_photo_logo" value="1"> حذف الشعار الحالي
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="" class="col-sm-2 control-label"></label>
                                         <div class="col-sm-6">
-                                            <button type="submit" class="btn btn-success pull-left" name="form1">Update Logo</button>
+                                            <button type="submit" class="btn btn-success pull-left" name="form1">تحديث الشعار</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1261,27 +1306,27 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <div class="box box-info">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Existing Photo</label>
+                                        <label for="" class="col-sm-2 control-label">الصورة الحالية</label>
                                         <div class="col-sm-6" style="padding-top:6px;">
                                             <img src="<?php echo htmlspecialchars(get_admin_image_url($favicon), ENT_QUOTES); ?>" class="existing-photo" style="height:40px;">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">New Photo</label>
+                                        <label for="" class="col-sm-2 control-label">صورة جديدة</label>
                                         <div class="col-sm-6" style="padding-top:6px;">
                                             <input type="file" name="photo_favicon">
                                             <br><br>
                                             <input type="text" class="form-control" name="photo_favicon_url" placeholder="Or paste favicon URL (https://...)" value="<?php echo is_external_image_url($favicon) ? htmlspecialchars($favicon, ENT_QUOTES) : ''; ?>">
                                             <br>
                                             <label style="font-weight:normal;">
-                                                <input type="checkbox" name="remove_photo_favicon" value="1"> Delete existing favicon
+                                                <input type="checkbox" name="remove_photo_favicon" value="1"> حذف الأيقونة الحالية
                                             </label>
                                         </div>
                                     </div>
                                     <div class="form-group">
                                         <label for="" class="col-sm-2 control-label"></label>
                                         <div class="col-sm-6">
-                                            <button type="submit" class="btn btn-success pull-left" name="form2">Update Favicon</button>
+                                            <button type="submit" class="btn btn-success pull-left" name="form2">تحديث الأيقونة</button>
                                         </div>
                                     </div>
                                 </div>
@@ -1296,7 +1341,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <div class="box box-info">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Newsletter Section </label>
+                                        <label for="" class="col-sm-2 control-label">قسم القائمة البريدية </label>
                                         <div class="col-sm-3">
                                             <select name="newsletter_on_off" class="form-control" style="width:auto;">
                                                 <option value="1" <?php if($newsletter_on_off == 1) {echo 'selected';} ?>>On</option>
@@ -1306,32 +1351,32 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                     </div>
 
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Footer - Copyright </label>
+                                        <label for="" class="col-sm-2 control-label">الفوتر - حقوق النشر </label>
                                         <div class="col-sm-9">
                                             <input class="form-control" type="text" name="footer_copyright" value="<?php echo $footer_copyright; ?>">
                                         </div>
                                     </div>                              
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Contact Address </label>
+                                        <label for="" class="col-sm-2 control-label">عنوان الاتصال </label>
                                         <div class="col-sm-6">
                                             <textarea class="form-control" name="contact_address" style="height:140px;"><?php echo $contact_address; ?></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Contact Email </label>
+                                        <label for="" class="col-sm-2 control-label">البريد الإلكتروني</label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" name="contact_email" value="<?php echo $contact_email; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Contact Phone Number </label>
+                                        <label for="" class="col-sm-2 control-label">رقم الهاتف </label>
                                         <div class="col-sm-6">
                                             <input type="text" class="form-control" name="contact_phone" value="<?php echo $contact_phone; ?>">
                                         </div>
                                     </div>
                  
                                     <div class="form-group">
-                                        <label for="" class="col-sm-2 control-label">Contact Map iFrame </label>
+                                        <label for="" class="col-sm-2 control-label">خريطة الموقع (iFrame) </label>
                                         <div class="col-sm-9">
                                             <textarea class="form-control" name="contact_map_iframe" style="height:200px;"><?php echo $contact_map_iframe; ?></textarea>
                                         </div>
@@ -1355,25 +1400,25 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <div class="box box-info">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Contact Email Address</label>
+                                        <label for="" class="col-sm-3 control-label">بريد الاتصال</label>
                                         <div class="col-sm-4">
                                             <input type="text" class="form-control" name="receive_email" value="<?php echo $receive_email; ?>">
                                         </div>
                                     </div>                                  
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Contact Email Subject</label>
+                                        <label for="" class="col-sm-3 control-label">عنوان رسالة الاتصال</label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="receive_email_subject" value="<?php echo $receive_email_subject; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Contact Email Thank you message</label>
+                                        <label for="" class="col-sm-3 control-label">رسالة الشكر (اتصل بنا)</label>
                                         <div class="col-sm-8">
                                             <textarea class="form-control" name="receive_email_thank_you_message"><?php echo $receive_email_thank_you_message; ?></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Forget password Message</label>
+                                        <label for="" class="col-sm-3 control-label">رسالة نسيت كلمة المرور</label>
                                         <div class="col-sm-8">
                                             <textarea class="form-control" name="forget_password_message"><?php echo $forget_password_message; ?></textarea>
                                         </div>
@@ -1398,19 +1443,19 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                 <div class="box-body">
                        
                                     <div class="form-group">
-                                        <label for="" class="col-sm-4 control-label">Home Page (How many featured product?)<span>*</span></label>
+                                        <label for="" class="col-sm-4 control-label">الرئيسية (عدد المنتجات المميزة)<span>*</span></label>
                                         <div class="col-sm-2">
                                             <input type="text" class="form-control" name="total_featured_product_home" value="<?php echo $total_featured_product_home; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-4 control-label">Home Page (How many latest product?)<span>*</span></label>
+                                        <label for="" class="col-sm-4 control-label">الرئيسية (عدد أحدث المنتجات)<span>*</span></label>
                                         <div class="col-sm-2">
                                             <input type="text" class="form-control" name="total_latest_product_home" value="<?php echo $total_latest_product_home; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-4 control-label">Home Page (How many popular product?)<span>*</span></label>
+                                        <label for="" class="col-sm-4 control-label">الرئيسية (عدد المنتجات الشائعة)<span>*</span></label>
                                         <div class="col-sm-2">
                                             <input type="text" class="form-control" name="total_popular_product_home" value="<?php echo $total_popular_product_home; ?>">
                                         </div>
@@ -1439,7 +1484,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <div class="box box-info">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Service Section </label>
+                                        <label for="" class="col-sm-3 control-label">قسم الخدمات </label>
                                         <div class="col-sm-4">
                                             <select name="home_service_on_off" class="form-control" style="width:auto;">
                                             	<option value="1" <?php if($home_service_on_off == 1) {echo 'selected';} ?>>On</option>
@@ -1448,7 +1493,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                         </div>
                                     </div>      
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Welcome Section </label>
+                                        <label for="" class="col-sm-3 control-label">قسم الترحيب </label>
                                         <div class="col-sm-4">
                                             <select name="home_welcome_on_off" class="form-control" style="width:auto;">
                                             	<option value="1" <?php if($home_welcome_on_off == 1) {echo 'selected';} ?>>On</option>
@@ -1457,7 +1502,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Featured Product Section </label>
+                                        <label for="" class="col-sm-3 control-label">قسم المنتجات المميزة </label>
                                         <div class="col-sm-4">
                                             <select name="home_featured_product_on_off" class="form-control" style="width:auto;">
                                             	<option value="1" <?php if($home_featured_product_on_off == 1) {echo 'selected';} ?>>On</option>
@@ -1466,7 +1511,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Latest Product Section </label>
+                                        <label for="" class="col-sm-3 control-label">قسم أحدث المنتجات </label>
                                         <div class="col-sm-4">
                                             <select name="home_latest_product_on_off" class="form-control" style="width:auto;">
                                             	<option value="1" <?php if($home_latest_product_on_off == 1) {echo 'selected';} ?>>On</option>
@@ -1475,7 +1520,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Popular Product Section </label>
+                                        <label for="" class="col-sm-3 control-label">قسم المنتجات الشائعة </label>
                                         <div class="col-sm-4">
                                             <select name="home_popular_product_on_off" class="form-control" style="width:auto;">
                                             	<option value="1" <?php if($home_popular_product_on_off == 1) {echo 'selected';} ?>>On</option>
@@ -1501,19 +1546,19 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <div class="box box-info">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Meta Title </label>
+                                        <label for="" class="col-sm-3 control-label">عنوان الميتا (Meta Title)</label>
                                         <div class="col-sm-8">
                                             <input type="text" name="meta_title_home" class="form-control" value="<?php echo $meta_title_home ?>">
                                         </div>
                                     </div>      
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Meta Keyword </label>
+                                        <label for="" class="col-sm-3 control-label">كلمات الميتا (Meta Keyword)</label>
                                         <div class="col-sm-8">
                                             <textarea class="form-control" name="meta_keyword_home" style="height:100px;"><?php echo $meta_keyword_home ?></textarea>
                                         </div>
                                     </div>  
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Meta Description </label>
+                                        <label for="" class="col-sm-3 control-label">وصف الميتا (Meta Description)</label>
                                         <div class="col-sm-8">
                                             <textarea class="form-control" name="meta_description_home" style="height:200px;"><?php echo $meta_description_home ?></textarea>
                                         </div>
@@ -1533,31 +1578,31 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <div class="box box-info">
                                 <div class="box-body">
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">CTA Title<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">عنوان CTA<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="cta_title" value="<?php echo $cta_title; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">CTA Content<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">محتوى CTA<span>*</span></label>
                                         <div class="col-sm-8">
                                             <textarea class="form-control" name="cta_content" style="height:140px;"><?php echo $cta_content; ?></textarea>
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">CTA Button Text<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">نص زر CTA<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="cta_read_more_text" value="<?php echo $cta_read_more_text; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">CTA Button URL<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">رابط زر CTA<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="cta_read_more_url" value="<?php echo $cta_read_more_url; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Existing CTA Photo</label>
+                                        <label for="" class="col-sm-3 control-label">صورة CTA الحالية</label>
                                         <div class="col-sm-8" style="padding-top:6px;">
                                             <?php if(!empty($cta_photo)): ?>
                                                 <img src="<?php echo htmlspecialchars(get_admin_image_url($cta_photo), ENT_QUOTES); ?>" class="existing-photo" style="height:80px;">
@@ -1567,7 +1612,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">New CTA Photo</label>
+                                        <label for="" class="col-sm-3 control-label">صورة CTA جديدة</label>
                                         <div class="col-sm-8" style="padding-top:6px;">
                                             <input type="file" name="cta_photo">
                                             <br><br>
@@ -1596,18 +1641,18 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
 
 
 
-                            <h3>Featured Product Section</h3>
+                            <h3>قسم المنتجات المميزة</h3>
                             <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                             <div class="box box-info">
                                 <div class="box-body">                                          
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Featured Product Title<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">عنوان المنتجات المميزة<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="featured_product_title" value="<?php echo $featured_product_title; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Featured Product SubTitle<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">وصف المنتجات المميزة<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="featured_product_subtitle" value="<?php echo $featured_product_subtitle; ?>">
                                         </div>
@@ -1623,18 +1668,18 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             </form>
 
 
-                            <h3>Latest Product Section</h3>
+                            <h3>قسم أحدث المنتجات</h3>
                             <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                             <div class="box box-info">
                                 <div class="box-body">                                          
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Latest Product Title<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">عنوان أحدث المنتجات<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="latest_product_title" value="<?php echo $latest_product_title; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Latest Product SubTitle<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">وصف أحدث المنتجات<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="latest_product_subtitle" value="<?php echo $latest_product_subtitle; ?>">
                                         </div>
@@ -1650,18 +1695,18 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             </form>
 
 
-                            <h3>Popular Product Section</h3>
+                            <h3>قسم المنتجات الشائعة</h3>
                             <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                             <div class="box box-info">
                                 <div class="box-body">                                          
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Popular Product Title<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">عنوان المنتجات الشائعة<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="popular_product_title" value="<?php echo $popular_product_title; ?>">
                                         </div>
                                     </div>
                                     <div class="form-group">
-                                        <label for="" class="col-sm-3 control-label">Popular Product SubTitle<span>*</span></label>
+                                        <label for="" class="col-sm-3 control-label">وصف المنتجات الشائعة<span>*</span></label>
                                         <div class="col-sm-8">
                                             <input type="text" class="form-control" name="popular_product_subtitle" value="<?php echo $popular_product_subtitle; ?>">
                                         </div>
@@ -1677,7 +1722,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             </form>
                             
 
-                            <h3>Newsletter Section</h3>
+                            <h3>قسم القائمة البريدية</h3>
                             <form class="form-horizontal" action="" method="post" enctype="multipart/form-data">
                             <div class="box box-info">
                                 <div class="box-body">                                          
@@ -1890,13 +1935,19 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             <form class="form-horizontal" action="" method="post">
                                 <div class="box box-info">
                                     <div class="box-body">
-                                        <?php if (empty($facebook_pixel_id) || empty($tiktok_pixel_id)): ?>
+                                        <?php if (empty($facebook_pixel_id) || empty($tiktok_pixel_id) || empty($snapchat_pixel_id) || empty($google_analytics_id)): ?>
                                         <div class="alert alert-warning">
                                             <?php if (empty($facebook_pixel_id)): ?>
                                                 <div>Facebook Pixel غير مفعّل حالياً لأن المعرف غير مُدخل.</div>
                                             <?php endif; ?>
                                             <?php if (empty($tiktok_pixel_id)): ?>
                                                 <div>TikTok Pixel غير مفعّل حالياً لأن المعرف غير مُدخل.</div>
+                                            <?php endif; ?>
+                                            <?php if (empty($snapchat_pixel_id)): ?>
+                                                <div>Snapchat Pixel غير مفعّل حالياً لأن المعرف غير مُدخل.</div>
+                                            <?php endif; ?>
+                                            <?php if (empty($google_analytics_id)): ?>
+                                                <div>Google Analytics غير مفعّل حالياً لأن المعرف غير مُدخل.</div>
                                             <?php endif; ?>
                                         </div>
                                         <?php endif; ?>
@@ -1912,6 +1963,20 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                             <div class="col-sm-8">
                                                 <input type="text" class="form-control" name="tiktok_pixel_id" value="<?php echo htmlspecialchars($tiktok_pixel_id ?? '', ENT_QUOTES, 'UTF-8'); ?>">
                                                 <small class="text-muted">Leave empty to disable tracking</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Snapchat Pixel ID</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" name="snapchat_pixel_id" value="<?php echo htmlspecialchars($snapchat_pixel_id ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                                <small class="text-muted">Snapchat Snap Pixel SDK — Leave empty to disable</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Google Analytics ID</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" class="form-control" name="google_analytics_id" value="<?php echo htmlspecialchars($google_analytics_id ?? '', ENT_QUOTES, 'UTF-8'); ?>">
+                                                <small class="text-muted">GA4 Measurement ID (G-XXXXXXXXXX) — Leave empty to disable</small>
                                             </div>
                                         </div>
                                         <div class="form-group">
@@ -2078,8 +2143,63 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                        </div>
 
+                        <div class="tab-pane" id="tab_zrexpress">
+                            <h3>ZRexpress Settings</h3>
+                            <form class="form-horizontal" action="" method="post">
+                                <div class="box box-info">
+                                    <div class="box-body">
+                                        <?php if (!empty($zrexpress_enabled) && (trim((string) $zrexpress_token) === '' || trim((string) $zrexpress_key) === '')): ?>
+                                        <div class="alert alert-warning">
+                                            ZRexpress is enabled but the API Token or API Key is still empty.
+                                        </div>
+                                        <?php endif; ?>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Enable ZRexpress</label>
+                                            <div class="col-sm-4">
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" name="zrexpress_enabled" value="1" <?php echo !empty($zrexpress_enabled) ? 'checked' : ''; ?>>
+                                                        Activate ZRexpress integration in the backend
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">API Token</label>
+                                            <div class="col-sm-8">
+                                                <textarea name="zrexpress_token" class="form-control" rows="2" placeholder="Paste your ZRexpress token here"><?php echo htmlspecialchars((string) $zrexpress_token, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                                                <small class="text-muted">Paste the token provided by ZRexpress.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">API Key</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" name="zrexpress_key" class="form-control" value="<?php echo htmlspecialchars((string) $zrexpress_key, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Paste your ZRexpress key here">
+                                                <small class="text-muted">Paste the API Key (Clé) provided by ZRexpress.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <label class="col-sm-3 control-label">Base URL</label>
+                                            <div class="col-sm-8">
+                                                <input type="text" name="zrexpress_base_url" class="form-control" value="<?php echo htmlspecialchars((string) $zrexpress_base_url, ENT_QUOTES, 'UTF-8'); ?>" placeholder="https://procolis.com/api_v1">
+                                                <small class="text-muted">Default is <code>https://procolis.com/api_v1</code>. Do not change this unless instructed by the delivery provider.</small>
+                                            </div>
+                                        </div>
+                                        <div class="form-group">
+                                            <div class="col-sm-offset-3 col-sm-8">
+                                                <button type="submit" name="form_zrexpress" class="btn btn-primary">
+                                                    <i class="fa fa-save"></i> Save ZRexpress Settings
+                                                </button>
+                                                <a href="zrexpress-diagnostics.php" class="btn btn-default" style="margin-left:8px;">
+                                                    <i class="fa fa-stethoscope"></i> Open ZRexpress Diagnostics
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
                         </div>
 
                         <div class="tab-pane" id="tab_sms">

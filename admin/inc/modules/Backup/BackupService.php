@@ -9,29 +9,29 @@ use Ecom\Queue\QueueService;
 class BackupService
 {
     public static function getTypeLabels(): array
-    {
+    { global $dbRepo;
         return ['database' => 'Database', 'files' => 'Files', 'full' => 'Full Backup'];
     }
 
     public static function getScopeLabels(): array
-    {
+    { global $dbRepo;
         return ['global' => 'Global', 'store' => 'Single Store', 'selected_tables' => 'Selected Tables'];
     }
 
     public static function getStatusLabels(): array
-    {
+    { global $dbRepo;
         return ['pending' => 'Pending', 'running' => 'Running', 'completed' => 'Completed', 'failed' => 'Failed'];
     }
 
     public static function getStoragePath(): string
-    {
+    { global $dbRepo;
         return dirname(__DIR__, 4) . DIRECTORY_SEPARATOR . 'backups';
     }
 
     public static function createJob(PDO $pdo, string $type, string $scope = 'global',
         ?int $storeId = null, ?array $selectedTables = null): int
-    {
-        $stmt = $pdo->prepare("INSERT INTO tbl_backup_job (store_id, type, scope, selected_tables, status)
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_backup_job (store_id, type, scope, selected_tables, status)
             VALUES (?, ?, ?, ?, 'pending')");
         $stmt->execute([
             $storeId,
@@ -39,19 +39,19 @@ class BackupService
             $scope,
             $selectedTables ? json_encode($selectedTables) : null,
         ]);
-        return (int) $pdo->lastInsertId();
+        return (int) $dbRepo->lastInsertId();
     }
 
     public static function getJob(PDO $pdo, int $backupId): ?array
-    {
-        $stmt = $pdo->prepare("SELECT * FROM tbl_backup_job WHERE id = ?");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_backup_job WHERE id = ?");
         $stmt->execute([$backupId]);
         $row = $stmt->fetch();
         return $row ?: null;
     }
 
     public static function updateJob(PDO $pdo, int $backupId, array $data): void
-    {
+    { global $dbRepo;
         $allowed = ['status', 'file_path', 'file_size', 'checksum', 'storage_location',
             's3_key', 'started_at', 'completed_at', 'error_message'];
         $sets = [];
@@ -66,13 +66,13 @@ class BackupService
             return;
         }
         $params[] = $backupId;
-        $stmt = $pdo->prepare("UPDATE tbl_backup_job SET " . implode(', ', $sets) . " WHERE id = ?");
+        $stmt = $dbRepo->prepare("UPDATE tbl_backup_job SET " . implode(', ', $sets) . " WHERE id = ?");
         $stmt->execute($params);
     }
 
     public static function getJobs(PDO $pdo, int $page = 1, int $perPage = 20,
         ?string $typeFilter = null, ?string $statusFilter = null): array
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
         if ($typeFilter) {
@@ -84,7 +84,7 @@ class BackupService
             $params[] = $statusFilter;
         }
         $offset = ($page - 1) * $perPage;
-        $stmt = $pdo->prepare("SELECT b.*, s.name AS store_name, s.slug AS store_slug
+        $stmt = $dbRepo->prepare("SELECT b.*, s.name AS store_name, s.slug AS store_slug
             FROM tbl_backup_job b
             LEFT JOIN tbl_stores s ON b.store_id = s.id
             WHERE {$where} ORDER BY b.id DESC LIMIT ? OFFSET ?");
@@ -94,7 +94,7 @@ class BackupService
     }
 
     public static function getJobCount(PDO $pdo, ?string $typeFilter = null, ?string $statusFilter = null): int
-    {
+    { global $dbRepo;
         $where = '1=1';
         $params = [];
         if ($typeFilter) {
@@ -105,54 +105,54 @@ class BackupService
             $where .= ' AND status = ?';
             $params[] = $statusFilter;
         }
-        $stmt = $pdo->prepare("SELECT COUNT(*) FROM tbl_backup_job WHERE {$where}");
+        $stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_backup_job WHERE {$where}");
         $stmt->execute($params);
         return (int) $stmt->fetchColumn();
     }
 
     public static function deleteJob(PDO $pdo, int $backupId): void
-    {
+    { global $dbRepo;
         $job = self::getJob($pdo, $backupId);
         if ($job && $job['file_path'] && file_exists($job['file_path'])) {
             unlink($job['file_path']);
         }
-        $stmt = $pdo->prepare("DELETE FROM tbl_backup_job WHERE id = ?");
+        $stmt = $dbRepo->prepare("DELETE FROM tbl_backup_job WHERE id = ?");
         $stmt->execute([$backupId]);
     }
 
     public static function writeLog(PDO $pdo, int $backupId, string $message, ?int $storeId = null,
         string $level = 'info'): void
-    {
-        $stmt = $pdo->prepare("INSERT INTO tbl_backup_log (backup_id, store_id, log_level, message, created_at)
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_backup_log (backup_id, store_id, log_level, message, created_at)
             VALUES (?, ?, ?, ?, NOW())");
         $stmt->execute([$backupId, $storeId, $level, $message]);
     }
 
     public static function getLogs(PDO $pdo, int $backupId): array
-    {
-        $stmt = $pdo->prepare("SELECT * FROM tbl_backup_log WHERE backup_id = ? ORDER BY id ASC");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT * FROM tbl_backup_log WHERE backup_id = ? ORDER BY id ASC");
         $stmt->execute([$backupId]);
         return $stmt->fetchAll();
     }
 
     public static function getConfig(PDO $pdo, string $key, mixed $default = null): mixed
-    {
-        $stmt = $pdo->prepare("SELECT config_value FROM tbl_backup_config WHERE config_key = ?");
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT config_value FROM tbl_backup_config WHERE config_key = ?");
         $stmt->execute([$key]);
         $row = $stmt->fetch();
         return $row ? $row['config_value'] : $default;
     }
 
     public static function setConfig(PDO $pdo, string $key, string $value): void
-    {
-        $stmt = $pdo->prepare("INSERT INTO tbl_backup_config (config_key, config_value)
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("INSERT INTO tbl_backup_config (config_key, config_value)
             VALUES (?, ?) ON DUPLICATE KEY UPDATE config_value = VALUES(config_value)");
         $stmt->execute([$key, $value]);
     }
 
     public static function getAllConfigs(PDO $pdo): array
-    {
-        $stmt = $pdo->query("SELECT config_key, config_value FROM tbl_backup_config");
+    { global $dbRepo;
+        $stmt = $dbRepo->query("SELECT config_key, config_value FROM tbl_backup_config");
         $result = [];
         while ($row = $stmt->fetch()) {
             $result[$row['config_key']] = $row['config_value'];
@@ -162,7 +162,7 @@ class BackupService
 
     public static function executeDatabaseBackup(PDO $pdo, int $backupId, ?int $storeId = null,
         ?array $selectedTables = null): string
-    {
+    { global $dbRepo;
         $backupDir = self::getStoragePath() . DIRECTORY_SEPARATOR . 'database';
         if (!is_dir($backupDir)) {
             mkdir($backupDir, 0755, true);
@@ -234,7 +234,7 @@ class BackupService
     }
 
     public static function executeFilesBackup(PDO $pdo, int $backupId, ?int $storeId = null): string
-    {
+    { global $dbRepo;
         $backupDir = self::getStoragePath() . DIRECTORY_SEPARATOR . 'files';
         if (!is_dir($backupDir)) {
             mkdir($backupDir, 0755, true);
@@ -307,7 +307,7 @@ class BackupService
     }
 
     public static function uploadToS3(PDO $pdo, int $backupId): bool
-    {
+    { global $dbRepo;
         $job = self::getJob($pdo, $backupId);
         if (!$job || !$job['file_path'] || !file_exists($job['file_path'])) {
             return false;
@@ -363,7 +363,7 @@ class BackupService
     }
 
     public static function download(PDO $pdo, int $backupId): ?string
-    {
+    { global $dbRepo;
         $job = self::getJob($pdo, $backupId);
         if (!$job || !$job['file_path'] || !file_exists($job['file_path'])) {
             return null;
@@ -372,7 +372,7 @@ class BackupService
     }
 
     public static function getHealth(PDO $pdo): array
-    {
+    { global $dbRepo;
         $health = [
             'last_backup'        => null,
             'total_backups'      => 0,
@@ -385,13 +385,13 @@ class BackupService
         ];
 
         try {
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job");
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job");
             $health['total_backups'] = (int) $stmt->fetchColumn();
 
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'completed'");
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'completed'");
             $health['successful'] = (int) $stmt->fetchColumn();
 
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'failed'");
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE status = 'failed'");
             $health['failed'] = (int) $stmt->fetchColumn();
 
             if ($health['total_backups'] > 0) {
@@ -400,19 +400,19 @@ class BackupService
                 );
             }
 
-            $stmt = $pdo->query("SELECT COALESCE(SUM(file_size), 0) FROM tbl_backup_job WHERE status = 'completed'");
+            $stmt = $dbRepo->query("SELECT COALESCE(SUM(file_size), 0) FROM tbl_backup_job WHERE status = 'completed'");
             $health['total_size'] = (int) $stmt->fetchColumn();
 
-            $stmt = $pdo->query("SELECT * FROM tbl_backup_job WHERE status = 'completed' ORDER BY completed_at DESC LIMIT 1");
+            $stmt = $dbRepo->query("SELECT * FROM tbl_backup_job WHERE status = 'completed' ORDER BY completed_at DESC LIMIT 1");
             $last = $stmt->fetch();
             if ($last) {
                 $health['last_backup'] = $last;
             }
 
-            $stmt = $pdo->query("SELECT * FROM tbl_backup_job WHERE status = 'failed' ORDER BY updated_at DESC LIMIT 5");
+            $stmt = $dbRepo->query("SELECT * FROM tbl_backup_job WHERE status = 'failed' ORDER BY updated_at DESC LIMIT 5");
             $health['recent_failures'] = $stmt->fetchAll();
 
-            $stmt = $pdo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
+            $stmt = $dbRepo->query("SELECT COUNT(*) FROM tbl_backup_job WHERE created_at >= DATE_SUB(NOW(), INTERVAL 24 HOUR)");
             $health['last_24h_backups'] = (int) $stmt->fetchColumn();
         } catch (\PDOException $e) {
         }
@@ -421,7 +421,7 @@ class BackupService
     }
 
     public static function checkAlerts(PDO $pdo): array
-    {
+    { global $dbRepo;
         $alerts = [];
         $configs = self::getAllConfigs($pdo);
         $lastAlertKey = 'backup_last_alert_sent';
@@ -465,7 +465,7 @@ class BackupService
     }
 
     public static function getStorageSummary(PDO $pdo): array
-    {
+    { global $dbRepo;
         $summary = [
             'total_local' => 0,
             'total_s3'    => 0,
@@ -473,7 +473,7 @@ class BackupService
         ];
 
         try {
-            $stmt = $pdo->query("SELECT storage_location, COALESCE(SUM(file_size), 0) AS total
+            $stmt = $dbRepo->query("SELECT storage_location, COALESCE(SUM(file_size), 0) AS total
                 FROM tbl_backup_job WHERE status = 'completed' GROUP BY storage_location");
             while ($row = $stmt->fetch()) {
                 if ($row['storage_location'] === 's3') {
@@ -483,7 +483,7 @@ class BackupService
                 }
             }
 
-            $stmt = $pdo->query("SELECT type, COALESCE(SUM(file_size), 0) AS total
+            $stmt = $dbRepo->query("SELECT type, COALESCE(SUM(file_size), 0) AS total
                 FROM tbl_backup_job WHERE status = 'completed' GROUP BY type");
             while ($row = $stmt->fetch()) {
                 $summary['by_type'][$row['type']] = (int) $row['total'];
@@ -495,7 +495,7 @@ class BackupService
     }
 
     public static function handleDatabaseJob(PDO $pdo, array $payload, array $job): string
-    {
+    { global $dbRepo;
         $storeId = $job['store_id'];
         $selectedTables = $payload['selected_tables'] ?? null;
         $backupId = (int) $job['id'];
@@ -511,7 +511,7 @@ class BackupService
     }
 
     public static function handleFilesJob(PDO $pdo, array $payload, array $job): string
-    {
+    { global $dbRepo;
         $storeId = $job['store_id'];
         $backupId = (int) $job['id'];
 
@@ -520,7 +520,7 @@ class BackupService
     }
 
     public static function handleStoreJob(PDO $pdo, array $payload, array $job): array
-    {
+    { global $dbRepo;
         $storeId = $job['store_id'];
         $scope = $payload['scope'] ?? 'store';
 
@@ -535,7 +535,7 @@ class BackupService
 
     public static function enqueueDatabase(PDO $pdo, ?int $storeId = null,
         ?array $selectedTables = null, string $priority = 'low'): int
-    {
+    { global $dbRepo;
         $payload = [];
         if ($selectedTables) {
             $payload['selected_tables'] = $selectedTables;
@@ -544,17 +544,17 @@ class BackupService
     }
 
     public static function enqueueFiles(PDO $pdo, ?int $storeId = null, string $priority = 'low'): int
-    {
+    { global $dbRepo;
         return QueueService::enqueue($pdo, 'backup_files', $priority, [], $storeId);
     }
 
     public static function enqueueStore(PDO $pdo, int $storeId, string $priority = 'low'): int
-    {
+    { global $dbRepo;
         return QueueService::enqueue($pdo, 'backup_store', $priority, ['scope' => 'store'], $storeId);
     }
 
     private static function formatBytes(int $bytes): string
-    {
+    { global $dbRepo;
         if ($bytes <= 0) return '0 B';
         $units = ['B', 'KB', 'MB', 'GB', 'TB'];
         $i = (int) floor(log($bytes, 1024));

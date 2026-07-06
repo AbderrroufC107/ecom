@@ -34,6 +34,10 @@ import {
   quickActions,
   sectionIcons,
   sectionLabels,
+  sharedTrans,
+  langLabels,
+  langFlags,
+  uiTranslations,
 } from '../lib/pageMeta.js'
 import { cleanText, currentFile, decodeText, getInitials, normalizeHref } from '../lib/text.js'
 
@@ -64,9 +68,10 @@ function readMenu() {
           }
         })
 
-      const section = getSectionForFile(file)
       const titleNode = link?.querySelector('span:not(.pull-right-container)')
       const fallbackTitle = titleNode ? titleNode.textContent : link?.textContent
+      const cleanFallback = cleanText(fallbackTitle)
+      const section = getSectionForFile(file, cleanFallback)
       const isStandaloneRoute = href !== '#' && !children.length
       if (isStandaloneRoute && seenStandaloneRoutes.has(file)) return null
       if (isStandaloneRoute) seenStandaloneRoutes.add(file)
@@ -130,7 +135,7 @@ function findPageTitle(file) {
   return decodeText(getPageTitle(file))
 }
 
-function getNotifications() {
+function getNotifications(currentLang) {
   const orderRoot = document.getElementById('orders-react-root')
   const pendingOrders = Number(orderRoot?.dataset.pending || 0)
   const pendingNoCalls = Number(orderRoot?.dataset.pendingNoCalls || 0)
@@ -138,21 +143,23 @@ function getNotifications() {
   const dashboardAttention = cleanText(document.querySelector('.admin-dashboard-hero-main p strong')?.textContent || '')
   const lowStock = cleanText(document.querySelector('.admin-mini-card.is-danger strong')?.textContent || '')
 
+  const trans = uiTranslations[currentLang] || uiTranslations['ar']
+
   return [
     pendingOrders
-      ? { label: 'طلبات تنتظر التأكيد', value: pendingOrders, href: 'order.php', tone: 'warning' }
+      ? { label: trans.pendingConfirm, value: pendingOrders, href: 'order.php', tone: 'warning' }
       : null,
     pendingNoCalls
-      ? { label: 'طلبات بلا اتصال', value: pendingNoCalls, href: 'order.php', tone: 'danger' }
+      ? { label: trans.noCalls, value: pendingNoCalls, href: 'order.php', tone: 'danger' }
       : null,
     incomplete
-      ? { label: 'متابعات مطلوبة', value: incomplete, href: 'incomplete-orders.php', tone: 'warning' }
+      ? { label: trans.followups, value: incomplete, href: 'incomplete-orders.php', tone: 'warning' }
       : null,
     dashboardAttention
-      ? { label: 'عناصر تحتاج متابعة', value: dashboardAttention, href: 'index.php', tone: 'warning' }
+      ? { label: trans.attentionRequired, value: dashboardAttention, href: 'index.php', tone: 'warning' }
       : null,
     lowStock
-      ? { label: 'منتجات منخفضة المخزون', value: lowStock, href: 'product.php', tone: 'danger' }
+      ? { label: trans.lowStock, value: lowStock, href: 'product.php', tone: 'danger' }
       : null,
   ].filter(Boolean)
 }
@@ -160,17 +167,18 @@ function getNotifications() {
 function NavLink({ item, collapsed, opened, toggle }) {
   const hasChildren = item.children?.length > 0
   const isActive = item.active || item.children?.some((child) => child.active)
+  const isOpen = hasChildren && (opened || isActive)
   const Icon = getIconForFile(item.file, item.section)
 
   return (
-    <div className={`saas-nav-item${opened ? ' is-open' : ''}`}>
+    <div className={`saas-nav-item${isOpen ? ' is-open' : ''}`}>
       <Tooltip label={item.title} position="left" disabled={!collapsed} withArrow>
         <UnstyledButton
           component={hasChildren ? 'button' : 'a'}
           href={hasChildren ? undefined : item.href}
           type={hasChildren ? 'button' : undefined}
           role={hasChildren ? 'button' : undefined}
-          aria-expanded={hasChildren ? opened : undefined}
+          aria-expanded={hasChildren ? isOpen : undefined}
           className={`saas-nav-link${isActive ? ' is-active' : ''}`}
           onClick={hasChildren ? (event) => {
             event.preventDefault()
@@ -180,7 +188,7 @@ function NavLink({ item, collapsed, opened, toggle }) {
           <Icon size={19} stroke={1.8} />
           {!collapsed ? <span>{item.title}</span> : null}
           {!collapsed && hasChildren ? (
-            <IconChevronLeft className={opened ? 'is-open' : ''} size={15} stroke={1.8} />
+            <IconChevronLeft className={isOpen ? 'is-open' : ''} size={15} stroke={1.8} />
           ) : null}
         </UnstyledButton>
       </Tooltip>
@@ -190,7 +198,7 @@ function NavLink({ item, collapsed, opened, toggle }) {
           className="saas-subnav-wrapper"
           style={{
             display: 'grid',
-            gridTemplateRows: opened ? '1fr' : '0fr',
+            gridTemplateRows: isOpen ? '1fr' : '0fr',
             transition: 'grid-template-rows 200ms ease',
             overflow: 'hidden',
           }}
@@ -216,23 +224,48 @@ function NavLink({ item, collapsed, opened, toggle }) {
   )
 }
 
+// Localized maps moved to pageMeta.js
+
 export default function AdminShell() {
+  const [currentPath, setCurrentPath] = React.useState(() => currentFile())
   const [mobileOpened, mobileHandlers] = useDisclosure(false)
   const [collapsed, setCollapsed] = React.useState(() => window.localStorage.getItem('adminShellCollapsed') === '1')
   const [openSubMenus, setOpenSubMenus] = React.useState({})
   const [searchQuery, setSearchQuery] = React.useState('')
   const [searchFocused, setSearchFocused] = React.useState(false)
 
-  const file = currentFile()
-  const menu = React.useMemo(() => readMenu(), [])
+  React.useEffect(() => {
+    const handlePageLoad = () => {
+      setCurrentPath(currentFile())
+    }
+    document.addEventListener('spa:pageLoaded', handlePageLoad)
+    window.addEventListener('popstate', handlePageLoad)
+    return () => {
+      document.removeEventListener('spa:pageLoaded', handlePageLoad)
+      window.removeEventListener('popstate', handlePageLoad)
+    }
+  }, [])
+
+  const currentLang = document.getElementById('admin-react-shell')?.getAttribute('data-current-lang') || 'ar'
+  const t = (key) => uiTranslations[currentLang]?.[key] || uiTranslations['ar'][key] || key
+
+  const handleLangChange = (event, lang) => {
+    event.preventDefault()
+    const url = new URL(window.location.href, window.location.origin)
+    url.searchParams.set('lang', lang)
+    window.location.href = url.toString()
+  }
+
+  const file = currentPath
+  const menu = React.useMemo(() => readMenu(), [currentPath])
   const groupedMenu = React.useMemo(() => groupMenu(menu), [menu])
   const flatMenu = React.useMemo(() => flattenMenu(menu), [menu])
-  const notifications = React.useMemo(() => getNotifications(), [])
+  const notifications = React.useMemo(() => getNotifications(currentLang), [currentLang])
   const pageTitle = React.useMemo(() => findPageTitle(file), [file])
   const activeItem = flatMenu.find((item) => item.file === file)
   const activeSection = activeItem?.section ? sectionLabels[activeItem.section] : sectionLabels[getSectionForFile(file)]
   const adminName = decodeText(
-    document.getElementById('admin-react-shell')?.getAttribute('data-admin-name') || 'المدير',
+    document.getElementById('admin-react-shell')?.getAttribute('data-admin-name') || sharedTrans.adminFallback,
   )
 
   const filteredCommands = React.useMemo(() => {
@@ -255,25 +288,46 @@ export default function AdminShell() {
     document.body.classList.toggle('admin-react-mobile-open', mobileOpened)
     document.documentElement.style.setProperty('--admin-shell-sidebar-width', collapsed ? '84px' : '288px')
     window.localStorage.setItem('adminShellCollapsed', collapsed ? '1' : '0')
-  }, [collapsed, mobileOpened])
+
+    const direction = currentLang === 'ar' ? 'rtl' : 'ltr'
+    document.body.dir = direction
+    document.body.style.direction = direction
+    document.documentElement.dir = direction
+  }, [collapsed, mobileOpened, currentLang])
 
   React.useEffect(() => {
-    const title = pageTitle ? `${pageTitle} | متجر الثقة` : 'لوحة التحكم | متجر الثقة'
+    const title = pageTitle ? `${pageTitle} | ${sharedTrans.brandName}` : `${sharedTrans.controlPanel} | ${sharedTrans.brandName}`
     document.title = title
-  }, [pageTitle])
+  }, [pageTitle, currentLang])
 
   const toggleSubMenu = (id) => {
     setOpenSubMenus((prev) => ({ ...prev, [id]: !prev[id] }))
   }
 
+  const isSubMenuOpen = (item) => {
+    if (Object.prototype.hasOwnProperty.call(openSubMenus, item.id)) {
+      return openSubMenus[item.id]
+    }
+
+    return item.active || item.children?.some((child) => child.active)
+  }
+
+  const handleSubMenuToggle = (item) => {
+    if (collapsed) {
+      setCollapsed(false)
+    }
+
+    toggleSubMenu(item.id)
+  }
+
   return (
-    <div className="saas-shell" dir="rtl">
+    <div className="saas-shell" dir={currentLang === 'ar' ? 'rtl' : 'ltr'}>
       <aside className="saas-sidebar" aria-label="Admin navigation">
-        <a className="saas-brand" href="index.php" title="متجر الثقة">
+        <a className="saas-brand" href="index.php" title={sharedTrans.brandName}>
           <span className="saas-brand-mark">MT</span>
           {!collapsed ? (
             <span className="saas-brand-copy">
-              <strong>متجر الثقة</strong>
+              <strong>{sharedTrans.brandName}</strong>
               <small>Enterprise Console</small>
             </span>
           ) : null}
@@ -292,8 +346,8 @@ export default function AdminShell() {
                 <NavLink
                   item={item}
                   collapsed={collapsed}
-                  opened={openSubMenus[item.id] || item.active || item.children?.some((child) => child.active)}
-                  toggle={() => toggleSubMenu(item.id)}
+                  opened={isSubMenuOpen(item)}
+                  toggle={() => handleSubMenuToggle(item)}
                   key={item.id}
                 />
               ))}
@@ -304,7 +358,7 @@ export default function AdminShell() {
 
       <button
         type="button"
-        aria-label="إغلاق القائمة"
+        aria-label={t('closeMenu')}
         className="saas-mobile-backdrop"
         onClick={mobileHandlers.close}
       />
@@ -312,7 +366,7 @@ export default function AdminShell() {
       <header className="saas-topbar">
         <Group gap="sm" wrap="nowrap" className="saas-topbar-title-group">
           <Burger opened={mobileOpened} onClick={mobileHandlers.toggle} hiddenFrom="md" size="sm" />
-          <Tooltip label={collapsed ? 'توسيع القائمة' : 'تصغير القائمة'} withArrow>
+          <Tooltip label={collapsed ? t('expandMenu') : t('collapseMenu')} withArrow>
             <ActionIcon
               className="saas-collapse-button"
               variant="subtle"
@@ -320,7 +374,7 @@ export default function AdminShell() {
               radius="md"
               visibleFrom="md"
               onClick={() => setCollapsed((value) => !value)}
-              aria-label="تصغير القائمة"
+              aria-label={t('collapseMenu')}
             >
               <IconMenu2 size={19} stroke={1.8} />
             </ActionIcon>
@@ -333,10 +387,10 @@ export default function AdminShell() {
 
         <div className={`saas-command${searchFocused ? ' is-focused' : ''}`}>
           <TextInput
-            aria-label="البحث السريع"
+            aria-label={t('searchPlaceholder')}
             leftSection={<IconSearch size={16} stroke={1.8} />}
             rightSection={<Kbd>⌘K</Kbd>}
-            placeholder="ابحث عن صفحة أو إجراء..."
+            placeholder={t('searchPlaceholder')}
             value={searchQuery}
             onFocus={() => setSearchFocused(true)}
             onChange={(event) => setSearchQuery(event.currentTarget.value)}
@@ -351,14 +405,14 @@ export default function AdminShell() {
                       <Icon size={17} stroke={1.8} />
                       <span>
                         <strong>{item.title}</strong>
-                        <small>{sectionLabels[item.section] || 'النظام'}</small>
+                        <small>{sectionLabels[item.section] || t('system')}</small>
                       </span>
                       <IconChevronLeft size={14} stroke={1.8} />
                     </a>
                   )
                 })
               ) : (
-                <Text className="saas-command-empty">لا توجد نتائج مطابقة</Text>
+                <Text className="saas-command-empty">{t('noResults')}</Text>
               )}
             </div>
           ) : null}
@@ -367,12 +421,12 @@ export default function AdminShell() {
         <Group gap="xs" wrap="nowrap" className="saas-topbar-actions">
           <Menu width={240} position="bottom-end" shadow="lg">
             <Menu.Target>
-              <ActionIcon variant="subtle" color="gray" radius="md" aria-label="الإجراءات السريعة">
+              <ActionIcon variant="subtle" color="gray" radius="md" aria-label={t('quickActions')}>
                 <IconCommand size={19} stroke={1.8} />
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>إجراءات سريعة</Menu.Label>
+              <Menu.Label>{t('quickActions')}</Menu.Label>
               {quickActions.map((action) => (
                 <Menu.Item
                   component="a"
@@ -388,13 +442,13 @@ export default function AdminShell() {
 
           <Menu width={280} position="bottom-end" shadow="lg">
             <Menu.Target>
-              <ActionIcon variant="subtle" color="gray" radius="md" aria-label="التنبيهات">
+              <ActionIcon variant="subtle" color="gray" radius="md" aria-label={t('notifications')}>
                 <IconBell size={19} stroke={1.8} />
                 {notifications.length ? <span className="saas-notification-dot" /> : null}
               </ActionIcon>
             </Menu.Target>
             <Menu.Dropdown>
-              <Menu.Label>التنبيهات</Menu.Label>
+              <Menu.Label>{t('notifications')}</Menu.Label>
               {notifications.length ? (
                 notifications.map((item) => (
                   <Menu.Item component="a" href={item.href} key={`${item.label}-${item.href}`}>
@@ -405,12 +459,12 @@ export default function AdminShell() {
                   </Menu.Item>
                 ))
               ) : (
-                <Text size="sm" c="dimmed" p="sm">لا توجد تنبيهات نشطة</Text>
+                <Text size="sm" c="dimmed" p="sm">{t('noActiveNotifications')}</Text>
               )}
             </Menu.Dropdown>
           </Menu>
 
-          <Tooltip label="عرض المتجر" withArrow>
+          <Tooltip label={t('viewStore')} withArrow>
             <ActionIcon
               component="a"
               href="../index.php"
@@ -419,11 +473,44 @@ export default function AdminShell() {
               variant="subtle"
               color="gray"
               radius="md"
-              aria-label="عرض المتجر"
+              aria-label={t('viewStore')}
             >
               <IconExternalLink size={19} stroke={1.8} />
             </ActionIcon>
           </Tooltip>
+
+          <Menu width={160} position="bottom-end" shadow="lg">
+            <Menu.Target>
+              <UnstyledButton className="saas-lang-button" style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: 8,
+                padding: '6px 10px',
+                borderRadius: 'var(--admin-radius)',
+                color: 'var(--admin-text)',
+                cursor: 'pointer',
+                transition: 'background 0.2s',
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#f1f5f9'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'transparent'}
+              >
+                <span style={{ fontSize: 16 }}>{langFlags[currentLang]}</span>
+                <span style={{ fontSize: 13, fontWeight: 750 }}>{langLabels[currentLang]}</span>
+                <IconChevronDown size={14} stroke={1.8} />
+              </UnstyledButton>
+            </Menu.Target>
+            <Menu.Dropdown>
+              <Menu.Item onClick={(e) => handleLangChange(e, 'ar')} leftSection={<span style={{ fontSize: 16 }}>🇩🇿</span>} className={currentLang === 'ar' ? 'is-active' : ''}>
+                {langLabels.ar}
+              </Menu.Item>
+              <Menu.Item onClick={(e) => handleLangChange(e, 'fr')} leftSection={<span style={{ fontSize: 16 }}>🇫🇷</span>} className={currentLang === 'fr' ? 'is-active' : ''}>
+                Français
+              </Menu.Item>
+              <Menu.Item onClick={(e) => handleLangChange(e, 'en')} leftSection={<span style={{ fontSize: 16 }}>🇺🇸</span>} className={currentLang === 'en' ? 'is-active' : ''}>
+                English
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
 
           <Menu width={230} position="bottom-end" shadow="lg">
             <Menu.Target>
@@ -438,14 +525,14 @@ export default function AdminShell() {
             <Menu.Dropdown>
               <Menu.Label>{adminName}</Menu.Label>
               <Menu.Item component="a" href="profile-edit.php" leftSection={<IconUserCircle size={15} stroke={1.8} />}>
-                الملف الشخصي
+                {t('profile')}
               </Menu.Item>
               <Menu.Item component="a" href="settings.php" leftSection={<IconSettings size={15} stroke={1.8} />}>
-                الإعدادات
+                {t('settings')}
               </Menu.Item>
               <Menu.Divider />
               <Menu.Item color="red" component="a" href="logout.php" leftSection={<IconLogout size={15} stroke={1.8} />}>
-                تسجيل الخروج
+                {t('logout')}
               </Menu.Item>
             </Menu.Dropdown>
           </Menu>

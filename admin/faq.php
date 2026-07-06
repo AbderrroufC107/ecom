@@ -25,7 +25,7 @@
 						<tbody>
 							<?php
 							$i=0;
-							$statement = $pdo->prepare("SELECT * FROM tbl_faq");
+							$statement = $dbRepo->prepare("SELECT * FROM tbl_faq");
 							$statement->execute();
 							$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 							foreach ($result as $row) {

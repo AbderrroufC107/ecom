@@ -1,0 +1,1593 @@
+﻿<body class="">
+<div id="fb-root">
+</div>
+<link rel="stylesheet" href="assets/css/checkout.css">
+<div class="page landing-page" id="top">
+<main id="main-content">
+<div class="announcement-bar">
+<div class="container">
+<div class="announcement-track">
+<span class="announcement-item">🚗 بساط طريق للأطفال مع 6 سيارات + شاحنتين | مقاس 1.60×2.60 | نوعية ممتازة</span>
+<span class="announcement-item">🚗 بساط طريق للأطفال مع 6 سيارات + شاحنتين | مقاس 1.60×2.60 | نوعية ممتازة</span>
+</div>
+</div>
+</div>
+<div class="landing-header">
+<div class="container landing-header-inner">
+<a class="landing-logo" href="index.php">
+<img src="https://res.cloudinary.com/depivaytu/image/upload/c_limit,w_260,f_auto,dpr_auto,q_60/v1772362169/Gemini_Generated_Image_u0dvs4u0dvs4u0dv_1_gwp2hr.png" alt="Logo" width="180" height="60" loading="lazy" decoding="async" fetchpriority="low">
+</a>
+<nav class="landing-menu-inline" aria-label="القائمة الرئيسية">
+<a href="#top">الرئيسية</a>
+<a href="#orderFormSection">اطلب الآن</a>
+<a href="#landingPhotos">صور هذا المنتج</a>
+<a href="#stepsSection">خطوات الطلب</a>
+<a href="#faqSection">الأسئلة الشائعة</a>
+</nav>
+<div class="landing-header-spacer" aria-hidden="true">
+</div>
+<button type="button" class="landing-menu-btn" aria-label="فتح القائمة" aria-controls="landingMenu" aria-expanded="false">
+<span class="landing-menu-icon">
+</span>
+</button>
+</div>
+</div>
+<div class="landing-menu-overlay" aria-hidden="true">
+</div>
+<nav class="landing-menu-panel" id="landingMenu" aria-hidden="true" inert>
+<div class="landing-menu-head">
+<span class="landing-menu-title">القائمة</span>
+<button type="button" class="landing-menu-close" data-menu-close aria-label="إغلاق القائمة">×</button>
+</div>
+<ul class="landing-menu-list">
+<li>
+<a href="#top" data-menu-close>الرئيسية</a>
+</li>
+<li>
+<a href="#orderFormSection" data-menu-close>اطلب الآن</a>
+</li>
+<li>
+<a href="#landingPhotos" data-menu-close>صور هذا المنتج</a>
+</li>
+<li>
+<a href="#stepsSection" data-menu-close>خطوات الطلب</a>
+</li>
+<li>
+<a href="#faqSection" data-menu-close>الأسئلة الشائعة</a>
+</li>
+</ul>
+</nav>
+<section class="landing-carousel" style="--landing-carousel-ratio: 1200 / 1200;">
+<div class="container">
+<div class="landing-carousel-frame">
+<div class="landing-carousel-title">سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود</div>
+<div class="swiper landing-carousel-main">
+<div class="swiper-wrapper">
+<div class="swiper-slide">
+<div class="landing-carousel-item">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_980,f_auto,dpr_auto,q_58/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="eager"
+decoding="sync"
+srcset="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_360,f_auto,dpr_auto,q_58/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 360w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_480,f_auto,dpr_auto,q_58/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 480w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_640,f_auto,dpr_auto,q_58/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 640w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_768,f_auto,dpr_auto,q_58/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 768w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_960,f_auto,dpr_auto,q_58/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 960w"                                                 sizes="(max-width: 768px) 92vw, 920px"
+fetchpriority="high">
+</div>
+</div>
+<div class="swiper-slide">
+<div class="landing-carousel-item">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_980,f_auto,dpr_auto,q_58/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy"
+decoding="async"
+srcset="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_360,f_auto,dpr_auto,q_58/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 360w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_480,f_auto,dpr_auto,q_58/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 480w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_640,f_auto,dpr_auto,q_58/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 640w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_768,f_auto,dpr_auto,q_58/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 768w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_960,f_auto,dpr_auto,q_58/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 960w"                                                 sizes="(max-width: 768px) 92vw, 920px"
+>
+</div>
+</div>
+<div class="swiper-slide">
+<div class="landing-carousel-item">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_980,f_auto,dpr_auto,q_58/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy"
+decoding="async"
+srcset="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_360,f_auto,dpr_auto,q_58/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 360w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_480,f_auto,dpr_auto,q_58/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 480w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_640,f_auto,dpr_auto,q_58/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 640w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_768,f_auto,dpr_auto,q_58/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 768w, https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_960,f_auto,dpr_auto,q_58/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 960w"                                                 sizes="(max-width: 768px) 92vw, 920px"
+>
+</div>
+</div>
+</div>
+<div class="landing-carousel-nav">
+<button type="button" class="landing-carousel-btn landing-carousel-prev" aria-label="Previous slide">
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<path d="M15 5l-7 7 7 7" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</button>
+<button type="button" class="landing-carousel-btn landing-carousel-next" aria-label="Next slide">
+<svg viewBox="0 0 24 24" aria-hidden="true">
+<path d="M9 5l7 7-7 7" stroke-linecap="round" stroke-linejoin="round">
+</path>
+</svg>
+</button>
+</div>
+<div class="swiper-pagination landing-carousel-pagination">
+</div>
+</div>
+</div>
+<div class="swiper landing-carousel-thumbs">
+<div class="swiper-wrapper">
+<div class="swiper-slide">
+<img class="landing-carousel-thumb"
+src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_320,f_auto,dpr_auto,q_60/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy">
+</div>
+<div class="swiper-slide">
+<img class="landing-carousel-thumb"
+src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_320,f_auto,dpr_auto,q_60/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy">
+</div>
+<div class="swiper-slide">
+<img class="landing-carousel-thumb"
+src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_320,f_auto,dpr_auto,q_60/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy">
+</div>
+</div>
+</div>
+</div>
+</section>
+<section class="landing-order">
+<div class="container">
+<div class="order-offers order-offers-top">
+<div class="offer-title">عرض خاص لفترة محدودة</div>
+<div class="offer-grid">
+<div class="offer-card selected offer-card--special" data-offer-id="80" data-offer-qty="1" data-offer-unit="1300" data-offer-type="special">
+<div class="offer-price-stack">
+<span class="offer-new">1,300 &#1583;&#1580;</span>
+</div>
+<div class="offer-details">
+<div class="offer-special-label">عرض 1</div>
+<div class="offer-special-desc">grand</div>
+<span class="offer-badge">سعر خاص</span>
+</div>
+<div class="offer-thumb">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy">
+</div>
+</div>
+<div class="offer-card offer-card--special" data-offer-id="81" data-offer-qty="1" data-offer-unit="1800" data-offer-type="special">
+<div class="offer-price-stack">
+<span class="offer-new">1,800 &#1583;&#1580;</span>
+</div>
+<div class="offer-details">
+<div class="offer-special-label">عرض 2</div>
+<div class="offer-special-desc">grand</div>
+<span class="offer-badge">سعر خاص</span>
+</div>
+<div class="offer-thumb">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy">
+</div>
+</div>
+</div>
+</div>
+<div id="orderFormSection" class="order-card reveal has-offers" style="--delay: 0.1s;">
+<div class="order-card-head">
+<h2 class="order-form-title">&#1573;&#1578;&#1605;&#1575;&#1605;&#32;&#1593;&#1605;&#1604;&#1610;&#1577;&#32;&#1575;&#1604;&#1591;&#1604;&#1576;</h2>
+<span class="order-tag">أكمل طلبك خلال دقيقة</span>
+<h2 class="product-title">سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود</h2>
+<div class="rating-row">
+<span class="stars">★★★★★</span>
+<span class="rating-text">(4.8)</span>
+</div>
+<div class="hero-price">
+<span class="price-current">1300 دج</span>
+<span class="price-badge">خصم 46%</span>
+</div>
+<div class="order-now-text">
+<h3>اطلب الآن</h3>
+<p>اترك بياناتك وسنتصل بك لتأكيد الطلب قبل الشحن.</p>
+</div>
+</div>
+<form action="" method="post" id="orderForm">
+<input type="hidden" name="form1" value="1">
+<input type="hidden" name="form_token" value="d60b2b1263cc070f2677a1f1e21ca4ee3adb9372824da2ff202fded821666946">
+<input type="hidden" name="selected_offer_id" id="selected_offer_id" value="80">
+<div class="form-row">
+<div class="form-group form-field col-md-6 position-relative">
+<label for="customer_name">الاسم الكامل *</label>
+<input type="text" class="form-control" id="customer_name" name="customer_name" required placeholder="&#1575;&#1603;&#1578;&#1576;&#32;&#1575;&#1587;&#1605;&#1603;&#32;&#1607;&#1606;&#1575;&#46;&#46;&#46;" value="">
+</div>
+<div class="form-group form-field col-md-6 position-relative">
+<label for="customer_phone">رقم الهاتف *</label>
+<input type="tel" class="form-control" id="customer_phone" name="customer_phone" required
+placeholder="06XXXXXXXX"
+pattern="[0-9]{9,10}"
+title="يرجى إدخال رقم هاتف جزائري صحيح (9-10 أرقام)"
+value="">
+<div id="phone-error" class="text-danger mt-1" style="display: none; font-size: 0.9rem;">
+</div>
+</div>
+</div>
+<div class="form-row">
+<div class="form-group form-field col-md-6">
+<label for="wilaya">الولاية *</label>
+<select class="form-control" id="wilaya" name="wilaya" required>
+<option value="">اختر الولاية</option>
+<option value="Adrar">Adrar</option>
+<option value="Aïn Defla">Aïn Defla</option>
+<option value="Aïn Témouchent">Aïn Témouchent</option>
+<option value="Alger">Alger</option>
+<option value="Annaba">Annaba</option>
+<option value="Batna">Batna</option>
+<option value="Béchar">Béchar</option>
+<option value="Béjaïa">Béjaïa</option>
+<option value="Beni Abbes">Beni Abbes</option>
+<option value="Biskra">Biskra</option>
+<option value="Blida">Blida</option>
+<option value="Bordj Bou Arreridj">Bordj Bou Arreridj</option>
+<option value="Bouira">Bouira</option>
+<option value="Boumerdès">Boumerdès</option>
+<option value="Chlef">Chlef</option>
+<option value="Constantine">Constantine</option>
+<option value="Djanet">Djanet</option>
+<option value="Djelfa">Djelfa</option>
+<option value="El Bayadh">El Bayadh</option>
+<option value="El M&#039;Ghair">El M&#039;Ghair</option>
+<option value="El Meniaa">El Meniaa</option>
+<option value="El Oued">El Oued</option>
+<option value="El Tarf">El Tarf</option>
+<option value="Ghardaïa">Ghardaïa</option>
+<option value="Guelma">Guelma</option>
+<option value="Illizi">Illizi</option>
+<option value="In Salah">In Salah</option>
+<option value="Jijel">Jijel</option>
+<option value="Khenchela">Khenchela</option>
+<option value="Laghouat">Laghouat</option>
+<option value="M&#039;Sila">M&#039;Sila</option>
+<option value="Mascara">Mascara</option>
+<option value="Médéa">Médéa</option>
+<option value="Mila">Mila</option>
+<option value="Mostaganem">Mostaganem</option>
+<option value="Naâma">Naâma</option>
+<option value="Oran">Oran</option>
+<option value="Ouargla">Ouargla</option>
+<option value="Ouled Djellal">Ouled Djellal</option>
+<option value="Oum El Bouaghi">Oum El Bouaghi</option>
+<option value="Relizane">Relizane</option>
+<option value="Saïda">Saïda</option>
+<option value="Sétif">Sétif</option>
+<option value="Sidi Bel Abbès">Sidi Bel Abbès</option>
+<option value="Skikda">Skikda</option>
+<option value="Souk Ahras">Souk Ahras</option>
+<option value="Tamanrasset">Tamanrasset</option>
+<option value="Tébessa">Tébessa</option>
+<option value="Tiaret">Tiaret</option>
+<option value="Timimoun">Timimoun</option>
+<option value="Tindouf">Tindouf</option>
+<option value="Tipaza">Tipaza</option>
+<option value="Tissemsilt">Tissemsilt</option>
+<option value="Tizi Ouzou">Tizi Ouzou</option>
+<option value="Tlemcen">Tlemcen</option>
+<option value="Touggourt">Touggourt</option>
+</select>
+</div>
+<div class="form-group form-field col-md-6">
+<label for="commune">البلدية *</label>
+<select class="form-control" id="commune" name="commune" required>
+<option value="">اختر البلدية</option>
+</select>
+</div>
+</div>
+<div class="form-group quantity-group">
+<label for="quantity">الكمية *</label>
+<div class="qty-control">
+<button type="button" id="decreaseQuantity" class="qty-btn" aria-label="&#1606;&#1602;&#1589;&#32;&#1575;&#1604;&#1603;&#1605;&#1610;&#1577;">-</button>
+<input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="200" required>
+<button type="button" id="increaseQuantity" class="qty-btn" aria-label="&#1586;&#1610;&#1575;&#1583;&#1577;&#32;&#1575;&#1604;&#1603;&#1605;&#1610;&#1577;">+</button>
+</div>
+</div>
+<div class="form-group">
+<label>&#1606;&#1608;&#1593;&#32;&#1575;&#1604;&#1578;&#1608;&#1589;&#1610;&#1604; *</label>
+<div class="delivery-options">
+<button type="button" class="delivery-btn selected" data-type="منزل">
+<span class="delivery-label">توصيل للمنزل</span>
+<span id="homePriceBtn" class="delivery-price-tag">0 دج</span>
+</button>
+<button type="button" class="delivery-btn" data-type="مكتب">
+<span class="delivery-label">توصيل للمكتب</span>
+<span id="officePriceBtn" class="delivery-price-tag">0 دج</span>
+</button>
+<div class="delivery-options-note" id="deliveryOptionsNote" style="display: none;">
+</div>
+</div>
+<div class="form-group">
+<div class="delivery-info p-3 mb-3 is-hidden">
+<div class="summary-row">
+<span class="summary-label">سعر التوصيل</span>
+<span id="delivery_price" class="summary-value delivery-price">0 دج</span>
+</div>
+<div class="summary-row total">
+<span class="summary-label">المجموع الكلي</span>
+<span id="total_price" class="summary-value total-value">1300 دج</span>
+</div>
+</div>
+</div>
+<input type="hidden" id="deliveryTypeInput" name="delivery_type" value="منزل">
+<input type="hidden" id="total_price_hidden" name="total_price" value="1300">
+<input type="hidden" name="selected_color" id="selected_color" value="">
+<div class="form-features">
+<div class="feature-item">
+<i class="fa fa-shield-alt">
+</i> &#1590;&#1605;&#1575;&#1606;&#32;&#1575;&#1604;&#1580;&#1608;&#1583;&#1577;</div>
+<div class="feature-item">
+<i class="fa fa-truck">
+</i> &#1578;&#1608;&#1589;&#1610;&#1604;&#32;&#1587;&#1585;&#1610;&#1593;</div>
+<div class="feature-item">
+<i class="fa fa-cash-register">
+</i> &#1583;&#1601;&#1593;&#32;&#1593;&#1606;&#1583;&#32;&#1575;&#1604;&#1575;&#1587;&#1578;&#1604;&#1575;&#1605;</div>
+</div>
+<input type="hidden" name="product_id" value="140">
+<input type="hidden" name="product_name" value="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود">
+<input type="hidden" name="unit_price" value="1300">
+<div class="order-cta">
+<button type="submit" class="btn btn-buy-now btn-lg" name="form1">
+<i class="fa fa-shopping-cart me-2">
+</i> &#1578;&#1571;&#1603;&#1610;&#1583;&#32;&#1575;&#1604;&#1591;&#1604;&#1576;&#32;&#45;&#32;&#1571;&#1591;&#1604;&#1576;&#32;&#1575;&#1604;&#1570;&#1606;
+</button>
+</div>
+<p class="privacy-note">بياناتك محفوظة ولن تُستخدم إلا لتأكيد الطلب.</p>
+</form>
+</div>
+</div>
+</section>
+<section class="landing-photos" id="landingPhotos">
+<div class="container">
+<div class="landing-photos-grid">
+<figure class="landing-photo">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_640,f_auto,dpr_auto,q_58/v1779279774/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy"
+decoding="async">
+</figure>
+<figure class="landing-photo">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_640,f_auto,dpr_auto,q_58/v1779279776/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy"
+decoding="async">
+</figure>
+<figure class="landing-photo">
+<img src="https://res.cloudinary.com/dbysitvsy/image/upload/c_limit,w_640,f_auto,dpr_auto,q_58/v1779279778/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png"
+alt="سجاد الطريق التفاعلي للأطفال – متعة لعب بلا حدود"
+width="1200"
+height="1200"
+loading="lazy"
+decoding="async">
+</figure>
+</div>
+</div>
+</section>
+<section class="trust-strip">
+<div class="container trust-grid">
+<div class="trust-chip">
+<i class="fa fa-truck">
+</i> توصيل سريع 24-48 ساعة</div>
+<div class="trust-chip">
+<i class="fa fa-cash-register">
+</i> الدفع عند الاستلام</div>
+<div class="trust-chip">
+<i class="fa fa-undo">
+</i> إمكانية الاستبدال حسب الشروط</div>
+<div class="trust-chip">
+<i class="fa fa-check-circle">
+</i> فحص قبل الدفع</div>
+</div>
+</section>
+<section class="section steps" id="stepsSection">
+<div class="container">
+<h2 class="section-title">كيف يتم الطلب؟</h2>
+<div class="steps-grid">
+<div class="step-card reveal" style="--delay: 0s;">
+<div class="step-index">1</div>
+<h3>املأ النموذج</h3>
+<p>أدخل معلوماتك بدقة لإتمام الشحن بسرعة.</p>
+</div>
+<div class="step-card reveal" style="--delay: 0.05s;">
+<div class="step-index">2</div>
+<h3>تأكيد سريع</h3>
+<p>سنتواصل معك لتأكيد الطلب قبل الإرسال.</p>
+</div>
+<div class="step-card reveal" style="--delay: 0.1s;">
+<div class="step-index">3</div>
+<h3>توصيل آمن</h3>
+<p>يصلك المنتج إلى باب البيت مع الدفع عند الاستلام.</p>
+</div>
+</div>
+</div>
+</section>
+<section class="section details">
+<div class="container">
+<h2 class="section-title">تفاصيل إضافية</h2>
+<div class="details-card">
+<div class="details-text">اجعل وقت اللعب أكثر متعة وفائدة مع سجاد الطريق التفاعلي للأطفال المصمم خصيصًا لتنمية خيال الطفل وتشجيعه على الاستكشاف.<br />
+يأتي هذا البساط بنوعية ممتازة وملمس ناعم وآمن، مع تصميم مدينة وطرق ممتعة تساعد الأطفال على ابتكار قصص ومغامرات رائعة.<br />
+<br />
+كما أنه مزود بـ 6 سيارات + شاحنتين ليبدأ طفلك اللعب فورًا دون الحاجة لشراء إضافات.<br />
+بفضل المقاس الكبير 1.60×2.60 متر فهو مثالي لغرفة الأطفال أو مساحة اللعب في المنزل، مع ألوان ثابتة وسهولة في التنظيف.</div>
+</div>
+</div>
+</section>
+<section class="section faq" id="faqSection">
+<div class="container">
+<h2 class="section-title">أسئلة شائعة</h2>
+<div class="faq-grid">
+<details>
+<summary>هل الدفع عند الاستلام متاح؟</summary>
+<p>نعم، يمكنك الدفع عند استلام الطلب بعد التأكيد الهاتفي.</p>
+</details>
+<details>
+<summary>كم مدة التوصيل؟</summary>
+<p>عادةً بين 24 و48 ساعة حسب الولاية والبلدية.</p>
+</details>
+<details>
+<summary>هل يمكن الاستبدال؟</summary>
+<p>نعم، يوجد إمكانية للاستبدال حسب شروط المتجر وحالة المنتج.</p>
+</details>
+</div>
+</div>
+</section>
+<section class="final-cta">
+<div class="container final-cta-inner">
+<h2 class="section-title">جاهز تطلب الآن؟</h2>
+<p class="section-subtitle">الكميات محدودة والعرض متجدد. اطلب الآن واستفد من السعر الحالي.</p>
+<button type="button" class="btn-cta" onclick="document.getElementById('orderFormSection').scrollIntoView({behavior: 'smooth'})">
+<i class="fa fa-shopping-bag">
+</i> اطلب الآن
+</button>
+</div>
+</section>
+<div id="sticky-scroll-btn" class="sticky-cta">
+<button type="button" onclick="document.getElementById('orderFormSection').scrollIntoView({behavior: 'smooth'})">
+<i class="fa fa-shopping-bag">
+</i> اطلب الآن
+</button>
+</div>
+</main>
+</div>
+<link rel="preload" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+<noscript>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css">
+</noscript>
+const wilayasList = (deliveryCacheData.wilayas || []).map((w, index) => ({ id: String(index + 1), code: String(index + 1).padStart(2, '0'), name: w }));
+const communesList = [];
+(deliveryCacheData.wilayas || []).forEach((w, wIndex) => {
+(deliveryCacheData.communes[w] || []).forEach(c => {
+communesList.push({ wilaya_id: String(wIndex + 1), name: c.name, id: c.name });
+});
+});
+const shippingFees = {"Adrar":{"\u0645\u0646\u0632\u0644":1050,"\u0645\u0643\u062a\u0628":600},"A\u00efn Defla":{"\u0645\u0646\u0632\u0644":690},"A\u00efn T\u00e9mouchent":{"\u0645\u0646\u0632\u0644":790},"Alger":{"\u0645\u0646\u0632\u0644":450},"Annaba":{"\u0645\u0646\u0632\u0644":690},"Batna":{"\u0645\u0646\u0632\u0644":590},"B\u00e9char":{"\u0645\u0646\u0632\u0644":1050},"B\u00e9ja\u00efa":{"\u0645\u0646\u0632\u0644":590},"Beni Abbes":{"\u0645\u0646\u0632\u0644":1250,"\u0645\u0643\u062a\u0628":600},"Biskra":{"\u0645\u0646\u0632\u0644":790},"Blida":{"\u0645\u0646\u0632\u0644":450},"Bordj Bou Arreridj":{"\u0645\u0646\u0632\u0644":590},"Bouira":{"\u0645\u0646\u0632\u0644":690},"Boumerd\u00e8s":{"\u0645\u0646\u0632\u0644":690},"Chlef":{"\u0645\u0646\u0632\u0644":690},"Constantine":{"\u0645\u0646\u0632\u0644":590},"Djanet":{"\u0645\u0646\u0632\u0644":2100},"Djelfa":{"\u0645\u0646\u0632\u0644":890},"El Bayadh":{"\u0645\u0646\u0632\u0644":990},"El M'Ghair":{"\u0645\u0646\u0632\u0644":890},"El Meniaa":{"\u0645\u0646\u0632\u0644":990,"\u0645\u0643\u062a\u0628":500},"El Oued":{"\u0645\u0646\u0632\u0644":900},"El Tarf":{"\u0645\u0646\u0632\u0644":690},"Gharda\u00efa":{"\u0645\u0646\u0632\u0644":900},"Guelma":{"\u0645\u0646\u0632\u0644":690},"Illizi":{"\u0645\u0646\u0632\u0644":1250},"In Salah":{"\u0645\u0646\u0632\u0644":1250},"Jijel":{"\u0645\u0646\u0632\u0644":600},"Khenchela":{"\u0645\u0646\u0632\u0644":690},"Laghouat":{"\u0645\u0646\u0632\u0644":900,"\u0645\u0643\u062a\u0628":490},"M'Sila":{"\u0645\u0646\u0632\u0644":690},"Mascara":{"\u0645\u0646\u0632\u0644":690},"M\u00e9d\u00e9a":{"\u0645\u0646\u0632\u0644":690},"Mila":{"\u0645\u0646\u0632\u0644":600},"Mostaganem":{"\u0645\u0646\u0632\u0644":690},"Na\u00e2ma":{"\u0645\u0646\u0632\u0644":990},"Oran":{"\u0645\u0646\u0632\u0644":650},"Ouargla":{"\u0645\u0646\u0632\u0644":990},"Ouled Djellal":{"\u0645\u0646\u0632\u0644":890},"Oum El Bouaghi":{"\u0645\u0646\u0632\u0644":690},"Relizane":{"\u0645\u0646\u0632\u0644":690},"Sa\u00efda":{"\u0645\u0646\u0632\u0644":790},"S\u00e9tif":{"\u0645\u0646\u0632\u0644":390},"Sidi Bel Abb\u00e8s":{"\u0645\u0646\u0632\u0644":800},"Skikda":{"\u0645\u0646\u0632\u0644":650},"Souk Ahras":{"\u0645\u0646\u0632\u0644":790},"Tamanrasset":{"\u0645\u0646\u0632\u0644":1250},"T\u00e9bessa":{"\u0645\u0646\u0632\u0644":790},"Tiaret":{"\u0645\u0646\u0632\u0644":750},"Timimoun":{"\u0645\u0646\u0632\u0644":1250},"Tindouf":{"\u0645\u0646\u0632\u0644":1250},"Tipaza":{"\u0645\u0646\u0632\u0644":690},"Tissemsilt":{"\u0645\u0646\u0632\u0644":790},"Tizi Ouzou":{"\u0645\u0646\u0632\u0644":650},"Tlemcen":{"\u0645\u0646\u0632\u0644":790},"Touggourt":{"\u0645\u0646\u0632\u0644":890}};
+const offersData = [{"id":80,"type":"special","qty":1,"unit":1300,"photo":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png"},{"id":81,"type":"special","qty":1,"unit":1800,"photo":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png"}];
+const carouselPhotos = ["https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png"];
+const carouselPhotoSizes = {"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png":{"width":1200,"height":1200},"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png":{"width":1200,"height":1200},"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png":{"width":1200,"height":1200}};
+const carouselPhotoSrcsets = {"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png":"","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png":"","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png":""};
+const carouselPhotoImgSrcsets = {"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_360,f_auto,dpr_auto,q_58\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 360w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_480,f_auto,dpr_auto,q_58\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 480w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_640,f_auto,dpr_auto,q_58\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 640w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_768,f_auto,dpr_auto,q_58\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 768w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_960,f_auto,dpr_auto,q_58\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png 960w","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_360,f_auto,dpr_auto,q_58\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 360w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_480,f_auto,dpr_auto,q_58\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 480w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_640,f_auto,dpr_auto,q_58\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 640w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_768,f_auto,dpr_auto,q_58\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 768w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_960,f_auto,dpr_auto,q_58\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png 960w","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_360,f_auto,dpr_auto,q_58\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 360w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_480,f_auto,dpr_auto,q_58\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 480w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_640,f_auto,dpr_auto,q_58\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 640w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_768,f_auto,dpr_auto,q_58\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 768w, https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_960,f_auto,dpr_auto,q_58\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png 960w"};
+const carouselOptimizedPhotoUrls = {"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_980,f_auto,dpr_auto,q_58\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_980,f_auto,dpr_auto,q_58\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_980,f_auto,dpr_auto,q_58\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png"};
+const carouselThumbUrls = {"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_320,f_auto,dpr_auto,q_60\/v1779279774\/Gemini_Generated_Image_2z2zgj2z2zgj2z2z_wdrlgu.png","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_320,f_auto,dpr_auto,q_60\/v1779279776\/Gemini_Generated_Image_6yr8m56yr8m56yr8_q620xn.png","https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png":"https:\/\/res.cloudinary.com\/dbysitvsy\/image\/upload\/c_limit,w_320,f_auto,dpr_auto,q_60\/v1779279778\/Gemini_Generated_Image_n7lh3n7lh3n7lh3n_jqkeil.png"};
+const carouselSizes = '(max-width: 768px) 92vw, 920px';
+const colorPhotoMap = [];
+const productName = "\u0633\u062c\u0627\u062f \u0627\u0644\u0637\u0631\u064a\u0642 \u0627\u0644\u062a\u0641\u0627\u0639\u0644\u064a \u0644\u0644\u0623\u0637\u0641\u0627\u0644 \u2013 \u0645\u062a\u0639\u0629 \u0644\u0639\u0628 \u0628\u0644\u0627 \u062d\u062f\u0648\u062f";
+const productDeliveryMode = "home_office";
+const deliveryProductId = 140;
+let basePrice = 1300;
+window.basePrice = basePrice;
+window.shippingFees = shippingFees;
+window.productDeliveryMode = productDeliveryMode;
+window.deliveryCacheData = deliveryCacheData;
+let selectedOffer = null;
+let wilayaSelect = null;
+let deliveryBtns = [];
+let deliveryTypeInput = null;
+let quantityInput = null;
+let increaseBtn = null;
+let decreaseBtn = null;
+let offerCards = [];
+let offerInput = null;
+function rebuildCommuneOptions(allCommunes) {
+const communeSelect = document.getElementById('commune');
+if (!communeSelect) return;
+const previous = String(communeSelect.value || '').trim();
+communeSelect.innerHTML = '<option value="">اختر البلدية</option>';
+(allCommunes || []).forEach(function (commune) {
+const name = String(commune || '').trim();
+if (!name) return;
+const option = document.createElement('option');
+option.value = name;
+option.textContent = name;
+communeSelect.appendChild(option);
+});
+if (previous && Array.from(communeSelect.options).some(o => String(o.value) === previous)) {
+communeSelect.value = previous;
+} else {
+communeSelect.value = '';
+}
+}
+function getAvailableDeliveryOptions(wilaya, deliveryButtons) {
+const buttons = Array.isArray(deliveryButtons) ? deliveryButtons : Array.from(document.querySelectorAll('.delivery-btn'));
+if (productDeliveryMode === 'free') {
+const freeType = buttons[0] ? (buttons[0].getAttribute('data-type') || '').trim() : '';
+return freeType ? { [freeType]: 0 } : {};
+}
+if (!wilaya || !shippingFees[wilaya]) {
+return {};
+}
+const rawEntry = shippingFees[wilaya];
+if (rawEntry && typeof rawEntry === 'object' && !Array.isArray(rawEntry)) {
+const available = {};
+Object.keys(rawEntry).forEach((type) => {
+const price = Number(rawEntry[type] || 0);
+// 0 دج = غير متوفر (حسب المطلوب)
+if (price > 0) {
+available[type] = price;
+}
+});
+return available;
+}
+const fallbackType = buttons[0] ? (buttons[0].getAttribute('data-type') || '').trim() : '';
+const fallbackPrice = Number(rawEntry || 0);
+return (fallbackType && fallbackPrice > 0) ? { [fallbackType]: fallbackPrice } : {};
+}
+function refreshCommuneDeliveryAvailability() {
+updateDeliveryPrices();
+updateTotalPrice();
+}
+function updateDeliveryOptionsState() {
+const deliveryButtons = Array.from(document.querySelectorAll('.delivery-btn'));
+const note = document.getElementById('deliveryOptionsNote');
+const wilayaSelectEl = wilayaSelect || document.getElementById('wilaya');
+const communeSelect = document.getElementById('commune');
+const selectedWilaya = wilayaSelectEl ? wilayaSelectEl.value.trim() : '';
+const selectedCommune = communeSelect ? communeSelect.value.trim() : '';
+const availableOptions = getAvailableDeliveryOptions(selectedWilaya, deliveryButtons);
+const submitButton = document.querySelector('#orderForm button[type="submit"]');
+if (productDeliveryMode !== 'free' && !selectedWilaya) {
+deliveryButtons.forEach((button) => {
+button.classList.remove('is-hidden');
+button.disabled = false;
+button.style.opacity = '1';
+});
+if (!deliveryButtons.some(b => b.classList.contains('selected')) && deliveryButtons.length > 0) {
+deliveryButtons[0].classList.add('selected');
+}
+if (deliveryTypeInput && deliveryButtons[0]) {
+deliveryTypeInput.value = (document.querySelector('.delivery-btn.selected') || deliveryButtons[0]).getAttribute('data-type') || '';
+}
+if (note) {
+note.style.display = 'none';
+}
+if (typeof updateDeliveryPrices === 'function') updateDeliveryPrices();
+return availableOptions;
+}
+const hasAvailable = productDeliveryMode === 'free'
+? true
+: (!!selectedWilaya && Object.keys(availableOptions).length > 0);
+deliveryButtons.forEach((btn) => {
+const type = (btn.getAttribute('data-type') || '').trim();
+const isTypeAvailable = productDeliveryMode === 'free'
+? true
+: (!!selectedWilaya && Object.prototype.hasOwnProperty.call(availableOptions, type));
+btn.classList.remove('is-hidden');
+btn.disabled = !isTypeAvailable;
+btn.style.opacity = !isTypeAvailable ? '0.55' : '1';
+btn.style.cursor = !isTypeAvailable ? 'not-allowed' : 'pointer';
+if (!isTypeAvailable) {
+btn.classList.remove('selected');
+}
+});
+if (submitButton) {
+submitButton.disabled = !hasAvailable;
+submitButton.style.opacity = !hasAvailable ? '0.6' : '';
+submitButton.style.cursor = !hasAvailable ? 'not-allowed' : '';
+}
+let selectedButton = deliveryButtons.find((button) => button.classList.contains('selected'));
+if (!selectedButton) {
+selectedButton = deliveryButtons.find((button) => !button.disabled) || null;
+}
+if (selectedButton) {
+selectedButton.classList.add('selected');
+}
+if (deliveryTypeInput) {
+deliveryTypeInput.value = selectedButton ? (selectedButton.getAttribute('data-type') || '') : '';
+}
+if (note) {
+if (productDeliveryMode !== 'free' && selectedWilaya && Object.keys(availableOptions).length === 0) {
+note.style.display = 'block';
+note.textContent = 'لا يوجد توصيل متاح لهذه الولاية/هذا النوع (الأسعار غير مُدخلة).';
+note.classList.add('is-error');
+} else {
+note.style.display = 'none';
+}
+}
+if (typeof updateDeliveryPrices === 'function') updateDeliveryPrices();
+return availableOptions;
+}
+// تحديث أسعار التوصيل بجانب الأزرار
+function updateDeliveryPrices() {
+const wilayaSelect = document.getElementById('wilaya');
+const communeSelect = document.getElementById('commune');
+const wilaya = wilayaSelect ? wilayaSelect.value.trim() : '';
+const commune = communeSelect ? communeSelect.value.trim() : '';
+const deliveryButtons = Array.from(document.querySelectorAll('.delivery-btn'));
+let homeSupported = true;
+let deskSupported = true;
+if (wilaya && typeof deliveryCacheData !== 'undefined' && deliveryCacheData.communes && deliveryCacheData.communes[wilaya]) {
+let cData = null;
+if (commune) {
+cData = deliveryCacheData.communes[wilaya].find(c => c.name === commune);
+}
+if (!cData) {
+cData = deliveryCacheData.communes[wilaya][0];
+}
+if (cData) {
+homeSupported = cData.home == 1;
+deskSupported = cData.desk == 1;
+}
+}
+deliveryButtons.forEach((button) => {
+const deliveryType = (button.getAttribute('data-type') || '').trim();
+const isDeskBtn = deliveryType.toLowerCase().includes('مكتب') || deliveryType.toLowerCase().includes('office') || deliveryType.toLowerCase().includes('desk') || deliveryType.includes('Ã');
+let supported = true;
+if (wilaya) {
+supported = isDeskBtn ? deskSupported : homeSupported;
+}
+if (!supported) {
+button.classList.add('disabled');
+button.style.opacity = '0.5';
+button.disabled = true;
+let msgEl = button.querySelector('.not-supported-msg');
+if (!msgEl) {
+msgEl = document.createElement('div');
+msgEl.className = 'not-supported-msg text-danger mt-1';
+msgEl.style.fontSize = '12px';
+msgEl.style.fontWeight = 'bold';
+button.appendChild(msgEl);
+}
+msgEl.textContent = 'غير مدعوم في هذه المنطقة';
+if (button.classList.contains('selected')) {
+button.classList.remove('selected');
+const typeInput = document.getElementById('deliveryTypeInput') || document.querySelector('input[name="delivery_type"]');
+if (typeInput) typeInput.value = '';
+// Select first available option instead
+const firstAvailable = deliveryButtons.find(b => {
+const t = (b.getAttribute('data-type') || '').trim();
+const dBtn = t.toLowerCase().includes('مكتب') || t.toLowerCase().includes('office') || t.toLowerCase().includes('desk') || t.includes('Ã');
+return dBtn ? deskSupported : homeSupported;
+});
+if (firstAvailable) {
+firstAvailable.classList.add('selected');
+if (typeInput) typeInput.value = firstAvailable.getAttribute('data-type');
+}
+}
+} else {
+button.classList.remove('disabled');
+button.style.opacity = '1';
+button.disabled = false;
+const msgEl = button.querySelector('.not-supported-msg');
+if (msgEl) msgEl.remove();
+}
+const priceTag = button.querySelector('.delivery-price-tag, .delivery-price');
+if (!priceTag) return;
+let buttonPrice = 0;
+if (wilaya && typeof deliveryCacheData !== 'undefined' && deliveryCacheData.communes && deliveryCacheData.communes[wilaya]) {
+let cData = null;
+if (commune) {
+cData = deliveryCacheData.communes[wilaya].find(c => c.name === commune);
+}
+if (!cData) cData = deliveryCacheData.communes[wilaya][0];
+if (cData) {
+buttonPrice = isDeskBtn ? cData.desk_price : cData.home_price;
+}
+} else if (wilaya && typeof shippingFees !== 'undefined' && shippingFees[wilaya]) {
+if (typeof shippingFees[wilaya] === 'object') {
+buttonPrice = shippingFees[wilaya][deliveryType] || 0;
+} else {
+buttonPrice = shippingFees[wilaya] || 0;
+}
+}
+priceTag.textContent = buttonPrice + ' دج';
+});
+}
+function initLandingForm() {
+wilayaSelect = document.getElementById('wilaya');
+if (wilayaSelect && typeof wilayasList !== 'undefined' && Array.isArray(wilayasList)) {
+// تعبئة الولايات بترتيب صحيح من القائمة الكاملة
+wilayaSelect.innerHTML = '<option value="">اختر الولاية</option>';
+wilayasList
+.slice()
+.sort((a, b) => parseInt(a.id) - parseInt(b.id))
+.forEach(wilaya => {
+const option = document.createElement('option');
+option.value = wilaya.name;
+option.textContent = wilaya.id + ' - ' + wilaya.name;
+wilayaSelect.appendChild(option);
+});
+// تحديث البلديات
+wilayaSelect.addEventListener('change', function () {
+const communeSelect = document.getElementById('commune');
+if (!communeSelect) return;
+communeSelect.innerHTML = '<option value="">اختر البلدية</option>';
+const selectedWilaya = this.value.trim();
+if (selectedWilaya && deliveryCacheData && deliveryCacheData.communes[selectedWilaya]) {
+const allCommunes = deliveryCacheData.communes[selectedWilaya].map(c => c.name);
+rebuildCommuneOptions(allCommunes);
+}
+updateDeliveryPrices();
+updateTotalPrice();
+refreshDeskOptions();
+});
+}
+const communeSelect = document.getElementById('commune');
+if (communeSelect) {
+communeSelect.addEventListener('change', function() {
+refreshCommuneDeliveryAvailability();
+refreshDeskOptions();
+});
+}
+const deskSelect = document.getElementById('desk');
+if (deskSelect) {
+deskSelect.addEventListener('change', function() {
+updateTotalPrice();
+});
+}
+function refreshDeskOptions() {
+const deskContainer = document.getElementById('desk_container');
+const deskSelect = document.getElementById('desk');
+const wSelect = document.getElementById('wilaya');
+const cSelect = document.getElementById('commune');
+const typeInput = document.getElementById('deliveryTypeInput');
+if (!deskContainer || !deskSelect || !wSelect || !cSelect || !typeInput) return;
+const isDesk = typeInput.value === 'مكتب' || typeInput.value === 'office' || typeInput.value === 'stopdesk';
+if (isDesk && wSelect.value && cSelect.value) {
+const wName = wSelect.value.trim();
+const cName = cSelect.value.trim();
+deskSelect.innerHTML = '<option value="">اختر المكتب</option>';
+let hasDesks = false;
+if (deliveryCacheData && deliveryCacheData.desks && deliveryCacheData.desks[wName]) {
+const desks = deliveryCacheData.desks[wName].filter(d => d.commune === cName);
+desks.forEach(d => {
+hasDesks = true;
+const opt = document.createElement('option');
+opt.value = d.id;
+opt.textContent = d.name + (d.address ? ' - ' + d.address : '');
+deskSelect.appendChild(opt);
+});
+}
+if (hasDesks) {
+deskContainer.style.display = 'block';
+deskSelect.required = true;
+} else {
+// No desks for this commune but office delivery is selected?
+// Ecotrack sometimes uses the commune itself as a stopdesk.
+deskContainer.style.display = 'none';
+deskSelect.required = false;
+}
+} else {
+deskContainer.style.display = 'none';
+deskSelect.required = false;
+}
+}
+deliveryBtns = Array.from(document.querySelectorAll('.delivery-btn'));
+deliveryTypeInput = document.getElementById('deliveryTypeInput');
+deliveryBtns.forEach(btn => {
+btn.addEventListener('click', function() {
+if (this.disabled) return; // Ignore if disabled
+deliveryBtns.forEach(b => b.classList.remove('selected'));
+this.classList.add('selected');
+if (deliveryTypeInput) {
+deliveryTypeInput.value = this.getAttribute('data-type') || '';
+}
+updateTotalPrice();
+updateDeliveryStepHint(true);
+if (typeof refreshDeskOptions === 'function') {
+refreshDeskOptions();
+}
+});
+});
+quantityInput = document.getElementById('quantity');
+increaseBtn = document.getElementById('increaseQuantity');
+decreaseBtn = document.getElementById('decreaseQuantity');
+if (increaseBtn && quantityInput) {
+increaseBtn.addEventListener('click', function() {
+let currentValue = parseInt(quantityInput.value, 10) || 1;
+quantityInput.value = currentValue + 1;
+updateTotalPrice();
+});
+}
+if (decreaseBtn && quantityInput) {
+decreaseBtn.addEventListener('click', function() {
+let currentValue = parseInt(quantityInput.value, 10) || 1;
+if (currentValue > 1) {
+quantityInput.value = currentValue - 1;
+updateTotalPrice();
+}
+});
+}
+if (quantityInput) {
+quantityInput.addEventListener('change', updateTotalPrice);
+}
+offerCards = Array.from(document.querySelectorAll('.offer-card'));
+offerInput = document.getElementById('selected_offer_id');
+if (offerCards.length) {
+offerCards.forEach(card => {
+card.addEventListener('click', function() {
+applyOfferSelection(this.getAttribute('data-offer-id'));
+});
+});
+}
+if (offersData && offersData.length) {
+offersData.forEach(function(offer) {
+if (offer && offer.photo) {
+ensureCarouselSlide(offer.photo);
+}
+});
+const preferredOffer = offersData.find(o => o && o.is_most_popular) || offersData[0];
+if (preferredOffer) {
+applyOfferSelection(preferredOffer.id);
+}
+if (increaseBtn) {
+increaseBtn.disabled = true;
+}
+if (decreaseBtn) {
+decreaseBtn.disabled = true;
+}
+if (quantityInput) {
+quantityInput.readOnly = true;
+}
+}
+if (communeSelect && communeSelect.value.trim()) {
+refreshCommuneDeliveryAvailability();
+} else {
+updateDeliveryPrices();
+updateTotalPrice();
+}
+}
+document.addEventListener('DOMContentLoaded', initLandingForm);
+function applyOfferSelection(offerId) {
+if (!offersData || offersData.length === 0) {
+return;
+}
+const offer = offersData.find(item => String(item.id) === String(offerId));
+if (!offer) {
+return;
+}
+selectedOffer = offer;
+if (offerInput) {
+offerInput.value = offer.id;
+}
+offerCards.forEach(card => {
+const cardId = card.getAttribute('data-offer-id');
+card.classList.toggle('selected', String(cardId) === String(offer.id));
+});
+if (quantityInput) {
+quantityInput.value = offer.qty;
+}
+if (offer.photo) {
+const targetIndex = ensureCarouselSlide(offer.photo);
+if (targetIndex !== null && window.landingMainSwiper) {
+window.landingMainSwiper.update();
+if (typeof window.landingMainSwiper.slideToLoop === 'function') {
+window.landingMainSwiper.slideToLoop(targetIndex);
+} else {
+window.landingMainSwiper.slideTo(targetIndex);
+}
+}
+}
+updateTotalPrice();
+}
+function updateTotalPrice() {
+const quantityInput = document.getElementById('quantity');
+const wilayaSelect = document.getElementById('wilaya');
+const deliveryTypeInput = document.getElementById('deliveryTypeInput');
+if (!quantityInput || !wilayaSelect || !deliveryTypeInput) {
+console.warn('Missing required elements for pricing');
+return;
+}
+let quantity = parseInt(quantityInput.value, 10) || 1;
+const wilaya = wilayaSelect.value.trim();
+const deliveryType = deliveryTypeInput.value;
+const availableOptions = updateDeliveryOptionsState();
+let effectiveUnitPrice = basePrice;
+if (selectedOffer && selectedOffer.qty && selectedOffer.unit) {
+quantity = selectedOffer.qty;
+effectiveUnitPrice = selectedOffer.unit;
+if (quantityInput) {
+quantityInput.value = quantity;
+}
+}
+let shippingFee = 0;
+if (Object.prototype.hasOwnProperty.call(availableOptions, deliveryType)) {
+shippingFee = Number(availableOptions[deliveryType] || 0);
+}
+const total = quantity * effectiveUnitPrice + shippingFee;
+const deliveryPriceSpan = document.getElementById('delivery_price');
+if (deliveryPriceSpan) {
+deliveryPriceSpan.textContent = formatDeliveryPrice(shippingFee);
+}
+const deliveryBox = document.querySelector('.delivery-info');
+if (deliveryBox) {
+if (wilaya && Object.keys(availableOptions).length > 0 && deliveryType) {
+deliveryBox.classList.remove('is-hidden');
+} else {
+deliveryBox.classList.add('is-hidden');
+}
+}
+const totalAmountSpan = document.getElementById('total_price_btn');
+if (totalAmountSpan) {
+totalAmountSpan.textContent = total.toFixed(2) + ' \u062f\u062c';
+}
+const totalHiddenInput = document.getElementById('total_price_hidden');
+if (totalHiddenInput) {
+totalHiddenInput.value = total.toFixed(2);
+}
+const totalDisplayInput = document.getElementById('total_price');
+if (totalDisplayInput) {
+totalDisplayInput.textContent = total.toFixed(2) + ' \u062f\u062c';
+}
+const summaryProduct = document.getElementById('summary-product-price');
+if (summaryProduct) {
+summaryProduct.textContent = (quantity * effectiveUnitPrice).toFixed(2) + ' \u062f\u062c';
+}
+const summaryDelivery = document.getElementById('summary-delivery-price');
+if (summaryDelivery) {
+summaryDelivery.textContent = shippingFee === 0 ? '\u0645\u062c\u0627\u0646\u064a' : shippingFee + ' \u062f\u062c';
+}
+const summaryTotal = document.getElementById('summary-total-price');
+if (summaryTotal) {
+summaryTotal.textContent = total.toFixed(2) + ' \u062f\u062c';
+}
+}
+const carouselPhotoIndex = {};
+if (Array.isArray(carouselPhotos)) {
+carouselPhotos.forEach((photo, index) => {
+if (photo && carouselPhotoIndex[photo] === undefined) {
+carouselPhotoIndex[photo] = index;
+}
+});
+}
+function ensureCarouselSlide(photo) {
+if (!photo || !window.landingMainSwiper) {
+return null;
+}
+if (carouselPhotoIndex[photo] !== undefined) {
+return carouselPhotoIndex[photo];
+}
+const size = (carouselPhotoSizes && carouselPhotoSizes[photo]) ? carouselPhotoSizes[photo] : { width: 1200, height: 1200 };
+const width = size && (size.width || size[0]) ? (size.width || size[0]) : 1200;
+const height = size && (size.height || size[1]) ? (size.height || size[1]) : 1200;
+const srcset = (carouselPhotoSrcsets && carouselPhotoSrcsets[photo]) ? carouselPhotoSrcsets[photo] : '';
+const imgSrcset = (carouselPhotoImgSrcsets && carouselPhotoImgSrcsets[photo]) ? carouselPhotoImgSrcsets[photo] : '';
+const photoUrl = (carouselOptimizedPhotoUrls && carouselOptimizedPhotoUrls[photo]) ? carouselOptimizedPhotoUrls[photo] : resolveFrontImageUrl(photo);
+const thumbUrl = (carouselThumbUrls && carouselThumbUrls[photo]) ? carouselThumbUrls[photo] : photoUrl;
+const imgTag = '<img src="' + photoUrl + '"' + (imgSrcset ? ' srcset="' + imgSrcset + '"' : '') + ' alt="' + productName + '" width="' + width + '" height="' + height + '" loading="lazy" decoding="async" sizes="' + carouselSizes + '">';
+const pictureHtml = srcset ? '<picture>
+<source type="image/webp" srcset="' + srcset + '" sizes="' + carouselSizes + '">' + imgTag + '</picture>' : imgTag;
+const slideHtml = '<div class="swiper-slide">
+<div class="landing-carousel-item">' + pictureHtml + '</div>
+</div>';
+window.landingMainSwiper.appendSlide(slideHtml);
+if (window.landingThumbsSwiper) {
+const thumbHtml = '<div class="swiper-slide">
+<img class="landing-carousel-thumb" src="' + thumbUrl + '" alt="' + productName + '" width="' + width + '" height="' + height + '" loading="lazy">
+</div>';
+window.landingThumbsSwiper.appendSlide(thumbHtml);
+window.landingThumbsSwiper.update();
+}
+const newIndex = carouselPhotos.length;
+carouselPhotos.push(photo);
+carouselPhotoIndex[photo] = newIndex;
+if (window.landingMainSwiper.params && window.landingMainSwiper.params.loop) {
+window.landingMainSwiper.loopDestroy();
+window.landingMainSwiper.loopCreate();
+}
+window.landingMainSwiper.update();
+return newIndex;
+}
+function parseRgbString(value) {
+const match = value.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)/i);
+if (!match) {
+return null;
+}
+return {
+r: parseInt(match[1], 10),
+g: parseInt(match[2], 10),
+b: parseInt(match[3], 10)
+};
+}
+function getRelativeLuminance(r, g, b) {
+const toLinear = (channel) => {
+const value = channel / 255;
+return value <= 0.03928 ? value / 12.92 : Math.pow((value + 0.055) / 1.055, 2.4);
+};
+const red = toLinear(r);
+const green = toLinear(g);
+const blue = toLinear(b);
+return 0.2126 * red + 0.7152 * green + 0.0722 * blue;
+}
+function applyColorSwatchStyles() {
+const options = document.querySelectorAll('.color-option[data-color]');
+if (!options.length) {
+return;
+}
+options.forEach((option) => {
+const colorValue = option.getAttribute('data-color');
+if (!colorValue || !(window.CSS && CSS.supports && CSS.supports('color', colorValue))) {
+return;
+}
+const probe = document.createElement('span');
+probe.style.color = colorValue;
+probe.style.position = 'absolute';
+probe.style.opacity = '0';
+document.body.appendChild(probe);
+const computed = getComputedStyle(probe).color;
+document.body.removeChild(probe);
+const rgb = parseRgbString(computed);
+if (!rgb) {
+return;
+}
+const luminance = getRelativeLuminance(rgb.r, rgb.g, rgb.b);
+if (luminance > 0.6) {
+option.style.color = '#111111';
+option.style.textShadow = '0 1px 1px rgba(255, 255, 255, 0.35)';
+} else {
+option.style.color = '#ffffff';
+option.style.textShadow = '0 1px 2px rgba(0, 0, 0, 0.35)';
+}
+});
+}
+applyColorSwatchStyles();
+const nextStepHint = document.getElementById('nextStepHint');
+const nextStepOffers = document.querySelector('.order-offers-top') || document.querySelector('.order-offers');
+const nextStepOrderSection = document.getElementById('orderFormSection');
+const nextStepQuantityGroup = document.querySelector('.quantity-group');
+const nextStepDeliveryOptions = document.querySelector('.delivery-options');
+const nextStepCta = document.querySelector('.order-cta');
+const hasOffers = document.querySelectorAll('.offer-card').length > 0;
+const colorSelection = document.getElementById('colorSelection');
+const selectedColorField = document.getElementById('selected_color');
+if (colorSelection && selectedColorField && !selectedColorField.value.trim()) {
+colorSelection.classList.add('color-attention');
+}
+function resolveFrontImageUrl(value) {
+const raw = String(value || '').trim();
+if (!raw) {
+return '';
+}
+if (/^(?:https?:)?\/\//i.test(raw)) {
+return raw;
+}
+return 'assets/uploads/' + raw.replace(/^[/\\]+/, '');
+}
+function flashStep(element) {
+if (!element) {
+return;
+}
+element.classList.remove('step-highlight');
+void element.offsetWidth;
+element.classList.add('step-highlight');
+}
+function updateColorStepHint(colorName, shouldHighlight = true) {
+if (!nextStepHint) {
+return;
+}
+const safeColorName = (colorName || '').trim();
+if (!safeColorName) {
+return;
+}
+if (hasOffers && nextStepOffers) {
+nextStepHint.textContent = `تم اختيار اللون: ${safeColorName}. الخطوة التالية: اختر العرض المناسب ثم أكمل بياناتك.`;
+if (shouldHighlight) {
+flashStep(nextStepOffers);
+}
+return;
+}
+nextStepHint.textContent = `تم اختيار اللون: ${safeColorName}. الخطوة التالية: أكمل بياناتك ثم اختر الكمية ونوع التوصيل.`;
+if (shouldHighlight) {
+flashStep(nextStepOrderSection || nextStepQuantityGroup);
+flashStep(nextStepDeliveryOptions);
+}
+}
+function updateDeliveryStepHint(shouldHighlight = true) {
+if (!nextStepHint) {
+return;
+}
+nextStepHint.textContent = 'تم اختيار نوع التوصيل. الخطوة الأخيرة: اضغط زر تأكيد الطلب.';
+if (shouldHighlight) {
+flashStep(nextStepCta);
+}
+}
+document.querySelectorAll('.color-option').forEach(option => {
+option.addEventListener('click', function () {
+document.querySelectorAll('.color-option').forEach(el => el.classList.remove('selected'));
+this.classList.add('selected');
+document.querySelectorAll('.color-option').forEach(el => el.setAttribute('aria-pressed', 'false'));
+this.setAttribute('aria-pressed', 'true');
+const colorId = this.getAttribute('data-value');
+const selectedColor = document.getElementById('selected_color');
+if (selectedColor) {
+selectedColor.value = colorId || '';
+}
+const slideIndexRaw = this.getAttribute('data-slide-index');
+const mappedPhoto = colorId && colorPhotoMap && colorPhotoMap[colorId] ? colorPhotoMap[colorId] : '';
+const photo = mappedPhoto || this.getAttribute('data-photo') || '';
+let targetIndex = null;
+if (slideIndexRaw) {
+const parsedIndex = parseInt(slideIndexRaw, 10);
+if (!isNaN(parsedIndex)) {
+targetIndex = parsedIndex;
+}
+} else if (photo) {
+targetIndex = ensureCarouselSlide(photo);
+}
+if (targetIndex !== null && window.landingMainSwiper) {
+window.landingMainSwiper.update();
+if (typeof window.landingMainSwiper.slideToLoop === 'function') {
+window.landingMainSwiper.slideToLoop(targetIndex);
+} else {
+window.landingMainSwiper.slideTo(targetIndex);
+}
+}
+clearColorError();
+if (colorSelection) {
+colorSelection.classList.remove('color-attention');
+}
+if (pendingColorSubmit) {
+pendingColorSubmit = false;
+const formEl = document.getElementById('orderForm');
+if (formEl) {
+if (typeof formEl.requestSubmit === 'function') {
+formEl.requestSubmit();
+} else {
+formEl.submit();
+}
+}
+}
+updateColorStepHint(this.textContent, true);
+});
+});
+function initDefaultColorSelection() {
+const selectedColorInput = document.getElementById('selected_color');
+const selectedValue = selectedColorInput ? selectedColorInput.value.trim() : '';
+if (!selectedValue) {
+return;
+}
+const selectedBtn = document.querySelector(`.color-option[data-value="${selectedValue}"]`) || document.querySelector('.color-option.selected');
+if (!selectedBtn) {
+return;
+}
+selectedBtn.classList.add('selected');
+selectedBtn.setAttribute('aria-pressed', 'true');
+if (colorSelection) {
+colorSelection.classList.remove('color-attention');
+}
+const mappedPhoto = selectedValue && colorPhotoMap && colorPhotoMap[selectedValue] ? colorPhotoMap[selectedValue] : '';
+const photo = mappedPhoto || selectedBtn.getAttribute('data-photo') || '';
+if (photo && carouselPhotoIndex[photo] === undefined) {
+ensureCarouselSlide(photo);
+}
+updateColorStepHint(selectedBtn.textContent, false);
+}
+if (document.readyState === 'loading') {
+document.addEventListener('DOMContentLoaded', initDefaultColorSelection);
+} else {
+initDefaultColorSelection();
+}
+// Size selection
+document.querySelectorAll('.size-option').forEach(option => {
+option.addEventListener('click', function () {
+document.querySelectorAll('.size-option').forEach(el => el.classList.remove('selected'));
+this.classList.add('selected');
+const selectedSize = document.getElementById('selected_size');
+if (selectedSize) {
+selectedSize.value = this.getAttribute('data-value') || '';
+}
+});
+});
+// تبديل الصورة الرئيسية بالنقر على الصور المصغرة
+document.querySelectorAll('.thumb-img').forEach(img => {
+img.addEventListener('click', function () {
+const mainImg = document.getElementById('main-product-image');
+const photo = this.getAttribute('data-photo');
+mainImg.src = resolveFrontImageUrl(photo);
+});
+});
+// تحريك الصور المصغرة تلقائياً
+let currentThumbIndex = 0;
+const thumbImages = document.querySelectorAll('.thumb-img');
+const mainImage = document.getElementById('main-product-image');
+const thumbContainer = document.querySelector('.d-flex.justify-content-center.gap-3');
+if (thumbImages.length && mainImage) {
+function autoRotateThumbs() {
+thumbImages.forEach(thumb => thumb.classList.remove('selected-thumb'));
+thumbImages[currentThumbIndex].classList.add('selected-thumb');
+const photo = thumbImages[currentThumbIndex].getAttribute('data-photo');
+mainImage.src = resolveFrontImageUrl(photo);
+currentThumbIndex = (currentThumbIndex + 1) % thumbImages.length;
+}
+let thumbInterval = setInterval(autoRotateThumbs, 3000);
+if (thumbContainer) {
+thumbContainer.addEventListener('mouseenter', () => {
+clearInterval(thumbInterval);
+});
+thumbContainer.addEventListener('mouseleave', () => {
+thumbInterval = setInterval(autoRotateThumbs, 3000);
+});
+}
+}
+// عند تغيير الكمية، حدث السعر الإجمالي
+let isSubmitting = false;
+let lastClickTime = 0;
+const CLICK_DELAY = 1000; // تأخير ثانية واحدة بين الضغطات
+let pendingColorSubmit = false;
+const colorError = document.getElementById('colorError');
+function showColorError() {
+if (!colorError) {
+return;
+}
+if (colorError.dataset && colorError.dataset.message) {
+colorError.textContent = colorError.dataset.message;
+}
+colorError.classList.add('is-visible');
+}
+function clearColorError() {
+if (!colorError) {
+return;
+}
+colorError.classList.remove('is-visible');
+}
+// إضافة معالج النموذج مع منع الضغط المتكرر المحسن
+document.querySelector('form').addEventListener('submit', function(e) {
+const currentTime = Date.now();
+if (currentTime - lastClickTime < CLICK_DELAY) {
+e.preventDefault();
+alert('يرجى الانتظار ثانية واحدة قبل المحاولة مرة أخرى');
+return false;
+}
+if (isSubmitting) {
+e.preventDefault();
+alert('جاري إرسال الطلب، يرجى الانتظار...');
+return false;
+}
+// تحديث وقت آخر ضغطة
+const colorSection = document.getElementById('colorSelection');
+if (colorSection) {
+const selectedColorValue = document.getElementById('selected_color')?.value.trim();
+if (!selectedColorValue) {
+e.preventDefault();
+pendingColorSubmit = true;
+showColorError();
+flashStep(colorSection);
+return false;
+}
+}
+lastClickTime = currentTime;
+// الحصول على زر الإرسال
+const submitButton = this.querySelector('button[type="submit"]');
+// التحقق من أن الزر لم يتم تعطيله مسبقاً
+if (submitButton.disabled) {
+e.preventDefault();
+return false;
+}
+// تعيين حالة الإرسال
+isSubmitting = true;
+// تعطيل الزر فوراً لمنع الضغط المتكرر
+submitButton.disabled = true;
+submitButton.style.opacity = '0.6';
+submitButton.style.cursor = 'not-allowed';
+// تغيير نص الزر لإظهار حالة التحميل
+const originalText = submitButton.innerHTML;
+submitButton.innerHTML = '<i class="fa fa-spinner fa-spin">
+</i> جاري الإرسال...';
+// إضافة رسالة للمستخدم
+const statusDiv = document.createElement('div');
+statusDiv.id = 'submit-status';
+statusDiv.style.cssText = 'background: rgba(193, 18, 31, 0.12); color: #000000; padding: 10px; margin: 10px 0; border-radius: 5px; text-align: center;';
+statusDiv.innerHTML = 'جاري إرسال الطلب، يرجى عدم إغلاق الصفحة...';
+submitButton.parentNode.insertBefore(statusDiv, submitButton);
+// السماح للنموذج بالإرسال العادي (بدون preventDefault)
+// هذا سيضمن إرسال النموذج مرة واحدة فقط
+});
+// تم إزالة تحذير beforeunload لتفادي رسالة المتصفح أثناء إرسال الطلب
+// إعادة تعيين حالة الإرسال عند تحميل الصفحة (في حالة إعادة التوجيه)
+window.addEventListener('load', function() {
+isSubmitting = false;
+});
+// إضافة تنسيقات للرسالة
+const style = document.createElement('style');
+style.textContent = `
+.swal2-title-arabic {
+font-family: 'Cairo', sans-serif !important;
+font-size: 2.5rem !important;
+color: #000000 !important;
+margin-bottom: 1rem !important;
+}
+.swal2-content-arabic {
+font-family: 'Cairo', sans-serif !important;
+font-size: 1.2rem !important;
+color: rgba(0, 0, 0, 0.65) !important;
+}
+.swal2-confirm-button-arabic {
+font-family: 'Cairo', sans-serif !important;
+font-size: 1.2rem !important;
+padding: 12px 40px !important;
+border-radius: 10px !important;
+margin-top: 1rem !important;
+}
+.swal2-popup-arabic {
+border-radius: 20px !important;
+padding: 2rem !important;
+max-width: 500px !important;
+}
+.success-message {
+text-align: center;
+padding: 1rem;
+}
+.success-message h3 {
+color: #c1121f;
+font-size: 1.8rem;
+margin-bottom: 1rem;
+}
+.success-message p {
+color: rgba(0, 0, 0, 0.65);
+font-size: 1.1rem;
+margin-bottom: 1.5rem;
+}
+.order-details {
+background: rgba(0, 0, 0, 0.04);
+padding: 1rem;
+border-radius: 10px;
+margin-top: 1rem;
+}
+.order-details p {
+margin: 0.5rem 0;
+font-size: 1rem;
+}
+.order-details strong {
+color: #000000;
+margin-left: 0.5rem;
+}
+.swal2-icon {
+transform: scale(1.2) !important;
+margin-bottom: 1rem !important;
+}
+`;
+document.head.appendChild(style);
+const landingPixelProduct = {
+id: "140",
+content_name: "\u0633\u062c\u0627\u062f \u0627\u0644\u0637\u0631\u064a\u0642 \u0627\u0644\u062a\u0641\u0627\u0639\u0644\u064a \u0644\u0644\u0623\u0637\u0641\u0627\u0644 \u2013 \u0645\u062a\u0639\u0629 \u0644\u0639\u0628 \u0628\u0644\u0627 \u062d\u062f\u0648\u062f",
+unit_price: 1300,
+currency: 'DZD'
+};
+function buildLandingPixelPayload(useCurrentTotal) {
+const quantity = Math.max(1, parseInt(document.getElementById('quantity')?.value || '1', 10) || 1);
+const currentTotal = parseFloat(document.getElementById('total_price_hidden')?.value || '');
+const value = useCurrentTotal && !Number.isNaN(currentTotal) && currentTotal > 0
+? currentTotal
+: (landingPixelProduct.unit_price * quantity);
+return {
+id: landingPixelProduct.id,
+content_ids: [landingPixelProduct.id],
+content_name: landingPixelProduct.content_name,
+content_type: 'product',
+currency: landingPixelProduct.currency,
+quantity: quantity,
+num_items: quantity,
+value: value
+};
+}
+window.addEventListener('load', function() {
+if (typeof window.__trackViewContent === 'function') {
+window.__trackViewContent(buildLandingPixelPayload(false), {
+dedupeKey: 'landing-view-content-140'
+});
+}
+// Just.ad / partners may validate against custom TikTok event names.
+// We mirror ViewContent into common partner names (once) to help validation succeed.
+try {
+if (window.ttq && typeof window.ttq.track === 'function') {
+const payload = buildLandingPixelPayload(false);
+const baseKey = 'landing-partner-view-140';
+window.__pixelEventCache = window.__pixelEventCache || {};
+if (!window.__pixelEventCache[baseKey + ':ON_WEB_DETAIL']) {
+window.__pixelEventCache[baseKey + ':ON_WEB_DETAIL'] = true;
+window.ttq.track('ON_WEB_DETAIL', payload);
+}
+if (!window.__pixelEventCache[baseKey + ':SHOPPING']) {
+window.__pixelEventCache[baseKey + ':SHOPPING'] = true;
+window.ttq.track('SHOPPING', payload);
+}
+}
+} catch (e) {}
+});
+// حفظ الطلب غير المكتمل عند مغادرة الصفحة
+let orderCompleted = false;
+const orderSuccessFlag = false;
+if (orderSuccessFlag) {
+orderCompleted = true;
+}
+// عند إرسال النموذج بنجاح نعتبر الطلب مكتمل
+const orderForm = document.getElementById('orderForm');
+if(orderForm) {
+const fireLandingInitiateCheckout = function() {
+if (typeof window.__trackInitiateCheckout === 'function') {
+window.__trackInitiateCheckout(buildLandingPixelPayload(true), {
+dedupeKey: 'landing-initiate-checkout-140'
+});
+}
+// Mirror to partner/custom TikTok event name that some connectors validate against.
+try {
+if (window.ttq && typeof window.ttq.track === 'function') {
+window.__pixelEventCache = window.__pixelEventCache || {};
+const key = 'landing-initiate-order-140';
+if (!window.__pixelEventCache[key]) {
+window.__pixelEventCache[key] = true;
+window.ttq.track('INITIATE_ORDER', buildLandingPixelPayload(true));
+}
+}
+} catch (e) {}
+};
+orderForm.addEventListener('focusin', fireLandingInitiateCheckout, { once: true });
+orderForm.addEventListener('pointerdown', fireLandingInitiateCheckout, { once: true });
+orderForm.addEventListener('change', fireLandingInitiateCheckout, { once: true });
+orderForm.addEventListener('submit', function() {
+fireLandingInitiateCheckout();
+orderCompleted = true;
+});
+}
+function isReloadNavigation() {
+try {
+if (performance.getEntriesByType) {
+const entries = performance.getEntriesByType('navigation');
+if (entries && entries.length) {
+return entries[0].type === 'reload';
+}
+}
+if (performance.navigation) {
+return performance.navigation.type === 1;
+}
+} catch (err) {
+return false;
+}
+return false;
+}
+function resetOrderFormFields() {
+const form = document.getElementById('orderForm');
+if (!form) {
+return;
+}
+const nameInput = document.getElementById('customer_name');
+const phoneInput = document.getElementById('customer_phone');
+if (nameInput) nameInput.value = '';
+if (phoneInput) phoneInput.value = '';
+const wilayaSelect = document.getElementById('wilaya');
+const communeSelect = document.getElementById('commune');
+if (wilayaSelect) wilayaSelect.selectedIndex = 0;
+if (communeSelect) communeSelect.selectedIndex = 0;
+const selectedSizeInput = document.getElementById('selected_size');
+if (selectedSizeInput) selectedSizeInput.value = '';
+document.querySelectorAll('.size-option.selected').forEach(el => el.classList.remove('selected'));
+const selectedColorInput = document.getElementById('selected_color');
+if (selectedColorInput) selectedColorInput.value = '';
+document.querySelectorAll('.color-option').forEach(el => {
+el.classList.remove('selected');
+el.setAttribute('aria-pressed', 'false');
+});
+if (typeof clearColorError === 'function') {
+clearColorError();
+}
+const quantityInput = document.getElementById('quantity');
+if (quantityInput) quantityInput.value = 1;
+if (typeof applyOfferSelection === 'function' && Array.isArray(offersData) && offersData.length) {
+applyOfferSelection(offersData[0].id);
+}
+const deliveryInput = document.getElementById('deliveryTypeInput');
+const selectedDelivery = document.querySelector('.delivery-btn.selected') || document.querySelector('.delivery-btn');
+if (deliveryInput && selectedDelivery) {
+deliveryInput.value = selectedDelivery.getAttribute('data-type') || deliveryInput.value;
+}
+if (typeof updateTotalPrice === 'function') {
+updateTotalPrice();
+} else {
+const totalHiddenInput = document.getElementById('total_price_hidden');
+if (totalHiddenInput && typeof basePrice !== 'undefined') {
+totalHiddenInput.value = basePrice;
+}
+const totalDisplayInput = document.getElementById('total_price');
+if (totalDisplayInput && typeof basePrice !== 'undefined') {
+totalDisplayInput.textContent = parseFloat(basePrice).toFixed(2) + ' دج';
+}
+}
+}
+document.addEventListener('DOMContentLoaded', function() {
+if (isReloadNavigation()) {
+resetOrderFormFields();
+}
+});
+document.addEventListener('DOMContentLoaded', function() {
+const dismissBtn = document.getElementById('orderSuccessDismiss');
+const banner = document.getElementById('orderSuccessBanner');
+if (banner) {
+const page = document.querySelector('.page.landing-page');
+if (page) {
+const announcement = page.querySelector('.announcement-bar');
+if (announcement && announcement.nextElementSibling !== banner) {
+announcement.after(banner);
+} else if (!announcement && page.firstElementChild !== banner) {
+page.insertBefore(banner, page.firstElementChild);
+}
+}
+}
+if (dismissBtn && banner) {
+dismissBtn.addEventListener('click', function() {
+banner.style.display = 'none';
+});
+}
+});
+window.addEventListener('beforeunload', function (e) {
+if(orderCompleted || isSubmitting) return;
+const name = document.getElementById('customer_name')?.value.trim();
+const phone = document.getElementById('customer_phone')?.value.trim();
+const wilaya = document.getElementById('wilaya')?.value.trim();
+const commune = document.getElementById('commune')?.value.trim();
+if(name && phone) {
+const productId = 140;
+const productName = "\u0633\u062c\u0627\u062f \u0627\u0644\u0637\u0631\u064a\u0642 \u0627\u0644\u062a\u0641\u0627\u0639\u0644\u064a \u0644\u0644\u0623\u0637\u0641\u0627\u0644 \u2013 \u0645\u062a\u0639\u0629 \u0644\u0639\u0628 \u0628\u0644\u0627 \u062d\u062f\u0648\u062f";
+const unitPrice = 1300;
+const quantity = document.getElementById('quantity')?.value || '';
+const selectedSize = document.getElementById('selected_size')?.value || '';
+const selectedColor = document.getElementById('selected_color')?.value || '';
+const deliveryType = document.getElementById('deliveryTypeInput')?.value || '';
+const totalPrice = document.getElementById('total_price_hidden')?.value || '';
+const data = new URLSearchParams({
+customer_name: name,
+customer_phone: phone
+});
+data.append('product_id', productId);
+data.append('product_name', productName);
+data.append('unit_price', unitPrice);
+if(quantity) data.append('quantity', quantity);
+if(selectedSize) data.append('selected_size', selectedSize);
+if(selectedColor) data.append('selected_color', selectedColor);
+if(deliveryType) data.append('delivery_type', deliveryType);
+if(totalPrice) data.append('total_price', totalPrice);
+if(wilaya) data.append('wilaya', wilaya);
+if(commune) data.append('commune', commune);
+if(window.siteDeviceId) data.append('device_id', window.siteDeviceId);
+data.append('source', 'landing');
+navigator.sendBeacon('save-incomplete-order.php', data);
+}
+});
+</script>
+</main>
+</div>
+</body>

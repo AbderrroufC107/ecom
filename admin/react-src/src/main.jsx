@@ -11,7 +11,17 @@ import './index.css'
 import AdminShell from './components/AdminShell.jsx'
 import { SkeletonPage } from './components/Enterprise.jsx'
 import { currentFile, decodeText } from './lib/text.js'
-import { getPageTitle, getSectionForFile, sectionLabels } from './lib/pageMeta.js'
+import { getPageTitle, getSectionForFile, sectionLabels, sharedTrans } from './lib/pageMeta.js'
+
+window.addEventListener('error', (event) => {
+  fetch('log_error.php?err=' + encodeURIComponent(event.message + ' at ' + event.filename + ':' + event.lineno))
+})
+window.addEventListener('unhandledrejection', (event) => {
+  fetch('log_error.php?err=' + encodeURIComponent('Promise Rejection: ' + event.reason))
+})
+window.logReact = (msg) => {
+  fetch('log_error.php?err=' + encodeURIComponent('[ReactLog] ' + msg))
+}
 
 const pageLoaders = {
   dashboard: () => import('./pages/Dashboard.jsx'),
@@ -20,6 +30,8 @@ const pageLoaders = {
   otherTables: () => import('./pages/OtherTables.jsx'),
   settings: () => import('./pages/SettingsPage.jsx'),
   content: () => import('./pages/ContentPage.jsx'),
+  aiKnowledge: () => import('./pages/AiKnowledge.jsx'),
+  marketingAi: () => import('./pages/MarketingAi.jsx'),
 }
 
 const Dashboard = lazy(pageLoaders.dashboard)
@@ -28,6 +40,8 @@ const ProductForm = lazy(pageLoaders.productForm)
 const OtherTables = lazy(pageLoaders.otherTables)
 const SettingsPage = lazy(pageLoaders.settings)
 const ContentPage = lazy(pageLoaders.content)
+const AiKnowledge = lazy(pageLoaders.aiKnowledge)
+const MarketingAi = lazy(pageLoaders.marketingAi)
 
 const theme = createTheme({
   primaryColor: 'indigo',
@@ -92,14 +106,14 @@ const theme = createTheme({
 function routeLoader(path) {
   if (path === 'order.php') return pageLoaders.orders
   if (path === 'settings.php') return pageLoaders.settings
+  if (path === 'ai-knowledge.php') return pageLoaders.aiKnowledge
   if (['index.php', '', 'store-dashboard.php', 'store.php'].includes(path)) return pageLoaders.dashboard
   if (shouldUseGenericForm(path)) return pageLoaders.productForm
-  if (['system-health.php'].includes(path)) return pageLoaders.content
+  if (['system-health.php', 'my-earnings.php', 'employee-performance.php', 'employee-payments.php'].includes(path)) return pageLoaders.content
   return pageLoaders.otherTables
 }
 
-const currentPath = currentFile()
-routeLoader(currentPath)?.()
+routeLoader(currentFile())?.()
 
 function Providers({ children }) {
   return (
@@ -126,6 +140,9 @@ function mountShell() {
 }
 
 function insertBefore(node, id, reference) {
+  const existing = document.getElementById(id)
+  if (existing) return existing
+
   const container = document.createElement('div')
   container.id = id
   reference.parentNode.insertBefore(container, reference)
@@ -137,7 +154,8 @@ function findDashboardAnchor() {
     document.querySelector('.admin-dashboard') ||
     document.querySelector('.admin-dashboard-hero') ||
     document.querySelector('.store-dash') ||
-    document.querySelector('.premium-dashboard')
+    document.querySelector('.premium-dashboard') ||
+    document.querySelector('.dashboard-wrapper')
   )
 }
 
@@ -182,27 +200,62 @@ function shouldUseGenericForm(path) {
   return /(?:-add|-edit)\.php$/.test(path) || ['profile-edit.php', 'performance-settings.php', 'integrations.php'].includes(path)
 }
 
+function getPageType(path) {
+  if (path === 'order.php') return 'orders'
+  if (path === 'settings.php') return 'settings'
+  if (path === 'ai-knowledge.php') return 'aiKnowledge'
+  if (path === 'marketing-ai.php') return 'marketingAi'
+  if (['index.php', '', 'store-dashboard.php', 'store.php'].includes(path)) return 'dashboard'
+  if (shouldUseGenericForm(path)) return 'productForm'
+  if (['system-health.php', 'my-earnings.php', 'employee-performance.php', 'employee-payments.php'].includes(path)) return 'content'
+  return 'otherTables'
+}
+
 function mountPageSpecific() {
-  const path = currentPath
-  const mountFormAdapter = (form) => {
-    if (!form) return false
-    const root = insertBefore(form.parentNode, 'admin-form-react-root', form)
-    const section = sectionLabels[getSectionForFile(path)] || 'الإدارة'
-    mountReact(root, (
-      <Suspense fallback={<SkeletonPage />}>
-        <ProductForm
-          sourceForm={form}
-          isEdit={/edit/.test(path)}
-          pageName={path}
-          titleOverride={decodeText(getPageTitle(path))}
-          eyebrow={section}
-        />
-      </Suspense>
-    ))
-    return true
+  const path = currentFile()
+  routeLoader(path)?.()
+
+  const pageType = getPageType(path)
+  
+  const expectedRootId = {
+    orders: 'orders-react-root',
+    settings: 'settings-react-root',
+    aiKnowledge: 'ai-knowledge-react-root',
+    marketingAi: 'marketing-ai-react-root',
+    dashboard: 'dashboard-react-root',
+    productForm: 'admin-form-react-root',
+    content: 'content-react-root',
+    otherTables: 'other-tables-react-root'
+  }[pageType]
+
+  if (window.logReact) {
+    window.logReact('mountPageSpecific path: ' + path + ', pageType: ' + pageType + ', expectedRootId: ' + expectedRootId + ', exists: ' + !!document.getElementById(expectedRootId))
   }
 
-  if (path === 'order.php') {
+  if (expectedRootId && document.getElementById(expectedRootId)) {
+    // Already mounted the correct component
+    return
+  }
+
+  // Clean up any incorrect roots that might have mounted
+  const allRoots = [
+    'orders-react-root',
+    'settings-react-root',
+    'ai-knowledge-react-root',
+    'marketing-ai-react-root',
+    'dashboard-react-root',
+    'admin-form-react-root',
+    'other-tables-react-root',
+    'content-react-root'
+  ]
+  allRoots.forEach(id => {
+    if (id !== expectedRootId) {
+      const el = document.getElementById(id)
+      if (el) el.remove()
+    }
+  })
+
+  if (pageType === 'orders') {
     const root = document.getElementById('orders-react-root')
     if (root) {
       mountReact(root, (
@@ -214,7 +267,7 @@ function mountPageSpecific() {
     return
   }
 
-  if (path === 'settings.php') {
+  if (pageType === 'settings') {
     const sourceTabs = document.querySelector('.nav-tabs-custom')
     if (sourceTabs) {
       const root = insertBefore(sourceTabs.parentNode, 'settings-react-root', sourceTabs)
@@ -227,7 +280,36 @@ function mountPageSpecific() {
     return
   }
 
-  if (['index.php', '', 'store-dashboard.php', 'store.php'].includes(path)) {
+  if (pageType === 'aiKnowledge') {
+    const contentHeader = document.querySelector('.content-header')
+    const content = document.querySelector('.content')
+    if (contentHeader) contentHeader.style.display = 'none'
+    if (content) content.style.display = 'none'
+    
+    const mountReference = contentHeader || content
+    if (mountReference) {
+      const root = insertBefore(mountReference.parentNode, 'ai-knowledge-react-root', mountReference)
+      mountReact(root, (
+        <Suspense fallback={<SkeletonPage />}>
+          <AiKnowledge />
+        </Suspense>
+      ))
+    }
+    return
+  }
+
+  if (pageType === 'marketingAi') {
+    const legacyWrapper = document.querySelector('.content-wrapper')
+    const root = insertBefore(legacyWrapper || document.body, 'marketing-ai-react-root', legacyWrapper ? legacyWrapper.firstChild : null)
+    mountReact(root, (
+      <Suspense fallback={<SkeletonPage />}>
+        <MarketingAi />
+      </Suspense>
+    ))
+    return
+  }
+
+  if (pageType === 'dashboard') {
     const anchor = findDashboardAnchor()
     if (anchor) {
       const root = insertBefore(anchor.parentNode, 'dashboard-react-root', anchor)
@@ -240,12 +322,11 @@ function mountPageSpecific() {
     return
   }
 
-  if (shouldUseGenericForm(path)) {
+  if (pageType === 'productForm') {
     const form = findPrimaryForm(path)
-    if (mountFormAdapter(form)) return
     if (form) {
       const root = insertBefore(form.parentNode, 'admin-form-react-root', form)
-      const section = sectionLabels[getSectionForFile(path)] || 'الإدارة'
+      const section = sectionLabels[getSectionForFile(path)] || sharedTrans.administration
       mountReact(root, (
         <Suspense fallback={<SkeletonPage />}>
           <ProductForm
@@ -257,39 +338,58 @@ function mountPageSpecific() {
           />
         </Suspense>
       ))
-      return
     }
-  }
-
-  const table = findPrimaryTable()
-  if (table) {
-    const mountReference = table.closest('.box, .card, .panel, .table-responsive, .dataTables_wrapper') || table
-    const root = insertBefore(mountReference.parentNode, 'other-tables-react-root', mountReference)
-    mountReact(root, (
-      <Suspense fallback={<SkeletonPage />}>
-        <OtherTables legacyTable={table} pageName={path} />
-      </Suspense>
-    ))
     return
   }
 
-  if (mountFormAdapter(findPrimaryForm(path))) return
+  if (pageType === 'otherTables') {
+    const table = findPrimaryTable()
+    if (window.logReact) {
+      window.logReact('otherTables block. table: ' + (table ? 'found id=' + table.id + ' class=' + table.className : 'null'))
+    }
+    if (table) {
+      const mountReference = table.closest('.box, .card, .panel, .table-responsive, .dataTables_wrapper') || table
+      const root = insertBefore(mountReference.parentNode, 'other-tables-react-root', mountReference)
+      mountReact(root, (
+        <Suspense fallback={<SkeletonPage />}>
+          <OtherTables legacyTable={table} pageName={path} />
+        </Suspense>
+      ))
+    }
+    return
+  }
 
-  const content = findPrimaryContent()
-  if (content) {
-    const root = insertBefore(content.parentNode, 'content-react-root', content)
-    mountReact(root, (
-      <Suspense fallback={<SkeletonPage />}>
-        <ContentPage sourceContent={content} pageName={path} />
-      </Suspense>
-    ))
+  if (pageType === 'content') {
+    const content = findPrimaryContent()
+    if (content) {
+      const root = insertBefore(content.parentNode, 'content-react-root', content)
+      mountReact(root, (
+        <Suspense fallback={<SkeletonPage />}>
+          <ContentPage sourceContent={content} pageName={path} />
+        </Suspense>
+      ))
+    }
+    return
   }
 }
 
-mountShell()
-
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', mountPageSpecific)
-} else {
-  mountPageSpecific()
+try {
+  mountShell()
+  window.logReact('mountShell OK')
+} catch (e) {
+  window.logReact('mountShell ERROR: ' + e.message + ' ' + e.stack)
+  document.body.classList.remove('admin-react-pending')
 }
+
+try {
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', mountPageSpecific)
+  } else {
+    mountPageSpecific()
+  }
+  window.logReact('mountPageSpecific OK')
+} catch (e) {
+  window.logReact('mountPageSpecific ERROR: ' + e.message + ' ' + e.stack)
+}
+
+document.addEventListener('spa:pageLoaded', mountPageSpecific)

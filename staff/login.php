@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../admin/inc/config.php';
 if (session_status() !== PHP_SESSION_ACTIVE) {
     session_start();
 }
@@ -7,8 +8,6 @@ if (!empty($_SESSION['staff_employee_id'])) {
     header('Location: index.php');
     exit;
 }
-
-require_once __DIR__ . '/../admin/inc/config.php';
 require_once __DIR__ . '/../admin/inc/employee_functions.php';
 require_once __DIR__ . '/../admin/inc/LoginThrottle.php';
 require_once __DIR__ . '/../admin/inc/audit.php';
