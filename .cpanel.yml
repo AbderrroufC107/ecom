@@ -1,0 +1,18 @@
+---
+# cPanel Git deployment script.
+# Runs when you click "Manage" -> "Pull or Deploy" -> "Deploy HEAD Commit"
+# in cPanel's Git Version Control. It copies the app from the cloned repo
+# (~/repositories/ecom) into the live web root (public_html).
+#
+# Notes:
+#  - No --delete is used, so files that live only on the server (the manually
+#    created admin/inc/config.php and runtime uploads under assets/uploads/)
+#    are preserved and never wiped by a deploy.
+#  - Secrets, SQL dumps, logs, archives, dev tooling and the separate Next.js
+#    source apps are excluded from the public web root.
+#  - If your site's document root is an addon/subdomain rather than the primary
+#    domain, change DEPLOYPATH below to that folder.
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/thikdtuy/public_html
+    - /usr/bin/rsync -a --exclude='.git/' --exclude='.github/' --exclude='.tools/' --exclude='.agents/' --exclude='.codex/' --exclude='.venv/' --exclude='.vscode/' --exclude='.claude/' --exclude='scratch/' --exclude='build-tools/' --exclude='tests/' --exclude='docs/' --exclude='node_modules/' --exclude='customer-next/' --exclude='customer-next-vite/' --exclude='admin/inc/config.php' --exclude='.env' --exclude='.env.*' --exclude='*.log' --exclude='*.zip' --exclude='*.sql' ./ "$DEPLOYPATH/"
