@@ -1,2 +1,6 @@
 # Auto detect text files and perform LF normalization
 * text=auto
+
+# Deploy/shell/config files must keep LF endings for the Linux server
+.cpanel.yml text eol=lf
+*.sh text eol=lf
