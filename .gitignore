@@ -1,0 +1,17 @@
+# Secrets / environment files — never commit real credentials
+admin/inc/config.php
+customer-next/.env.local
+customer-next-vite/.env
+.env
+.env.*
+!.env.example
+
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+
+# OS/editor cruft
+.DS_Store
+Thumbs.db
