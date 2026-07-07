@@ -12,7 +12,12 @@
 #    source apps are excluded from the public web root.
 #  - If your site's document root is an addon/subdomain rather than the primary
 #    domain, change DEPLOYPATH below to that folder.
+#  - IMPORTANT: rsync uses --chmod (dirs 0755, files 0644) and drops -p/-o/-g on
+#    purpose. A previous `rsync -a` copied the repo's own directory permissions
+#    onto public_html and broke LiteSpeed (it could no longer traverse the web
+#    root, so every URL 404'd). --chmod forces web-safe permissions instead.
 deployment:
   tasks:
     - export DEPLOYPATH=/home/thikdtuy/public_html
-    - /usr/bin/rsync -a --exclude='.git/' --exclude='.github/' --exclude='.tools/' --exclude='.agents/' --exclude='.codex/' --exclude='.venv/' --exclude='.vscode/' --exclude='.claude/' --exclude='scratch/' --exclude='build-tools/' --exclude='tests/' --exclude='docs/' --exclude='node_modules/' --exclude='customer-next/' --exclude='customer-next-vite/' --exclude='admin/inc/config.php' --exclude='.env' --exclude='.env.*' --exclude='*.log' --exclude='*.zip' --exclude='*.sql' ./ "$DEPLOYPATH/"
+    - /usr/bin/rsync -rltD --no-owner --no-group --chmod=Du=rwx,Dgo=rx,Fu=rw,Fgo=r --exclude='.git/' --exclude='.github/' --exclude='.tools/' --exclude='.agents/' --exclude='.codex/' --exclude='.venv/' --exclude='.vscode/' --exclude='.claude/' --exclude='scratch/' --exclude='build-tools/' --exclude='tests/' --exclude='docs/' --exclude='node_modules/' --exclude='customer-next/' --exclude='customer-next-vite/' --exclude='admin/inc/config.php' --exclude='.env' --exclude='.env.*' --exclude='*.log' --exclude='*.zip' --exclude='*.sql' ./ "$DEPLOYPATH/"
+    - /bin/chmod 755 "$DEPLOYPATH"
