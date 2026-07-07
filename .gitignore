@@ -15,3 +15,5 @@ node_modules/
 # OS/editor cruft
 .DS_Store
 Thumbs.db
+.tools/node/
+.tools/node-v22.22.3-win-x64.zip

@@ -168,7 +168,7 @@ if (isset($_POST['add_user'])) {
             throw new Exception('جميع الحقول مطلوبة لإضافة مستخدم جديد.');
         }
 
-        if (!in_array($role, ['Admin', 'Editor'], true)) {
+        if ($role !== 'Admin') {
             throw new Exception('الصلاحية المحددة غير صالحة.');
         }
 
@@ -691,7 +691,6 @@ foreach ($users as $user_row) {
                                 <select name="role" id="role" class="form-control" required>
                                     <option value="">اختر الصلاحية</option>
                                     <option value="Admin" <?= $form_role === 'Admin' ? 'selected' : ''; ?>>مدير</option>
-                                    <option value="Editor" <?= $form_role === 'Editor' ? 'selected' : ''; ?>>محرر</option>
                                 </select>
                             </div>
                         </div>

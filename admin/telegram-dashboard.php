@@ -35,6 +35,17 @@ $adminId = (int) $_SESSION['user']['id'];
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
     $action = trim((string) $_POST['action']);
 
+    // These four touch shared, platform-wide state (webhook registration, the
+    // secret token every incoming update is verified against, and the shared
+    // queue/log tables) — restricted to Super Admin so a regular Manager can't
+    // break Telegram for everyone else.
+    $superAdminOnlyActions = ['reset_webhook', 'regenerate_secret', 'clear_dlq', 'purge_logs'];
+    $isSuperAdmin = isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin';
+    if (in_array($action, $superAdminOnlyActions, true) && !$isSuperAdmin) {
+        $error = 'هذا الإجراء متاح فقط لحساب Super Admin.';
+        $action = '';
+    }
+
     try {
         switch ($action) {
             case 'test_connection':
@@ -217,7 +228,9 @@ try {
         <h1>لوحة تحكم ومراقبة Telegram Bot</h1>
     </div>
     <div class="content-header-right">
-        <a href="telegram-settings.php" class="btn btn-success"><i class="fa fa-cog"></i> إعدادات البوت</a>
+        <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin'): ?>
+            <a href="telegram-settings.php" class="btn btn-success"><i class="fa fa-cog"></i> إعدادات البوت</a>
+        <?php endif; ?>
     </div>
 </section>
 
@@ -375,21 +388,25 @@ try {
                         <button type="submit" name="action" value="test_connection" class="btn btn-block btn-info btn-flat">
                             <i class="fa fa-ping"></i> فحص الاتصال وإرسال تنبيه تجريبي
                         </button>
+                        <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin'): ?>
                         <button type="submit" name="action" value="reset_webhook" class="btn btn-block btn-primary btn-flat">
                             <i class="fa fa-link"></i> إعادة تسجيل Webhook لتيليجرام
                         </button>
                         <button type="submit" name="action" value="regenerate_secret" class="btn btn-block btn-warning btn-flat">
                             <i class="fa fa-key"></i> تجديد رمز Webhook السري الآمن
                         </button>
+                        <?php endif; ?>
                         <button type="submit" name="action" value="retry_failed" class="btn btn-block btn-success btn-flat">
                             <i class="fa fa-refresh"></i> إعادة تشغيل الرسائل الفاشلة / التالفة
                         </button>
+                        <?php if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin'): ?>
                         <button type="submit" name="action" value="clear_dlq" class="btn btn-block btn-danger btn-flat">
                             <i class="fa fa-trash"></i> مسح الرسائل التالفة (Clear DLQ)
                         </button>
                         <button type="submit" name="action" value="purge_logs" class="btn btn-block btn-default btn-flat text-red">
                             <i class="fa fa-times"></i> تنظيف السجلات القديمة (أقدم من 30 يوماً)
                         </button>
+                        <?php endif; ?>
                         <button type="submit" name="action" value="export_logs" class="btn btn-block btn-default btn-flat">
                             <i class="fa fa-download"></i> تصدير السجلات بتنسيق CSV
                         </button>

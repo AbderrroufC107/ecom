@@ -236,9 +236,9 @@ if ($is_employee) {
 												<th style="background-color: #f9f9f9;">حالة التوفر</th>
 												<td>
 													<select name="availability_status" class="form-control" style="width: 200px;">
-														<option value="available" <?php echo ($user_data['availability_status'] ?? 'available') === 'available' ? 'selected' : ''; ?>>متاح</option>
-														<option value="busy" <?php echo ($user_data['availability_status'] ?? '') === 'busy' ? 'selected' : ''; ?>>مشغول</option>
-														<option value="away" <?php echo ($user_data['availability_status'] ?? '') === 'away' ? 'selected' : ''; ?>>بعيد</option>
+														<option value="Available" <?php echo ($user_data['availability_status'] ?? 'Available') === 'Available' ? 'selected' : ''; ?>>متاح</option>
+														<option value="Busy" <?php echo ($user_data['availability_status'] ?? '') === 'Busy' ? 'selected' : ''; ?>>مشغول</option>
+														<option value="Away" <?php echo ($user_data['availability_status'] ?? '') === 'Away' ? 'selected' : ''; ?>>بعيد</option>
 													</select>
 												</td>
 											</tr>

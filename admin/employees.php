@@ -18,6 +18,14 @@ $current_manager_id = (int)($_SESSION['user']['id'] ?? 0);
 $is_super_admin = (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin');
 $effective_manager_id = $is_super_admin ? null : $current_manager_id;
 
+function employee_owned_by_current_manager(PDO $pdo, int $employee_id, ?int $effective_manager_id, bool $is_super_admin): bool
+{
+    if ($is_super_admin) return true;
+    $emp = employee_get_by_id($pdo, $employee_id);
+    if (!$emp) return false;
+    return (int) ($emp['manager_id'] ?? 0) === (int) $effective_manager_id;
+}
+
 $search = trim($_GET['search'] ?? '');
 
 $action = $_POST['action'] ?? ($_GET['action'] ?? '');
@@ -33,6 +41,10 @@ if ($action === 'auto_assign') {
         $password = $_POST['password'] ?? '';
         $telegram_chat_id = trim($_POST['telegram_chat_id'] ?? '');
         $is_active = !empty($_POST['is_active']) ? 1 : 0;
+        $assignment_weight = max(1, (int) ($_POST['assignment_weight'] ?? 1));
+        $availability_status = $_POST['availability_status'] ?? 'Available';
+        $max_active_orders = max(1, (int) ($_POST['max_active_orders'] ?? 50));
+        $commission_per_order = (float) ($_POST['commission_per_order'] ?? 0);
 
         if ($full_name === '') throw new Exception('الاسم الكامل مطلوب.');
         if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) throw new Exception('البريد الإلكتروني غير صالح.');
@@ -49,7 +61,11 @@ if ($action === 'auto_assign') {
             'password' => $password,
             'telegram_chat_id' => $telegram_chat_id,
             'is_active' => $is_active,
-            'manager_id' => $effective_manager_id
+            'manager_id' => $effective_manager_id,
+            'assignment_weight' => $assignment_weight,
+            'availability_status' => $availability_status,
+            'max_active_orders' => $max_active_orders,
+            'commission_per_order' => $commission_per_order
         ]);
 
         if (isset($_POST['products_tab_present'])) {
@@ -68,8 +84,15 @@ if ($action === 'auto_assign') {
         $password = $_POST['password'] ?? '';
         $telegram_chat_id = trim($_POST['telegram_chat_id'] ?? '');
         $is_active = !empty($_POST['is_active']) ? 1 : 0;
+        $assignment_weight = max(1, (int) ($_POST['assignment_weight'] ?? 1));
+        $availability_status = $_POST['availability_status'] ?? 'Available';
+        $max_active_orders = max(1, (int) ($_POST['max_active_orders'] ?? 50));
+        $commission_per_order = (float) ($_POST['commission_per_order'] ?? 0);
 
         if ($employee_id <= 0) throw new Exception('معرّف الموظف غير صالح.');
+        if (!employee_owned_by_current_manager($pdo, $employee_id, $effective_manager_id, $is_super_admin)) {
+            throw new Exception('غير مصرح لك بتعديل هذا الموظف.');
+        }
         if ($full_name === '') throw new Exception('الاسم الكامل مطلوب.');
         if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) throw new Exception('البريد الإلكتروني غير صالح.');
 
@@ -85,7 +108,11 @@ if ($action === 'auto_assign') {
             'email' => $email,
             'password' => $password !== '' ? $password : '',
             'telegram_chat_id' => $telegram_chat_id,
-            'is_active' => $is_active
+            'is_active' => $is_active,
+            'assignment_weight' => $assignment_weight,
+            'availability_status' => $availability_status,
+            'max_active_orders' => $max_active_orders,
+            'commission_per_order' => $commission_per_order
         ]);
 
         if (isset($_POST['products_tab_present'])) {
@@ -98,14 +125,34 @@ if ($action === 'auto_assign') {
         $error_message = $e->getMessage();
     }
 } elseif ($action === 'test_telegram' && $employee_id > 0) {
-    $test_result = telegram_send_test($pdo, $employee_id);
-    if ($test_result['success']) {
-        $success_message = $test_result['message'];
+    if (!employee_owned_by_current_manager($pdo, $employee_id, $effective_manager_id, $is_super_admin)) {
+        $error_message = 'غير مصرح لك بالوصول لهذا الموظف.';
     } else {
-        $error_message = $test_result['message'];
+        $test_result = telegram_send_test($pdo, $employee_id);
+        if ($test_result['success']) {
+            $success_message = $test_result['message'];
+        } else {
+            $error_message = $test_result['message'];
+        }
+    }
+} elseif ($action === 'toggle_active' && $employee_id > 0) {
+    try {
+        if (!employee_owned_by_current_manager($pdo, $employee_id, $effective_manager_id, $is_super_admin)) {
+            throw new Exception('غير مصرح لك بتعديل هذا الموظف.');
+        }
+        $emp_row = employee_get_by_id($pdo, $employee_id);
+        if (!$emp_row) throw new Exception('الموظف غير موجود.');
+        $new_status = empty($emp_row['is_active']) ? 1 : 0;
+        $dbRepo->prepare("UPDATE tbl_employee SET is_active = ? WHERE id = ?")->execute([$new_status, $employee_id]);
+        $success_message = $new_status ? 'تم تفعيل الموظف بنجاح.' : 'تم تعطيل الموظف بنجاح.';
+    } catch (Exception $e) {
+        $error_message = $e->getMessage();
     }
 } elseif ($action === 'delete' && $employee_id > 0) {
     try {
+        if (!employee_owned_by_current_manager($pdo, $employee_id, $effective_manager_id, $is_super_admin)) {
+            throw new Exception('غير مصرح لك بحذف هذا الموظف.');
+        }
         $assign_check = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_order_assignment WHERE employee_id = ?");
         $assign_check->execute([$employee_id]);
         if ((int) $assign_check->fetchColumn() > 0) {
@@ -139,28 +186,83 @@ $unassigned_count = employee_get_unassigned_orders_count($pdo);
 ?>
 
 <style>
-.emp-wrap { direction: rtl; text-align: right; font-family: 'Cairo', sans-serif; }
-.emp-hero { display: flex; justify-content: space-between; align-items: center; gap: 12px; margin-bottom: 18px; flex-wrap: wrap; }
-.emp-hero h3 { margin: 0; font-weight: 800; color: #0f172a; }
-.emp-hero p { margin: 6px 0 0; color: #64748b; }
-.emp-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-.emp-card { background: #fff; border: 1px solid #e5e7eb; border-radius: 14px; box-shadow: 0 8px 24px rgba(15,23,42,.06); padding: 18px; margin-bottom: 18px; }
-.emp-stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px; margin-bottom: 18px; }
-.emp-stat { background: #fff; border: 1px solid #e5e7eb; border-radius: 12px; padding: 14px; text-align: center; }
-.emp-stat strong { display: block; font-size: 24px; font-weight: 800; color: #0f172a; }
-.emp-stat small { color: #64748b; font-size: 12px; }
-.emp-stat.is-primary { border-color: #0f766e; background: linear-gradient(135deg, #f0fdfa, #fff); }
-.emp-stat.is-warning { border-color: #f59e0b; background: linear-gradient(135deg, #fffbeb, #fff); }
-.emp-table th { background: #f8fafc; font-weight: 700; white-space: nowrap; }
-.emp-table td { vertical-align: middle; }
-.emp-badge { display: inline-block; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700; }
-.emp-badge.is-active { background: #dcfce7; color: #15803d; }
-.emp-badge.is-inactive { background: #fef2f2; color: #b91c1c; }
-.emp-modal-lg { max-width: 600px; }
-.emp-search-form { display: flex; gap: 8px; align-items: center; }
-.emp-search-form input { min-width: 220px; }
-.emp-stat-table td { padding: 4px 8px; font-size: 13px; }
-.emp-stat-table td:first-child { font-weight: 700; }
+/* ==========================================================================
+   Employees page — self-contained native design (opted out of the React
+   table adapter in main.jsx via NATIVE_PAGES, so this markup renders as-is).
+   ========================================================================== */
+.emp-wrap { direction: rtl; text-align: right; font-family: 'CairoLocal','Cairo',sans-serif; --emp-line:#e6e9ef; --emp-ink:#0f172a; --emp-muted:#64748b; }
+.emp-hero { display:flex; justify-content:space-between; align-items:flex-end; gap:16px; margin:4px 0 20px; flex-wrap:wrap; }
+.emp-hero h3 { margin:0; font-weight:800; color:var(--emp-ink); font-size:22px; display:flex; align-items:center; gap:10px; }
+.emp-hero h3 i { color:#4f46e5; }
+.emp-hero p { margin:6px 0 0; color:var(--emp-muted); font-size:13.5px; }
+.emp-actions { display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+.emp-search-form { display:flex; gap:8px; align-items:center; }
+.emp-search-form input { min-width:220px; }
+
+/* KPI cards */
+.emp-stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:12px; margin-bottom:20px; }
+.emp-stat { background:#fff; border:1px solid var(--emp-line); border-radius:14px; padding:16px; text-align:center; box-shadow:0 1px 2px rgba(15,23,42,.04); }
+.emp-stat strong { display:block; font-size:26px; font-weight:800; color:var(--emp-ink); line-height:1.1; }
+.emp-stat small { color:var(--emp-muted); font-size:12px; }
+.emp-stat.is-primary { border-color:#c7d2fe; background:linear-gradient(135deg,#eef2ff,#fff); }
+.emp-stat.is-warning { border-color:#fde68a; background:linear-gradient(135deg,#fffbeb,#fff); }
+
+/* Table card */
+.emp-card { background:#fff; border:1px solid var(--emp-line); border-radius:16px; box-shadow:0 4px 20px rgba(15,23,42,.05); overflow:hidden; margin-bottom:18px; }
+.emp-tablewrap { overflow-x:auto; }
+.emp-tbl { width:100%; border-collapse:separate; border-spacing:0; font-size:13.5px; }
+.emp-tbl thead th { background:#f8fafc; color:#475569; font-weight:800; font-size:12.5px; text-align:right; padding:13px 16px; white-space:nowrap; border-bottom:1px solid var(--emp-line); position:sticky; top:0; z-index:1; }
+.emp-tbl tbody td { padding:14px 16px; border-bottom:1px solid #f1f5f9; color:#334155; vertical-align:middle; }
+.emp-tbl tbody tr:last-child td { border-bottom:0; }
+.emp-tbl tbody tr:hover td { background:#f9fafb; }
+.emp-tbl .col-idx { color:var(--emp-muted); font-weight:700; width:44px; }
+
+/* Identity cell (name + email stacked) */
+.emp-identity { display:flex; flex-direction:column; gap:2px; min-width:180px; }
+.emp-identity .nm { font-weight:800; color:var(--emp-ink); font-size:14px; }
+.emp-identity .em { color:var(--emp-muted); font-size:12px; direction:ltr; text-align:right; }
+.emp-identity .dt { color:#94a3b8; font-size:11px; margin-top:2px; }
+
+/* Badges */
+.emp-badge { display:inline-flex; align-items:center; gap:4px; padding:4px 10px; border-radius:999px; font-size:11.5px; font-weight:800; line-height:1.4; white-space:nowrap; }
+.emp-badge.is-active { background:#dcfce7; color:#15803d; }
+.emp-badge.is-inactive { background:#fee2e2; color:#b91c1c; }
+.emp-badge.b-avail { background:#e0f2fe; color:#0369a1; }
+.emp-badge.b-mute { background:#f1f5f9; color:#334155; }
+.emp-badge.b-info { background:#0284c7; color:#fff; }
+.emp-badge.b-warn { background:#d97706; color:#fff; cursor:help; }
+.emp-statusbox { display:flex; flex-direction:column; gap:5px; align-items:flex-start; }
+
+/* Compact stats grid inside a cell */
+.emp-mini { display:grid; grid-template-columns:repeat(3,auto); gap:5px; min-width:190px; }
+.emp-chip { display:flex; flex-direction:column; align-items:center; padding:5px 8px; border-radius:9px; font-size:11px; font-weight:700; line-height:1.2; }
+.emp-chip b { font-size:14px; font-weight:800; }
+.emp-chip.c-all { background:#f1f5f9; color:#334155; }
+.emp-chip.c-pend { background:#fef9c3; color:#854d0e; }
+.emp-chip.c-conf { background:#e0e7ff; color:#3730a3; }
+.emp-chip.c-comp { background:#dcfce7; color:#15803d; }
+.emp-chip.c-canc { background:#fee2e2; color:#b91c1c; }
+.emp-chip.c-ret  { background:#f3e8ff; color:#6b21a8; }
+
+/* Action buttons */
+.emp-actionsbar { display:flex; gap:6px; flex-wrap:nowrap; }
+.emp-btn { display:inline-flex; align-items:center; gap:5px; padding:6px 11px; border-radius:9px; font-size:12px; font-weight:800; border:1px solid transparent; cursor:pointer; text-decoration:none; white-space:nowrap; transition:filter .15s,box-shadow .15s; }
+.emp-btn:hover { filter:brightness(.94); text-decoration:none; }
+.emp-btn.b-edit { background:#4f46e5; color:#fff; }
+.emp-btn.b-test { background:#f1f5f9; color:#334155; border-color:#e2e8f0; }
+.emp-btn.b-off  { background:#f59e0b; color:#fff; }
+.emp-btn.b-on   { background:#16a34a; color:#fff; }
+.emp-btn.b-del  { background:#ef4444; color:#fff; }
+
+.emp-empty { text-align:center; color:var(--emp-muted); padding:40px 16px; }
+
+@media (max-width:720px){
+    .emp-tbl thead { display:none; }
+    .emp-tbl, .emp-tbl tbody, .emp-tbl tr, .emp-tbl td { display:block; width:100%; }
+    .emp-tbl tbody tr { border-bottom:8px solid #f1f5f9; padding:6px 0; }
+    .emp-tbl tbody td { border:0; padding:8px 16px; }
+    .emp-tbl .col-idx { display:none; }
+}
 </style>
 
 <section class="content emp-wrap">
@@ -213,63 +315,78 @@ $unassigned_count = employee_get_unassigned_orders_count($pdo);
     </div>
 
     <div class="emp-card">
-        <div class="table-responsive">
-            <table class="table table-bordered table-hover emp-table">
+        <div class="emp-tablewrap">
+            <table class="emp-tbl">
                 <thead>
                     <tr>
-                        <th>#</th>
-                        <th>الاسم الكامل</th>
-                        <th>البريد الإلكتروني</th>
-                        <th>حالة التيليجرام</th>
-                        <th>الحالة</th>
-                        <th>صلاحيات المنتجات</th>
-                        <th>تاريخ الإضافة</th>
+                        <th class="col-idx">#</th>
+                        <th>الموظف</th>
+                        <th>تيليجرام</th>
+                        <th>الحالة والتوزيع</th>
+                        <th>المنتجات</th>
                         <th>الإحصائيات</th>
                         <th>إجراءات</th>
                     </tr>
                 </thead>
                 <tbody>
                     <?php if (empty($employees)): ?>
-                        <tr><td colspan="9" class="text-center text-muted">لا يوجد موظفون بعد.</td></tr>
+                        <tr><td colspan="7" class="emp-empty"><i class="fa fa-users" style="font-size:22px;opacity:.4;display:block;margin-bottom:8px;"></i>لا يوجد موظفون بعد.</td></tr>
                     <?php else: $i = 0; foreach ($employees as $emp): $i++;
                         $stats = employee_get_stats($pdo, (int) $emp['id']);
+                        $allowed_cnt = count($emp['allowed_products'] ?? []);
                     ?>
                         <tr>
-                            <td><?php echo $i; ?></td>
-                            <td><strong><?php echo htmlspecialchars($emp['full_name'], ENT_QUOTES, 'UTF-8'); ?></strong></td>
-                            <td><?php echo htmlspecialchars($emp['email'], ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td class="col-idx"><?php echo $i; ?></td>
+                            <td>
+                                <div class="emp-identity">
+                                    <span class="nm"><?php echo htmlspecialchars($emp['full_name'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <span class="em"><?php echo htmlspecialchars($emp['email'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <span class="dt"><i class="fa fa-calendar-o"></i> <?php echo date('d/m/Y', strtotime($emp['created_at'])); ?></span>
+                                </div>
+                            </td>
                             <td><?php echo telegram_get_status_html($emp); ?></td>
                             <td>
-                                <span class="emp-badge <?php echo $emp['is_active'] ? 'is-active' : 'is-inactive'; ?>">
-                                    <?php echo $emp['is_active'] ? 'نشط' : 'معطل'; ?>
-                                </span>
+                                <div class="emp-statusbox">
+                                    <span class="emp-badge <?php echo $emp['is_active'] ? 'is-active' : 'is-inactive'; ?>">
+                                        <?php echo $emp['is_active'] ? 'نشط' : 'معطل'; ?>
+                                    </span>
+                                    <span class="emp-badge b-avail"><?php echo htmlspecialchars($emp['availability_status'] ?? 'Available', ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <span class="emp-badge b-mute">وزن <?php echo (int)($emp['assignment_weight'] ?? 1); ?> · سعة <?php echo (int)($emp['max_active_orders'] ?? 50); ?></span>
+                                </div>
                             </td>
                             <td>
-                                <?php
-                                $allowed_cnt = count($emp['allowed_products'] ?? []);
-                                if ($allowed_cnt === 0) {
-                                    echo '<span class="label label-info" style="background:#0284c7;color:#fff;padding:4px 8px;border-radius:4px;font-size:11px;display:inline-block;">جميع المنتجات</span>';
-                                } else {
+                                <?php if ($allowed_cnt === 0): ?>
+                                    <span class="emp-badge b-info">جميع المنتجات</span>
+                                <?php else:
                                     $p_titles = [];
                                     foreach ($emp['allowed_products'] as $pid) {
                                         $p_titles[] = $prod_names_map[$pid] ?? ("منتج #" . $pid);
                                     }
-                                    echo '<span class="label label-warning" style="background:#d97706;color:#fff;padding:4px 8px;border-radius:4px;font-size:11px;display:inline-block;cursor:help;" title="المنتجات: ' . htmlspecialchars(implode('، ', $p_titles), ENT_QUOTES, 'UTF-8') . '">محدد بـ ' . $allowed_cnt . ' منتجات</span>';
-                                }
                                 ?>
+                                    <span class="emp-badge b-warn" title="المنتجات: <?php echo htmlspecialchars(implode('، ', $p_titles), ENT_QUOTES, 'UTF-8'); ?>">محدد بـ <?php echo $allowed_cnt; ?> منتجات</span>
+                                <?php endif; ?>
                             </td>
-                            <td><?php echo date('d/m/Y', strtotime($emp['created_at'])); ?></td>
                             <td>
-                                <table class="emp-stat-table" style="width:100%">
-                                    <tr><td>الكل</td><td><?php echo $stats['total_assigned']; ?></td><td>معلق</td><td><?php echo $stats['pending']; ?></td></tr>
-                                    <tr><td>مؤكد</td><td><?php echo $stats['confirmed']; ?></td><td>مكتمل</td><td><?php echo $stats['completed']; ?></td></tr>
-                                    <tr><td>ملغي</td><td><?php echo $stats['cancelled']; ?></td><td>مرتجع</td><td><?php echo $stats['returned']; ?></td></tr>
-                                </table>
+                                <div class="emp-mini">
+                                    <span class="emp-chip c-all"><b><?php echo $stats['total_assigned']; ?></b>الكل</span>
+                                    <span class="emp-chip c-pend"><b><?php echo $stats['pending']; ?></b>معلق</span>
+                                    <span class="emp-chip c-conf"><b><?php echo $stats['confirmed']; ?></b>مؤكد</span>
+                                    <span class="emp-chip c-comp"><b><?php echo $stats['completed']; ?></b>مكتمل</span>
+                                    <span class="emp-chip c-canc"><b><?php echo $stats['cancelled']; ?></b>ملغي</span>
+                                    <span class="emp-chip c-ret"><b><?php echo $stats['returned']; ?></b>مرتجع</span>
+                                </div>
                             </td>
-                            <td style="white-space: nowrap;">
-                                <a href="employees.php?action=test_telegram&id=<?php echo (int) $emp['id']; ?>" class="btn btn-default btn-xs" title="إرسال رسالة اختبار"><i class="fa fa-paper-plane"></i> تجربة</a>
-                                <button class="btn btn-primary btn-xs" onclick="editEmployee(<?php echo (int) $emp['id']; ?>)"><i class="fa fa-edit"></i> تعديل</button>
-                                <a href="employees.php?action=delete&id=<?php echo (int) $emp['id']; ?>" class="btn btn-danger btn-xs" onclick="return confirm('هل أنت متأكد من حذف هذا الموظف؟');"><i class="fa fa-trash"></i> حذف</a>
+                            <td>
+                                <div class="emp-actionsbar">
+                                    <button type="button" class="emp-btn b-edit" onclick="editEmployee(<?php echo (int) $emp['id']; ?>)" title="تعديل بيانات الموظف"><i class="fa fa-edit"></i> تعديل</button>
+                                    <a href="employees.php?action=test_telegram&id=<?php echo (int) $emp['id']; ?>" class="emp-btn b-test" title="إرسال رسالة اختبار تيليجرام"><i class="fa fa-paper-plane"></i> تجربة</a>
+                                    <?php if ($emp['is_active']): ?>
+                                        <a href="employees.php?action=toggle_active&id=<?php echo (int) $emp['id']; ?>" class="emp-btn b-off" title="تعطيل حساب الموظف مؤقتاً (يبقى محفوظاً)" onclick="return confirm('هل تريد تعطيل هذا الموظف؟ سيتوقف عن استلام طلبات جديدة.');"><i class="fa fa-pause"></i> تعطيل</a>
+                                    <?php else: ?>
+                                        <a href="employees.php?action=toggle_active&id=<?php echo (int) $emp['id']; ?>" class="emp-btn b-on" title="إعادة تفعيل حساب الموظف"><i class="fa fa-play"></i> تفعيل</a>
+                                    <?php endif; ?>
+                                    <a href="employees.php?action=delete&id=<?php echo (int) $emp['id']; ?>" class="emp-btn b-del" title="حذف الموظف نهائياً (أو تعطيله تلقائياً إن كان لديه طلبات)" onclick="return confirm('هل أنت متأكد من حذف هذا الموظف نهائياً؟ إن كان لديه طلبات سابقة سيتم تعطيله فقط بدلاً من الحذف.');"><i class="fa fa-trash"></i> حذف</a>
+                                </div>
                             </td>
                         </tr>
                     <?php endforeach; endif; ?>
@@ -312,6 +429,30 @@ $unassigned_count = employee_get_unassigned_orders_count($pdo);
                         <div class="col-md-6 mb-3">
                             <label class="form-label">معرّف تيليجرام</label>
                             <input type="text" name="telegram_chat_id" class="form-control" placeholder="اختياري">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">وزن التوزيع</label>
+                            <input type="number" name="assignment_weight" class="form-control" value="1" min="1">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">السعة القصوى</label>
+                            <input type="number" name="max_active_orders" class="form-control" value="50" min="1">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">حالة التواجد</label>
+                            <select name="availability_status" class="form-control">
+                                <option value="Available">متاح</option>
+                                <option value="Busy">مشغول</option>
+                                <option value="Break">استراحة</option>
+                                <option value="Vacation">إجازة</option>
+                                <option value="Offline">غير متصل</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">العمولة لكل طلب</label>
+                            <input type="number" name="commission_per_order" class="form-control" value="0" min="0" step="0.01">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -387,6 +528,30 @@ $unassigned_count = employee_get_unassigned_orders_count($pdo);
                         <div class="col-md-6 mb-3">
                             <label class="form-label">معرّف تيليجرام</label>
                             <input type="text" name="telegram_chat_id" id="editTelegram" class="form-control">
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">وزن التوزيع</label>
+                            <input type="number" name="assignment_weight" id="editAssignmentWeight" class="form-control" value="1" min="1">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">السعة القصوى</label>
+                            <input type="number" name="max_active_orders" id="editMaxActiveOrders" class="form-control" value="50" min="1">
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">حالة التواجد</label>
+                            <select name="availability_status" id="editAvailabilityStatus" class="form-control">
+                                <option value="Available">متاح</option>
+                                <option value="Busy">مشغول</option>
+                                <option value="Break">استراحة</option>
+                                <option value="Vacation">إجازة</option>
+                                <option value="Offline">غير متصل</option>
+                            </select>
+                        </div>
+                        <div class="col-md-3 mb-3">
+                            <label class="form-label">العمولة لكل طلب</label>
+                            <input type="number" name="commission_per_order" id="editCommissionPerOrder" class="form-control" value="0" min="0" step="0.01">
                         </div>
                     </div>
                     <div class="mb-3">
@@ -547,7 +712,11 @@ function editEmployee(id) {
     document.getElementById('editEmail').value = emp.email;
     var tel = document.getElementById('editTelegram');
     if(tel) tel.value = emp.telegram_chat_id || '';
-    
+    document.getElementById('editAssignmentWeight').value = emp.assignment_weight || 1;
+    document.getElementById('editMaxActiveOrders').value = emp.max_active_orders || 50;
+    document.getElementById('editAvailabilityStatus').value = emp.availability_status || 'Available';
+    document.getElementById('editCommissionPerOrder').value = emp.commission_per_order || 0;
+
     var editIsActive = document.getElementById('editIsActive');
     if(editIsActive) {
         editIsActive.checked = parseInt(emp.is_active) === 1;

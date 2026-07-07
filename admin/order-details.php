@@ -628,6 +628,18 @@ if (!$order) {
     exit;
 }
 
+if (!empty($order['manager_id']) && isset($_SESSION['user'])) {
+    $current_manager_id = (int) ($_SESSION['user']['id'] ?? 0);
+    $is_super_admin_user = (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin');
+    if (!$is_super_admin_user && (int) $order['manager_id'] !== $current_manager_id) {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            die('غير مصرح لك بإدارة هذا الطلب لأنه تابع لمدير آخر.');
+        }
+        header('location: order.php');
+        exit;
+    }
+}
+
 $current_admin_emp = employee_get_current_admin_employee($pdo);
 $is_product_restricted_for_user = false;
 if ($current_admin_emp !== null && !empty($current_admin_emp['id'])) {

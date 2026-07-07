@@ -898,6 +898,34 @@ body.admin-react-ready .incomplete-card {
   background: #f8fafc !important;
 }
 
+/*
+ * Pinned (sticky) column background fix.
+ * mantine-datatable only sets z-index on td[data-pinned]; it relies on the cell
+ * having an opaque background so the horizontally-scrolled columns don't show
+ * through it. With `striped`, only odd rows get a background, leaving even-row
+ * pinned cells transparent — which made the stats/date columns bleed through the
+ * pinned "actions" column. Force an opaque, stripe-aware background here.
+ */
+.saas-data-table table td[data-pinned] {
+  background: #ffffff !important;
+}
+.saas-data-table table tbody tr:nth-of-type(odd) td[data-pinned] {
+  background: #f8f9fa !important;
+}
+.saas-data-table table tbody tr:hover td[data-pinned] {
+  background: #f1f5f9 !important;
+}
+.saas-data-table table thead th[data-pinned] {
+  background: #f8fafc !important;
+}
+/* Subtle divider so the pinned column reads as a distinct, fixed panel.
+ * In this RTL table pinLastColumn resolves to data-pinned="left", so the
+ * separating border goes on the pinned column's inline-end (its right edge). */
+.saas-data-table table td[data-pinned="left"],
+.saas-data-table table th[data-pinned="left"] {
+  border-inline-end: 1px solid var(--admin-line) !important;
+}
+
 .saas-table th {
   color: var(--admin-muted);
   font-size: 12px;

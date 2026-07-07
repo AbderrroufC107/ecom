@@ -7,6 +7,12 @@ if (session_status() !== PHP_SESSION_ACTIVE) {
 require_once('inc/config.php');
 require_once('inc/functions.php');
 require_once(dirname(__DIR__) . '/inc/site-security.php');
+if (file_exists(__DIR__ . '/inc/telegram_bot.php')) {
+    require_once(__DIR__ . '/inc/telegram_bot.php');
+}
+if (file_exists(__DIR__ . '/inc/telegram_actions.php')) {
+    require_once(__DIR__ . '/inc/telegram_actions.php');
+}
 header('Content-Type: application/json; charset=UTF-8');
 
 if (!isset($_SESSION['user'])) {
@@ -145,6 +151,15 @@ if (!empty($request['success']) && !empty($request['json'])) {
             if (empty($telegram_result['skipped']) && empty($telegram_result['success'])) {
                 error_log('Order status Telegram failed for order #' . $order_id . ': ' . trim((string) ($telegram_result['error'] ?? 'send failed')));
             }
+
+            // Alert the assigned employee if the driver could not reach the customer.
+            // Only fire on an actual status change so repeated syncs don't spam.
+            if ($previous_status !== $latest_status
+                && function_exists('telegram_is_delivery_noanswer_status')
+                && telegram_is_delivery_noanswer_status($latest_status, $latest_note)) {
+                telegram_notify_employee_delivery_noanswer($pdo, $order_id, $latest_status, (string) $latest_note);
+            }
+
             $synced_count++;
         }
     }

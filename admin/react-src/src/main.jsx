@@ -103,7 +103,13 @@ const theme = createTheme({
   },
 })
 
+// Pages that render their own polished, self-contained markup and must NOT be
+// re-rendered by the generic React adapters (they keep only the shell around
+// their native PHP content). employees.php has a purpose-built table.
+const NATIVE_PAGES = ['employees.php']
+
 function routeLoader(path) {
+  if (NATIVE_PAGES.includes(path)) return null
   if (path === 'order.php') return pageLoaders.orders
   if (path === 'settings.php') return pageLoaders.settings
   if (path === 'ai-knowledge.php') return pageLoaders.aiKnowledge
@@ -201,6 +207,7 @@ function shouldUseGenericForm(path) {
 }
 
 function getPageType(path) {
+  if (NATIVE_PAGES.includes(path)) return 'native'
   if (path === 'order.php') return 'orders'
   if (path === 'settings.php') return 'settings'
   if (path === 'ai-knowledge.php') return 'aiKnowledge'
@@ -216,7 +223,14 @@ function mountPageSpecific() {
   routeLoader(path)?.()
 
   const pageType = getPageType(path)
-  
+
+  // Native pages keep their own PHP markup — mount only the shell (already done)
+  // and make sure the legacy content is revealed even if the shell is slow.
+  if (pageType === 'native') {
+    document.body.classList.remove('admin-react-pending')
+    return
+  }
+
   const expectedRootId = {
     orders: 'orders-react-root',
     settings: 'settings-react-root',

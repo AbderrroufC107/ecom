@@ -57,6 +57,8 @@ class TelegramNotificationProvider implements NotificationProviderInterface
         $buttons = [];
 
         if ($status === 'Pending') {
+            // Kept in sync with telegram_build_action_buttons() in
+            // admin/inc/telegram_bot.php (the keyboard rebuilt after each action).
             $buttons = [
                 'inline_keyboard' => [
                     [
@@ -64,11 +66,14 @@ class TelegramNotificationProvider implements NotificationProviderInterface
                         ['text' => '✏️ تعديل الطلب', 'callback_data' => "edit:{$orderId}"],
                     ],
                     [
-                        ['text' => '🚚 إرسال للشركة', 'callback_data' => "ship:{$orderId}"],
+                        ['text' => '📞 لم يرد', 'callback_data' => "noanswer:{$orderId}"],
                         ['text' => '📝 ملاحظة', 'callback_data' => "note:{$orderId}"],
                     ],
                     [
+                        ['text' => '🚚 إرسال للشركة', 'callback_data' => "ship:{$orderId}"],
                         ['text' => '❌ إلغاء الطلب', 'callback_data' => "cancel:{$orderId}"],
+                    ],
+                    [
                         ['text' => '🗑 حذف الطلب', 'callback_data' => "delete:{$orderId}"],
                     ],
                 ]

@@ -15,8 +15,11 @@ if (!isset($_SESSION['user'])) {
     exit;
 }
 
-// Block employees
-if (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Employee') {
+// The bot token/webhook are a single shared setting for the whole platform
+// (tbl_settings id=1) — only Super Admin may view or change them. A regular
+// Manager (role=Admin) changing this would break Telegram for every other
+// manager and employee, so they (and Employees) are redirected away.
+if (!isset($_SESSION['user']['role']) || $_SESSION['user']['role'] !== 'Super Admin') {
     header('Location: index.php');
     exit;
 }

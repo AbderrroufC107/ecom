@@ -831,6 +831,59 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
         }
     }
 
+    if (!function_exists('telegram_handle_log_noanswer')) {
+        /**
+         * Records a "no answer" call attempt (with timestamp) into
+         * tbl_order_call_log, then refreshes the order message so the employee
+         * sees the running attempt count and last-call time.
+         */
+        function telegram_handle_log_noanswer(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
+        { global $dbRepo;
+            $chat_id = (string) ($callback_query['message']['chat']['id'] ?? '');
+            $message_id = (int) ($callback_query['message']['message_id'] ?? 0);
+            $callback_id = (string) ($callback_query['id'] ?? '');
+            $telegram_user_id = (int) ($callback_query['from']['id'] ?? 0);
+
+            $access = telegram_verify_order_access($pdo, $order_id, $employee_id);
+            if (!$access) {
+                telegram_answer_callback_query($callback_id, "\xE2\x9D\x8C \xD9\x84\xD8\xA7 \xD9\x8A\xD9\x85\xD9\x83\xD9\x86\xD9\x83 \xD8\xA7\xD9\x84\xD9\x88\xD8\xB5\xD9\x88\xD9\x84 \xD9\x84\xD9\x87\xD8\xB0\xD8\xA7 \xD8\xA7\xD9\x84\xD8\xB7\xD9\x84\xD8\xA8");
+                return;
+            }
+
+            try {
+                if (function_exists('admin_ensure_order_call_log_table')) {
+                    admin_ensure_order_call_log_table($pdo);
+                }
+
+                $employee = employee_get_by_id($pdo, $employee_id);
+                $created_by = (string) ($employee['full_name'] ?? 'Telegram');
+
+                $dbRepo->prepare("INSERT INTO tbl_order_call_log (order_id, call_status, call_note, called_at, created_by) VALUES (?, 'no_answer', NULL, NOW(), ?)")
+                    ->execute([$order_id, $created_by]);
+
+                $cs = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_order_call_log WHERE order_id = ? AND call_status = 'no_answer'");
+                $cs->execute([$order_id]);
+                $no_answer_count = (int) $cs->fetchColumn();
+
+                telegram_log_action($pdo, $employee_id, $order_id, 'call_no_answer', $telegram_user_id, ['no_answer_count' => $no_answer_count]);
+
+                // Refresh the order card so the new count/time show immediately.
+                $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+                $stmt->execute([$order_id]);
+                $order = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($order) {
+                    $text = telegram_build_order_notification($order, $employee);
+                    $reply_markup = telegram_build_action_buttons($order_id, $order['order_status'] ?? 'Pending');
+                    telegram_edit_message_text($chat_id, $message_id, $text, $reply_markup);
+                }
+
+                telegram_answer_callback_query($callback_id, "\xF0\x9F\x93\x9E \xD8\xAA\xD9\x85 \xD8\xAA\xD8\xB3\xD8\xAC\xD9\x8A\xD9\x84 \xD9\x85\xD8\xAD\xD8\xA7\xD9\x88\xD9\x84\xD8\xA9 (\xD9\x84\xD9\x85 \xD9\x8A\xD8\xB1\xD8\xAF) \xD8\xB1\xD9\x82\xD9\x85 {$no_answer_count}");
+            } catch (Exception $e) {
+                telegram_answer_callback_query($callback_id, "\xE2\x9D\x8C \xD8\xAA\xD8\xB9\xD8\xB0\xD8\xB1 \xD8\xAA\xD8\xB3\xD8\xAC\xD9\x8A\xD9\x84 \xD8\xA7\xD9\x84\xD9\x85\xD8\xAD\xD8\xA7\xD9\x88\xD9\x84\xD8\xA9");
+            }
+        }
+    }
+
     if (!function_exists('telegram_handle_delete')) {
         function telegram_handle_delete(PDO $pdo, array $callback_query, int $order_id, int $employee_id): void
         {
@@ -931,6 +984,9 @@ if (!defined('TELEGRAM_ACTIONS_LOADED')) {
                     break;
                 case 'note':
                     telegram_handle_note($pdo, $callback_query, $order_id, $employee_id);
+                    break;
+                case 'noanswer':
+                    telegram_handle_log_noanswer($pdo, $callback_query, $order_id, $employee_id);
                     break;
                 case 'ship':
                     telegram_handle_ship($pdo, $callback_query, $order_id, $employee_id);

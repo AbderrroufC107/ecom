@@ -30,12 +30,20 @@ try {
     admin_ensure_order_call_log_table($pdo);
     admin_ensure_order_status_log_table($pdo);
 
-    $statement = $dbRepo->prepare('SELECT id, customer_name FROM tbl_order WHERE id = ? LIMIT 1');
+    $statement = $dbRepo->prepare('SELECT id, customer_name, manager_id FROM tbl_order WHERE id = ? LIMIT 1');
     $statement->execute([$order_id]);
     $order = $statement->fetch(PDO::FETCH_ASSOC);
 
     if (!$order) {
         throw new Exception('الطلب المطلوب غير موجود.');
+    }
+
+    if (!empty($order['manager_id']) && isset($_SESSION['user'])) {
+        $current_manager_id = (int) ($_SESSION['user']['id'] ?? 0);
+        $is_super_admin = (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin');
+        if (!$is_super_admin && (int) $order['manager_id'] !== $current_manager_id) {
+            throw new Exception('غير مصرح لك بحذف طلب تابع لمدير آخر.');
+        }
     }
 
     $pdo->beginTransaction();

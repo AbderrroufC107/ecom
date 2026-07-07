@@ -167,7 +167,7 @@ function columnWidth(header, rows, headerPosition, isActionColumn) {
   const samples = rows.slice(0, 20).map((row) => row.cells.find((cell) => cell.index === header.index)?.text || '')
   const longest = Math.max(header.text.length, ...samples.map((value) => value.length))
 
-  if (isActionColumn) return 220
+  if (isActionColumn) return 320
   if (headerPosition === 0 || /^#|id$/i.test(header.text)) return 96
   if (legacyMappers.colPhone.test(header.text)) return 140
   if (legacyMappers.colDateTime.test(header.text)) return 170
@@ -211,6 +211,7 @@ function parseActionButtons(html) {
       icon,
       isModal,
       isDelete,
+      onclick,
       dataHref,
       dataTarget,
     })
@@ -230,13 +231,28 @@ function ActionCell({ html, isAction }) {
     <Group gap={6} wrap="nowrap">
       {buttons.map((btn, index) => {
         const handleClick = (e) => {
-          if (btn.href) {
-            if (btn.isDelete) {
-              e.preventDefault()
-              if (window.confirm(getLanguage() === 'ar' ? 'هل أنت متأكد من الحذف؟' : 'Are you sure you want to delete this?')) {
-                window.location.href = btn.href
-              }
+          e.preventDefault()
+          if (btn.isDelete && btn.href) {
+            if (window.confirm(getLanguage() === 'ar' ? 'هل أنت متأكد من الحذف؟' : 'Are you sure you want to delete this?')) {
+              window.location.href = btn.href
             }
+            return
+          }
+          if (btn.onclick) {
+            // Legacy `onclick="return confirm('...')"` guards are meant to gate the link's
+            // own navigation, not replace it — evaluate the confirm, then still navigate.
+            const isConfirmGuard = /^\s*return\s+confirm\s*\(/i.test(btn.onclick)
+            if (isConfirmGuard) {
+              let proceed = true
+              try { proceed = new Function(btn.onclick)() !== false } catch (err) { console.warn('action button error', err) }
+              if (proceed && btn.href) window.location.href = btn.href
+              return
+            }
+            try { /* eslint-disable-next-line no-new-func */ new Function(btn.onclick)() } catch (err) { console.warn('action button error', err) }
+            return
+          }
+          if (btn.href) {
+            window.location.href = btn.href
           }
         }
         return (
@@ -481,6 +497,7 @@ export default function OtherTables({ legacyTable, pageName }) {
           withColumnBorders={false}
           striped
           highlightOnHover
+          pinLastColumn
           records={paginatedRows}
           columns={columns}
           totalRecords={sortedRows.length}

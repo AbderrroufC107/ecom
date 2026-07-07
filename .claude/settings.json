@@ -1,0 +1,17 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(php -r ' *)",
+      "Bash(grep -v 'Deprecated\\\\|Undefined variable $current_lang\\\\|Undefined variable $l\\\\|array offset')",
+      "Bash(php -l admin/employees.php)",
+      "Bash(grep -rn \"telegram/bootstrap.php\\\\|telegram\\\\\\\\\\\\\\\\bootstrap\" --include=\"*.php\" c:/xampp/htdocs/ecom)",
+      "Bash(grep -n '$dbhost\\\\|$dbname\\\\|$dbuser\\\\|$dbpass' c:/xampp/htdocs/ecom/admin/inc/config.php)",
+      "Bash(php -l admin/order-details.php)",
+      "Bash(php -l admin/order-delete.php)",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -uroot -h localhost thikastore -e \"SELECT id, telegram_bot_token, telegram_is_enabled, telegram_enable_queue_processing, telegram_secret_token FROM tbl_settings WHERE id=1\\\\G\")",
+      "Bash(grep -v 'Deprecated\\\\|Undefined variable $current_lang\\\\|Undefined variable $l\\\\b\\\\|array offset')",
+      "Bash(/c/xampp/mysql/bin/mysql.exe -uroot -h localhost thikastore -e \"SELECT id, chat_id, method, status, attempts, error_message, created_at FROM tbl_telegram_queue ORDER BY id DESC LIMIT 5\\\\G\")",
+      "Bash(grep -rn \"function ecotrack_normalize_settings\\\\|function ecotrack_api_request\\\\|function ecotrack_is_configured\\\\|function front_get_settings\\\\|function admin_log_order_status_change\\\\|function admin_db_table_exists\" --include=\"*.php\" c:/xampp/htdocs/ecom/admin/inc)"
+    ]
+  }
+}

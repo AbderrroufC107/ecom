@@ -9,48 +9,46 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
         require_once __DIR__ . '/../telegram/bootstrap.php';
     }
 
+    if (!function_exists('employee_safe_alter')) {
+        function employee_safe_alter(string $sql): void
+        { global $dbRepo;
+            try {
+                $dbRepo->executeCommand($sql);
+            } catch (Exception $e) {
+                // Column/index already exists, or the target table isn't installed yet
+            }
+        }
+    }
+
     if (!function_exists('employee_ensure_tables')) {
         function employee_ensure_tables(PDO $pdo): void
         { global $dbRepo;
-            $lock_file = __DIR__ . '/../cache/employee_tables_v4.lock';
+            // v5 folds in columns (manager_id, commission_per_order, assignment_weight,
+            // availability_status, max_active_orders on tbl_employee; manager_id on
+            // tbl_order; the assignment fields on tbl_user) that earlier versions only
+            // ever added via one-off scripts under scratch/, so a fresh install that
+            // never ran those scripts was missing them entirely.
+            $lock_file = __DIR__ . '/../cache/employee_tables_v5.lock';
             if (file_exists($lock_file)) {
-                try {
-                    $dbRepo->executeCommand("ALTER TABLE tbl_employee_products ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
-                } catch (Exception $e) {
-                    // Column already exists or table is not installed yet
-                }
-
-                try {
-                    $dbRepo->executeCommand("ALTER TABLE tbl_product_assignment ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
-                } catch (Exception $e) {
-                    // Column already exists or table is not installed yet
-                }
-
-                try {
-                    $dbRepo->executeCommand("ALTER TABLE tbl_employee_products ADD INDEX idx_emp_prod_tenant (tenant_id)");
-                } catch (Exception $e) {
-                    // Index already exists or table is not installed yet
-                }
-
-                try {
-                    $dbRepo->executeCommand("ALTER TABLE tbl_product_assignment ADD INDEX idx_pa_tenant (tenant_id)");
-                } catch (Exception $e) {
-                    // Index already exists or table is not installed yet
-                }
-
                 return;
             }
 
             $dbRepo->executeCommand("
                 CREATE TABLE IF NOT EXISTS tbl_employee (
                     id INT AUTO_INCREMENT PRIMARY KEY,
+                    manager_id INT DEFAULT NULL,
                     full_name VARCHAR(255) NOT NULL,
                     email VARCHAR(255) NOT NULL,
                     password_hash VARCHAR(255) NOT NULL,
                     telegram_chat_id VARCHAR(255) NOT NULL DEFAULT '',
                     is_active TINYINT(1) NOT NULL DEFAULT 1,
+                    assignment_weight INT NOT NULL DEFAULT 1,
+                    availability_status VARCHAR(50) NOT NULL DEFAULT 'Available',
+                    max_active_orders INT NOT NULL DEFAULT 50,
+                    commission_per_order DECIMAL(12,2) NOT NULL DEFAULT 0.00,
                     created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-                    UNIQUE KEY uk_employee_email (email)
+                    UNIQUE KEY uk_employee_email (email),
+                    KEY idx_employee_manager (manager_id)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             ");
             if (function_exists('telegram_ensure_tables')) {
@@ -61,14 +59,20 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                 CREATE TABLE IF NOT EXISTS tbl_order_assignment (
                     id INT AUTO_INCREMENT PRIMARY KEY,
                     order_id INT NOT NULL,
-                    employee_id INT NOT NULL,
+                    employee_id INT NULL DEFAULT NULL,
+                    user_id INT NULL DEFAULT NULL,
                     assigned_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
                     assigned_by VARCHAR(100) NOT NULL DEFAULT 'auto',
+                    assignment_source VARCHAR(50) NOT NULL DEFAULT 'wrr',
                     status VARCHAR(50) NOT NULL DEFAULT 'active',
+                    is_paid TINYINT(1) NOT NULL DEFAULT 0,
+                    payment_id INT NULL DEFAULT NULL,
                     UNIQUE KEY uk_assignment_order (order_id),
                     KEY idx_assignment_employee (employee_id),
                     KEY idx_assignment_status (status),
-                    KEY idx_assignment_assigned (assigned_at)
+                    KEY idx_assignment_assigned (assigned_at),
+                    KEY idx_assignment_is_paid (is_paid),
+                    KEY idx_assignment_payment_id (payment_id)
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             ");
 
@@ -102,35 +106,48 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci
             ");
 
-            try {
-                $dbRepo->executeCommand("ALTER TABLE tbl_order_assignment ADD COLUMN assignment_source VARCHAR(50) NOT NULL DEFAULT 'wrr' AFTER assigned_by");
-            } catch (Exception $e) {
-                // Column already exists
-            }
+            // Self-healing alters for installs created before this schema existed
+            // (CREATE TABLE IF NOT EXISTS above is a no-op there, so these columns
+            // would otherwise stay missing forever on any pre-v5 database).
+            employee_safe_alter("ALTER TABLE tbl_employee ADD COLUMN manager_id INT DEFAULT NULL AFTER id");
+            employee_safe_alter("ALTER TABLE tbl_employee ADD COLUMN assignment_weight INT NOT NULL DEFAULT 1 AFTER is_active");
+            employee_safe_alter("ALTER TABLE tbl_employee ADD COLUMN availability_status VARCHAR(50) NOT NULL DEFAULT 'Available' AFTER assignment_weight");
+            employee_safe_alter("ALTER TABLE tbl_employee ADD COLUMN max_active_orders INT NOT NULL DEFAULT 50 AFTER availability_status");
+            employee_safe_alter("ALTER TABLE tbl_employee ADD COLUMN commission_per_order DECIMAL(12,2) NOT NULL DEFAULT 0.00");
+            employee_safe_alter("ALTER TABLE tbl_employee ADD INDEX idx_employee_manager (manager_id)");
 
-            try {
-                $dbRepo->executeCommand("ALTER TABLE tbl_employee_products ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
-            } catch (Exception $e) {
-                // Column already exists
-            }
+            employee_safe_alter("ALTER TABLE tbl_order_assignment ADD COLUMN assignment_source VARCHAR(50) NOT NULL DEFAULT 'wrr' AFTER assigned_by");
+            employee_safe_alter("ALTER TABLE tbl_order_assignment MODIFY COLUMN employee_id INT NULL DEFAULT NULL");
+            employee_safe_alter("ALTER TABLE tbl_order_assignment ADD COLUMN user_id INT NULL DEFAULT NULL AFTER employee_id");
+            employee_safe_alter("ALTER TABLE tbl_order_assignment ADD COLUMN is_paid TINYINT(1) NOT NULL DEFAULT 0");
+            employee_safe_alter("ALTER TABLE tbl_order_assignment ADD COLUMN payment_id INT NULL DEFAULT NULL");
+            employee_safe_alter("ALTER TABLE tbl_order_assignment ADD INDEX idx_assignment_is_paid (is_paid)");
+            employee_safe_alter("ALTER TABLE tbl_order_assignment ADD INDEX idx_assignment_payment_id (payment_id)");
 
-            try {
-                $dbRepo->executeCommand("ALTER TABLE tbl_product_assignment ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
-            } catch (Exception $e) {
-                // Column already exists
-            }
+            employee_safe_alter("ALTER TABLE tbl_employee_products ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
+            employee_safe_alter("ALTER TABLE tbl_product_assignment ADD COLUMN tenant_id INT NOT NULL DEFAULT 1 AFTER id");
+            employee_safe_alter("ALTER TABLE tbl_employee_products ADD INDEX idx_emp_prod_tenant (tenant_id)");
+            employee_safe_alter("ALTER TABLE tbl_product_assignment ADD INDEX idx_pa_tenant (tenant_id)");
 
-            try {
-                $dbRepo->executeCommand("ALTER TABLE tbl_employee_products ADD INDEX idx_emp_prod_tenant (tenant_id)");
-            } catch (Exception $e) {
-                // Index already exists
-            }
+            // tbl_order / tbl_user are core tables owned outside this file, but the
+            // assignment feature reads columns on them that historically were only
+            // added by running scratch/multi_manager_migration.sql / update_schema_p9.php
+            // by hand.
+            employee_safe_alter("ALTER TABLE tbl_order ADD COLUMN manager_id INT DEFAULT NULL AFTER id");
+            employee_safe_alter("ALTER TABLE tbl_order ADD INDEX idx_order_manager (manager_id)");
 
-            try {
-                $dbRepo->executeCommand("ALTER TABLE tbl_product_assignment ADD INDEX idx_pa_tenant (tenant_id)");
-            } catch (Exception $e) {
-                // Index already exists
-            }
+            employee_safe_alter("ALTER TABLE tbl_user ADD COLUMN participate_in_assignment TINYINT(1) NOT NULL DEFAULT 0 AFTER role");
+            employee_safe_alter("ALTER TABLE tbl_user ADD COLUMN assignment_weight INT NOT NULL DEFAULT 1 AFTER participate_in_assignment");
+            employee_safe_alter("ALTER TABLE tbl_user ADD COLUMN availability_status VARCHAR(50) NOT NULL DEFAULT 'Available' AFTER assignment_weight");
+            employee_safe_alter("ALTER TABLE tbl_user ADD COLUMN max_active_orders INT NOT NULL DEFAULT 50 AFTER availability_status");
+
+            // Normalize legacy lowercase values that a case-mismatch bug in
+            // admin/profile-edit.php used to write ('available'/'busy'/'away'),
+            // which the WRR assignment query never matched since it only ever
+            // looks for the capitalized 'Available'.
+            employee_safe_alter("UPDATE tbl_user SET availability_status = 'Available' WHERE availability_status = 'available'");
+            employee_safe_alter("UPDATE tbl_user SET availability_status = 'Busy' WHERE availability_status = 'busy'");
+            employee_safe_alter("UPDATE tbl_user SET availability_status = 'Away' WHERE availability_status = 'away'");
 
             @file_put_contents($lock_file, '1');
         }
@@ -201,8 +218,8 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
             }
 
             $stmt = $dbRepo->prepare("
-                INSERT INTO tbl_employee (full_name, email, password_hash, telegram_chat_id, is_active, commission_per_order, manager_id)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO tbl_employee (full_name, email, password_hash, telegram_chat_id, is_active, commission_per_order, manager_id, assignment_weight, availability_status, max_active_orders)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ");
             $stmt->execute([
                 $full_name,
@@ -211,7 +228,10 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                 $telegram_chat_id,
                 $is_active,
                 (float) ($data['commission_per_order'] ?? 0.00),
-                $manager_id
+                $manager_id,
+                max(1, (int) ($data['assignment_weight'] ?? 1)),
+                $data['availability_status'] ?? 'Available',
+                max(1, (int) ($data['max_active_orders'] ?? 50))
             ]);
             $inserted_id = (int) $dbRepo->lastInsertId();
 
@@ -249,6 +269,21 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
             if (isset($data['commission_per_order'])) {
                 $fields[] = "commission_per_order = ?";
                 $params[] = (float) $data['commission_per_order'];
+            }
+
+            if (isset($data['assignment_weight'])) {
+                $fields[] = "assignment_weight = ?";
+                $params[] = max(1, (int) $data['assignment_weight']);
+            }
+
+            if (isset($data['availability_status'])) {
+                $fields[] = "availability_status = ?";
+                $params[] = $data['availability_status'];
+            }
+
+            if (isset($data['max_active_orders'])) {
+                $fields[] = "max_active_orders = ?";
+                $params[] = max(1, (int) $data['max_active_orders']);
             }
 
             $params[] = $id;
