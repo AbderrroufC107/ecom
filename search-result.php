@@ -5,7 +5,7 @@ $page_stylesheet = 'assets/css/catalog-pro.css';
 require_once('header.php');
 ?>
 <?php
-// ØªØ¶Ù…ÙŠÙ† Ù…Ù„Ù Ø§Ù„ØªØ´ÙÙŠØ±
+// تضمين ملف التشفير
 require_once('inc/encryption.php');
 
 if(!isset($_REQUEST['search_text'])) {
@@ -91,7 +91,7 @@ $banner_search_url = trim((string)get_front_image_url($banner_search));
 <div class="page-banner"<?php if ($banner_search_url !== ''): ?> style="background-image: url('<?php echo htmlspecialchars($banner_search_url, ENT_QUOTES, 'UTF-8'); ?>');"<?php endif; ?>>
     <div class="overlay"></div>
     <div class="inner">
-        <h1>Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ø¨Ø­Ø«: <?php echo $search_display; ?></h1>
+        <h1>نتائج البحث: <?php echo $search_display; ?></h1>
     </div>
 </div>
 
@@ -134,9 +134,9 @@ $banner_search_url = trim((string)get_front_image_url($banner_search));
             {   
                 $pagination .= "<div class='pagination'>";
                 if ($page > 1) 
-                    $pagination.= "<a href='$targetpage&page=$prev'>&#171; Ø§Ù„Ø³Ø§Ø¨Ù‚</a>";
+                    $pagination.= "<a href='$targetpage&page=$prev'>&#171; السابق</a>";
                 else
-                    $pagination.= "<span class='disabled'>&#171; Ø§Ù„Ø³Ø§Ø¨Ù‚</span>";    
+                    $pagination.= "<span class='disabled'>&#171; السابق</span>";    
                 if ($lastpage < 7 + ($adjacents * 2))   //not enough pages to bother breaking it up
                 {   
                     for ($counter = 1; $counter <= $lastpage; $counter++)
@@ -193,9 +193,9 @@ $banner_search_url = trim((string)get_front_image_url($banner_search));
                     }
                 }
                 if ($page < $counter - 1) 
-                    $pagination.= "<a href='$targetpage&page=$next'>Ø§Ù„ØªØ§Ù„ÙŠ &#187;</a>";
+                    $pagination.= "<a href='$targetpage&page=$next'>التالي &#187;</a>";
                 else
-                    $pagination.= "<span class='disabled'>Ø§Ù„ØªØ§Ù„ÙŠ &#187;</span>";
+                    $pagination.= "<span class='disabled'>التالي &#187;</span>";
                 $pagination.= "</div>\n";       
             }
             /* ===================== Pagination Code Ends ================== */
@@ -203,13 +203,13 @@ $banner_search_url = trim((string)get_front_image_url($banner_search));
 
             <div class="catalog-header">
                 <div>
-                    <h3>Ù†ØªØ§Ø¦Ø¬ Ø§Ù„Ø¨Ø­Ø«: <?php echo $search_display; ?></h3>
+                    <h3>نتائج البحث: <?php echo $search_display; ?></h3>
                 </div>
                 <span class="catalog-count"><?php echo $total_pages; ?></span>
             </div>
 
             <?php if(!$total_pages): ?>
-                <div class="catalog-empty">Ù„Ø§ ØªÙˆØ¬Ø¯ Ù†ØªØ§Ø¦Ø¬</div>
+                <div class="catalog-empty">لا توجد نتائج</div>
             <?php else: ?>
                 <div class="product-grid">
                     <?php foreach ($result as $row): ?>
@@ -221,7 +221,7 @@ $banner_search_url = trim((string)get_front_image_url($banner_search));
                         <div class="product-card">
                             <div class="product-media"<?php if ($product_photo_url !== ''): ?> style="background-image:url('<?php echo htmlspecialchars($product_photo_url, ENT_QUOTES, 'UTF-8'); ?>');"<?php endif; ?>>
                                 <?php if ($sold_out): ?>
-                                    <span class="product-badge out">Ù†ÙØ¯ Ø§Ù„Ù…Ø®Ø²ÙˆÙ†</span>
+                                    <span class="product-badge out">نفد المخزون</span>
                                 <?php endif; ?>
                             </div>
                             <div class="product-body">
@@ -237,7 +237,7 @@ $banner_search_url = trim((string)get_front_image_url($banner_search));
                                 </div>
                                 <div class="product-actions">
                                     <?php if ($sold_out): ?>
-                                        <span class="product-soldout">Ù†ÙØ¯ Ø§Ù„Ù…Ø®Ø²ÙˆÙ†</span>
+                                        <span class="product-soldout">نفد المخزون</span>
                                     <?php else: ?>
                                         <a href="<?php echo htmlspecialchars($product_url); ?>" class="pro-btn">&#1593;&#1585;&#1590; &#1575;&#1604;&#1605;&#1606;&#1578;&#1580;</a>
                                     <?php endif; ?>
