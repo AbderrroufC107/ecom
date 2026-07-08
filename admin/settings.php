@@ -1,6 +1,14 @@
 <?php require_once('header.php'); ?>
 
 <?php
+// The Telegram bot token is a shared, platform-wide credential managed only by
+// Super Admin on the dedicated telegram-settings.php page. This flag gates the
+// legacy Telegram section here so a regular Manager can't change the token from
+// the general settings page (which would bypass that restriction).
+$settings_is_super_admin = isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin';
+?>
+
+<?php
 try {
     $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS facebook_pixel_id varchar(255) NOT NULL DEFAULT ''");
     $dbRepo->executeCommand("ALTER TABLE tbl_settings ADD COLUMN IF NOT EXISTS tiktok_pixel_id varchar(255) NOT NULL DEFAULT ''");
@@ -368,8 +376,8 @@ if(isset($_POST['form_pixels'])) {
     $success_message = 'Pixel settings updated successfully.';
 }
 
-// Telegram Settings
-if(isset($_POST['form_telegram'])) {
+// Telegram Settings — Super Admin only (the bot token is shared platform-wide).
+if(isset($_POST['form_telegram']) && $settings_is_super_admin) {
     $telegram_bot_token = trim($_POST['telegram_bot_token'] ?? '');
     $telegram_chat_id = trim($_POST['telegram_chat_id'] ?? '');
     $telegram_incomplete_chat_id = trim($_POST['telegram_incomplete_chat_id'] ?? '');
@@ -1256,7 +1264,9 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                         <li><a href="#tab_6" data-toggle="tab">إعدادات الرئيسية</a></li>
                         <li><a href="#tab_7" data-toggle="tab">إعدادات البانر</a></li>
                         <li><a href="#tab_pixels" data-toggle="tab">بيكسل (Pixels)</a></li>
+                        <?php if ($settings_is_super_admin): ?>
                         <li><a href="#tab_telegram" data-toggle="tab">تلغرام</a></li>
+                        <?php endif; ?>
                         <li><a href="#tab_ecotrack" data-toggle="tab">ECOTRACK</a></li>
                         <li><a href="#tab_zrexpress" data-toggle="tab">ZRexpress</a></li>
                         <li><a href="#tab_10" data-toggle="tab">أكواد Head & Body</a></li>
@@ -1992,6 +2002,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
 
                         </div>
 
+                        <?php if ($settings_is_super_admin): ?>
                         <div class="tab-pane" id="tab_telegram">
                             <h3>Telegram Settings</h3>
                             <form class="form-horizontal" action="" method="post">
@@ -2083,6 +2094,7 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             </form>
 
                         </div>
+                        <?php endif; ?>
 
                         <div class="tab-pane" id="tab_ecotrack">
                             <h3>ECOTRACK Settings</h3>
