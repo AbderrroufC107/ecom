@@ -26,6 +26,7 @@ import {
   IconPackage,
   IconPhoto,
   IconSettings,
+  IconSpeakerphone,
   IconTag,
   IconUpload,
 } from '@tabler/icons-react'
@@ -42,7 +43,10 @@ function inferSection(input) {
   const value = `${name} ${groupText}`
 
   if (/price|qty|quantity|offer|purchase|discount|amount|cost/.test(value)) return 'pricing'
-  if (/description|content|detail|short|note|announcement|seo/.test(value)) return 'content'
+  // Split the old catch-all "content" into: main descriptions vs. announcement/SEO,
+  // so neither step becomes one long strip of tall textareas.
+  if (/announcement|seo|meta|keyword|tagline|slug/.test(value)) return 'seo'
+  if (/description|content|detail|short|note/.test(value)) return 'content'
   if (/photo|image|file|landing|banner|gallery|favicon|logo/.test(value)) return 'media'
   if (/active|featured|status|pixel|color|size|tag|publish|popular/.test(value)) return 'options'
   return 'basics'
@@ -103,6 +107,7 @@ export default function ProductForm({ sourceForm, isEdit, pageName = '', titleOv
       { id: 'basics', label: trans.basics, description: trans.basicsDesc, icon: IconPackage },
       { id: 'pricing', label: trans.pricing, description: trans.pricingDesc, icon: IconTag },
       { id: 'content', label: trans.contentTab, description: trans.contentTabDesc, icon: IconInfoCircle },
+      { id: 'seo', label: trans.seoTab, description: trans.seoTabDesc, icon: IconSpeakerphone },
       { id: 'media', label: trans.media, description: trans.mediaDesc, icon: IconPhoto },
       { id: 'options', label: trans.options, description: trans.optionsDesc, icon: IconSettings },
     ]
@@ -336,6 +341,7 @@ function renderField(field, value, updateField, trans) {
         {...common}
         value={String(value ?? '')}
         minRows={4}
+        maxRows={9}
         autosize
         onChange={(event) => updateField(field, event.currentTarget.value)}
       />
