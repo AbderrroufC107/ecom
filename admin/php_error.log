@@ -106,3 +106,84 @@ sidebar_rendered              :     1.17ms
 before_content                :     0.00ms
 
 Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 01:03:29 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 1756.78ms
+
+bootstrap_complete            :   856.72ms
+sidebar_rendered              :     1.48ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 01:33:20 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 109.11ms
+
+bootstrap_complete            :    33.99ms
+sidebar_rendered              :     1.73ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 10:09:28 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 576.54ms
+
+bootstrap_complete            :    38.90ms
+sidebar_rendered              :     1.55ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 10:10:10 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 41.08ms
+
+bootstrap_complete            :    33.27ms
+sidebar_rendered              :     2.28ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 10:10:18 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 26.46ms
+
+bootstrap_complete            :    22.33ms
+sidebar_rendered              :     1.78ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 11:03:44 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 193.25ms
+
+bootstrap_complete            :    64.84ms
+sidebar_rendered              :     1.55ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 17:03:32 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 89.46ms
+
+bootstrap_complete            :    23.20ms
+sidebar_rendered              :     1.42ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 19:55:22 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 330.42ms
+
+bootstrap_complete            :    74.40ms
+sidebar_rendered              :     2.53ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
+[08-Jul-2026 20:12:11 Africa/Algiers] === PAGE PROFILING REPORT ===
+=== PROFILER REPORT ===
+Total Time: 71.66ms
+
+bootstrap_complete            :    27.13ms
+sidebar_rendered              :     1.68ms
+before_content                :     0.00ms
+
+Checkpoints: start | bootstrap_complete | sidebar_rendered | before_content
