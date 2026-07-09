@@ -51,3 +51,9 @@ FileETag None
 <IfModule mod_rewrite.c>
     RewriteRule ^admin/dist/(.+\.js)$ admin/dist/$1 [L]
 </IfModule>
+
+# Prevent admin/dist/index.html from hijacking root
+<IfModule mod_rewrite.c>
+    RewriteCond %{DOCUMENT_ROOT}/admin/dist/index.html -f
+    RewriteRule ^admin/dist/index\.html$ - [R=404,L]
+</IfModule>
