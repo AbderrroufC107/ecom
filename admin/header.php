@@ -50,6 +50,34 @@ if (!isset($_SESSION['user']) && !isset($_SESSION['store_user'])) {
 	exit;
 }
 
+// ---- Role-based page access for Employees (default-deny whitelist) ----
+// An Employee (tbl_employee, session id "emp_<id>", role "Employee") is limited
+// to their own area only. Managers / Admins / Super Admins are NOT affected.
+// To let employees open more pages, add the file name to $employee_allowed_pages.
+if (isset($_SESSION['user'])) {
+	$__role  = $_SESSION['user']['role'] ?? '';
+	$__idRaw = (string) ($_SESSION['user']['id'] ?? '');
+	$__isEmployee = ($__role === 'Employee') || (strpos($__idRaw, 'emp_') === 0);
+
+	if ($__isEmployee) {
+		$employee_allowed_pages = [
+			'index.php',                 // لوحة القيادة (صفحة الهبوط بعد الدخول)
+			'my-earnings.php',           // عمولاتي وسجل المدفوعات
+			'ai-assistant.php',          // المساعد الذكي (مقيّد ببيانات الموظف)
+			'logout.php',
+			'telegram-link-action.php',  // ربط حساب تيليغرام الخاص به
+			// لتمكين الموظف من معالجة الطلبات داخل اللوحة، أضِف الصفحات التالية:
+			// 'order.php', 'order-details.php', 'order-change-status.php',
+		];
+		$__cur = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['PHP_SELF'] ?? ''));
+		if ($__cur !== '' && !in_array($__cur, $employee_allowed_pages, true)) {
+			$_SESSION['employee_access_denied'] = $__cur;
+			header('location: index.php');
+			exit;
+		}
+	}
+}
+
 // Resolve current store ID
 store_ensure_tables($pdo);
 $current_store_id = store_resolve($pdo);
@@ -376,7 +404,20 @@ if (window.self !== window.top) {
     		<section class="sidebar">
       			<ul class="sidebar-menu">
 
-		        
+		        <?php if (!empty($__isEmployee)): ?>
+		        <!-- قائمة الموظف المحدودة (تُطابق قائمة السماح في حارس الوصول أعلاه) -->
+		        <li class="treeview <?php if($cur_page == 'index.php') {echo 'active';} ?>">
+		          <a href="index.php"><i class="fa fa-dashboard"></i> <span>لوحة القيادة</span></a>
+		        </li>
+		        <li class="treeview <?php if($cur_page == 'my-earnings.php') {echo 'active';} ?>">
+		          <a href="my-earnings.php"><i class="fa fa-money"></i> <span>عمولاتي والمدفوعات</span></a>
+		        </li>
+		        <li class="treeview <?php if($cur_page == 'ai-assistant.php') {echo 'active';} ?>">
+		          <a href="ai-assistant.php"><i class="fa fa-magic text-purple"></i> <span>💬 المساعد الذكي</span></a>
+		        </li>
+		        <?php else: ?>
+
+
 		        <?php if (isset($_SESSION['store_user'])): ?>
 		        <li class="treeview <?php if($cur_page == 'store-dashboard.php') {echo 'active';} ?>">
 		          <a href="store-dashboard.php">
@@ -409,13 +450,14 @@ if (window.self !== window.top) {
 		        </li>
 
 		        <!-- الذكاء الاصطناعي -->
-		        <li class="treeview <?php if(in_array($cur_page, ['ai-products.php','ai-campaigns.php','ai-settings.php','ai-keywords.php','ai-faqs.php','ai-rules.php','ai-analytics.php','ai-chat-logs.php'])) {echo 'active';} ?>">
+		        <li class="treeview <?php if(in_array($cur_page, ['ai-products.php','ai-campaigns.php','ai-settings.php','ai-keywords.php','ai-faqs.php','ai-rules.php','ai-analytics.php','ai-chat-logs.php','ai-assistant.php'])) {echo 'active';} ?>">
 		          <a href="#">
 		            <i class="fa fa-magic text-purple"></i>
 		            <span>🤖 الذكاء الاصطناعي</span>
 		            <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
 		          </a>
 		          <ul class="treeview-menu">
+		            <li><a href="ai-assistant.php"><i class="fa fa-comments text-purple"></i> المساعد الذكي</a></li>
 		            <li><a href="ai-agents.php"><i class="fa fa-circle-o"></i> إدارة العملاء الآليين</a></li>
 		            <li><a href="ai-tasks.php"><i class="fa fa-circle-o"></i> سجل المهام</a></li>
 		            <li><a href="ai-analytics.php"><i class="fa fa-circle-o"></i> الإحصائيات</a></li>
@@ -568,6 +610,7 @@ if (window.self !== window.top) {
 		          </ul>
 		        </li>
 
+        <?php endif; /* employee limited menu */ ?>
         </ul>
       </section>
     </aside>

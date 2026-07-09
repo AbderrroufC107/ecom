@@ -181,19 +181,23 @@ function delivery_cache_phonetic_arabic_location_name($name) {
 }
 
 function delivery_cache_load_commune_arabic_map(PDO $pdo) {
+    static $cached = null;
+    if ($cached !== null) return $cached;
+
+    // Curated Latin→Arabic commune labels, version-controlled data file.
+    // Shape: [wilaya_id => [ normalized_latin_name => arabic_name ]].
+    // The delivery VALUE stays the Latin name; this only sets the shown Arabic label.
     $map = [];
-    try {
-        $stmt = $pdo->query("SELECT wilaya_id, commune_name FROM tbl_commune WHERE commune_name IS NOT NULL AND commune_name <> ''");
-        foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row) {
-            $wilaya_id = (int)($row['wilaya_id'] ?? 0);
-            $name = trim((string)($row['commune_name'] ?? ''));
-            if ($wilaya_id <= 0 || $name === '') continue;
-            $map[$wilaya_id][delivery_cache_normalize_wilaya_key($name)] = $name;
+    $file = __DIR__ . '/commune_ar_map.php';
+    if (is_file($file)) {
+        $data = include $file;
+        if (is_array($data)) {
+            foreach ($data as $wid => $names) {
+                if (is_array($names)) $map[(int)$wid] = $names;
+            }
         }
-    } catch (Throwable $e) {
-        error_log('Failed to load commune Arabic labels: ' . $e->getMessage());
     }
-    return $map;
+    return $cached = $map;
 }
 
 function delivery_cache_get_adapters() {

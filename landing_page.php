@@ -126,6 +126,98 @@ if ($page_meta_description === '') {
 require_once('header.php');
 ?>
 <link rel="stylesheet" href="assets/css/checkout.css">
+<style>
+/* Reset the browser's default 8px body margin so full-bleed bars
+   (announcement / trust) reach the screen edges on this page. */
+body { margin: 0; }
+
+/* Never let an image overflow its column — the source stylesheet that
+   constrained the landing-photo images (1200px naturals) isn't loaded,
+   which caused horizontal scrolling on mobile. */
+.landing-page img { max-width: 100%; height: auto; }
+.landing-page { overflow-x: hidden; }
+
+/* Center & constrain the landing content column on desktop.
+   Without this, .container has no max-width and stretches to the full
+   viewport (looked unprofessional / edge-to-edge on wide screens).
+   Restores the intended centered sales-page column. */
+.landing-page .container {
+    max-width: 760px;
+    margin-left: auto;
+    margin-right: auto;
+    padding-left: 16px;
+    padding-right: 16px;
+    box-sizing: border-box;
+}
+/* Full-bleed background bars keep their edge-to-edge background,
+   only their inner .container is centered (handled by the rule above). */
+.landing-page .trust-strip {
+    width: 100%;
+}
+
+/* ===== Top announcement bar: professional black scrolling marquee =====
+   These rules live here because the source stylesheet that defined them
+   (landing_css_extracted.css) is not loaded on this page. */
+.landing-page .announcement-bar {
+    width: 100%;
+    background: #000000;
+    color: #ffffff;
+    padding: 14px 0;
+    margin-top: 0 !important;
+    font-weight: 800;
+    letter-spacing: 0.3px;
+    overflow: hidden;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+    min-height: 52px;
+    display: flex;
+    align-items: center;
+}
+/* Bar marquee must span the full width, not the centered 760px column. */
+.landing-page .announcement-bar .container {
+    max-width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+}
+.landing-page .announcement-track {
+    display: inline-flex;
+    align-items: center;
+    width: max-content;
+    white-space: nowrap;
+    animation: landing-announcement-scroll 20s linear infinite;
+    will-change: transform;
+}
+/* Each identical copy carries its own leading gap, so the two copies are
+   pixel-identical units and translateX(-50%) loops with no seam. */
+.landing-page .announcement-item {
+    font-size: 1.25rem;
+    line-height: 1.4;
+    padding-inline-start: 64px;
+}
+/* Two identical copies in the markup + moving by exactly -50% = a
+   seamless infinite marquee that is never empty. */
+@keyframes landing-announcement-scroll {
+    from { transform: translateX(0); }
+    to   { transform: translateX(-50%); }
+}
+
+@media (max-width: 768px) {
+    .landing-page .container {
+        max-width: 100%;
+        padding-left: 14px;
+        padding-right: 14px;
+    }
+    .landing-page .announcement-bar {
+        padding: 11px 0;
+        min-height: 44px;
+    }
+    .landing-page .announcement-item {
+        font-size: 1.02rem;
+    }
+    .landing-page .announcement-track {
+        gap: 48px;
+    }
+}
+</style>
 <?php
 // Include encryption helpers
 require_once('inc/encryption.php');
@@ -1715,6 +1807,213 @@ if (isset($_SESSION['order_details']) && empty($order_details)) {
 .sticky-cta button:hover {
     background: #8f1318;
 }
+
+/* ═══ Professional order-card polish (appearance only) ═══════════════
+   Fixes: card-in-card double framing, duplicate title, cramped quantity. */
+
+/* Single clean card: flatten the inner form so it doesn't draw a 2nd box. */
+.landing-page .order-card {
+    border: 1px solid #eef0f3;
+    border-radius: 16px;
+    padding: 26px 24px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05), 0 12px 34px rgba(0, 0, 0, 0.05);
+}
+.landing-page .order-card .modern-checkout-form {
+    background: transparent;
+    box-shadow: none;
+    border: none;
+    border-radius: 0;
+    padding: 0;
+    margin-bottom: 0;
+    overflow: visible;
+}
+.landing-page .order-card:hover {
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06), 0 16px 40px rgba(0, 0, 0, 0.07);
+}
+
+/* One title only: keep the outer heading, drop the duplicate inside the form. */
+.landing-page .modern-checkout-form .checkout-title { display: none; }
+.landing-page .order-form-title {
+    font-size: 1.6rem;
+    margin-bottom: 4px;
+}
+/* Turn the hidden tagline into a subtle subtitle under the title. */
+.landing-page .order-card-head .order-tag {
+    display: block;
+    text-align: center;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #6b7280;
+    margin: 0 0 20px;
+}
+
+/* Uniform field sizing: inputs default to content-box (→70px tall) while
+   selects render border-box (→48px). Force border-box so EVERY control is
+   exactly 48px, with one consistent border/radius and red focus. Padding is
+   deliberately NOT set here, so select.form-control keeps its 36px chevron gap. */
+.landing-page .modern-checkout-form .form-control {
+    box-sizing: border-box;
+    height: 48px;
+    border: 1.5px solid #dde1e6;
+    border-radius: 10px;
+}
+.landing-page .modern-checkout-form .form-control:focus {
+    border-color: #c1121f;
+    box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.12);
+}
+.landing-page .modern-checkout-form .grid-2-cols { gap: 12px 12px; }
+.landing-page .modern-checkout-form > .form-group,
+.landing-page .modern-checkout-form > .grid-2-cols,
+.landing-page .modern-checkout-form > .row {
+    margin-bottom: 16px;
+}
+
+/* When the product has offers, the chosen offer defines the quantity
+   (server enforces $effective_qty = offer qty), so hide the manual stepper
+   — same behaviour as landing_page_2. */
+.landing-page .order-card.has-offers .quantity-group { display: none; }
+
+/* Quantity: a clean, balanced stepper instead of a cramped inline box. */
+.landing-page .quantity-group {
+    display: block;
+    border: none;
+    height: auto;
+    background: transparent;
+    overflow: visible;
+}
+.landing-page .quantity-group .qty-control {
+    display: inline-flex;
+    align-items: center;
+    border: 1.5px solid #dde1e6;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #fff;
+    height: 48px;
+    box-sizing: border-box;
+}
+.landing-page .quantity-group .qty-btn {
+    width: 50px;
+    height: 100%;
+    border: none;
+    background: #f8f9fb;
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: #374151;
+    cursor: pointer;
+    line-height: 1;
+}
+.landing-page .quantity-group .qty-btn:hover {
+    background: #eef1f5;
+    color: #111827;
+}
+.landing-page .quantity-group #quantity {
+    width: 66px;
+    height: 100%;
+    border: none;
+    border-left: 1.5px solid #dde1e6;
+    border-right: 1.5px solid #dde1e6;
+    border-radius: 0;
+    text-align: center;
+    font-size: 1.05rem;
+    font-weight: 700;
+    box-shadow: none;
+    padding: 0;
+}
+
+/* ── Color selector: give the (otherwise unstyled) container a clean card,
+   and turn the cramped circles into readable pills. ─────────────────── */
+.landing-page .order-color-select {
+    background: #f9fafb;
+    border: 1px solid #eef0f3;
+    border-radius: 12px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+}
+.landing-page .order-color-title {
+    font-size: 1rem;
+    font-weight: 800;
+    color: #111827;
+    margin: 0 0 4px;
+}
+.landing-page .order-color-title strong { color: #c1121f; }
+.landing-page .order-color-note {
+    font-size: 0.85rem;
+    color: #6b7280;
+    line-height: 1.5;
+    margin: 0 0 12px;
+}
+.landing-page .color-selector { gap: 10px; margin: 0; }
+.landing-page .color-option {
+    width: auto;
+    min-width: 66px;
+    height: 44px;
+    border-radius: 10px;
+    padding: 0 16px;
+    font-size: 0.9rem;
+    font-weight: 800;
+    color: #111827;
+    /* white halo keeps the name readable on any swatch colour (light or dark) */
+    text-shadow: 0 0 3px #fff, 0 0 3px #fff, 0 0 5px #fff;
+    border: 1.5px solid rgba(0, 0, 0, 0.16);
+    transform: none;
+}
+.landing-page .color-option:hover {
+    transform: none;
+    border-color: #c1121f;
+}
+.landing-page .color-option.selected {
+    transform: none;
+    border-color: #c1121f;
+    box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.2);
+}
+.landing-page .next-step-hint {
+    font-size: 0.82rem;
+    color: #6b7280;
+    text-align: center;
+    margin-top: 10px;
+}
+.landing-page .order-color-error {
+    color: #c1121f;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-top: 8px;
+}
+
+/* ── Delivery options: full-width, edge-aligned grid (not centred 180px
+   chips), and a single consistent (red) selected state. ─────────────── */
+.landing-page .delivery-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 12px;
+    justify-content: stretch;
+    margin: 0 0 4px;
+}
+.landing-page .delivery-btn {
+    width: auto;
+    max-width: none;
+    padding: 14px 12px;
+}
+.landing-page .delivery-btn.selected {
+    border-color: #c1121f;
+    background: #fff5f5;
+    box-shadow: 0 0 0 3px rgba(193, 18, 31, 0.12);
+}
+.landing-page .delivery-btn.selected .radio-icon { border-color: #c1121f; }
+.landing-page .delivery-btn.selected .radio-icon::after { background: #c1121f; }
+
+/* ── Price summary: lighter, cleaner card instead of a heavy black border. ── */
+.landing-page .delivery-info {
+    background: #f9fafb !important;
+    border: 1px solid #eef0f3 !important;
+    border-radius: 12px !important;
+    padding: 14px 16px !important;
+}
+
+/* ── CTA: keep the existing JS loading/disabled behaviour, just polish states. ── */
+.landing-page .btn-buy-now:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
 </style>
 <section class="landing-order">
         <div class="container">
@@ -1815,7 +2114,7 @@ if (isset($_SESSION['order_details']) && empty($order_details)) {
             <div class="custom-delivery-banner">
                 <div class="text">
                     <strong>ملاحظة هامة حول التوصيل:</strong><br>
-                    التوصيل متوفر لجميع الولايات: 400 دج للمكتب، و500 دج أو 600 دج للمنزل حسب الولاية.
+                    التوصيل متوفر لجميع الولايات من 24 إلى 48 ساعة.
                 </div>
                 <div class="icon">🚚</div>
             </div>
@@ -1918,25 +2217,20 @@ if (isset($_SESSION['order_details']) && empty($order_details)) {
                         <input type="hidden" name="selected_offer_id" id="selected_offer_id" value="<?= htmlspecialchars($default_offer_id, ENT_QUOTES, 'UTF-8') ?>">
                     <?php endif; ?>
                     
-                    <div class="form-group form-field position-relative">
-                        <label for="customer_name">الاسم الكامل *</label>
-                        <input type="text" class="form-control" id="customer_name" name="customer_name" required placeholder="اكتب اسمك هنا..." value="<?= isset($_POST['customer_name']) ? htmlspecialchars($_POST['customer_name']) : '' ?>">
-                    </div>
-                    
-                    <div class="form-group form-field position-relative">
-                        <label for="customer_phone">رقم الهاتف *</label>
-                        <div class="phone-wrapper">
-                            <div class="country-code">
-                                <img src="https://flagcdn.com/w20/dz.png" alt="DZ"> +213
-                            </div>
-                            <input type="tel" id="customer_phone" name="customer_phone" required 
-                                   placeholder="551 23 45 67"  
-                                   pattern="[0-9]{9,10}" 
-                                   title="يرجى إدخال رقم هاتف جزائري صحيح"
-                                   value="<?= isset($_POST['customer_phone']) ? htmlspecialchars($_POST['customer_phone']) : '' ?>">
+                    <div class="grid-2-cols">
+                        <div class="form-group form-field position-relative">
+                            <label for="customer_name">الاسم الكامل *</label>
+                            <input type="text" class="form-control" id="customer_name" name="customer_name" required placeholder="اكتب اسمك هنا..." value="<?= isset($_POST['customer_name']) ? htmlspecialchars($_POST['customer_name']) : '' ?>">
                         </div>
-                        <div id="phone-error" class="text-danger mt-1" style="display: none; font-size: 0.9rem;"></div>
-                        <div id="phone-error-duplicate-removed" class="text-danger mt-1" style="display: none; font-size: 0.9rem;"></div>
+                        <div class="form-group form-field position-relative">
+                            <label for="customer_phone">رقم الهاتف *</label>
+                            <input type="tel" class="form-control" id="customer_phone" name="customer_phone" required
+                                   placeholder="06XXXXXXXX"
+                                   pattern="[0-9]{9,10}"
+                                   title="يرجى إدخال رقم هاتف جزائري صحيح (9-10 أرقام)"
+                                   value="<?= isset($_POST['customer_phone']) ? htmlspecialchars($_POST['customer_phone']) : '' ?>">
+                            <div id="phone-error" class="text-danger mt-1" style="display: none; font-size: 0.9rem;"></div>
+                        </div>
                     </div>
 
                     <div class="grid-2-cols">
@@ -1962,6 +2256,29 @@ if (isset($_SESSION['order_details']) && empty($order_details)) {
                             <select class="form-control" id="desk" name="desk">
                                 <option value="">اختر المكتب</option>
                             </select>
+                        </div>
+                    </div>
+
+                    <?php if(!empty($sizes)): ?>
+                    <div class="form-group">
+                        <label>المقاس *</label>
+                        <div class="size-selector">
+                            <?php foreach($sizes as $size_id): ?>
+                                <div class="size-option" data-value="<?= $size_id ?>">
+                                    <?= htmlspecialchars($size_names[$size_id]) ?>
+                                </div>
+                            <?php endforeach; ?>
+                            <input type="hidden" name="selected_size" id="selected_size" value="">
+                        </div>
+                    </div>
+                    <?php endif; ?>
+
+                    <div class="form-group quantity-group">
+                        <label for="quantity">الكمية *</label>
+                        <div class="qty-control">
+                            <button type="button" id="decreaseQuantity" class="qty-btn" aria-label="نقّص الكمية">-</button>
+                            <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="<?= $p_qty ?>" required>
+                            <button type="button" id="increaseQuantity" class="qty-btn" aria-label="زيّدة الكمية">+</button>
                         </div>
                     </div>
 
@@ -2003,29 +2320,6 @@ if (isset($_SESSION['order_details']) && empty($order_details)) {
                                 <span class="summary-label">المجموع الكلي</span>
                                 <span id="total_price" class="summary-value total-value"><?= htmlspecialchars($unit_price) ?> دج</span>
                             </div>
-                        </div>
-                    </div>
-
-                    <?php if(!empty($sizes)): ?>
-                    <div class="form-group">
-                        <label>المقاس *</label>
-                        <div class="size-selector">
-                            <?php foreach($sizes as $size_id): ?>
-                                <div class="size-option" data-value="<?= $size_id ?>">
-                                    <?= htmlspecialchars($size_names[$size_id]) ?>
-                                </div>
-                            <?php endforeach; ?>
-                            <input type="hidden" name="selected_size" id="selected_size" value="">
-                        </div>
-                    </div>
-                    <?php endif; ?>
-
-                    <div class="form-group quantity-group">
-                        <label for="quantity">الكمية *</label>
-                        <div class="qty-control">
-                            <button type="button" id="decreaseQuantity" class="qty-btn" aria-label="نقّص الكمية">-</button>
-                            <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="<?= $p_qty ?>" required>
-                            <button type="button" id="increaseQuantity" class="qty-btn" aria-label="زيّدة الكمية">+</button>
                         </div>
                     </div>
 

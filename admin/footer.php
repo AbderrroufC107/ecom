@@ -811,5 +811,114 @@
 			color: #cbd5e1;
 		}
 	</style>
+
+<?php
+// ===== Floating AI assistant bubble (admin, all pages) =====
+$__aiShow  = isset($_SESSION['user']);
+$__aiPage  = basename($_SERVER['PHP_SELF'] ?? '');
+$__aiToken = isset($csrf) && is_object($csrf) && method_exists($csrf, 'getToken') ? $csrf->getToken() : '';
+if ($__aiShow && $__aiPage !== 'ai-assistant.php' && $__aiToken !== ''):
+?>
+<div id="aiFab" aria-label="المساعد الذكي" title="المساعد الذكي"
+     style="position:fixed;bottom:22px;left:22px;z-index:100000;width:58px;height:58px;border-radius:50%;
+            background:linear-gradient(135deg,#6d28d9,#3b82f6);color:#fff;display:flex;align-items:center;
+            justify-content:center;font-size:24px;cursor:pointer;box-shadow:0 8px 24px rgba(59,130,246,.45);
+            transition:transform .15s">💬</div>
+
+<div id="aiPanel" style="display:none;position:fixed;bottom:90px;left:22px;z-index:100000;width:360px;max-width:calc(100vw - 44px);
+            height:520px;max-height:calc(100vh - 130px);background:#fff;border-radius:16px;overflow:hidden;
+            box-shadow:0 24px 70px rgba(0,0,0,.35);flex-direction:column;direction:rtl">
+    <div style="padding:12px 16px;background:linear-gradient(135deg,#6d28d9,#3b82f6);color:#fff;display:flex;
+                align-items:center;justify-content:space-between">
+        <div style="font-weight:700"><i class="fa fa-magic"></i> المساعد الذكي</div>
+        <div>
+            <a href="ai-assistant.php" title="فتح كامل" style="color:#fff;margin-inline-end:10px;text-decoration:none"><i class="fa fa-external-link"></i></a>
+            <span id="aiClose" style="cursor:pointer;font-size:20px;line-height:1">&times;</span>
+        </div>
+    </div>
+    <div id="aiFabMsgs" style="flex:1;overflow-y:auto;padding:14px;background:#f7f7f9"></div>
+    <form id="aiFabForm" autocomplete="off" style="display:flex;gap:6px;padding:10px;border-top:1px solid #e2e8f0;background:#fff">
+        <input type="text" id="aiFabInput" placeholder="اكتب سؤالك…" maxlength="4000"
+               style="flex:1;border:1px solid #cbd5e1;border-radius:10px;padding:9px 12px;outline:none;font-size:14px">
+        <button type="submit" id="aiFabSend"
+                style="border:none;background:#3b82f6;color:#fff;border-radius:10px;padding:0 14px;cursor:pointer;font-size:16px">
+            <i class="fa fa-paper-plane"></i>
+        </button>
+    </form>
+</div>
+
+<style>
+#aiFab:hover{transform:scale(1.08)}
+.aiFabRow{display:flex;margin-bottom:10px}
+.aiFabRow.u{justify-content:flex-start}
+.aiFabRow.b{justify-content:flex-end}
+.aiFabBubble{max-width:80%;padding:9px 12px;border-radius:12px;line-height:1.7;font-size:13.5px;word-wrap:break-word}
+.aiFabRow.u .aiFabBubble{background:#fff;border:1px solid #e3e3e3;border-top-right-radius:4px}
+.aiFabRow.b .aiFabBubble{background:#3c8dbc;color:#fff;border-top-left-radius:4px}
+.aiFabBubble ul{margin:5px 0;padding-inline-start:20px}
+.aiFabBubble code{background:rgba(0,0,0,.12);padding:1px 4px;border-radius:4px}
+</style>
+
+<script>
+(function(){
+    var CSRF = <?= json_encode($__aiToken) ?>;
+    var sid = 'adminfab' + Date.now();
+    var fab = document.getElementById('aiFab');
+    var panel = document.getElementById('aiPanel');
+    var msgs = document.getElementById('aiFabMsgs');
+    var form = document.getElementById('aiFabForm');
+    var input = document.getElementById('aiFabInput');
+    var send = document.getElementById('aiFabSend');
+    var greeted = false;
+
+    function esc(s){return String(s).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+    function md(t){
+        var h = esc(t).replace(/`([^`]+)`/g,'<code>$1</code>').replace(/\*\*([^*]+)\*\*/g,'<b>$1</b>');
+        var lines=h.split('\n'),out=[],inL=false;
+        lines.forEach(function(ln){var m=ln.match(/^\s*[-*]\s+(.*)$/);
+            if(m){if(!inL){out.push('<ul>');inL=true;}out.push('<li>'+m[1]+'</li>');}
+            else{if(inL){out.push('</ul>');inL=false;}out.push(ln);}});
+        if(inL)out.push('</ul>');
+        return out.join('\n').replace(/\n/g,'<br>');
+    }
+    function add(role,text,isHtml){
+        var r=document.createElement('div');r.className='aiFabRow '+(role==='user'?'u':'b');
+        var b=document.createElement('div');b.className='aiFabBubble';b.innerHTML=isHtml?text:esc(text);
+        r.appendChild(b);msgs.appendChild(r);msgs.scrollTop=msgs.scrollHeight;return r;
+    }
+    function toggle(){
+        var open = panel.style.display==='flex';
+        panel.style.display = open ? 'none' : 'flex';
+        if(!open){
+            if(!greeted){add('bot','مرحباً 👋 أنا مساعدك. اسألني عن الطلبات أو المبيعات أو اطلب صياغة نص.');greeted=true;}
+            setTimeout(function(){input.focus();},50);
+        }
+    }
+    fab.addEventListener('click',toggle);
+    document.getElementById('aiClose').addEventListener('click',function(){panel.style.display='none';});
+
+    form.addEventListener('submit',function(e){
+        e.preventDefault();
+        var text=input.value.trim(); if(!text) return;
+        add('user',text); input.value=''; input.disabled=true; send.disabled=true;
+        var typing=add('bot','…يكتب',false);
+        var body=new URLSearchParams();
+        body.append('_csrf',CSRF); body.append('message',text); body.append('session_id',sid);
+        fetch('ai-assistant-send.php',{method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded; charset=UTF-8'},
+            body:body.toString(),credentials:'same-origin'})
+        .then(function(r){return r.json();})
+        .then(function(d){
+            typing.remove();
+            if(d&&d.success){ sid=d.session_id||sid; add('bot',md(d.reply),true); }
+            else{ add('bot','⚠️ '+((d&&d.message)||'حدث خطأ.')); }
+        })
+        .catch(function(){ typing.remove(); add('bot','⚠️ تعذّر الاتصال بالخادم.'); })
+        .finally(function(){ input.disabled=false; send.disabled=false; input.focus(); });
+    });
+})();
+</script>
+<?php endif; ?>
+
 </body>
 </html>

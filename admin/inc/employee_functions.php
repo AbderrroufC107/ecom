@@ -296,8 +296,28 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
     if (!function_exists('employee_delete')) {
         function employee_delete(PDO $pdo, int $id): void
         { global $dbRepo;
-            $stmt = $dbRepo->prepare("DELETE FROM tbl_employee WHERE id = ?");
-            $stmt->execute([$id]);
+            // Clean up dependents so deleting an employee never leaves orphan rows
+            // (orphan assignments used to survive and show up as "موظف محذوف #N").
+            $ownTx = false;
+            if (!$pdo->inTransaction()) { $pdo->beginTransaction(); $ownTx = true; }
+            try {
+                // Free their orders back to the unassigned pool — but keep any
+                // assignment that was already paid, to preserve payout history.
+                $dbRepo->prepare("DELETE FROM tbl_order_assignment WHERE employee_id = ? AND is_paid = 0")->execute([$id]);
+                $dbRepo->prepare("UPDATE tbl_order_assignment SET status = 'employee_deleted' WHERE employee_id = ? AND is_paid = 1")->execute([$id]);
+
+                // Remove product restrictions and exclusive product assignments
+                $dbRepo->prepare("DELETE FROM tbl_employee_products WHERE employee_id = ?")->execute([$id]);
+                $dbRepo->prepare("UPDATE tbl_product_assignment SET employee_id = 0, is_enabled = 0 WHERE employee_id = ?")->execute([$id]);
+
+                // Finally, delete the employee
+                $dbRepo->prepare("DELETE FROM tbl_employee WHERE id = ?")->execute([$id]);
+
+                if ($ownTx) { $pdo->commit(); }
+            } catch (\Throwable $e) {
+                if ($ownTx) { $pdo->rollBack(); }
+                throw $e;
+            }
         }
     }
 
@@ -377,7 +397,7 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
             }
             $emp_sql = "
                 SELECT 'employee' AS type, e.id AS ref_id, e.full_name, e.assignment_weight, e.max_active_orders,
-                (SELECT COUNT(oa1.id) FROM tbl_order_assignment oa1 JOIN tbl_order o1 ON o1.id = oa1.order_id WHERE oa1.employee_id = e.id AND oa1.status = 'active' AND o1.order_status NOT IN ('Delivered', 'Returned', 'Cancelled')) AS current_active_orders,
+                (SELECT COUNT(oa1.id) FROM tbl_order_assignment oa1 JOIN tbl_order o1 ON o1.id = oa1.order_id WHERE oa1.employee_id = e.id AND oa1.status = 'active' AND o1.order_status NOT IN ('Delivered', 'Completed', 'Returned', 'Cancelled')) AS current_active_orders,
                 (SELECT COUNT(oa2.id) FROM tbl_order_assignment oa2 WHERE oa2.employee_id = e.id AND oa2.status = 'active') AS total_assigned
                 FROM tbl_employee e
                 WHERE e.is_active = 1 AND e.availability_status = 'Available' {$managerFilter}
@@ -395,7 +415,7 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
             // Fetch admins
             $stmt2 = $dbRepo->query("
                 SELECT 'user' AS type, u.id AS ref_id, u.full_name, u.assignment_weight, u.max_active_orders,
-                (SELECT COUNT(oa3.id) FROM tbl_order_assignment oa3 JOIN tbl_order o3 ON o3.id = oa3.order_id WHERE oa3.user_id = u.id AND oa3.status = 'active' AND o3.order_status NOT IN ('Delivered', 'Returned', 'Cancelled')) AS current_active_orders,
+                (SELECT COUNT(oa3.id) FROM tbl_order_assignment oa3 JOIN tbl_order o3 ON o3.id = oa3.order_id WHERE oa3.user_id = u.id AND oa3.status = 'active' AND o3.order_status NOT IN ('Delivered', 'Completed', 'Returned', 'Cancelled')) AS current_active_orders,
                 (SELECT COUNT(oa4.id) FROM tbl_order_assignment oa4 WHERE oa4.user_id = u.id AND oa4.status = 'active') AS total_assigned
                 FROM tbl_user u
                 WHERE u.participate_in_assignment = 1 AND u.availability_status = 'Available'
@@ -499,7 +519,7 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                     // Do NOT run WRR! Check exclusive employee availability
                     $stmt_emp = $dbRepo->prepare("
                         SELECT e.id, e.is_active, e.availability_status, e.max_active_orders,
-                        (SELECT COUNT(oa1.id) FROM tbl_order_assignment oa1 JOIN tbl_order o1 ON o1.id = oa1.order_id WHERE oa1.employee_id = e.id AND oa1.status = 'active' AND o1.order_status NOT IN ('Delivered', 'Returned', 'Cancelled')) AS current_active_orders
+                        (SELECT COUNT(oa1.id) FROM tbl_order_assignment oa1 JOIN tbl_order o1 ON o1.id = oa1.order_id WHERE oa1.employee_id = e.id AND oa1.status = 'active' AND o1.order_status NOT IN ('Delivered', 'Completed', 'Returned', 'Cancelled')) AS current_active_orders
                         FROM tbl_employee e
                         WHERE e.id = ?
                     ");
@@ -742,10 +762,10 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                     COUNT(*) AS total_assigned,
                     SUM(CASE WHEN o.order_status = 'Pending' THEN 1 ELSE 0 END) AS pending,
                     SUM(CASE WHEN o.order_status = 'Confirmed' THEN 1 ELSE 0 END) AS confirmed,
-                    SUM(CASE WHEN o.order_status = 'Completed' THEN 1 ELSE 0 END) AS completed,
+                    SUM(CASE WHEN o.order_status IN ('Completed','Delivered') THEN 1 ELSE 0 END) AS completed,
                     SUM(CASE WHEN o.order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled,
                     SUM(CASE WHEN o.order_status = 'Returned' THEN 1 ELSE 0 END) AS returned,
-                    SUM(CASE WHEN o.order_status = 'Completed' AND oa.is_paid = 0 THEN 1 ELSE 0 END) AS unpaid_completed
+                    SUM(CASE WHEN o.order_status IN ('Completed','Delivered') AND oa.is_paid = 0 THEN 1 ELSE 0 END) AS unpaid_completed
                 FROM tbl_order_assignment oa
                 INNER JOIN tbl_order o ON o.id = oa.order_id
                 WHERE oa.employee_id = ? AND oa.status = 'active'
@@ -786,10 +806,10 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                     COUNT(oa.id) AS total_assigned,
                     SUM(CASE WHEN o.order_status = 'Pending' THEN 1 ELSE 0 END) AS pending,
                     SUM(CASE WHEN o.order_status = 'Confirmed' THEN 1 ELSE 0 END) AS confirmed,
-                    SUM(CASE WHEN o.order_status = 'Completed' THEN 1 ELSE 0 END) AS completed,
+                    SUM(CASE WHEN o.order_status IN ('Completed','Delivered') THEN 1 ELSE 0 END) AS completed,
                     SUM(CASE WHEN o.order_status = 'Cancelled' THEN 1 ELSE 0 END) AS cancelled,
                     SUM(CASE WHEN o.order_status = 'Returned' THEN 1 ELSE 0 END) AS returned,
-                    SUM(CASE WHEN o.order_status = 'Completed' AND oa.is_paid = 0 THEN 1 ELSE 0 END) AS unpaid_completed
+                    SUM(CASE WHEN o.order_status IN ('Completed','Delivered') AND oa.is_paid = 0 THEN 1 ELSE 0 END) AS unpaid_completed
                 FROM tbl_employee e
                 LEFT JOIN tbl_order_assignment oa ON oa.employee_id = e.id AND oa.status = 'active'
                 LEFT JOIN tbl_order o ON o.id = oa.order_id
