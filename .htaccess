@@ -1,4 +1,6 @@
-﻿<IfModule mod_deflate.c>
+﻿DirectoryIndex index.php index.html
+
+<IfModule mod_deflate.c>
     AddOutputFilterByType DEFLATE text/html text/plain text/xml text/css text/javascript application/javascript application/x-javascript application/json application/xml image/svg+xml
     AddOutputFilterByType DEFLATE font/ttf font/otf font/woff font/woff2
     Header append Vary Accept-Encoding
