@@ -153,15 +153,8 @@ if ($action === 'auto_assign') {
         if (!employee_owned_by_current_manager($pdo, $employee_id, $effective_manager_id, $is_super_admin)) {
             throw new Exception('غير مصرح لك بحذف هذا الموظف.');
         }
-        $assign_check = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_order_assignment WHERE employee_id = ?");
-        $assign_check->execute([$employee_id]);
-        if ((int) $assign_check->fetchColumn() > 0) {
-            $dbRepo->prepare("UPDATE tbl_employee SET is_active = 0 WHERE id = ?")->execute([$employee_id]);
-            $success_message = 'لا يمكن حذف موظف لديه طلبات. تم تعطيل الحساب بدلاً من ذلك.';
-        } else {
-            employee_delete($pdo, $employee_id);
-            $success_message = 'تم حذف الموظف بنجاح.';
-        }
+        employee_delete($pdo, $employee_id);
+        $success_message = 'تم حذف الموظف بنجاح.';
     } catch (Exception $e) {
         $error_message = $e->getMessage();
     }
@@ -385,7 +378,7 @@ $unassigned_count = employee_get_unassigned_orders_count($pdo);
                                     <?php else: ?>
                                         <a href="employees.php?action=toggle_active&id=<?php echo (int) $emp['id']; ?>" class="emp-btn b-on" title="إعادة تفعيل حساب الموظف"><i class="fa fa-play"></i> تفعيل</a>
                                     <?php endif; ?>
-                                    <a href="employees.php?action=delete&id=<?php echo (int) $emp['id']; ?>" class="emp-btn b-del" title="حذف الموظف نهائياً (أو تعطيله تلقائياً إن كان لديه طلبات)" onclick="return confirm('هل أنت متأكد من حذف هذا الموظف نهائياً؟ إن كان لديه طلبات سابقة سيتم تعطيله فقط بدلاً من الحذف.');"><i class="fa fa-trash"></i> حذف</a>
+                                    <a href="employees.php?action=delete&id=<?php echo (int) $emp['id']; ?>" class="emp-btn b-del" title="حذف الموظف نهائياً" onclick="return confirm('هل أنت متأكد من حذف هذا الموظف نهائياً؟ سيتم تحرير طلباته غير المدفوعة.');"><i class="fa fa-trash"></i> حذف</a>
                                 </div>
                             </td>
                         </tr>
