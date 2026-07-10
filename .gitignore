@@ -17,3 +17,10 @@ node_modules/
 Thumbs.db
 .tools/node/
 .tools/node-v22.22.3-win-x64.zip
+
+# Database backups / dumps — contain real customer data, never commit
+backups/
+*.sql
+
+# Accidental nested git checkout
+/ecom/

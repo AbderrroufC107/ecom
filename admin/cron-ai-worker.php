@@ -17,14 +17,20 @@ $engine = new \AI\AiTaskEngine($pdo);
 // Process tasks until queue is empty
 $processedCount = 0;
 while (true) {
-    // processNextTask locks a row, processes it, and updates its status
-    $didWork = $engine->processNextTask();
-    
+    try {
+        // processNextTask locks a row, processes it, and updates its status
+        $didWork = $engine->processNextTask();
+    } catch (Throwable $e) {
+        // A single bad task must not kill the rest of the queue.
+        error_log('AI worker: processNextTask threw: ' . $e->getMessage());
+        $didWork = true; // assume it consumed/locked a row; keep draining the queue
+    }
+
     if (!$didWork) {
         break; // No more tasks
     }
     $processedCount++;
-    
+
     // Optional: limit jobs per cron execution to avoid hanging forever
     if ($processedCount >= 50) {
         break;

@@ -230,5 +230,50 @@ class DeliveryManager {
             $pdo->rollBack();
             throw $e;
         }
+
+        // Feed the real delivery outcome back to Meta Ads and notify Telegram.
+        // Never let this break order processing: log and continue on any failure.
+        if (in_array($new_status, ['Delivered', 'Returned', 'Cancelled'], true)) {
+            try {
+                self::notifyDeliveryOutcome($pdo, $order, $new_status);
+            } catch (Exception $e) {
+                error_log('DeliveryManager::notifyDeliveryOutcome failed for order ' . $order['id'] . ': ' . $e->getMessage());
+            }
+        }
+    }
+
+    /**
+     * Reports a confirmed delivery outcome to Meta Conversions API (across every pixel linked
+     * to the order's product, since the same product can run on several ad accounts) and pings
+     * the n8n webhook so a Telegram alert goes out. Both sides are best-effort: a failure here
+     * must never roll back or interrupt the delivery status update itself.
+     */
+    private static function notifyDeliveryOutcome($pdo, array $order, string $newStatus) { global $dbRepo;
+        global $dbRepo;
+
+        $eventName = $newStatus === 'Delivered' ? 'Purchase' : 'OrderRefused';
+
+        require_once dirname(__DIR__, 3) . '/inc/meta-marketing.php';
+        meta_marketing_send_event_for_product($pdo, (int) ($order['product_id'] ?? 0), $eventName, [
+            'phone' => $order['customer_phone'] ?? '',
+            'value' => $order['total_price'] ?? 0,
+            'currency' => 'DZD',
+            'order_id' => $order['id'] ?? '',
+        ]);
+
+        try {
+            require_once __DIR__ . '/N8nManager.php';
+            $n8n = new \Integration\N8nManager($pdo);
+            $n8n->callWebhook('delivery_status', [
+                'orderId' => $order['id'] ?? '',
+                'phone' => $order['customer_phone'] ?? '',
+                'status' => strtolower($newStatus),
+                'amount' => $order['total_price'] ?? 0,
+                'currency' => 'DZD',
+                'deliveryCompany' => $order['delivery_company_id'] ?? '',
+            ]);
+        } catch (Exception $e) {
+            error_log('DeliveryManager::notifyDeliveryOutcome n8n webhook failed: ' . $e->getMessage());
+        }
     }
 }

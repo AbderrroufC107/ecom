@@ -191,11 +191,7 @@ function delivery_cache_load_commune_arabic_map(PDO $pdo) {
     $file = __DIR__ . '/commune_ar_map.php';
     if (is_file($file)) {
         $data = include $file;
-        if (is_array($data)) {
-            foreach ($data as $wid => $names) {
-                if (is_array($names)) $map[(int)$wid] = $names;
-            }
-        }
+        if (is_array($data)) $map = $data; // flat: [ normalized_latin => arabic ]
     }
     return $cached = $map;
 }
@@ -426,10 +422,7 @@ function delivery_cache_build_json(PDO $pdo, $company_id) {
         }
         
         $commune_name = (string)$r['commune_name'];
-        $commune_ar = '';
-        if ($w_id > 0 && !empty($commune_ar_map[$w_id])) {
-            $commune_ar = $commune_ar_map[$w_id][delivery_cache_normalize_wilaya_key($commune_name)] ?? '';
-        }
+        $commune_ar = $commune_ar_map[delivery_cache_normalize_wilaya_key($commune_name)] ?? '';
         $data['communes'][$w][] = [
             'name' => $commune_name,
             'name_ar' => $commune_ar,
@@ -561,9 +554,11 @@ function delivery_cache_get_frontend_data(PDO $pdo, $company_id = 0) {
             }
             $name = trim((string)($commune['name'] ?? ''));
             $wilaya_id = (int)($commune['wilaya_id'] ?? delivery_cache_guess_wilaya_id($wilaya_name));
-            $name_ar = trim((string)($commune['name_ar'] ?? ''));
-            if ($name_ar === '' && $wilaya_id > 0 && !empty($commune_ar_map[$wilaya_id])) {
-                $name_ar = $commune_ar_map[$wilaya_id][delivery_cache_normalize_wilaya_key($name)] ?? '';
+            // The curated map is authoritative; it wins over any (possibly stale
+            // phonetic) name_ar already stored in the cache JSON.
+            $name_ar = $commune_ar_map[delivery_cache_normalize_wilaya_key($name)] ?? '';
+            if ($name_ar === '') {
+                $name_ar = trim((string)($commune['name_ar'] ?? ''));
             }
             if ($name_ar === '') {
                 $name_ar = delivery_cache_phonetic_arabic_location_name($name);

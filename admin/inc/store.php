@@ -1032,7 +1032,17 @@ if (!function_exists('store_get_api_key_permissions')) {
 }
 
 if (!function_exists('store_validate_api_key')) {
-    function store_validate_api_key(PDO $pdo, string $apiKey): ?array { global $dbRepo; return ApiKeyService::validate($pdo, $apiKey); }
+    function store_validate_api_key(PDO $pdo, string $apiKey): ?array {
+        global $dbRepo;
+        $row = ApiKeyService::validate($pdo, $apiKey);
+        if ($row === null) {
+            return null;
+        }
+        // Route handlers (api/v1/*.php) check permissions_list; the DB row only has the raw JSON column.
+        $row['permissions_list'] = json_decode((string) ($row['permissions'] ?? '[]'), true) ?: [];
+        $row['id'] = $row['id'] ?? null;
+        return $row;
+    }
 }
 
 if (!function_exists('store_log_api_call')) {

@@ -1477,6 +1477,21 @@ $zrexpress_sent_at = trim((string) ($order['zrexpress_sent_at'] ?? ''));
                                             <?php else: ?>
                                                 <span style="color:#94a3b8;">غير موزع</span>
                                             <?php endif; ?>
+                                            <?php
+                                                // "Claim" button: a regular manager who does NOT own this order can
+                                                // insert themselves into it so they may confirm it.
+                                                $__cu = $_SESSION['user'] ?? [];
+                                                $__crole = $__cu['role'] ?? '';
+                                                if (($__crole === 'Admin' || $__crole === 'Manager')
+                                                    && function_exists('order_can_manager_change')
+                                                    && !order_can_manager_change($pdo, (int) $order['id'], $__cu)):
+                                            ?>
+                                                <a href="order-claim.php?id=<?php echo (int) $order['id']; ?>&redirect=order-details.php?id=<?php echo (int) $order['id']; ?>"
+                                                   class="btn btn-xs btn-warning" style="margin-top:6px;display:inline-block;"
+                                                   onclick="return confirm('استلام هذا الطلب لإدخال نفسك فيه وتأكيده؟');">
+                                                   <i class="fa fa-hand-paper-o"></i> استلام الطلب
+                                                </a>
+                                            <?php endif; ?>
                                         </td>
                                     </tr>
                                 </tbody>

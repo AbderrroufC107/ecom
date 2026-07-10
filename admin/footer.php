@@ -812,6 +812,113 @@
 		}
 	</style>
 
+<script>
+/* ============================================================
+ * Universal alert handler: every success/failure message across
+ * the admin gets a professional close (×) button, fades in, and
+ * auto-dismisses after a few seconds (pauses while hovered).
+ * Add class "alert-permanent" or data-no-autodismiss to opt out.
+ * ============================================================ */
+(function () {
+	// Covers every notification style in the project: Bootstrap .alert-*,
+	// AdminLTE .callout-*, and prefixed variants (ak-/qd-/dr-/bu-/b-alert-*),
+	// via substring class matching.
+	var ADD_CLOSE = '[class*="alert-success"],[class*="alert-danger"],[class*="alert-error"],[class*="alert-warning"],[class*="alert-info"],[class*="callout-success"],[class*="callout-danger"],[class*="callout-warning"],[class*="callout-info"]';
+	// These auto-dismiss (success / failure / warning). Info stays until closed.
+	var AUTODISMISS = '[class*="alert-success"],[class*="alert-danger"],[class*="alert-error"],[class*="alert-warning"],[class*="callout-success"],[class*="callout-danger"],[class*="callout-warning"]';
+	var DELAY = { success: 5000, danger: 8000, warning: 8000, info: 8000 };
+	var isRtl = (document.documentElement.getAttribute('dir') === 'rtl') || (document.dir === 'rtl') || true;
+
+	function typeOf(el) {
+		var c = ' ' + (el.className || '') + ' ';
+		if (/success/.test(c)) return 'success';
+		if (/danger|error/.test(c)) return 'danger';
+		if (/warning/.test(c)) return 'warning';
+		return 'info';
+	}
+	function dismiss(el) {
+		if (!el || el.__dismissed) return;
+		el.__dismissed = true;
+		el.style.transition = 'opacity .4s ease, transform .4s ease';
+		el.style.opacity = '0';
+		el.style.transform = 'translateY(-8px)';
+		setTimeout(function () { if (el && el.parentNode) el.parentNode.removeChild(el); }, 420);
+	}
+	function enhance(el) {
+		if (el.__enhanced) return;
+		el.__enhanced = true;
+
+		var cs = window.getComputedStyle(el);
+		if (cs.position === 'static') el.style.position = 'relative';
+		el.style.paddingInlineEnd = '38px';
+		el.style.transition = 'opacity .35s ease, transform .35s ease';
+
+		// add × if it doesn't already have a close control
+		if (!el.querySelector('[data-dismiss="alert"]') && !el.querySelector('.js-alert-x')) {
+			var x = document.createElement('button');
+			x.type = 'button';
+			x.className = 'js-alert-x';
+			x.setAttribute('aria-label', 'إغلاق');
+			x.innerHTML = '&times;';
+			x.style.cssText = 'position:absolute;top:8px;' + (isRtl ? 'left:12px' : 'right:12px') +
+				';background:none;border:none;padding:0;width:22px;height:22px;font-size:20px;line-height:20px;' +
+				'cursor:pointer;color:inherit;opacity:.55;transition:opacity .15s;';
+			x.onmouseenter = function () { x.style.opacity = '1'; };
+			x.onmouseleave = function () { x.style.opacity = '.55'; };
+			x.onclick = function () { dismiss(el); };
+			el.appendChild(x);
+		}
+
+		// auto-dismiss (success/danger only), with pause-on-hover
+		var permanent = el.classList.contains('alert-permanent') ||
+			(el.hasAttribute('data-no-autodismiss') && el.getAttribute('data-no-autodismiss') !== 'false');
+		if (!permanent && el.matches(AUTODISMISS)) {
+			var timer = setTimeout(function () { dismiss(el); }, DELAY[typeOf(el)] || 6000);
+			el.addEventListener('mouseenter', function () { clearTimeout(timer); });
+			el.addEventListener('mouseleave', function () { timer = setTimeout(function () { dismiss(el); }, 2500); });
+		}
+	}
+	function scan(root) {
+		(root || document).querySelectorAll(ADD_CLOSE).forEach(function (el) {
+			if (el.textContent && el.textContent.trim() !== '') enhance(el);
+		});
+	}
+	// Strip one-time notification params from the URL so a REFRESH won't
+	// re-trigger the message (the message is already rendered in the DOM).
+	// Config-state alerts (e.g. Cloudinary) aren't param-driven, so they
+	// correctly keep showing until the underlying issue is fixed.
+	try {
+		var url = new URL(window.location.href);
+		var junk = ['success', 'saved', 'updated', 'added', 'created', 'deleted', 'removed',
+			'error', 'err', 'msg', 'message', 'done', 'flash', 'notice', 'ok'];
+		var changed = false;
+		junk.forEach(function (k) { if (url.searchParams.has(k)) { url.searchParams.delete(k); changed = true; } });
+		if (changed) {
+			var qs = url.searchParams.toString();
+			window.history.replaceState({}, document.title, url.pathname + (qs ? '?' + qs : '') + url.hash);
+		}
+	} catch (e) {}
+
+	if (document.readyState !== 'loading') scan(); else document.addEventListener('DOMContentLoaded', function () { scan(); });
+	// Re-scan a few times to catch alerts the React shell renders after load.
+	[300, 1000, 2500].forEach(function (ms) { setTimeout(scan, ms); });
+
+	// Catch alerts injected later (AJAX responses, drawers, etc.)
+	try {
+		new MutationObserver(function (muts) {
+			muts.forEach(function (m) {
+				if (!m.addedNodes) return;
+				m.addedNodes.forEach(function (n) {
+					if (n.nodeType !== 1) return;
+					if (n.matches && n.matches(ADD_CLOSE)) enhance(n);
+					if (n.querySelectorAll) scan(n);
+				});
+			});
+		}).observe(document.body, { childList: true, subtree: true });
+	} catch (e) {}
+})();
+</script>
+
 <?php
 // ===== Floating AI assistant bubble (admin, all pages) =====
 $__aiShow  = isset($_SESSION['user']);

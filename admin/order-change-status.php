@@ -56,6 +56,14 @@ try {
         throw new Exception('Ø§Ù„Ø·Ù„Ø¨ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯.');
     }
 
+    // Ownership guard: a regular manager may only change/confirm their own team's
+    // orders (or ones they claimed). Super Admin is unrestricted. Employees may
+    // only change orders assigned to them.
+    require_once('inc/employee_functions.php');
+    if (!order_can_manager_change($pdo, $order_id, $_SESSION['user'] ?? [])) {
+        throw new Exception('هذا الطلب ليس ضمن طلبات فريقك. اضغط «استلام الطلب» أولاً لإدخال نفسك ثم غيّر حالته.');
+    }
+
     $current_status = admin_normalize_order_status($order['order_status'] ?? '');
     if ($current_status === $target_status) {
         throw new Exception('Ø§Ù„Ø·Ù„Ø¨ Ù…ÙˆØ¬ÙˆØ¯ Ø¨Ø§Ù„Ù Ø¹Ù„ Ù ÙŠ Ø§Ù„Ø­Ø§Ù„Ø© Ø§Ù„Ù…Ø­Ø¯Ø¯Ø©.');

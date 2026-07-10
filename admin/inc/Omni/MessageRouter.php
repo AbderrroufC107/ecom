@@ -141,11 +141,18 @@ class MessageRouter {
             }
         }
 
+        // Prefer the n8n Meta Sales Agent (handles Messenger/Instagram across every connected
+        // page using real product knowledge); fall back to the local AI task queue so a reply
+        // still goes out if n8n is unreachable or not yet configured.
+        if ($this->dispatchToN8nSalesAgent($conversationId, $msg, $instruction)) {
+            return;
+        }
+
         $stmt = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("
             INSERT INTO tbl_ai_tasks (task_type, entity_type, entity_id, priority, payload, status)
             VALUES ('omni_reply', 'conversation', ?, 'HIGH', ?, 'PENDING')
         ");
-        
+
         $payload = json_encode([
             'message' => $msg->text,
             'type' => $msg->messageType,
@@ -154,7 +161,40 @@ class MessageRouter {
             'instruction' => $instruction,
             'comment_id' => $msg->commentId
         ], JSON_UNESCAPED_UNICODE);
-        
+
         $stmt->execute([$conversationId, $payload]);
+    }
+
+    private function dispatchToN8nSalesAgent($conversationId, UnifiedMessage $msg, string $instruction): bool
+    {
+        try {
+            require_once dirname(__DIR__) . '/integration/N8nManager.php';
+
+            $stmtHist = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare(
+                "SELECT sender_type, content FROM tbl_omni_timeline WHERE conversation_id = ? ORDER BY created_at ASC LIMIT 10"
+            );
+            $stmtHist->execute([$conversationId]);
+            $history = array_map(
+                static fn($row) => ['role' => $row['sender_type'] === 'AI' ? 'assistant' : 'user', 'content' => $row['content']],
+                $stmtHist->fetchAll(PDO::FETCH_ASSOC)
+            );
+
+            $n8n = new \Integration\N8nManager($this->pdo);
+            $result = $n8n->callWebhook('sales_agent', [
+                'conversation_id' => $conversationId,
+                'message' => $msg->text,
+                'type' => $msg->messageType,
+                'channel_id' => $msg->channelId,
+                'platform_user_id' => $msg->platformUserId,
+                'instruction' => $instruction,
+                'comment_id' => $msg->commentId,
+                'conversation_history' => $history,
+            ], 10);
+
+            return (bool) ($result['success'] ?? false);
+        } catch (\Exception $e) {
+            error_log('MessageRouter::dispatchToN8nSalesAgent failed, falling back to local AI queue: ' . $e->getMessage());
+            return false;
+        }
     }
 }

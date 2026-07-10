@@ -29,6 +29,8 @@ class N8nManager
         'order_events'      => '/webhook/order-events',
         'analytics'         => '/webhook/analytics',
         'notifications'     => '/webhook/notifications',
+        'delivery_status'   => '/webhook/delivery-status',
+        'sales_agent'       => '/webhook/sales-agent',
     ];
 
     public function __construct(PDO $pdo, string $environment = 'production')
@@ -235,6 +237,16 @@ class N8nManager
 
     private function decryptApiKey(string $encrypted): string
     { global $dbRepo;
+        return self::decryptApiKeyPublic($encrypted);
+    }
+
+    /**
+     * Public entry point for callers outside this class (e.g. the inbound
+     * api/omni/send-reply.php endpoint) that need to validate the same shared
+     * secret used for outbound n8n webhook calls.
+     */
+    public static function decryptApiKeyPublic(string $encrypted): string
+    {
         if (!$encrypted) return '';
         try {
             // Use the same APP_SECRET_KEY defined in config.php
@@ -293,7 +305,9 @@ class N8nManager
                 'customer360' => '/webhook/customer360',
                 'order_events' => '/webhook/order-events',
                 'analytics' => '/webhook/analytics',
-                'notifications' => '/webhook/notifications'
+                'notifications' => '/webhook/notifications',
+                'delivery_status' => '/webhook/delivery-status',
+                'sales_agent' => '/webhook/sales-agent'
             ]);
             $dbRepo->prepare("INSERT IGNORE INTO tbl_n8n_integrations (environment, label, base_url, webhook_paths, is_active) VALUES ('production', 'الخادم الرئيسي (Production)', 'https://n8n.yourdomain.com', ?, 1)")->execute([$defaultPaths]);
         }

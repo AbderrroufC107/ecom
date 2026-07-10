@@ -140,23 +140,30 @@ class AiTaskEngine {
             ]);
             
             if ($task['task_type'] === 'omni_reply') {
-                $convId = $task['entity_id'];
-                // Save AI reply to timeline
-                $stmtT = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("INSERT INTO tbl_omni_timeline (conversation_id, type, sender_type, content) VALUES (?, 'TEXT', 'AI', ?)");
-                $stmtT->execute([$convId, $resultData]);
-                
-                // Send via MetaAdapter
-                require_once __DIR__ . '/../Omni/Adapters/AdapterInterface.php';
-                require_once __DIR__ . '/../Omni/Adapters/MetaAdapter.php';
-                require_once __DIR__ . '/../Security/SecretManager.php';
-                $adapter = new \Omni\Adapters\MetaAdapter();
-                                $parsedJSON = json_decode($resultData, true);
-                if (is_array($parsedJSON) && isset($parsedJSON['reply'])) {
-                    $finalReply = $parsedJSON['reply'];
-                } else {
-                    $finalReply = $resultData; // Fallback
+                try {
+                    $convId = $task['entity_id'];
+                    // Save AI reply to timeline
+                    $stmtT = (new \SaaS\Repositories\DatabaseRepository($this->pdo))->prepare("INSERT INTO tbl_omni_timeline (conversation_id, type, sender_type, content) VALUES (?, 'TEXT', 'AI', ?)");
+                    $stmtT->execute([$convId, $resultData]);
+
+                    // Send via MetaAdapter
+                    require_once __DIR__ . '/../Omni/Adapters/AdapterInterface.php';
+                    require_once __DIR__ . '/../Omni/Adapters/MetaAdapter.php';
+                    require_once __DIR__ . '/../Security/SecretManager.php';
+                    $adapter = new \Omni\Adapters\MetaAdapter();
+                    $parsedJSON = json_decode($resultData, true);
+                    if (is_array($parsedJSON) && isset($parsedJSON['reply'])) {
+                        $finalReply = $parsedJSON['reply'];
+                    } else {
+                        $finalReply = $resultData; // Fallback
+                    }
+                    $adapter->sendMessage($payload['channel_id'], $payload['platform_user_id'], $finalReply);
+                } catch (Exception $e) {
+                    // The AI reply was generated successfully; a delivery-side problem
+                    // (e.g. a deleted conversation, missing token) must not abort the
+                    // whole worker batch or leave the task stuck reprocessing forever.
+                    error_log('AiTaskEngine omni_reply delivery failed for task ' . $task['id'] . ': ' . $e->getMessage());
                 }
-                $adapter->sendMessage($payload['channel_id'], $payload['platform_user_id'], $finalReply);
             }
         } else {
             $newRetries = $task['retries'] + 1;

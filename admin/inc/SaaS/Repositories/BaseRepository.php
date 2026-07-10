@@ -199,28 +199,39 @@ abstract class BaseRepository {
             
             // Handle SELECT/UPDATE/DELETE by appending tenant_id
             if (preg_match('/^\s*(SELECT|UPDATE|DELETE)/i', $sql)) {
+                $globalTables = [
+                    'tbl_commune', 'tbl_country', 'tbl_delivery_company',
+                    'tbl_language', 'tbl_store', 'tbl_stores', 'tbl_tenants',
+                    'tbl_test_logs', 'tbl_wilaya', 'information_schema', 'tbl_plans', 'tbl_page',
+                    'tbl_n8n_integrations', 'tbl_n8n_call_log', 'tbl_api_keys', 'tbl_api_logs'
+                ];
+
+                // UPDATE/DELETE name their table right after the keyword (no FROM), so the
+                // FROM-based lookup below never sees them and global tables slip through.
+                if (preg_match('/^\s*UPDATE\s+([a-zA-Z0-9_`]+)/i', $sql, $updMatches)
+                    || preg_match('/^\s*DELETE\s+FROM\s+([a-zA-Z0-9_`]+)/i', $sql, $updMatches)) {
+                    $updateTableName = strtolower(trim($updMatches[1], '`'));
+                    if (in_array($updateTableName, $globalTables)) {
+                        return $this->pdo->prepare($sql);
+                    }
+                }
+
                 // Determine the alias of the primary table to avoid ambiguous column errors on JOINs
                 $tenant_col = 'tenant_id';
                 if (preg_match('/FROM\s+([a-zA-Z0-9_`]+)(?:\s+(?:AS\s+)?([a-zA-Z0-9_`]+))?(?:\s+WHERE|\s+JOIN|\s+LEFT|\s+RIGHT|\s+INNER|\s+ON|\s+ORDER|\s+GROUP|\s+LIMIT|\s*$)/i', $sql, $matches)) {
                     $tableName = strtolower(trim($matches[1], '`'));
-                    $globalTables = [
-                        'tbl_commune', 'tbl_country', 'tbl_delivery_company', 
-                        'tbl_language', 'tbl_store', 'tbl_stores', 'tbl_tenants', 
-                        'tbl_test_logs', 'tbl_wilaya', 'information_schema', 'tbl_plans', 'tbl_page',
-                        'tbl_n8n_integrations', 'tbl_n8n_call_log'
-                    ];
-                    
+
                     if (in_array($tableName, $globalTables)) {
                         // Driving table is global; skip auto-injection to prevent "Unknown column tenant_id"
                         return $this->pdo->prepare($sql);
                     }
-                    
+
                     $aliasCandidate = !empty($matches[2]) ? $matches[2] : $matches[1];
                     // Ensure the alias isn't actually a SQL keyword that was matched optionally
                     if (preg_match('/^(WHERE|JOIN|LEFT|RIGHT|INNER|ON|ORDER|GROUP|LIMIT|HAVING|ASC|DESC)$/i', $aliasCandidate)) {
                         $aliasCandidate = $matches[1];
                     }
-                    
+
                     // Backtick it to be safe unless it's already backticked
                     $tenant_col = $aliasCandidate . '.tenant_id';
                 }
@@ -237,10 +248,10 @@ abstract class BaseRepository {
             elseif (preg_match('/^\s*INSERT\s+INTO\s+([a-zA-Z0-9_`]+)\s*\((.*?)\)\s*VALUES\s*\((.*)\)\s*;?\s*$/i', $sql, $matches)) {
                 $tableName = strtolower(trim($matches[1], '`'));
                 $globalTables = [
-                    'tbl_commune', 'tbl_country', 'tbl_delivery_company', 
-                    'tbl_language', 'tbl_store', 'tbl_stores', 'tbl_tenants', 
+                    'tbl_commune', 'tbl_country', 'tbl_delivery_company',
+                    'tbl_language', 'tbl_store', 'tbl_stores', 'tbl_tenants',
                     'tbl_test_logs', 'tbl_wilaya', 'information_schema', 'tbl_plans', 'tbl_page',
-                    'tbl_n8n_integrations', 'tbl_n8n_call_log'
+                    'tbl_n8n_integrations', 'tbl_n8n_call_log', 'tbl_api_keys', 'tbl_api_logs'
                 ];
                 if (in_array($tableName, $globalTables)) {
                     return $this->pdo->prepare($sql);

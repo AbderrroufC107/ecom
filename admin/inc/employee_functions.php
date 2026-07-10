@@ -930,4 +930,89 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
         }
     }
 
+    // ---------------------------------------------------------------
+    // Manager ownership of orders (for "confirm own only + claim")
+    // ---------------------------------------------------------------
+
+    if (!function_exists('order_owner_manager_id')) {
+        /**
+         * Which manager (tbl_user id) owns this order?
+         *  - a manager who claimed it (assignment.user_id), or
+         *  - the manager of the assigned employee (employee.manager_id).
+         * Returns null if the order is unowned.
+         */
+        function order_owner_manager_id(PDO $pdo, int $orderId): ?int
+        { global $dbRepo;
+            $stmt = $dbRepo->prepare("
+                SELECT a.user_id, e.manager_id
+                FROM tbl_order_assignment a
+                LEFT JOIN tbl_employee e ON e.id = a.employee_id
+                WHERE a.order_id = ? AND a.status IN ('active','waiting')
+                ORDER BY a.id DESC LIMIT 1");
+            $stmt->execute([$orderId]);
+            $row = $stmt->fetch(PDO::FETCH_ASSOC);
+            if ($row) {
+                if (!empty($row['user_id']))    return (int) $row['user_id'];
+                if (!empty($row['manager_id'])) return (int) $row['manager_id'];
+            }
+            return null;
+        }
+    }
+
+    if (!function_exists('order_can_manager_change')) {
+        /**
+         * May the current user change/confirm this order?
+         *  - Super Admin: yes (full access).
+         *  - Employee: yes only for orders assigned to them.
+         *  - Regular manager (Admin/Manager): only their own team's orders,
+         *    or orders they claimed. Unowned orders require claiming first.
+         *  - Any other role: yes (unchanged legacy behaviour).
+         */
+        function order_can_manager_change(PDO $pdo, int $orderId, array $sessionUser): bool
+        { global $dbRepo;
+            $role  = (string) ($sessionUser['role'] ?? '');
+            $idRaw = (string) ($sessionUser['id'] ?? '');
+
+            if ($role === 'Super Admin') return true;
+
+            if ($role === 'Employee' || strpos($idRaw, 'emp_') === 0) {
+                $empId = strpos($idRaw, 'emp_') === 0 ? (int) substr($idRaw, 4) : (int) $idRaw;
+                $st = $dbRepo->prepare("SELECT 1 FROM tbl_order_assignment WHERE order_id=? AND employee_id=? AND status='active' LIMIT 1");
+                $st->execute([$orderId, $empId]);
+                return (bool) $st->fetchColumn();
+            }
+
+            if ($role === 'Admin' || $role === 'Manager') {
+                $owner = order_owner_manager_id($pdo, $orderId);
+                return $owner !== null && $owner === (int) $idRaw;
+            }
+
+            return true;
+        }
+    }
+
+    if (!function_exists('order_claim_by_manager')) {
+        /**
+         * A manager "claims" an order — inserts themselves as its owner so they
+         * can confirm it. Takes it over from any prior employee/manager.
+         */
+        function order_claim_by_manager(PDO $pdo, int $orderId, int $managerId): bool
+        { global $dbRepo;
+            if ($orderId <= 0 || $managerId <= 0) return false;
+            $exists = $dbRepo->prepare("SELECT id FROM tbl_order_assignment WHERE order_id = ? LIMIT 1");
+            $exists->execute([$orderId]);
+            if ($exists->fetchColumn()) {
+                $dbRepo->prepare("UPDATE tbl_order_assignment
+                    SET user_id = ?, employee_id = NULL, status = 'active',
+                        assigned_by = 'manager_claim', assignment_source = 'claim', assigned_at = NOW()
+                    WHERE order_id = ?")->execute([$managerId, $orderId]);
+            } else {
+                $dbRepo->prepare("INSERT INTO tbl_order_assignment
+                    (order_id, user_id, assigned_by, assignment_source, status)
+                    VALUES (?, ?, 'manager_claim', 'claim', 'active')")->execute([$orderId, $managerId]);
+            }
+            return true;
+        }
+    }
+
 }

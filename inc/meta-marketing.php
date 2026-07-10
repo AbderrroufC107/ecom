@@ -337,3 +337,87 @@ if (!function_exists('meta_marketing_send_event')) {
         ];
     }
 }
+
+if (!function_exists('meta_marketing_send_event_for_product')) {
+    /**
+     * Send a server-side (Conversions API) event to every Facebook pixel linked to a product
+     * (tbl_pixel/tbl_product_pixel), falling back to the single global pixel in tbl_settings
+     * when the product has no pixels of its own. A product can run on several ad accounts at
+     * once, each with its own pixel, so the same real-world event (e.g. an order actually
+     * delivered) must be reported to all of them.
+     */
+    function meta_marketing_send_event_for_product(PDO $pdo, int $productId, string $eventName, array $eventData): array
+    {
+        $settings = function_exists('front_get_settings') ? front_get_settings($pdo) : [];
+        $accessToken = trim((string) ($settings['meta_marketing_access_token'] ?? ''));
+        $graphVersion = meta_marketing_normalize_graph_version($settings['meta_marketing_graph_version'] ?? 'v25.0');
+        $testCode = trim((string) ($settings['meta_marketing_test_event_code'] ?? ''));
+
+        $pixelIds = [];
+        try {
+            $stmt = $pdo->prepare("SELECT tp.pixel_id FROM tbl_pixel tp JOIN tbl_product_pixel tpp ON tp.id = tpp.pixel_id WHERE tpp.product_id = ? AND LOWER(tp.pixel_network) = 'facebook'");
+            $stmt->execute([$productId]);
+            $pixelIds = array_column($stmt->fetchAll(PDO::FETCH_ASSOC), 'pixel_id');
+        } catch (Throwable $e) {
+            $pixelIds = [];
+        }
+        if (!$pixelIds) {
+            $globalPixel = trim((string) ($settings['facebook_pixel_id'] ?? ''));
+            if ($globalPixel !== '') {
+                $pixelIds = [$globalPixel];
+            }
+        }
+        $pixelIds = array_values(array_unique(array_filter($pixelIds, static fn($v) => trim((string) $v) !== '')));
+
+        if (!$pixelIds || $accessToken === '') {
+            return ['sent' => false, 'skipped' => true, 'reason' => 'No Facebook pixel or access token configured.', 'pixels' => []];
+        }
+
+        $eventId = trim((string) ($eventData['event_id'] ?? ''));
+        if ($eventId === '') {
+            $eventId = 'evt_' . bin2hex(random_bytes(12));
+        }
+
+        $userData = [];
+        if (!empty($eventData['phone'])) {
+            $userData['ph'] = [meta_marketing_hash(preg_replace('/\D+/', '', (string) $eventData['phone']))];
+        }
+        if (!empty($eventData['email'])) {
+            $userData['em'] = [meta_marketing_hash($eventData['email'])];
+        }
+
+        $event = [
+            'event_name' => $eventName,
+            'event_time' => time(),
+            'event_id' => $eventId,
+            'action_source' => 'system_generated',
+            'user_data' => array_filter($userData, static fn($v) => $v !== '' && $v !== []),
+            'custom_data' => array_filter([
+                'currency' => $eventData['currency'] ?? 'DZD',
+                'value' => isset($eventData['value']) ? (float) $eventData['value'] : null,
+                'order_id' => isset($eventData['order_id']) ? (string) $eventData['order_id'] : null,
+            ], static fn($v) => $v !== null && $v !== ''),
+        ];
+
+        $results = [];
+        foreach ($pixelIds as $pixelId) {
+            $url = 'https://graph.facebook.com/' . $graphVersion . '/' . rawurlencode((string) $pixelId) . '/events';
+            $payload = ['data' => [$event], 'access_token' => $accessToken];
+            if ($testCode !== '') {
+                $payload['test_event_code'] = $testCode;
+            }
+            $response = meta_marketing_request($url, $payload);
+            if (!$response['ok']) {
+                error_log("Meta CAPI event failed for pixel {$pixelId}: HTTP {$response['status']} {$response['body']} {$response['error']}");
+            }
+            $results[$pixelId] = $response['ok'];
+        }
+
+        return [
+            'sent' => in_array(true, $results, true),
+            'skipped' => false,
+            'event_id' => $eventId,
+            'pixels' => $results,
+        ];
+    }
+}

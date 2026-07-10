@@ -1991,7 +1991,8 @@ if (isset($_SESSION['order_details']) && empty($order_details)) {
 .landing-page .delivery-btn {
     width: auto;
     max-width: none;
-    padding: 14px 12px;
+    padding: 9px 10px;
+    gap: 3px;
 }
 .landing-page .delivery-btn.selected {
     border-color: #c1121f;
@@ -2000,6 +2001,46 @@ if (isset($_SESSION['order_details']) && empty($order_details)) {
 }
 .landing-page .delivery-btn.selected .radio-icon { border-color: #c1121f; }
 .landing-page .delivery-btn.selected .radio-icon::after { background: #c1121f; }
+
+/* ── Make the delivery-type boxes more compact (they were too big) ── */
+.landing-page .delivery-btn .radio-icon {
+    width: 15px;
+    height: 15px;
+    margin-bottom: 4px;
+}
+.landing-page .delivery-btn.selected .radio-icon::after {
+    width: 8px;
+    height: 8px;
+}
+.landing-page .delivery-btn .delivery-label {
+    font-size: 0.82rem;
+    margin-bottom: 1px;
+}
+.landing-page .delivery-btn .delivery-price-tag {
+    font-size: 0.85rem;
+}
+
+/* ── Slightly smaller offer boxes ── */
+.landing-page .offer-card {
+    padding: 11px 16px;
+    margin-bottom: 10px;
+}
+.landing-page .offer-qty-price,
+.landing-page .offer-special-label {
+    font-size: 1.35rem;
+}
+.landing-page .offer-new { font-size: 1.7rem; }
+.landing-page .offer-old { font-size: 1.05rem; }
+.landing-page .offer-select-dot {
+    width: 18px;
+    height: 18px;
+    margin-left: 12px;
+}
+.landing-page .offer-popular-badge {
+    font-size: 1.05rem;
+    padding: 5px 16px;
+    top: -12px;
+}
 
 /* ── Price summary: lighter, cleaner card instead of a heavy black border. ── */
 .landing-page .delivery-info {
