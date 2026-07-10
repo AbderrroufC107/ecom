@@ -114,13 +114,20 @@ if ($is_employee) {
 // Secondary bot (order-status) - only shown when a genuinely separate bot
 // token is configured; otherwise personal order-status alerts already ride
 // on the main bot linked above.
-require_once __DIR__ . '/telegram/Services/SecondaryBotLinkService.php';
-$owner_type_secondary = $is_employee ? 'employee' : 'manager';
-$owner_id_secondary = $is_employee ? $emp_id : (int) $_SESSION['user']['id'];
-$order_status_bot_available = SecondaryBotLinkService::hasDedicatedBot($pdo, 'order_status');
-$order_status_link = $order_status_bot_available
-	? SecondaryBotLinkService::getLinkStatus($pdo, $owner_type_secondary, $owner_id_secondary, 'order_status')
-	: null;
+$order_status_bot_available = false;
+$order_status_link = null;
+try {
+	require_once __DIR__ . '/telegram/Services/SecondaryBotLinkService.php';
+	$owner_type_secondary = $is_employee ? 'employee' : 'manager';
+	$owner_id_secondary = $is_employee ? $emp_id : (int) $_SESSION['user']['id'];
+	$order_status_bot_available = SecondaryBotLinkService::hasDedicatedBot($pdo, 'order_status');
+	$order_status_link = $order_status_bot_available
+		? SecondaryBotLinkService::getLinkStatus($pdo, $owner_type_secondary, $owner_id_secondary, 'order_status')
+		: null;
+} catch (Throwable $e) {
+	$order_status_bot_available = false;
+	$order_status_link = null;
+}
 ?>
 
 <section class="content-header">
