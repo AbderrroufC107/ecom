@@ -57,6 +57,16 @@ $cache_file = __DIR__ . '/cache/dashboard_kpis_cache.json';
 $cache_ttl = 300; // 5 minutes cache
 $data_cached = false;
 
+// Manual refresh: lets an admin force-recompute the KPIs immediately (e.g. after
+// editing data directly in the database) instead of waiting out the 5-minute cache.
+if (($_GET['action'] ?? '') === 'refresh_kpis') {
+    if (file_exists($cache_file)) {
+        @unlink($cache_file);
+    }
+    header('Location: index.php');
+    exit;
+}
+
 if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_ttl) {
     $cache_data = json_decode(file_get_contents($cache_file), true);
     if ($cache_data) {
@@ -302,7 +312,10 @@ input:checked + .slider:before { transform: translateX(18px); }
 <div class="dashboard-wrapper admin-dashboard">
     <div class="d-header">
         <h1>لوحة القيادة التنفيذية</h1>
-        <button class="d-btn" onclick="document.getElementById('customizeModal').style.display='flex'"><i class="fa fa-sliders"></i> تخصيص الواجهة</button>
+        <div style="display:flex; gap:8px;">
+            <a href="index.php?action=refresh_kpis" class="d-btn" title="أعد حساب الأرقام الآن بدل انتظار 5 دقائق"><i class="fa fa-refresh"></i> تحديث الآن</a>
+            <button class="d-btn" onclick="document.getElementById('customizeModal').style.display='flex'"><i class="fa fa-sliders"></i> تخصيص الواجهة</button>
+        </div>
     </div>
 
     <!-- KPIs -->
