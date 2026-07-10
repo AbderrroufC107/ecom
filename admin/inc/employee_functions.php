@@ -576,14 +576,17 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                 // 3. Normal WRR Execution
                 $assignment_id = employee_assign_order($pdo, $order_id, null, $triggered_by, true, $manager_id);
 
-                // After WRR picks an employee, stamp the order's manager_id so
-                // future scoping (dashboard, notifications, claim logic) works.
+                // After WRR picks someone, stamp the order's manager_id so future
+                // scoping (dashboard, notifications, claim logic) works. The pick
+                // may be an employee (attribute to *their* manager) or a manager/
+                // admin picked directly (attribute to themselves).
                 if ($assignment_id > 0 && ($manager_id === null || $manager_id <= 0)) {
                     try {
-                        $oa_stmt = $dbRepo->prepare("SELECT employee_id FROM tbl_order_assignment WHERE id = ? LIMIT 1");
+                        $oa_stmt = $dbRepo->prepare("SELECT employee_id, user_id FROM tbl_order_assignment WHERE id = ? LIMIT 1");
                         $oa_stmt->execute([$assignment_id]);
                         $oa_row = $oa_stmt->fetch(PDO::FETCH_ASSOC);
                         $picked_emp = (int)($oa_row['employee_id'] ?? 0);
+                        $picked_user = (int)($oa_row['user_id'] ?? 0);
                         if ($picked_emp > 0) {
                             $emp_mgr = $dbRepo->prepare("SELECT manager_id FROM tbl_employee WHERE id = ? LIMIT 1");
                             $emp_mgr->execute([$picked_emp]);
@@ -591,6 +594,8 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                             if (!empty($emp_mgr_id)) {
                                 $dbRepo->prepare("UPDATE tbl_order SET manager_id = ? WHERE id = ? AND (manager_id IS NULL OR manager_id = 0)")->execute([(int)$emp_mgr_id, $order_id]);
                             }
+                        } elseif ($picked_user > 0) {
+                            $dbRepo->prepare("UPDATE tbl_order SET manager_id = ? WHERE id = ? AND (manager_id IS NULL OR manager_id = 0)")->execute([$picked_user, $order_id]);
                         }
                     } catch (\Throwable $e) {}
                 }
@@ -599,16 +604,18 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                     $pdo->commit();
                 }
                 if ($assignment_id > 0) {
-                    $stmt_oa = $dbRepo->prepare("SELECT employee_id FROM tbl_order_assignment WHERE id = ? LIMIT 1");
+                    $stmt_oa = $dbRepo->prepare("SELECT employee_id, user_id FROM tbl_order_assignment WHERE id = ? LIMIT 1");
                     $stmt_oa->execute([$assignment_id]);
                     $oa_row = $stmt_oa->fetch(PDO::FETCH_ASSOC);
                     $assigned_emp_id = (int)($oa_row['employee_id'] ?? 0);
-                    if ($assigned_emp_id > 0) {
+                    $assigned_user_id = (int)($oa_row['user_id'] ?? 0);
+                    $notifyId = $assigned_emp_id > 0 ? $assigned_emp_id : $assigned_user_id;
+                    if ($notifyId > 0) {
                         if (class_exists('EventManager')) {
-                            EventManager::dispatch('OrderAssigned', $pdo, $order_id, $assigned_emp_id);
+                            EventManager::dispatch('OrderAssigned', $pdo, $order_id, $notifyId);
                         } else {
                             telegram_ensure_tables($pdo);
-                            telegram_notify_assignment($pdo, $order_id, $assigned_emp_id);
+                            telegram_notify_assignment($pdo, $order_id, $notifyId);
                         }
                     }
                 }
@@ -645,12 +652,23 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
             }
             $order_product_id = (int) ($order_row['product_id'] ?? 0);
 
+            $picked_user_id = null;
             if ($employee_id === null) {
                 $next = employee_get_next_for_assignment($pdo, $order_product_id, $manager_id);
                 if ($next === null) {
                     return null;
                 }
-                $employee_id = (int) $next['id'];
+                // WRR can pick either an employee (tbl_employee) or a manager/admin
+                // opted into assignment (tbl_user) - they must land in different
+                // columns, or a manager's user id gets stored as if it were an
+                // employee id (and then resolves to nobody, since tbl_employee has
+                // no row with that id).
+                if (($next['type'] ?? 'employee') === 'user') {
+                    $picked_user_id = (int) $next['id'];
+                    $employee_id = null;
+                } else {
+                    $employee_id = (int) $next['id'];
+                }
             } else {
                 $emp = employee_get_by_id($pdo, $employee_id);
                 if ($emp === null || empty($emp['is_active'])) {
@@ -665,18 +683,19 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
             }
 
             $stmt = $dbRepo->prepare("
-                INSERT INTO tbl_order_assignment (order_id, employee_id, assigned_by, assignment_source)
-                VALUES (?, ?, ?, 'wrr')
+                INSERT INTO tbl_order_assignment (order_id, employee_id, user_id, assigned_by, assignment_source)
+                VALUES (?, ?, ?, ?, 'wrr')
             ");
-            $stmt->execute([$order_id, $employee_id, $assigned_by]);
+            $stmt->execute([$order_id, $employee_id, $picked_user_id, $assigned_by]);
             $assignment_id = (int) $dbRepo->lastInsertId();
 
             if ($assignment_id > 0 && !$from_strategy) {
+                $notifyId = $employee_id ?? $picked_user_id;
                 if (class_exists('EventManager')) {
-                    EventManager::dispatch('OrderAssigned', $pdo, $order_id, $employee_id);
+                    EventManager::dispatch('OrderAssigned', $pdo, $order_id, $notifyId);
                 } else {
                     telegram_ensure_tables($pdo);
-                    telegram_notify_assignment($pdo, $order_id, $employee_id);
+                    telegram_notify_assignment($pdo, $order_id, $notifyId);
                 }
             }
 
