@@ -268,6 +268,7 @@ body.admin-react-ready #ordersTable {
             <li data-tab="follow_up" style="list-style:none;"><a href="#" style="text-decoration:none; display:block;">قيد المتابعة</a></li>
             <li data-tab="waiting_dispatch" style="list-style:none;"><a href="#" style="text-decoration:none; display:block;">بانتظار الإرسال</a></li>
             <li data-tab="dispatched" style="list-style:none;"><a href="#" style="text-decoration:none; display:block;">مرسلة</a></li>
+            <li data-tab="completed" style="list-style:none;"><a href="#" style="text-decoration:none; display:block;">مؤكدة</a></li>
             <li data-tab="issues" style="list-style:none;"><a href="#" style="text-decoration:none; display:block;">مشاكل</a></li>
             <li data-tab="returns" style="list-style:none;"><a href="#" style="text-decoration:none; display:block;">مرتجعات</a></li>
         </ul>

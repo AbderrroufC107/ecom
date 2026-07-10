@@ -58,6 +58,16 @@ if (!$is_admin) {
     $where_conditions[] = "oa.employee_id = ?";
     $params[] = $my_employee_id;
 } else {
+    // A regular Manager/Admin (not Super Admin) must only ever see their own
+    // team's orders - orders explicitly stamped with another manager's id.
+    // This used to be cosmetic only (dimmed via row-other-manager in the
+    // client), so a manager could still see every other manager's customer
+    // names, phone numbers and order details in the raw list.
+    if (!$is_super_admin) {
+        $where_conditions[] = "(o.manager_id = ? OR o.manager_id IS NULL OR o.manager_id = 0)";
+        $params[] = $current_user_id;
+    }
+
     if ($employee_filter === 'unassigned') {
         $where_conditions[] = "oa.employee_id IS NULL";
     } elseif ($employee_filter === 'my') {
@@ -96,6 +106,9 @@ switch ($tab) {
         break;
     case 'returns':
         $where_conditions[] = "o.order_status = 'Returned'";
+        break;
+    case 'completed':
+        $where_conditions[] = "o.order_status IN ('Completed', 'Delivered')";
         break;
     case 'all':
     default:
