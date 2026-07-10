@@ -65,6 +65,7 @@ if (isset($_SESSION['user'])) {
 			'my-earnings.php',           // عمولاتي وسجل المدفوعات
 			'ai-assistant.php',          // المساعد الذكي (مقيّد ببيانات الموظف)
 			'logout.php',
+			'profile-edit.php',          // ملفه الشخصي: كلمة المرور وربط تيليغرام (يعرض تبويب الموظف تلقائياً)
 			'telegram-link-action.php',  // ربط حساب تيليغرام الخاص به
 			// لتمكين الموظف من معالجة الطلبات داخل اللوحة، أضِف الصفحات التالية:
 			// 'order.php', 'order-details.php', 'order-change-status.php',
