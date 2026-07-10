@@ -90,12 +90,13 @@ $kpis = [
         <!-- Pending orders needing follow-up -->
         <div class="col-md-8">
             <div class="box box-warning">
-                <div class="box-header with-border">
-                    <h3 class="box-title"><i class="fa fa-clock-o"></i> طلبات معلّقة تحتاج متابعة (<?= count($pendingOrders) ?>)</h3>
+                <div class="box-header with-border" style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px">
+                    <h3 class="box-title" style="margin:0"><i class="fa fa-clock-o"></i> طلبات معلّقة تحتاج متابعة (<?= count($pendingOrders) ?>)</h3>
+                    <a href="order.php" class="btn btn-primary btn-sm"><i class="fa fa-list"></i> كل طلباتي</a>
                 </div>
                 <div class="box-body p-0">
                     <table class="table table-hover" style="margin:0">
-                        <thead><tr><th>#</th><th>العميل</th><th>الهاتف</th><th>المنتج</th><th>منذ</th></tr></thead>
+                        <thead><tr><th>#</th><th>العميل</th><th>الهاتف</th><th>المنتج</th><th>منذ</th><th style="text-align:center">الإجراء</th></tr></thead>
                         <tbody>
                         <?php foreach ($pendingOrders as $o): $hrs = (int)$o['hrs']; $age = $hrs >= 48 ? intdiv($hrs,24).' يوم' : $hrs.' ساعة'; ?>
                             <tr>
@@ -104,10 +105,15 @@ $kpis = [
                                 <td dir="ltr"><?= htmlspecialchars($o['customer_phone'] ?? '') ?></td>
                                 <td><small><?= htmlspecialchars(mb_substr((string)$o['product_name'], 0, 30)) ?></small></td>
                                 <td><span class="label label-<?= $hrs >= 48 ? 'danger' : 'warning' ?>"><?= $age ?></span></td>
+                                <td style="text-align:center;white-space:nowrap">
+                                    <a href="order-details.php?id=<?= (int)$o['id'] ?>" class="btn btn-success btn-xs" title="تأكيد الطلب، تسجيل مكالمة، وإرسال لشركة التوصيل">
+                                        <i class="fa fa-phone"></i> معالجة / تأكيد
+                                    </a>
+                                </td>
                             </tr>
                         <?php endforeach; ?>
                         <?php if (empty($pendingOrders)): ?>
-                            <tr><td colspan="5" class="text-center text-muted" style="padding:20px">
+                            <tr><td colspan="6" class="text-center text-muted" style="padding:20px">
                                 <i class="fa fa-check-circle" style="color:#10b981"></i> لا توجد طلبات معلّقة — عمل رائع!
                             </td></tr>
                         <?php endif; ?>

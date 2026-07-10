@@ -1391,9 +1391,12 @@ $zrexpress_sent_at = trim((string) ($order['zrexpress_sent_at'] ?? ''));
     <ul class="nav nav-tabs" id="orderDetailsTabs" role="tablist">
         <li class="active"><a href="#tab_summary" data-toggle="tab">ملخص الطلب</a></li>
         <li><a href="#tab_edit" data-toggle="tab">تعديل الطلب</a></li>
-        <?php if (!$is_employee): ?>
+        <?php // Delivery-dispatch tabs: employees need these to confirm an order and
+              // push it to the delivery company (ECOTRACK / ZRexpress). ?>
         <li><a href="#tab_ecotrack" data-toggle="tab">ECOTRACK</a></li>
         <li><a href="#tab_zrexpress" data-toggle="tab">ZRexpress</a></li>
+        <?php if (!$is_employee): ?>
+        <?php // Manager/admin-only tabs. ?>
         <li><a href="#tab_telegram" data-toggle="tab">تلغرام</a></li>
         <li><a href="#tab_audit" data-toggle="tab"><i class="fa fa-history"></i> سجل التدقيق</a></li>
         <li><a href="#tab_timeline" data-toggle="tab"><i class="fa fa-clock-o"></i> السجل الزمني للطلب (ERP)</a></li>
@@ -1516,6 +1519,64 @@ $zrexpress_sent_at = trim((string) ($order['zrexpress_sent_at'] ?? ''));
                             </table>
                         </div>
                     </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Call log: register a follow-up call + history. Backend handler exists
+         (add_call) but the UI was missing, so nobody could log a call. Available
+         to whoever can open this order (managers see their team's, employees see
+         only their own assigned orders). -->
+    <div class="row order-actions-bar">
+        <div class="col-md-12">
+            <div class="box box-primary">
+                <div class="box-header with-border">
+                    <h3 class="box-title"><i class="fa fa-phone"></i> تسجيل مكالمة (<?php echo (int) $call_count; ?>)</h3>
+                </div>
+                <div class="box-body">
+                    <?php if (!empty($call_error_message)): ?>
+                        <div class="callout callout-danger"><?php echo htmlspecialchars($call_error_message, ENT_QUOTES, 'UTF-8'); ?></div>
+                    <?php endif; ?>
+                    <form method="post" action="order-details.php?id=<?php echo (int) $order_id; ?>" class="form-inline" style="margin-bottom:15px;">
+                        <?php $csrf->echoInputField(); ?>
+                        <input type="hidden" name="add_call" value="1">
+                        <div class="form-group" style="margin-left:8px;">
+                            <label style="margin-left:6px;">حالة الاتصال</label>
+                            <select name="call_status" class="form-control" required>
+                                <option value="">اختر...</option>
+                                <?php foreach ($call_status_labels as $__cs_key => $__cs_label): ?>
+                                    <option value="<?php echo htmlspecialchars((string) $__cs_key, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $__cs_label, ENT_QUOTES, 'UTF-8'); ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="form-group" style="margin-left:8px;">
+                            <input type="text" name="call_note" class="form-control" placeholder="ملاحظة (اختياري)" style="min-width:220px;">
+                        </div>
+                        <button type="submit" class="btn btn-primary"><i class="fa fa-plus"></i> تسجيل المكالمة</button>
+                    </form>
+
+                    <?php if (!empty($call_logs)): ?>
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover" style="margin-bottom:0;">
+                            <thead>
+                                <tr><th style="width:150px;">الحالة</th><th>الملاحظة</th><th style="width:150px;">بواسطة</th><th style="width:150px;">التاريخ</th></tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($call_logs as $log): ?>
+                                <tr>
+                                    <td><span class="<?php echo htmlspecialchars($call_status_classes[$log['call_status']] ?? 'label label-default', ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($call_status_labels[$log['call_status']] ?? (string) $log['call_status'], ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                    <td><?php echo htmlspecialchars((string) ($log['call_note'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
+                                    <td><?php echo htmlspecialchars((string) ($log['created_by'] ?? '—'), ENT_QUOTES, 'UTF-8'); ?></td>
+                                    <td><?php echo htmlspecialchars(date('d/m/Y H:i', strtotime((string) $log['called_at'])), ENT_QUOTES, 'UTF-8'); ?></td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+                    </div>
+                    <?php else: ?>
+                        <p class="text-muted" style="margin:0;">لا توجد مكالمات مسجلة بعد.</p>
+                    <?php endif; ?>
                 </div>
             </div>
         </div>
