@@ -1,5 +1,13 @@
 <?php require_once('header.php'); ?>
 <?php
+// Employees get a simple, own-data dashboard — not the full manager dashboard.
+if ((($_SESSION['user']['role'] ?? '') === 'Employee')
+    || (strpos((string) ($_SESSION['user']['id'] ?? ''), 'emp_') === 0)) {
+    require __DIR__ . '/employee-home.php';
+    require_once('footer.php');
+    exit;
+}
+
 error_reporting(E_ALL);
 ini_set('display_errors', 0);
 ini_set('log_errors', 1);
