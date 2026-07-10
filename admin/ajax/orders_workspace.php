@@ -13,8 +13,9 @@ if (!isset($_SESSION['user'])) {
 $is_admin = ($_SESSION['user']['role'] === 'Admin' || $_SESSION['user']['role'] === 'Super Admin' || $_SESSION['user']['role'] === 'Manager');
 $current_user_id = (int)($_SESSION['user']['id'] ?? 0);
 $is_super_admin = ($_SESSION['user']['role'] === 'Super Admin');
+$is_employee = (($_SESSION['user']['role'] ?? '') === 'Employee') || (strpos((string)($_SESSION['user']['id'] ?? ''), 'emp_') === 0);
 $my_employee_id = 0;
-if (!$is_admin && $_SESSION['user']['role'] === 'Employee') {
+if ($is_employee) {
     require_once('../inc/employee_functions.php');
     $emp = employee_get_current_admin_employee($pdo);
     if ($emp) {
@@ -178,9 +179,14 @@ $orders = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 $data = [];
 foreach ($orders as $o) {
-    // Check if order belongs to another manager
+    // "Another manager's order" only makes sense for an actual manager/admin.
+    // An employee's session id is "emp_<n>" -> (int)0, which would otherwise
+    // never match the order's manager_id and wrongly flag every one of their
+    // OWN assigned orders as belonging to someone else (hiding all buttons).
+    // Employees are already hard-filtered to their own assigned orders above,
+    // so no per-row isolation is needed for them.
     $order_manager_id = !empty($o['manager_id']) ? (int)$o['manager_id'] : 0;
-    $is_other_manager = ($order_manager_id > 0 && $order_manager_id !== $current_user_id && !$is_super_admin);
+    $is_other_manager = (!$is_employee && $order_manager_id > 0 && $order_manager_id !== $current_user_id && !$is_super_admin);
     $row_class = $is_other_manager ? 'row-other-manager' : '';
 
     // 1. Order ID + Date

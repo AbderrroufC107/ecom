@@ -67,8 +67,14 @@ if (isset($_SESSION['user'])) {
 			'logout.php',
 			'profile-edit.php',          // ملفه الشخصي: كلمة المرور وربط تيليغرام (يعرض تبويب الموظف تلقائياً)
 			'telegram-link-action.php',  // ربط حساب تيليغرام الخاص به
-			// لتمكين الموظف من معالجة الطلبات داخل اللوحة، أضِف الصفحات التالية:
-			// 'order.php', 'order-details.php', 'order-change-status.php',
+			// مساحة عمل الطلبات: الموظف يرى طلباته المُسندة فقط ويعالجها
+			// (orders_workspace.php + order-details.php يفلترون حسب employee_id).
+			'order.php',                 // قائمة طلباته المُسندة
+			'order-details.php',         // فتح/تأكيد/تسجيل مكالمة على طلبه
+			'order-change-status.php',   // تغيير حالة الطلب (يشمل الدفع لشركة التوصيل)
+			'order-ecotrack-action.php', // إرسال الطلب لشركة التوصيل ECOTRACK
+			'order-zrexpress-action.php',// إرسال الطلب لشركة التوصيل ZRexpress
+			'order-delete.php',          // حذف طلب من طلباته
 		];
 		$__cur = basename($_SERVER['SCRIPT_NAME'] ?? ($_SERVER['PHP_SELF'] ?? ''));
 		if ($__cur !== '' && !in_array($__cur, $employee_allowed_pages, true)) {
@@ -77,6 +83,15 @@ if (isset($_SESSION['user'])) {
 			exit;
 		}
 	}
+
+	// Expose a clean employee flag + the employee's real numeric id for pages
+	// that scope data/actions to the logged-in employee (order-details.php,
+	// orders_workspace.php). Manager-isolation checks elsewhere compare against
+	// $_SESSION['user']['id'], which for an employee is the string "emp_<n>"
+	// and casts to 0 - those checks must therefore special-case employees using
+	// this flag instead of misreading them as "manager #0".
+	$is_employee = $__isEmployee;
+	$current_employee_id = $__isEmployee ? (int) preg_replace('/\D+/', '', $__idRaw) : 0;
 }
 
 // Resolve current store ID

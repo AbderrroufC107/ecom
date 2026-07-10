@@ -628,15 +628,33 @@ if (!$order) {
     exit;
 }
 
-if (!empty($order['manager_id']) && isset($_SESSION['user'])) {
-    $current_manager_id = (int) ($_SESSION['user']['id'] ?? 0);
+if (isset($_SESSION['user'])) {
     $is_super_admin_user = (isset($_SESSION['user']['role']) && $_SESSION['user']['role'] === 'Super Admin');
-    if (!$is_super_admin_user && (int) $order['manager_id'] !== $current_manager_id) {
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            die('غير مصرح لك بإدارة هذا الطلب لأنه تابع لمدير آخر.');
+
+    if (!empty($is_employee)) {
+        // Employees are scoped by assignment, not by manager_id. An employee may
+        // only open an order that is actively assigned to them. (Their session id
+        // "emp_<n>" casts to 0, so the manager_id comparison below would otherwise
+        // block them from every one of their own orders.)
+        $own_stmt = $dbRepo->prepare("SELECT 1 FROM tbl_order_assignment WHERE order_id = ? AND employee_id = ? AND status = 'active' LIMIT 1");
+        $own_stmt->execute([(int) $order['id'], (int) ($current_employee_id ?? 0)]);
+        if (!$own_stmt->fetchColumn()) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                die('غير مصرح لك بإدارة هذا الطلب لأنه غير مُسند إليك.');
+            }
+            header('location: order.php');
+            exit;
         }
-        header('location: order.php');
-        exit;
+    } elseif (!empty($order['manager_id']) && !$is_super_admin_user) {
+        // Regular manager/admin: may only manage their own team's orders.
+        $current_manager_id = (int) ($_SESSION['user']['id'] ?? 0);
+        if ((int) $order['manager_id'] !== $current_manager_id) {
+            if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+                die('غير مصرح لك بإدارة هذا الطلب لأنه تابع لمدير آخر.');
+            }
+            header('location: order.php');
+            exit;
+        }
     }
 }
 
