@@ -169,4 +169,12 @@ class SecondaryBotLinkService
         $row = self::getLinkStatus($pdo, $ownerType, $ownerId, $purpose);
         return ($row && !empty($row['is_linked'])) ? (string) $row['chat_id'] : '';
     }
+
+    /** Get all linked users for a purpose (for broadcasting personal notifications). */
+    public static function getLinkedChatIds(PDO $pdo, string $purpose): array
+    { global $dbRepo;
+        $stmt = $dbRepo->prepare("SELECT chat_id, telegram_username, telegram_first_name, owner_type, owner_id FROM tbl_telegram_secondary_bot_links WHERE bot_purpose = ? AND is_linked = 1 AND chat_id IS NOT NULL AND chat_id != ''");
+        $stmt->execute([$purpose]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC) ?: [];
+    }
 }

@@ -27,6 +27,7 @@ if (!isset($_SESSION['user']['role']) || $_SESSION['user']['role'] !== 'Super Ad
 require_once __DIR__ . '/header.php';
 require_once __DIR__ . '/telegram/Services/TelegramService.php';
 require_once __DIR__ . '/telegram/Services/AuditService.php';
+require_once __DIR__ . '/telegram/Services/SecondaryBotLinkService.php';
 
 $message = '';
 $error = '';
@@ -53,6 +54,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
     $reminderHours = (int) ($_POST['telegram_reminder_hours'] ?? 24);
     $weeklyDay = (int) ($_POST['telegram_weekly_report_day'] ?? 5);
     $secretToken = trim((string) ($_POST['telegram_secret_token'] ?? ''));
+    $incompleteBotToken = trim((string) ($_POST['telegram_incomplete_bot_token'] ?? ''));
+    $orderStatusBotToken = trim((string) ($_POST['telegram_order_status_bot_token'] ?? ''));
+    $incompleteEnabled = isset($_POST['telegram_incomplete_enabled']) ? 1 : 0;
+    $orderStatusEnabled = isset($_POST['telegram_order_status_enabled']) ? 1 : 0;
 
     if ($secretToken === '') {
         $secretToken = md5(uniqid((string)rand(), true));
@@ -76,7 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
                 telegram_daily_report_time = ?,
                 telegram_reminder_hours = ?,
                 telegram_weekly_report_day = ?,
-                telegram_secret_token = ?
+                telegram_secret_token = ?,
+                telegram_incomplete_bot_token = ?,
+                telegram_order_status_bot_token = ?,
+                telegram_incomplete_enabled = ?,
+                telegram_order_status_enabled = ?
             WHERE id = 1
         ");
         
@@ -93,7 +102,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
             $reportTime,
             $reminderHours,
             $weeklyDay,
-            $secretToken
+            $secretToken,
+            $incompleteBotToken,
+            $orderStatusBotToken,
+            $incompleteEnabled,
+            $orderStatusEnabled
         ]);
 
         // Audit Trail
@@ -103,9 +116,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
         $message = "تم حفظ إعدادات البوت بنجاح.";
 
         // Clear Bot Username Cache so it re-fetches
-        $cacheFile = __DIR__ . '/telegram/cache/telegram_bot_username.cache';
+        $cacheFile = __DIR__ . '/cache/telegram_bot_username.cache';
         if (file_exists($cacheFile)) {
             @unlink($cacheFile);
+        }
+        // Clear secondary bot username caches
+        foreach (['order_status', 'incomplete'] as $purpose) {
+            $secCacheFile = __DIR__ . '/cache/telegram_bot_username_' . $purpose . '.cache';
+            if (file_exists($secCacheFile)) {
+                @unlink($secCacheFile);
+            }
         }
 
         // Auto-Register Webhook if URL is provided and Bot is enabled
@@ -119,6 +139,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
 
             if (!empty($webhookRes['ok'])) {
                 $message .= " وتم ربط Webhook الخاص بالبوت بنجاح.";
+
+                // Register secondary bot webhooks
+                $baseWebhookUrl = rtrim($webhookUrl, '?&');
+                $secondaryPurposes = ['order_status', 'incomplete'];
+                foreach ($secondaryPurposes as $purpose) {
+                    $secToken = SecondaryBotLinkService::getBotToken($pdo, $purpose);
+                    if ($secToken !== '' && $secToken !== $botToken) {
+                        $secWebhookUrl = $baseWebhookUrl . '?purpose=' . $purpose;
+                        $payload = json_encode([
+                            'url' => $secWebhookUrl,
+                            'secret_token' => $secretToken
+                        ]);
+                        $ch = curl_init("https://api.telegram.org/bot{$secToken}/setWebhook");
+                        curl_setopt($ch, CURLOPT_POST, true);
+                        curl_setopt($ch, CURLOPT_HTTPHEADER, ['Content-Type: application/json']);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, $payload);
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                        curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+                        $secRes = json_decode(curl_exec($ch), true);
+                        curl_close($ch);
+                        if (!empty($secRes['ok'])) {
+                            $purposeLabel = $purpose === 'order_status' ? 'Order Status' : 'Incomplete Orders';
+                            $message .= " Webhook ($purposeLabel) مسجل.";
+                        }
+                    }
+                }
             } else {
                 $error = "تم حفظ الإعدادات، ولكن فشل تسجيل Webhook في تيليجرام: " . ($webhookRes['description'] ?? 'No response');
             }
@@ -198,6 +244,48 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
                             <div class="col-sm-6">
                                 <input type="text" class="form-control" name="telegram_secret_token" value="<?php echo htmlspecialchars($settings['telegram_secret_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="توليد تلقائي إذا تُرِك فارغاً">
                                 <small class="text-muted">مستخدم للتحقق من هوية الطلبات الواردة إلى Webhook لضمان أمان البوت.</small>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="box-header with-border" style="padding-left:0; margin-bottom:15px;">
+                            <h3 class="box-title"><i class="fa fa-robot text-aqua"></i> البوتات الفرعية (Secondary Bots)</h3>
+                            <p class="text-muted" style="margin-top:5px;">بوتات منفصلة مخصصة لأنواع معينة من الإشعارات. كل بوت له توكن وربط مستقل.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">توكن بوت الطلبات المعلقة (Incomplete Orders Bot)</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="telegram_incomplete_bot_token" value="<?php echo htmlspecialchars($settings['telegram_incomplete_bot_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="اتركه فارغاً لاستخدام البوت الرئيسي">
+                                <small class="text-muted">بوت منفصل لإشعارات الطلبات المعلقة والمتروكة. إذا تُرِك فارغاً، تُستخدم إشعارات البوت الرئيسي.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">توكن بوت حالة الطلب (Order Status Bot)</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="telegram_order_status_bot_token" value="<?php echo htmlspecialchars($settings['telegram_order_status_bot_token'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="اتركه فارغاً لاستخدام البوت الرئيسي">
+                                <small class="text-muted">بوت منفصل لإشعارات تغيير حالة الطلب. إذا تُرِك فارغاً، تُستخدم إشعارات البوت الرئيسي.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">تفعيل بوت الطلبات المعلقة</label>
+                            <div class="col-sm-9">
+                                <label class="switch" style="margin-top: 7px;">
+                                    <input type="checkbox" name="telegram_incomplete_enabled" value="1" <?php if (($settings['telegram_incomplete_enabled'] ?? 0) == 1) echo 'checked'; ?>>
+                                    <span class="slider round"></span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">تفعيل بوت حالة الطلب</label>
+                            <div class="col-sm-9">
+                                <label class="switch" style="margin-top: 7px;">
+                                    <input type="checkbox" name="telegram_order_status_enabled" value="1" <?php if (($settings['telegram_order_status_enabled'] ?? 0) == 1) echo 'checked'; ?>>
+                                    <span class="slider round"></span>
+                                </label>
                             </div>
                         </div>
 

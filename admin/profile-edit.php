@@ -128,6 +128,21 @@ try {
 	$order_status_bot_available = false;
 	$order_status_link = null;
 }
+
+$incomplete_bot_available = false;
+$incomplete_link = null;
+try {
+	if (!class_exists('SecondaryBotLinkService')) {
+		require_once __DIR__ . '/telegram/Services/SecondaryBotLinkService.php';
+	}
+	$incomplete_bot_available = SecondaryBotLinkService::hasDedicatedBot($pdo, 'incomplete');
+	$incomplete_link = $incomplete_bot_available
+		? SecondaryBotLinkService::getLinkStatus($pdo, $owner_type_secondary, $owner_id_secondary, 'incomplete')
+		: null;
+} catch (Throwable $e) {
+	$incomplete_bot_available = false;
+	$incomplete_link = null;
+}
 ?>
 
 <section class="content-header">
@@ -471,6 +486,66 @@ try {
 								</div>
 							</div>
 							<?php endif; ?>
+
+							<?php if ($incomplete_bot_available): ?>
+							<div class="box box-warning" id="telegram-incomplete-link-card" style="margin-top: 15px;">
+								<div class="box-body" style="padding: 20px;">
+									<h3 style="margin-top: 0; margin-bottom: 20px; font-size: 18px; font-weight: 600;">
+										<i class="fa fa-exclamation-triangle text-orange"></i> بوت الطلبات المعلقة (منفصل)
+									</h3>
+									<p class="text-muted" style="margin-bottom: 20px;">
+										بوت منفصل مخصص لإشعارات الطلبات المعلقة والمتروكة. اربطه هنا لتتلقى الإشعارات بشكل شخصي - هذا مستقل عن البوت الرئيسي أعلاه.
+									</p>
+
+									<?php if (!empty($incomplete_link['is_linked'])): ?>
+										<table class="table table-bordered">
+											<tr>
+												<th style="width: 180px; background-color: #f9f9f9;">حالة الاتصال</th>
+												<td><span class="label label-success" style="font-size: 13px;"><i class="fa fa-check"></i> متصل</span></td>
+											</tr>
+											<tr>
+												<th style="background-color: #f9f9f9;">اسم المستخدم</th>
+												<td><strong><?php echo !empty($incomplete_link['telegram_username']) ? '@' . htmlspecialchars($incomplete_link['telegram_username'], ENT_QUOTES, 'UTF-8') : '--'; ?></strong></td>
+											</tr>
+											<tr>
+												<th style="background-color: #f9f9f9;">تاريخ الربط</th>
+												<td><?php echo !empty($incomplete_link['linked_at']) ? htmlspecialchars($incomplete_link['linked_at'], ENT_QUOTES, 'UTF-8') : '--'; ?></td>
+											</tr>
+										</table>
+										<div id="tg-inc-initial-state">
+											<button type="button" class="btn btn-info" onclick="telegramIncompleteTest()" id="btn-tg-inc-test">
+												<i class="fa fa-bell-o"></i> إرسال إشعار تجريبي
+											</button>
+											<button type="button" class="btn btn-danger" onclick="telegramIncompleteUnlink()" style="margin-left: 10px;">
+												<i class="fa fa-times-circle"></i> فك الربط
+											</button>
+										</div>
+									<?php else: ?>
+										<div id="tg-inc-initial-state">
+											<button type="button" class="btn btn-primary" onclick="telegramIncompleteGenerateLink()">
+												<i class="fa fa-link"></i> ربط بوت الطلبات المعلقة
+											</button>
+										</div>
+									<?php endif; ?>
+
+									<div id="tg-inc-pending-state" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #bee5eb; border-radius: 8px; background-color: #d1ecf1;">
+										<h4 style="color: #0c5460; margin-top:0;"><i class="icon fa fa-info"></i> انتظار الربط</h4>
+										<p style="color: #0c5460; margin-bottom: 15px;">يرجى فتح تيليغرام والضغط على زر <strong>Start</strong> لإتمام الربط.</p>
+										<div style="display:flex; gap:10px; align-items: center;">
+											<a href="#" id="tg-inc-deep-link-btn" target="_blank" class="btn btn-success">
+												<i class="fa fa-telegram"></i> فتح بوت تيليغرام
+											</a>
+											<button type="button" class="btn btn-default" onclick="window.location.reload()">
+												<i class="fa fa-refresh"></i> أكملت الربط
+											</button>
+										</div>
+										<p class="text-muted" style="font-size: 13px; margin-top: 10px; margin-bottom:0;">
+											انتهاء الصلاحية خلال: <span id="tg-inc-timer" class="text-danger" style="font-weight: bold;">15:00</span>
+										</p>
+									</div>
+								</div>
+							</div>
+							<?php endif; ?>
           				</div>
           			</div>
 				</div>
@@ -664,6 +739,105 @@ function telegramStatusTest() {
     btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
 
     fetch('telegram-link-action.php?action=test&user_type=' + tgStatusUserType + '&bot_purpose=order_status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Test notification sent successfully! Please check your Telegram app.');
+            } else {
+                alert('Error sending test: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(err => {
+            alert('Failed to connect to the server: ' + err.message);
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = oldHtml;
+        });
+}
+
+let tgIncTimerInterval = null;
+const tgIncUserType = '<?php echo $is_employee ? "employee" : "manager"; ?>';
+
+function telegramIncompleteGenerateLink() {
+    const btn = document.querySelector('#tg-inc-initial-state button');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generating...';
+
+    fetch('telegram-link-action.php?action=generate&user_type=' + tgIncUserType + '&bot_purpose=incomplete')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('tg-inc-initial-state').style.display = 'none';
+                document.getElementById('tg-inc-pending-state').style.display = 'block';
+
+                const linkBtn = document.getElementById('tg-inc-deep-link-btn');
+                linkBtn.href = data.url;
+
+                let timeLeft = 15 * 60;
+                const timerSpan = document.getElementById('tg-inc-timer');
+                if (tgIncTimerInterval) clearInterval(tgIncTimerInterval);
+                tgIncTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        clearInterval(tgIncTimerInterval);
+                        timerSpan.textContent = 'Expired';
+                        linkBtn.classList.add('disabled');
+                        linkBtn.href = '#';
+                    } else {
+                        const minutes = Math.floor(timeLeft / 60);
+                        const seconds = timeLeft % 60;
+                        timerSpan.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            } else {
+                alert('Error generating link token: ' + (data.error || 'Unknown error'));
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa fa-link"></i> ربط بوت الطلبات المعلقة';
+            }
+        })
+        .catch(err => {
+            alert('Failed to connect to the server: ' + err.message);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa fa-link"></i> ربط بوت الطلبات المعلقة';
+        });
+}
+
+function telegramIncompleteUnlink() {
+    if (!confirm('Are you sure you want to unlink this bot? You will stop receiving incomplete order alerts here.')) {
+        return;
+    }
+    const card = document.getElementById('telegram-incomplete-link-card');
+    card.style.opacity = '0.6';
+    card.style.pointerEvents = 'none';
+
+    fetch('telegram-link-action.php?action=unlink&user_type=' + tgIncUserType + '&bot_purpose=incomplete')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Error unlinking account: ' + (data.error || 'Unknown error'));
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            }
+        })
+        .catch(err => {
+            alert('Failed to connect to the server: ' + err.message);
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+        });
+}
+
+function telegramIncompleteTest() {
+    const btn = document.getElementById('btn-tg-inc-test');
+    if (!btn) return;
+    const oldHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+
+    fetch('telegram-link-action.php?action=test&user_type=' + tgIncUserType + '&bot_purpose=incomplete')
         .then(response => response.json())
         .then(data => {
             if (data.success) {

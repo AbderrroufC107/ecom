@@ -399,6 +399,18 @@ if (isset($_POST['form1'])) {
                                             'source' => 'buy-now'
                                         ];
                                         $telegram->sendIncompleteOrderNotification($incompleteData);
+
+                                        // Send to personally linked users via incomplete secondary bot
+                                        try {
+                                            require_once __DIR__ . '/admin/telegram/Services/SecondaryBotLinkService.php';
+                                            if (SecondaryBotLinkService::hasDedicatedBot($pdo, 'incomplete')) {
+                                                $linkedUsers = SecondaryBotLinkService::getLinkedChatIds($pdo, 'incomplete');
+                                                foreach ($linkedUsers as $linked) {
+                                                    $personalTelegram = new TelegramNotification($telegram_incomplete_bot_token, $linked['chat_id']);
+                                                    $personalTelegram->sendIncompleteOrderNotification($incompleteData);
+                                                }
+                                            }
+                                        } catch (Throwable $e) {}
                                     }
                                     // إرسال Pixels للطلبات غير المكتملة وإظهار رسالة نجاح
                                     echo '<script>

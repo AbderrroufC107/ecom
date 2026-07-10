@@ -149,6 +149,37 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 'source' => $source,
                 'is_update' => !$is_new
             ]);
+
+            // Also send to personally linked users via the incomplete secondary bot
+            try {
+                require_once __DIR__ . '/admin/telegram/Services/SecondaryBotLinkService.php';
+                if (SecondaryBotLinkService::hasDedicatedBot($pdo, 'incomplete')) {
+                    $linkedUsers = SecondaryBotLinkService::getLinkedChatIds($pdo, 'incomplete');
+                    foreach ($linkedUsers as $linked) {
+                        $personalTelegram = new TelegramNotification($telegram_incomplete_bot_token, $linked['chat_id']);
+                        $personalTelegram->sendIncompleteOrderNotification([
+                            'incomplete_id' => $record_id,
+                            'customer_name' => $name,
+                            'customer_phone' => $phone,
+                            'product_id' => $product_id,
+                            'product_name' => $product_name,
+                            'quantity' => $quantity,
+                            'unit_price' => $unit_price,
+                            'total_price' => $total_price,
+                            'selected_size' => $selected_size,
+                            'selected_color' => $selected_color_name,
+                            'wilaya' => $wilaya,
+                            'commune' => $commune,
+                            'address' => $address,
+                            'delivery_type' => $delivery_type,
+                            'source' => $source,
+                            'is_update' => !$is_new
+                        ]);
+                    }
+                }
+            } catch (Throwable $e) {
+                // Silently fail - admin notification already sent
+            }
         }
     }
 }
