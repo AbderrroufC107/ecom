@@ -412,13 +412,26 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
             $stmt1 = $dbRepo->query($emp_sql);
             $emp_participants = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
-            // Fetch admins
+            // Fetch admins/managers eligible for this order's manager scope.
+            // Without this scoping, any participating user (including a different
+            // manager entirely) could be handed an order that belongs to another
+            // manager's team, breaking the same manager/employee isolation that
+            // the employee-side query above already enforces.
+            $userManagerFilter = '';
+            if ($manager_id !== null && $manager_id > 0) {
+                // A manager-scoped order may only fall to that manager personally.
+                $userManagerFilter = ' AND u.id = ' . (int) $manager_id;
+            } else {
+                // No manager on the order: only super admins are eligible, never
+                // an arbitrary regular manager who happens to opt into assignment.
+                $userManagerFilter = " AND u.role = 'Super Admin'";
+            }
             $stmt2 = $dbRepo->query("
                 SELECT 'user' AS type, u.id AS ref_id, u.full_name, u.assignment_weight, u.max_active_orders,
                 (SELECT COUNT(oa3.id) FROM tbl_order_assignment oa3 JOIN tbl_order o3 ON o3.id = oa3.order_id WHERE oa3.user_id = u.id AND oa3.status = 'active' AND o3.order_status NOT IN ('Delivered', 'Completed', 'Returned', 'Cancelled')) AS current_active_orders,
                 (SELECT COUNT(oa4.id) FROM tbl_order_assignment oa4 WHERE oa4.user_id = u.id AND oa4.status = 'active') AS total_assigned
                 FROM tbl_user u
-                WHERE u.participate_in_assignment = 1 AND u.availability_status = 'Available'
+                WHERE u.participate_in_assignment = 1 AND u.availability_status = 'Available'{$userManagerFilter}
             ");
             $user_participants = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 

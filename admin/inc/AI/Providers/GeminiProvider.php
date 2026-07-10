@@ -18,15 +18,11 @@ class GeminiProvider implements AiProviderInterface {
     public function generate(string $prompt, string $model, array $options = []) {
         $apiKey = $this->config['api_key'] ?? '';
         if (!$apiKey) {
-            // MOCK RESPONSE FOR TESTING PURPOSES WHEN NO API KEY IS PROVIDED
-            return [
-                'content' => json_encode(['text' => 'مرحباً بك! نعم، السويت شيرت متوفر باللون الأسود ومقاس لارج. يمكنك إتمام الطلب الآن.']),
-                'usage' => [
-                    'prompt_tokens' => 50,
-                    'completion_tokens' => 20,
-                    'cost' => 0.0001
-                ]
-            ];
+            // A real customer must never receive a fabricated "yes, it's in stock" reply
+            // just because the key isn't configured. Fail loudly so AiTaskEngine's provider
+            // loop moves on (or marks the task FAILED for an admin to notice), the same way
+            // OpenAiProvider already behaves.
+            throw new Exception('Gemini API key missing');
         }
 
         $url = rtrim($this->config['base_url'] ?: 'https://generativelanguage.googleapis.com/v1beta/models', '/');
