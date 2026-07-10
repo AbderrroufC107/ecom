@@ -1675,69 +1675,83 @@ if (!function_exists('admin_send_order_status_telegram')) {
         }
 
         try {
-            $stmt = $dbRepo->query("SELECT telegram_is_enabled, telegram_enable_manager_notifications, telegram_enable_employee_notifications FROM tbl_settings WHERE id = 1 LIMIT 1");
+            $stmt = $dbRepo->query("
+                SELECT telegram_order_status_enabled, telegram_order_status_bot_token, telegram_order_status_chat_id,
+                       telegram_bot_token, telegram_chat_id,
+                       telegram_enable_manager_notifications, telegram_enable_employee_notifications
+                FROM tbl_settings WHERE id = 1 LIMIT 1
+            ");
             $settings = $stmt->fetch(PDO::FETCH_ASSOC);
         } catch (Exception $e) {
             return ['skipped' => true, 'reason' => 'settings_unavailable'];
         }
 
-        if (empty($settings['telegram_is_enabled'])) {
+        if (!$settings || empty($settings['telegram_order_status_enabled'])) {
             return ['skipped' => true, 'reason' => 'disabled'];
         }
 
-        // Build Message
-        $message = "📦 <b>تحديث حالة الطلب</b>\n\n";
-        if (!empty($order['id'])) {
-            $message .= "🆔 الطلب: #" . htmlspecialchars((string)$order['id']) . "\n";
+        // Dedicated order-status bot/chat if configured (admin/settings.php), otherwise
+        // fall back to the main order-notifications bot - same pattern as the
+        // incomplete-order notifications already use.
+        $botToken = trim((string) ($settings['telegram_order_status_bot_token'] ?? ''));
+        $chatId   = trim((string) ($settings['telegram_order_status_chat_id'] ?? ''));
+        if ($botToken === '') {
+            $botToken = trim((string) ($settings['telegram_bot_token'] ?? ''));
         }
-        $tracking = $order['ecotrack_tracking'] ?? ($context['tracking'] ?? '');
-        if (!empty($tracking)) {
-            $message .= "🚚 التتبع: " . htmlspecialchars((string)$tracking) . "\n";
-        }
-        $message .= "\n🔄 <b>الحالة:</b>\n";
-        $message .= "من: " . htmlspecialchars((string)($old_status !== '' ? $old_status : '-')) . "\n";
-        $message .= "إلى: <b>" . htmlspecialchars((string)$new_status) . "</b>\n";
-        
-        if (!empty($context['note'])) {
-            $message .= "📝 ملاحظة: " . htmlspecialchars((string)$context['note']) . "\n";
+        if ($chatId === '') {
+            $chatId = trim((string) ($settings['telegram_chat_id'] ?? ''));
         }
 
-        $message .= "\n👤 <b>الزبون:</b>\n";
-        if (!empty($order['customer_name'])) {
-            $message .= "الاسم: " . htmlspecialchars((string)$order['customer_name']) . "\n";
-        }
-        if (!empty($order['wilaya'])) {
-            $message .= "الولاية: " . htmlspecialchars((string)$order['wilaya']) . "\n";
-        }
+        require_once dirname(__DIR__, 2) . '/assets/telegram-notification.php';
 
-        $message .= "\n⏰ التوقيت: " . date('Y-m-d H:i:s');
+        $orderData = [
+            'order_id' => $order['id'] ?? '',
+            'tracking' => $order['ecotrack_tracking'] ?? ($context['tracking'] ?? ''),
+            'customer_name' => $order['customer_name'] ?? '',
+            'customer_phone' => $order['customer_phone'] ?? '',
+            'old_status' => $old_status !== '' ? $old_status : '-',
+            'new_status' => $new_status,
+            'note' => $context['note'] ?? '',
+        ];
 
-        require_once dirname(__DIR__, 2) . '/admin/telegram/Services/QueueService.php';
         $pushed = false;
 
-        // Notify Managers
-        if (!empty($settings['telegram_enable_manager_notifications'])) {
-            $stmt = $dbRepo->query("SELECT telegram_chat_id FROM tbl_user WHERE telegram_is_linked = 1 AND status = 1");
-            while ($mgr = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                if (!empty($mgr['telegram_chat_id'])) {
-                    QueueService::enqueueTelegram($pdo, $mgr['telegram_chat_id'], $message);
-                    $pushed = true;
-                }
-            }
-        }
-
-        // Notify Assigned Employee
-        if (!empty($settings['telegram_enable_employee_notifications']) && !empty($order['employee_id'])) {
-            $stmt = $dbRepo->prepare("SELECT telegram_chat_id FROM tbl_employee WHERE id = ? AND telegram_is_linked = 1 AND is_active = 1");
-            $stmt->execute([$order['employee_id']]);
-            $emp = $stmt->fetch(PDO::FETCH_ASSOC);
-            if (!empty($emp['telegram_chat_id'])) {
-                QueueService::enqueueTelegram($pdo, $emp['telegram_chat_id'], $message);
+        if ($botToken !== '' && $chatId !== '') {
+            $telegram = new TelegramNotification($botToken, $chatId);
+            if ($telegram->sendOrderStatusNotification($orderData)) {
                 $pushed = true;
             }
         }
 
-        return $pushed ? ['success' => true] : ['skipped' => true, 'reason' => 'no_linked_users'];
+        // Also notify managers/employees who personally linked their own Telegram
+        // (staff/profile.php or admin/profile-edit.php), using the same bot token.
+        if ($botToken !== '') {
+            if (!empty($settings['telegram_enable_manager_notifications'])) {
+                $stmt = $dbRepo->query("SELECT telegram_chat_id FROM tbl_user WHERE telegram_is_linked = 1 AND status = 1");
+                while ($mgr = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    if (!empty($mgr['telegram_chat_id'])) {
+                        $notifier = new TelegramNotification($botToken, $mgr['telegram_chat_id']);
+                        if ($notifier->sendOrderStatusNotification($orderData)) {
+                            $pushed = true;
+                        }
+                    }
+                }
+            }
+
+            if (!empty($settings['telegram_enable_employee_notifications']) && !empty($order['employee_id'])) {
+                $stmt = $dbRepo->prepare("SELECT telegram_chat_id FROM tbl_employee WHERE id = ? AND telegram_is_linked = 1 AND is_active = 1");
+                $stmt->execute([$order['employee_id']]);
+                $emp = $stmt->fetch(PDO::FETCH_ASSOC);
+                if (!empty($emp['telegram_chat_id'])) {
+                    $notifier = new TelegramNotification($botToken, $emp['telegram_chat_id']);
+                    if ($notifier->sendOrderStatusNotification($orderData)) {
+                        $pushed = true;
+                    }
+                }
+            }
+        }
+
+        return $pushed ? ['success' => true] : ['skipped' => true, 'reason' => 'no_recipients'];
     }
 }
 
