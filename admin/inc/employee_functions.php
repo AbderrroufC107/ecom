@@ -393,7 +393,8 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                 $mid = (int) $manager_id;
                 $managerFilter = " AND e.manager_id = {$mid}";
             } else {
-                $managerFilter = " AND (e.manager_id IS NULL OR e.manager_id = 0)";
+                // No manager scope: allow ALL employees to be picked by WRR.
+                $managerFilter = "";
             }
             $emp_sql = "
                 SELECT 'employee' AS type, e.id AS ref_id, e.full_name, e.assignment_weight, e.max_active_orders,
@@ -422,9 +423,8 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                 // A manager-scoped order may only fall to that manager personally.
                 $userManagerFilter = ' AND u.id = ' . (int) $manager_id;
             } else {
-                // No manager on the order: only super admins are eligible, never
-                // an arbitrary regular manager who happens to opt into assignment.
-                $userManagerFilter = " AND u.role = 'Super Admin'";
+                // No manager on the order: distribute among Managers/Admins, not Super Admin.
+                $userManagerFilter = " AND u.role IN ('Admin', 'Manager')";
             }
             $stmt2 = $dbRepo->query("
                 SELECT 'user' AS type, u.id AS ref_id, u.full_name, u.assignment_weight, u.max_active_orders,
@@ -575,6 +575,26 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
 
                 // 3. Normal WRR Execution
                 $assignment_id = employee_assign_order($pdo, $order_id, null, $triggered_by, true, $manager_id);
+
+                // After WRR picks an employee, stamp the order's manager_id so
+                // future scoping (dashboard, notifications, claim logic) works.
+                if ($assignment_id > 0 && ($manager_id === null || $manager_id <= 0)) {
+                    try {
+                        $oa_stmt = $dbRepo->prepare("SELECT employee_id FROM tbl_order_assignment WHERE id = ? LIMIT 1");
+                        $oa_stmt->execute([$assignment_id]);
+                        $oa_row = $oa_stmt->fetch(PDO::FETCH_ASSOC);
+                        $picked_emp = (int)($oa_row['employee_id'] ?? 0);
+                        if ($picked_emp > 0) {
+                            $emp_mgr = $dbRepo->prepare("SELECT manager_id FROM tbl_employee WHERE id = ? LIMIT 1");
+                            $emp_mgr->execute([$picked_emp]);
+                            $emp_mgr_id = $emp_mgr->fetchColumn();
+                            if (!empty($emp_mgr_id)) {
+                                $dbRepo->prepare("UPDATE tbl_order SET manager_id = ? WHERE id = ? AND (manager_id IS NULL OR manager_id = 0)")->execute([(int)$emp_mgr_id, $order_id]);
+                            }
+                        }
+                    } catch (\Throwable $e) {}
+                }
+
                 if ($started_tx) {
                     $pdo->commit();
                 }
