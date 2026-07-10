@@ -32,13 +32,17 @@ require_once __DIR__ . '/inc/telegram_actions.php';
 require_once __DIR__ . '/telegram/Services/TelegramService.php';
 require_once __DIR__ . '/telegram/Handlers/WebhookHandler.php';
 require_once __DIR__ . '/telegram/Handlers/CallbackHandler.php';
+require_once __DIR__ . '/telegram/Services/SecondaryBotLinkService.php';
+require_once __DIR__ . '/telegram/Handlers/SecondaryBotWebhookHandler.php';
 
 if (!isset($pdo) || !$pdo instanceof PDO) {
     http_response_code(500);
     exit;
 }
 
-// 1. Secure Webhook using X-Telegram-Bot-Api-Secret-Token
+// 1. Secure Webhook using X-Telegram-Bot-Api-Secret-Token. Secondary bots are
+// registered with Telegram's setWebhook using this same secret, so this check
+// applies to every bot's requests, not just the main one.
 $headers = getallheaders();
 $secretToken = $headers['X-Telegram-Bot-Api-Secret-Token'] ?? $headers['x-telegram-bot-api-secret-token'] ?? '';
 
@@ -64,6 +68,21 @@ try {
     }
 } catch (Exception $e) {
     error_log('Telegram webhook security check failed: ' . $e->getMessage());
+}
+
+// Secondary bots (order-status, incomplete-orders) each get their own
+// webhook URL when registered with Telegram: .../telegram-webhook.php?purpose=order_status
+// They only need /start <token> linking, not the main bot's full command set.
+$__botPurpose = trim((string) ($_GET['purpose'] ?? ''));
+if ($__botPurpose !== '' && SecondaryBotLinkService::isValidPurpose($__botPurpose)) {
+    SecondaryBotLinkService::ensureTable($pdo);
+    if (isset($update['message'])) {
+        $handler = new SecondaryBotWebhookHandler($pdo, $__botPurpose);
+        $handler->handle($update['message']);
+    }
+    http_response_code(200);
+    echo json_encode(['ok' => true]);
+    exit;
 }
 
 // Ensure database tables exist

@@ -18,9 +18,11 @@ require_once __DIR__ . '/inc/config.php';
 require_once __DIR__ . '/telegram/Services/TelegramService.php';
 require_once __DIR__ . '/telegram/Services/TokenService.php';
 require_once __DIR__ . '/telegram/Services/AuditService.php';
+require_once __DIR__ . '/telegram/Services/SecondaryBotLinkService.php';
 
 $action = trim((string) ($_POST['action'] ?? $_GET['action'] ?? ''));
 $userType = trim((string) ($_POST['user_type'] ?? $_GET['user_type'] ?? ''));
+$botPurpose = trim((string) ($_POST['bot_purpose'] ?? $_GET['bot_purpose'] ?? ''));
 
 if ($action === '' || $userType === '') {
     http_response_code(400);
@@ -54,6 +56,74 @@ if ($userType === 'employee') {
         exit;
     }
     $userId = (int) $_SESSION['user']['id'];
+}
+
+// 1b. Secondary bots (order-status, incomplete-orders) route to their own
+// service entirely - separate table, separate per-bot chat_id, independent
+// of the main bot's tbl_user/tbl_employee linking above.
+if ($botPurpose !== '') {
+    if (!SecondaryBotLinkService::isValidPurpose($botPurpose)) {
+        http_response_code(400);
+        echo json_encode(['success' => false, 'error' => 'Invalid bot purpose.']);
+        exit;
+    }
+
+    SecondaryBotLinkService::ensureTable($pdo);
+    $ownerType = $userType === 'employee' ? 'employee' : 'manager';
+
+    if ($action === 'generate') {
+        try {
+            if (!SecondaryBotLinkService::hasDedicatedBot($pdo, $botPurpose)) {
+                http_response_code(400);
+                echo json_encode(['success' => false, 'error' => 'لا يوجد بوت منفصل مضبوط لهذا الغرض بعد.']);
+                exit;
+            }
+            $token = SecondaryBotLinkService::generateLinkToken($pdo, $ownerType, $userId, $botPurpose);
+            $botUsername = SecondaryBotLinkService::getBotUsername($pdo, $botPurpose);
+            if ($botUsername === '') {
+                http_response_code(500);
+                echo json_encode(['success' => false, 'error' => 'تعذّر التحقق من هذا البوت. تأكد من صحة التوكن.']);
+                exit;
+            }
+            echo json_encode(['success' => true, 'token' => $token, 'url' => "https://t.me/{$botUsername}?start={$token}"]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Failed to generate token: ' . $e->getMessage()]);
+        }
+        exit;
+    }
+
+    if ($action === 'unlink') {
+        SecondaryBotLinkService::unlink($pdo, $ownerType, $userId, $botPurpose);
+        echo json_encode(['success' => true]);
+        exit;
+    }
+
+    if ($action === 'test') {
+        $chatId = SecondaryBotLinkService::getLinkedChatId($pdo, $ownerType, $userId, $botPurpose);
+        if ($chatId === '') {
+            http_response_code(400);
+            echo json_encode(['success' => false, 'error' => 'Account is not linked to this bot.']);
+            exit;
+        }
+        $botToken = SecondaryBotLinkService::getBotToken($pdo, $botPurpose);
+        $result = @file_get_contents('https://api.telegram.org/bot' . $botToken . '/sendMessage?' . http_build_query([
+            'chat_id' => $chatId,
+            'text' => "🔔 Test notification - this channel is linked correctly.",
+        ]));
+        $decoded = $result !== false ? json_decode($result, true) : null;
+        if (!empty($decoded['ok'])) {
+            echo json_encode(['success' => true]);
+        } else {
+            http_response_code(500);
+            echo json_encode(['success' => false, 'error' => 'Failed to send test message.']);
+        }
+        exit;
+    }
+
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Unsupported action.']);
+    exit;
 }
 
 // 2. Action Routing

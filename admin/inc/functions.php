@@ -1723,9 +1723,38 @@ if (!function_exists('admin_send_order_status_telegram')) {
             }
         }
 
-        // Also notify managers/employees who personally linked their own Telegram
-        // (staff/profile.php or admin/profile-edit.php), using the same bot token.
-        if ($botToken !== '') {
+        // Also notify managers/employees who personally linked their own Telegram.
+        // If a genuinely separate "order status" bot is configured, personal chats
+        // must come from that bot's own link table (SecondaryBotLinkService) -
+        // the main bot's tbl_user/tbl_employee chat_id was never started with that
+        // bot and can't be messaged through it. Only when order-status falls back
+        // to the main bot do the existing self-linked chat_ids apply.
+        require_once __DIR__ . '/../telegram/Services/SecondaryBotLinkService.php';
+        $usesDedicatedBot = SecondaryBotLinkService::hasDedicatedBot($pdo, 'order_status');
+
+        if ($usesDedicatedBot) {
+            if (!empty($settings['telegram_enable_manager_notifications'])) {
+                $stmt = $dbRepo->query("SELECT id FROM tbl_user WHERE status = 1");
+                while ($mgr = $stmt->fetch(PDO::FETCH_ASSOC)) {
+                    $chat = SecondaryBotLinkService::getLinkedChatId($pdo, 'manager', (int) $mgr['id'], 'order_status');
+                    if ($chat !== '') {
+                        $notifier = new TelegramNotification($botToken, $chat);
+                        if ($notifier->sendOrderStatusNotification($orderData)) {
+                            $pushed = true;
+                        }
+                    }
+                }
+            }
+            if (!empty($settings['telegram_enable_employee_notifications']) && !empty($order['employee_id'])) {
+                $chat = SecondaryBotLinkService::getLinkedChatId($pdo, 'employee', (int) $order['employee_id'], 'order_status');
+                if ($chat !== '') {
+                    $notifier = new TelegramNotification($botToken, $chat);
+                    if ($notifier->sendOrderStatusNotification($orderData)) {
+                        $pushed = true;
+                    }
+                }
+            }
+        } elseif ($botToken !== '') {
             if (!empty($settings['telegram_enable_manager_notifications'])) {
                 $stmt = $dbRepo->query("SELECT telegram_chat_id FROM tbl_user WHERE telegram_is_linked = 1 AND status = 1");
                 while ($mgr = $stmt->fetch(PDO::FETCH_ASSOC)) {

@@ -42,6 +42,15 @@ $stmt = $pdo->prepare("SELECT MAX(created_at) AS last_action FROM tbl_telegram_a
 $stmt->execute([$employee_id]);
 $last_action = $stmt->fetch(PDO::FETCH_ASSOC);
 $last_action_time = $last_action ? $last_action['last_action'] : null;
+
+// Secondary bot (order-status) - only shown when a genuinely separate bot
+// token is configured; otherwise personal order-status alerts already ride
+// on the main bot linked above.
+require_once __DIR__ . '/../admin/telegram/Services/SecondaryBotLinkService.php';
+$order_status_bot_available = SecondaryBotLinkService::hasDedicatedBot($pdo, 'order_status');
+$order_status_link = $order_status_bot_available
+    ? SecondaryBotLinkService::getLinkStatus($pdo, 'employee', $employee_id, 'order_status')
+    : null;
 ?>
 
 <div class="row g-3">
@@ -116,6 +125,58 @@ $last_action_time = $last_action ? $last_action['last_action'] : null;
                 </div>
             <?php endif; ?>
         </div>
+
+        <?php if ($order_status_bot_available): ?>
+        <div class="staff-card" id="telegram-status-link-card">
+            <div class="staff-card-title">بوت حالة الطلب (منفصل)</div>
+            <p style="font-size: 12px; color: var(--text-secondary);" class="mb-2">
+                يوجد بوت منفصل لتنبيهات حالة الطلب. اربطه هنا أيضًا لتصلك تنبيهات حالة طلباتك شخصيًا — هذا مستقل عن الربط أعلاه.
+            </p>
+
+            <?php if (!empty($order_status_link['is_linked'])): ?>
+                <div class="text-center py-3">
+                    <div class="badge bg-success mb-3" style="font-size: 14px; padding: 8px 12px;">
+                        <i class="bi bi-check-circle-fill"></i> مرتبط
+                    </div>
+                    <table class="table staff-table text-start" style="font-size: 13px;">
+                        <tr>
+                            <td style="width: 130px;">المعرف (Username)</td>
+                            <td><strong><?php echo !empty($order_status_link['telegram_username']) ? '@' . htmlspecialchars($order_status_link['telegram_username'], ENT_QUOTES, 'UTF-8') : '--'; ?></strong></td>
+                        </tr>
+                        <tr>
+                            <td>تاريخ الربط</td>
+                            <td><?php echo !empty($order_status_link['linked_at']) ? htmlspecialchars($order_status_link['linked_at'], ENT_QUOTES, 'UTF-8') : '--'; ?></td>
+                        </tr>
+                    </table>
+                    <button type="button" class="btn btn-danger w-100 btn-staff mt-2" onclick="telegramStatusUnlink()">
+                        <i class="bi bi-x-circle"></i> إلغاء الربط
+                    </button>
+                </div>
+            <?php else: ?>
+                <div class="text-center py-3" id="tg-status-initial-state">
+                    <button type="button" class="btn btn-primary w-100 btn-staff" onclick="telegramStatusGenerateLink()">
+                        <i class="bi bi-link-45deg"></i> ربط بوت حالة الطلب
+                    </button>
+                </div>
+
+                <div class="py-2 d-none" id="tg-status-pending-state">
+                    <div class="alert alert-info" style="font-size: 13px; line-height: 1.6;">
+                        <i class="bi bi-info-circle"></i>
+                        تم توليد رمز ربط آمن. اضغط على الزر أدناه لفتح Telegram، ثم اضغط على زر <strong>Start</strong> أو <strong>ابدأ</strong> لتأكيد عملية الربط.
+                    </div>
+                    <a href="#" id="tg-status-deep-link-btn" target="_blank" class="btn btn-success w-100 btn-staff mb-2">
+                        <i class="bi bi-telegram"></i> افتح Telegram للربط
+                    </a>
+                    <div class="text-center text-secondary mb-3" style="font-size: 12px;">
+                        ينتهي صلاحية هذا الرمز بعد: <span id="tg-status-timer" class="fw-bold text-danger">15:00</span>
+                    </div>
+                    <button type="button" class="btn btn-outline-secondary w-100 btn-staff" onclick="window.location.reload()">
+                        <i class="bi bi-arrow-clockwise"></i> لقد أكملت الربط، تحديث الصفحة
+                    </button>
+                </div>
+            <?php endif; ?>
+        </div>
+        <?php endif; ?>
     </div>
 
     <div class="col-md-4">
@@ -237,6 +298,81 @@ function telegramUnlink() {
     card.style.pointerEvents = 'none';
 
     fetch('../admin/telegram-link-action.php?action=unlink&user_type=employee')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('خطأ في إلغاء الربط: ' + (data.error || 'خطأ غير معروف'));
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            }
+        })
+        .catch(err => {
+            alert('فشل الاتصال بالخادم: ' + err.message);
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+        });
+}
+
+let tgStatusTimerInterval = null;
+
+function telegramStatusGenerateLink() {
+    const btn = document.querySelector('#tg-status-initial-state button');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.innerHTML = '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> جاري التوليد...';
+
+    fetch('../admin/telegram-link-action.php?action=generate&user_type=employee&bot_purpose=order_status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('tg-status-initial-state').classList.add('d-none');
+                document.getElementById('tg-status-pending-state').classList.remove('d-none');
+
+                const linkBtn = document.getElementById('tg-status-deep-link-btn');
+                linkBtn.href = data.url;
+
+                let timeLeft = 15 * 60;
+                const timerSpan = document.getElementById('tg-status-timer');
+
+                if (tgStatusTimerInterval) clearInterval(tgStatusTimerInterval);
+                tgStatusTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        clearInterval(tgStatusTimerInterval);
+                        timerSpan.textContent = 'منتهي الصلاحية';
+                        linkBtn.classList.add('disabled');
+                        linkBtn.href = '#';
+                    } else {
+                        const minutes = Math.floor(timeLeft / 60);
+                        const seconds = timeLeft % 60;
+                        timerSpan.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            } else {
+                alert('خطأ في توليد الرابط: ' + (data.error || 'خطأ غير معروف'));
+                btn.disabled = false;
+                btn.innerHTML = '<i class="bi bi-link-45deg"></i> ربط بوت حالة الطلب';
+            }
+        })
+        .catch(err => {
+            alert('فشل الاتصال بالخادم: ' + err.message);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="bi bi-link-45deg"></i> ربط بوت حالة الطلب';
+        });
+}
+
+function telegramStatusUnlink() {
+    if (!confirm('هل أنت متأكد من رغبتك في إلغاء ربط هذا البوت؟')) {
+        return;
+    }
+
+    const card = document.getElementById('telegram-status-link-card');
+    card.style.opacity = '0.6';
+    card.style.pointerEvents = 'none';
+
+    fetch('../admin/telegram-link-action.php?action=unlink&user_type=employee&bot_purpose=order_status')
         .then(response => response.json())
         .then(data => {
             if (data.success) {

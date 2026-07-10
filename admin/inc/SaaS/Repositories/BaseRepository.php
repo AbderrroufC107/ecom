@@ -203,7 +203,8 @@ abstract class BaseRepository {
                     'tbl_commune', 'tbl_country', 'tbl_delivery_company',
                     'tbl_language', 'tbl_store', 'tbl_stores', 'tbl_tenants',
                     'tbl_test_logs', 'tbl_wilaya', 'information_schema', 'tbl_plans', 'tbl_page',
-                    'tbl_n8n_integrations', 'tbl_n8n_call_log', 'tbl_api_keys', 'tbl_api_logs'
+                    'tbl_n8n_integrations', 'tbl_n8n_call_log', 'tbl_api_keys', 'tbl_api_logs',
+                    'tbl_telegram_secondary_bot_links'
                 ];
 
                 // UPDATE/DELETE name their table right after the keyword (no FROM), so the
@@ -251,7 +252,8 @@ abstract class BaseRepository {
                     'tbl_commune', 'tbl_country', 'tbl_delivery_company',
                     'tbl_language', 'tbl_store', 'tbl_stores', 'tbl_tenants',
                     'tbl_test_logs', 'tbl_wilaya', 'information_schema', 'tbl_plans', 'tbl_page',
-                    'tbl_n8n_integrations', 'tbl_n8n_call_log', 'tbl_api_keys', 'tbl_api_logs'
+                    'tbl_n8n_integrations', 'tbl_n8n_call_log', 'tbl_api_keys', 'tbl_api_logs',
+                    'tbl_telegram_secondary_bot_links'
                 ];
                 if (in_array($tableName, $globalTables)) {
                     return $this->pdo->prepare($sql);

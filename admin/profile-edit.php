@@ -110,6 +110,17 @@ if ($is_employee) {
 	$result = $statement->fetchAll(PDO::FETCH_ASSOC);
 	$user_data = $result[0];
 }
+
+// Secondary bot (order-status) - only shown when a genuinely separate bot
+// token is configured; otherwise personal order-status alerts already ride
+// on the main bot linked above.
+require_once __DIR__ . '/telegram/Services/SecondaryBotLinkService.php';
+$owner_type_secondary = $is_employee ? 'employee' : 'manager';
+$owner_id_secondary = $is_employee ? $emp_id : (int) $_SESSION['user']['id'];
+$order_status_bot_available = SecondaryBotLinkService::hasDedicatedBot($pdo, 'order_status');
+$order_status_link = $order_status_bot_available
+	? SecondaryBotLinkService::getLinkStatus($pdo, $owner_type_secondary, $owner_id_secondary, 'order_status')
+	: null;
 ?>
 
 <section class="content-header">
@@ -393,9 +404,69 @@ if ($is_employee) {
 									<?php endif; ?>
 								</div>
 							</div>
+
+							<?php if ($order_status_bot_available): ?>
+							<div class="box box-warning" id="telegram-status-link-card" style="margin-top: 15px;">
+								<div class="box-body" style="padding: 20px;">
+									<h3 style="margin-top: 0; margin-bottom: 20px; font-size: 18px; font-weight: 600;">
+										<i class="fa fa-truck text-yellow"></i> Order Status Bot (Separate)
+									</h3>
+									<p class="text-muted" style="margin-bottom: 20px;">
+										A separate bot is configured for order-status alerts. Link it here to also receive those personally - this is independent from the main bot above.
+									</p>
+
+									<?php if (!empty($order_status_link['is_linked'])): ?>
+										<table class="table table-bordered">
+											<tr>
+												<th style="width: 180px; background-color: #f9f9f9;">Connection Status</th>
+												<td><span class="label label-success" style="font-size: 13px;"><i class="fa fa-check"></i> Connected</span></td>
+											</tr>
+											<tr>
+												<th style="background-color: #f9f9f9;">Telegram Username</th>
+												<td><strong><?php echo !empty($order_status_link['telegram_username']) ? '@' . htmlspecialchars($order_status_link['telegram_username'], ENT_QUOTES, 'UTF-8') : '--'; ?></strong></td>
+											</tr>
+											<tr>
+												<th style="background-color: #f9f9f9;">Linked Date</th>
+												<td><?php echo !empty($order_status_link['linked_at']) ? htmlspecialchars($order_status_link['linked_at'], ENT_QUOTES, 'UTF-8') : '--'; ?></td>
+											</tr>
+										</table>
+										<div id="tg-status-initial-state">
+											<button type="button" class="btn btn-info" onclick="telegramStatusTest()" id="btn-tg-status-test">
+												<i class="fa fa-bell-o"></i> Send Test Notification
+											</button>
+											<button type="button" class="btn btn-danger" onclick="telegramStatusUnlink()" style="margin-left: 10px;">
+												<i class="fa fa-times-circle"></i> Unlink Account
+											</button>
+										</div>
+									<?php else: ?>
+										<div id="tg-status-initial-state">
+											<button type="button" class="btn btn-primary" onclick="telegramStatusGenerateLink()">
+												<i class="fa fa-link"></i> Link Order-Status Bot
+											</button>
+										</div>
+									<?php endif; ?>
+
+									<div id="tg-status-pending-state" style="display: none; margin-top: 20px; padding: 15px; border: 1px solid #bee5eb; border-radius: 8px; background-color: #d1ecf1;">
+										<h4 style="color: #0c5460; margin-top:0;"><i class="icon fa fa-info"></i> Pending Link</h4>
+										<p style="color: #0c5460; margin-bottom: 15px;">Please open Telegram and press the <strong>Start</strong> button to complete.</p>
+										<div style="display:flex; gap:10px; align-items: center;">
+											<a href="#" id="tg-status-deep-link-btn" target="_blank" class="btn btn-success">
+												<i class="fa fa-telegram"></i> Open Telegram Bot
+											</a>
+											<button type="button" class="btn btn-default" onclick="window.location.reload()">
+												<i class="fa fa-refresh"></i> I completed linking
+											</button>
+										</div>
+										<p class="text-muted" style="font-size: 13px; margin-top: 10px; margin-bottom:0;">
+											Token expires in: <span id="tg-status-timer" class="text-danger" style="font-weight: bold;">15:00</span>
+										</p>
+									</div>
+								</div>
+							</div>
+							<?php endif; ?>
           				</div>
           			</div>
-				</div>			
+				</div>
 
 		</div>
 	</div>
@@ -487,6 +558,105 @@ function telegramTest() {
 
     const userType = '<?php echo $is_employee ? "employee" : "manager"; ?>';
     fetch('telegram-link-action.php?action=test&user_type=' + userType)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                alert('Test notification sent successfully! Please check your Telegram app.');
+            } else {
+                alert('Error sending test: ' + (data.error || 'Unknown error'));
+            }
+        })
+        .catch(err => {
+            alert('Failed to connect to the server: ' + err.message);
+        })
+        .finally(() => {
+            btn.disabled = false;
+            btn.innerHTML = oldHtml;
+        });
+}
+
+let tgStatusTimerInterval = null;
+const tgStatusUserType = '<?php echo $is_employee ? "employee" : "manager"; ?>';
+
+function telegramStatusGenerateLink() {
+    const btn = document.querySelector('#tg-status-initial-state button');
+    if (!btn) return;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Generating...';
+
+    fetch('telegram-link-action.php?action=generate&user_type=' + tgStatusUserType + '&bot_purpose=order_status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('tg-status-initial-state').style.display = 'none';
+                document.getElementById('tg-status-pending-state').style.display = 'block';
+
+                const linkBtn = document.getElementById('tg-status-deep-link-btn');
+                linkBtn.href = data.url;
+
+                let timeLeft = 15 * 60;
+                const timerSpan = document.getElementById('tg-status-timer');
+                if (tgStatusTimerInterval) clearInterval(tgStatusTimerInterval);
+                tgStatusTimerInterval = setInterval(() => {
+                    timeLeft--;
+                    if (timeLeft <= 0) {
+                        clearInterval(tgStatusTimerInterval);
+                        timerSpan.textContent = 'Expired';
+                        linkBtn.classList.add('disabled');
+                        linkBtn.href = '#';
+                    } else {
+                        const minutes = Math.floor(timeLeft / 60);
+                        const seconds = timeLeft % 60;
+                        timerSpan.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+                    }
+                }, 1000);
+            } else {
+                alert('Error generating link token: ' + (data.error || 'Unknown error'));
+                btn.disabled = false;
+                btn.innerHTML = '<i class="fa fa-link"></i> Link Order-Status Bot';
+            }
+        })
+        .catch(err => {
+            alert('Failed to connect to the server: ' + err.message);
+            btn.disabled = false;
+            btn.innerHTML = '<i class="fa fa-link"></i> Link Order-Status Bot';
+        });
+}
+
+function telegramStatusUnlink() {
+    if (!confirm('Are you sure you want to unlink this bot? You will stop receiving order-status alerts here.')) {
+        return;
+    }
+    const card = document.getElementById('telegram-status-link-card');
+    card.style.opacity = '0.6';
+    card.style.pointerEvents = 'none';
+
+    fetch('telegram-link-action.php?action=unlink&user_type=' + tgStatusUserType + '&bot_purpose=order_status')
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                window.location.reload();
+            } else {
+                alert('Error unlinking account: ' + (data.error || 'Unknown error'));
+                card.style.opacity = '1';
+                card.style.pointerEvents = 'auto';
+            }
+        })
+        .catch(err => {
+            alert('Failed to connect to the server: ' + err.message);
+            card.style.opacity = '1';
+            card.style.pointerEvents = 'auto';
+        });
+}
+
+function telegramStatusTest() {
+    const btn = document.getElementById('btn-tg-status-test');
+    if (!btn) return;
+    const oldHtml = btn.innerHTML;
+    btn.disabled = true;
+    btn.innerHTML = '<i class="fa fa-spinner fa-spin"></i> Sending...';
+
+    fetch('telegram-link-action.php?action=test&user_type=' + tgStatusUserType + '&bot_purpose=order_status')
         .then(response => response.json())
         .then(data => {
             if (data.success) {
