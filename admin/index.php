@@ -53,7 +53,22 @@ try {
     return !isset($prefs[$key]) || $prefs[$key] === true || $prefs[$key] === 'true';
 }
 
-$cache_file = __DIR__ . '/cache/dashboard_kpis_cache.json';
+// This dashboard is also the whitelisted landing page for Employee sessions
+// (see header.php's $employee_allowed_pages). Employees must only ever see
+// their own assigned orders here - never store-wide revenue, profit, or
+// other employees' data. $__isEmployee is set by header.php, which this file
+// require_once()s above, so it's already in scope here.
+$__currentEmployeeId = 0;
+if (!empty($__isEmployee)) {
+    $__currentEmployeeId = (int) str_replace('emp_', '', (string) ($_SESSION['user']['id'] ?? ''));
+}
+
+// Cache file must be scoped separately per employee (and separately from the
+// store-wide admin view) - a shared cache file would leak one employee's/the
+// admin's numbers to whoever loads the dashboard next within the TTL.
+$cache_file = $__currentEmployeeId > 0
+    ? __DIR__ . '/cache/dashboard_kpis_cache_emp_' . $__currentEmployeeId . '.json'
+    : __DIR__ . '/cache/dashboard_kpis_cache.json';
 $cache_ttl = 300; // 5 minutes cache
 $data_cached = false;
 
@@ -75,7 +90,77 @@ if (file_exists($cache_file) && (time() - filemtime($cache_file)) < $cache_ttl) 
     }
 }
 
-if (!$data_cached) {
+if (!$data_cached && $__currentEmployeeId > 0) {
+    // Employee view: every figure is scoped to this employee's own assigned
+    // orders. No store-wide revenue, profit, customer counts, or peer
+    // rankings - those belong to managers/admins only.
+    $unassigned_count = 0;
+    $stuck_count = 0;
+    $unsent_count = 0;
+    try {
+        $unsent_count = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_order o JOIN tbl_order_assignment oa ON oa.order_id = o.id WHERE oa.employee_id = ? AND (o.sync_status = 'failed' OR o.ecotrack_status = 'failed')");
+        $unsent_count->execute([$__currentEmployeeId]);
+        $unsent_count = $unsent_count->fetchColumn();
+    } catch (Exception $e) { $unsent_count = 0; }
+
+    $low_stock_count = 0;
+    $out_stock_count = 0;
+    $new_returns = 0;
+    try {
+        $new_returns_stmt = $dbRepo->prepare("SELECT COUNT(*) FROM tbl_order o JOIN tbl_order_assignment oa ON oa.order_id = o.id WHERE oa.employee_id = ? AND o.order_status = 'Returned' AND DATE(o.order_date) >= DATE_SUB(CURDATE(), INTERVAL 2 DAY)");
+        $new_returns_stmt->execute([$__currentEmployeeId]);
+        $new_returns = $new_returns_stmt->fetchColumn();
+    } catch (Exception $e) {}
+
+    $today = date('Y-m-d');
+    $yesterday = date('Y-m-d', strtotime('-1 day'));
+    $this_month = date('Y-m');
+    $last_month = date('Y-m', strtotime('-1 month'));
+
+    try {
+        $stmt = $dbRepo->prepare("
+            SELECT
+                COUNT(*) as total_orders,
+                SUM(CASE WHEN DATE(o.order_date) = '{$today}' THEN 1 ELSE 0 END) as today_orders,
+                SUM(CASE WHEN DATE(o.order_date) = '{$yesterday}' THEN 1 ELSE 0 END) as yesterday_orders,
+                SUM(CASE WHEN DATE(o.order_date) = '{$today}' AND o.order_status IN ('Completed', 'Delivered') THEN o.total_price ELSE 0 END) as today_sales,
+                SUM(CASE WHEN DATE(o.order_date) = '{$yesterday}' AND o.order_status IN ('Completed', 'Delivered') THEN o.total_price ELSE 0 END) as yesterday_sales,
+                SUM(CASE WHEN DATE_FORMAT(o.order_date, '%Y-%m') = '{$this_month}' AND o.order_status IN ('Completed', 'Delivered') THEN o.total_price ELSE 0 END) as month_sales,
+                SUM(CASE WHEN DATE_FORMAT(o.order_date, '%Y-%m') = '{$last_month}' AND o.order_status IN ('Completed', 'Delivered') THEN o.total_price ELSE 0 END) as last_month_sales,
+                SUM(CASE WHEN o.order_status = 'Pending' THEN 1 ELSE 0 END) as pending_orders,
+                SUM(CASE WHEN o.order_status IN ('Shipped', 'In Transit') THEN 1 ELSE 0 END) as shipped_orders,
+                SUM(CASE WHEN o.order_status = 'Returned' THEN 1 ELSE 0 END) as returned_orders,
+                SUM(CASE WHEN o.order_status IN ('Completed', 'Delivered') THEN 1 ELSE 0 END) as completed_orders
+            FROM tbl_order o
+            JOIN tbl_order_assignment oa ON oa.order_id = o.id
+            WHERE oa.employee_id = ?
+        ");
+        $stmt->execute([$__currentEmployeeId]);
+        $kpis = $stmt->fetch(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $kpis = ['total_orders'=>0,'today_orders'=>0,'yesterday_orders'=>0,'today_sales'=>0,'yesterday_sales'=>0,'month_sales'=>0,'last_month_sales'=>0,'pending_orders'=>0,'shipped_orders'=>0,'returned_orders'=>0,'completed_orders'=>0];
+    }
+
+    // No profit/margin data, and no peer ranking, for an employee's own view.
+    $gross_profit = 0;
+    $top_employees = [];
+    $top_company = null;
+
+    try {
+        $recent_stmt = $dbRepo->prepare("
+            SELECT o.id, o.customer_name, c.name as company_name, o.order_status, o.total_price, o.order_date
+            FROM tbl_order o
+            JOIN tbl_order_assignment oa ON oa.order_id = o.id
+            LEFT JOIN tbl_delivery_company c ON o.delivery_company_id = c.id
+            WHERE oa.employee_id = ?
+            ORDER BY o.id DESC LIMIT 10
+        ");
+        $recent_stmt->execute([$__currentEmployeeId]);
+        $recent_orders = $recent_stmt->fetchAll(PDO::FETCH_ASSOC);
+    } catch (Exception $e) {
+        $recent_orders = [];
+    }
+} elseif (!$data_cached) {
     // Check Unassigned Orders (If employee system is used)
     // We assume an order is unassigned if it's Pending/Confirmed and not in tbl_order_assignment with status active
     $unassigned_count = 0;
@@ -106,7 +191,7 @@ if (!$data_cached) {
     $last_month = date('Y-m', strtotime('-1 month'));
 
     $stmt = $dbRepo->query("
-        SELECT 
+        SELECT
             COUNT(*) as total_orders,
             SUM(CASE WHEN DATE(order_date) = '{$today}' THEN 1 ELSE 0 END) as today_orders,
             SUM(CASE WHEN DATE(order_date) = '{$yesterday}' THEN 1 ELSE 0 END) as yesterday_orders,
@@ -127,12 +212,12 @@ if (!$data_cached) {
     if (class_exists('\SaaS\TenantContext') && method_exists('\SaaS\TenantContext', 'getTenantId')) {
         $tenant_id_val = \SaaS\TenantContext::getTenantId();
     }
-    
+
     $profit_stmt = $dbRepo->query("
-        SELECT SUM((o.unit_price - COALESCE(p.purchase_price, 0)) * o.quantity) as gross_profit 
-        FROM tbl_order o 
-        LEFT JOIN tbl_product p ON o.product_id = p.p_id 
-        WHERE o.tenant_id = " . intval($tenant_id_val) . " 
+        SELECT SUM((o.unit_price - COALESCE(p.purchase_price, 0)) * o.quantity) as gross_profit
+        FROM tbl_order o
+        LEFT JOIN tbl_product p ON o.product_id = p.p_id
+        WHERE o.tenant_id = " . intval($tenant_id_val) . "
         AND o.order_status IN ('Completed', 'Delivered')
     ");
     $gross_profit = $profit_stmt->fetchColumn() ?: 0;
@@ -159,7 +244,7 @@ if (!$data_cached) {
 
     // Delivery Company
     $top_company = $dbRepo->query("
-        SELECT c.name, COUNT(o.id) as total_shipments, 
+        SELECT c.name, COUNT(o.id) as total_shipments,
                SUM(CASE WHEN o.order_status IN ('Completed', 'Delivered') THEN 1 ELSE 0 END) as successful,
                SUM(CASE WHEN o.order_status = 'Returned' THEN 1 ELSE 0 END) as returned
         FROM tbl_order o
