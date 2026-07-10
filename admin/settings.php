@@ -376,24 +376,6 @@ if(isset($_POST['form_pixels'])) {
     $success_message = 'Pixel settings updated successfully.';
 }
 
-// Telegram Settings — Super Admin only (the bot token is shared platform-wide).
-if(isset($_POST['form_telegram']) && $settings_is_super_admin) {
-    $telegram_bot_token = trim($_POST['telegram_bot_token'] ?? '');
-    $telegram_chat_id = trim($_POST['telegram_chat_id'] ?? '');
-    $telegram_incomplete_chat_id = trim($_POST['telegram_incomplete_chat_id'] ?? '');
-    $telegram_incomplete_bot_token = trim($_POST['telegram_incomplete_bot_token'] ?? '');
-    $telegram_order_status_chat_id = trim($_POST['telegram_order_status_chat_id'] ?? '');
-    $telegram_order_status_bot_token = trim($_POST['telegram_order_status_bot_token'] ?? '');
-    $telegram_orders_enabled = isset($_POST['telegram_orders_enabled']) ? 1 : 0;
-    $telegram_incomplete_enabled = isset($_POST['telegram_incomplete_enabled']) ? 1 : 0;
-    $telegram_order_status_enabled = isset($_POST['telegram_order_status_enabled']) ? 1 : 0;
-
-    $statement = $dbRepo->prepare("UPDATE tbl_settings SET telegram_bot_token=?, telegram_chat_id=?, telegram_orders_enabled=?, telegram_incomplete_enabled=?, telegram_incomplete_chat_id=?, telegram_incomplete_bot_token=?, telegram_order_status_enabled=?, telegram_order_status_chat_id=?, telegram_order_status_bot_token=? WHERE id=1");
-    $statement->execute(array($telegram_bot_token, $telegram_chat_id, $telegram_orders_enabled, $telegram_incomplete_enabled, $telegram_incomplete_chat_id, $telegram_incomplete_bot_token, $telegram_order_status_enabled, $telegram_order_status_chat_id, $telegram_order_status_bot_token));
-
-    $success_message = 'Telegram settings updated successfully.';
-}
-
 if(isset($_POST['form_sms_gateway'])) {
     $sms_gateway_enabled = isset($_POST['sms_gateway_enabled']) ? 1 : 0;
     $sms_gateway_url = trim((string) ($_POST['sms_gateway_url'] ?? ''));
@@ -1264,9 +1246,6 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                         <li><a href="#tab_6" data-toggle="tab">إعدادات الرئيسية</a></li>
                         <li><a href="#tab_7" data-toggle="tab">إعدادات البانر</a></li>
                         <li><a href="#tab_pixels" data-toggle="tab">بيكسل (Pixels)</a></li>
-                        <?php if ($settings_is_super_admin): ?>
-                        <li><a href="#tab_telegram" data-toggle="tab">تلغرام</a></li>
-                        <?php endif; ?>
                         <li><a href="#tab_ecotrack" data-toggle="tab">ECOTRACK</a></li>
                         <li><a href="#tab_zrexpress" data-toggle="tab">ZRexpress</a></li>
                         <li><a href="#tab_10" data-toggle="tab">أكواد Head & Body</a></li>
@@ -2001,100 +1980,6 @@ $sms_automation_templates = admin_get_sms_automation_templates($pdo);
                             </form>
 
                         </div>
-
-                        <?php if ($settings_is_super_admin): ?>
-                        <div class="tab-pane" id="tab_telegram">
-                            <h3>Telegram Settings</h3>
-                            <form class="form-horizontal" action="" method="post">
-                                <div class="box box-info">
-                                    <div class="box-body">
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Enable Order Notifications</label>
-                                            <div class="col-sm-4">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name="telegram_orders_enabled" value="1" <?php echo !empty($telegram_orders_enabled) ? 'checked' : ''; ?>>
-                                                        Send completed orders to Telegram
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Enable Incomplete Order Alerts</label>
-                                            <div class="col-sm-4">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name="telegram_incomplete_enabled" value="1" <?php echo !empty($telegram_incomplete_enabled) ? 'checked' : ''; ?>>
-                                                        Send incomplete orders to Telegram
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Enable Order Status Alerts</label>
-                                            <div class="col-sm-4">
-                                                <div class="checkbox">
-                                                    <label>
-                                                        <input type="checkbox" name="telegram_order_status_enabled" value="1" <?php echo !empty($telegram_order_status_enabled) ? 'checked' : ''; ?>>
-                                                        Send parcel status changes to Telegram
-                                                    </label>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Bot Token</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="telegram_bot_token" value="<?php echo htmlspecialchars($telegram_bot_token ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                <small class="text-muted">Bot token for completed orders</small>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Bot Token for incomplete orders</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="telegram_incomplete_bot_token" value="<?php echo htmlspecialchars($telegram_incomplete_bot_token ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                <small class="text-muted">Use a different bot if you want separation</small>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Bot Token for order status</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="telegram_order_status_bot_token" value="<?php echo htmlspecialchars($telegram_order_status_bot_token ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                <small class="text-muted">Leave empty to use the main bot token</small>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Chat ID for completed orders</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="telegram_chat_id" value="<?php echo htmlspecialchars($telegram_chat_id ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Chat ID for incomplete orders</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="telegram_incomplete_chat_id" value="<?php echo htmlspecialchars($telegram_incomplete_chat_id ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                <small class="text-muted">Leave empty to use the same Chat ID</small>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <label class="col-sm-3 control-label">Chat ID for order status</label>
-                                            <div class="col-sm-8">
-                                                <input type="text" class="form-control" name="telegram_order_status_chat_id" value="<?php echo htmlspecialchars($telegram_order_status_chat_id ?? '', ENT_QUOTES, 'UTF-8'); ?>">
-                                                <small class="text-muted">Use this for your Order Status Telegram channel/group</small>
-                                            </div>
-                                        </div>
-                                        <div class="form-group">
-                                            <div class="col-sm-offset-3 col-sm-8">
-                                                <button type="submit" name="form_telegram" class="btn btn-primary">
-                                                    <i class="fa fa-save"></i> Save Telegram Settings
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </form>
-
-                        </div>
-                        <?php endif; ?>
 
                         <div class="tab-pane" id="tab_ecotrack">
                             <h3>ECOTRACK Settings</h3>

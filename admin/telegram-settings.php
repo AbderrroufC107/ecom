@@ -58,6 +58,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
     $orderStatusBotToken = trim((string) ($_POST['telegram_order_status_bot_token'] ?? ''));
     $incompleteEnabled = isset($_POST['telegram_incomplete_enabled']) ? 1 : 0;
     $orderStatusEnabled = isset($_POST['telegram_order_status_enabled']) ? 1 : 0;
+    $chatId = trim((string) ($_POST['telegram_chat_id'] ?? ''));
+    $incompleteChatId = trim((string) ($_POST['telegram_incomplete_chat_id'] ?? ''));
+    $orderStatusChatId = trim((string) ($_POST['telegram_order_status_chat_id'] ?? ''));
 
     if ($secretToken === '') {
         $secretToken = md5(uniqid((string)rand(), true));
@@ -85,7 +88,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
                 telegram_incomplete_bot_token = ?,
                 telegram_order_status_bot_token = ?,
                 telegram_incomplete_enabled = ?,
-                telegram_order_status_enabled = ?
+                telegram_order_status_enabled = ?,
+                telegram_chat_id = ?,
+                telegram_incomplete_chat_id = ?,
+                telegram_order_status_chat_id = ?
             WHERE id = 1
         ");
         
@@ -106,7 +112,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
             $incompleteBotToken,
             $orderStatusBotToken,
             $incompleteEnabled,
-            $orderStatusEnabled
+            $orderStatusEnabled,
+            $chatId,
+            $incompleteChatId,
+            $orderStatusChatId
         ]);
 
         // Audit Trail
@@ -286,6 +295,36 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['save_settings'])) {
                                     <input type="checkbox" name="telegram_order_status_enabled" value="1" <?php if (($settings['telegram_order_status_enabled'] ?? 0) == 1) echo 'checked'; ?>>
                                     <span class="slider round"></span>
                                 </label>
+                            </div>
+                        </div>
+
+                        <hr>
+                        <div class="box-header with-border" style="padding-left:0; margin-bottom:15px;">
+                            <h3 class="box-title"><i class="fa fa-hashtag text-aqua"></i> Chat IDs</h3>
+                            <p class="text-muted" style="margin-top:5px;">معرفات المحادثات أو القنوات التي تصل إليها الإشعارات.</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Chat ID للطلبات المكتملة</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="telegram_chat_id" value="<?php echo htmlspecialchars($settings['telegram_chat_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="-100xxxxxxxxxx">
+                                <small class="text-muted">معرف المحادثة أو القناة للطلبات المكتملة</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Chat ID للطلبات المعلقة</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="telegram_incomplete_chat_id" value="<?php echo htmlspecialchars($settings['telegram_incomplete_chat_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="اتركه فارغاً لاستخدام نفس Chat ID">
+                                <small class="text-muted">معرف المحادثة للطلبات المعلقة. إذا تُرِك فارغاً، يُستخدم Chat ID الرئيسي.</small>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Chat ID لحالة الطلب</label>
+                            <div class="col-sm-6">
+                                <input type="text" class="form-control" name="telegram_order_status_chat_id" value="<?php echo htmlspecialchars($settings['telegram_order_status_chat_id'] ?? '', ENT_QUOTES, 'UTF-8'); ?>" placeholder="اتركه فارغاً لاستخدام نفس Chat ID">
+                                <small class="text-muted">معرف المحادثة لتغييرات حالة الطلب.</small>
                             </div>
                         </div>
 
