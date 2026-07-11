@@ -2591,6 +2591,121 @@ if (!function_exists('admin_ecotrack_save_order_state')) {
     }
 }
 
+if (!function_exists('admin_ecotrack_auto_dispatch')) {
+    /**
+     * Programmatically create the delivery order at ECOTRACK for a given order,
+     * reusing the exact same request/response handling as the manual "send to
+     * ECOTRACK" button. Called automatically when an order is confirmed.
+     *
+     * Safe / idempotent:
+     *  - skips silently if ECOTRACK isn't configured;
+     *  - skips if the order was already sent (has a tracking number);
+     *  - never throws - returns a status array so the caller (status change)
+     *    is never rolled back by a delivery-side problem.
+     *
+     * @return array{sent?:bool, skipped?:bool, reason?:string, tracking?:string, error?:string}
+     */
+    function admin_ecotrack_auto_dispatch(PDO $pdo, int $order_id, $changed_by = null): array
+    { global $dbRepo;
+        if ($order_id <= 0) {
+            return ['skipped' => true, 'reason' => 'invalid_order'];
+        }
+
+        try {
+            $settings = ecotrack_normalize_settings(front_get_settings($pdo));
+            if (!ecotrack_is_configured($settings)) {
+                return ['skipped' => true, 'reason' => 'not_configured'];
+            }
+
+            $stmt = $dbRepo->prepare("SELECT * FROM tbl_order WHERE id = ? LIMIT 1");
+            $stmt->execute([$order_id]);
+            $order = $stmt->fetch(PDO::FETCH_ASSOC);
+            if (!$order) {
+                return ['skipped' => true, 'reason' => 'order_not_found'];
+            }
+
+            // Already dispatched? Don't create a duplicate shipment.
+            if (trim((string) ($order['ecotrack_tracking'] ?? '')) !== ''
+                || trim((string) ($order['tracking_number'] ?? '')) !== '') {
+                return ['skipped' => true, 'reason' => 'already_sent'];
+            }
+
+            $reference = ecotrack_build_order_reference($order);
+            $request_context = ecotrack_create_order_request_context($pdo, $settings, $order);
+            $request_body = $request_context['payload'];
+            $prepared_order = $request_context['order'];
+            $request_entry = (array) ($request_body['orders']['0'] ?? []);
+            $request_wilaya_code = trim((string) ($request_entry['code_wilaya'] ?? ''));
+            $request_commune_name = trim((string) ($request_entry['commune'] ?? ''));
+            $request_payload_text = ecotrack_json_encode($request_body, true);
+
+            if ($request_wilaya_code === '' || $request_commune_name === '') {
+                admin_ecotrack_save_order_state($pdo, $order_id, [
+                    'reference' => $reference,
+                    'tracking' => '',
+                    'status' => 'error',
+                    'remote_status' => '',
+                    'last_error' => 'الرفع التلقائي: بيانات الولاية/البلدية غير مكتملة.',
+                    'last_payload' => $request_payload_text,
+                    'last_response' => ''
+                ], false);
+                return ['sent' => false, 'reason' => 'incomplete_address'];
+            }
+
+            $request = ecotrack_api_request($pdo, $settings, 'POST', '/api/v1/create/orders', [], $request_body, 'bearer');
+            $response_text = ecotrack_response_to_text($request['response'] ?? '', $request['json'] ?? null);
+
+            $result_entry = [];
+            if (!empty($request['json']['results'][$reference]) && is_array($request['json']['results'][$reference])) {
+                $result_entry = $request['json']['results'][$reference];
+            }
+
+            if (!empty($result_entry['success']) && !empty($result_entry['tracking'])) {
+                $tracking = trim((string) $result_entry['tracking']);
+                $remote_status = trim((string) ($result_entry['status'] ?? ''));
+
+                if (($prepared_order['delivery_type'] ?? '') !== ($order['delivery_type'] ?? '')) {
+                    $dbRepo->prepare("UPDATE tbl_order SET delivery_type = ? WHERE id = ? LIMIT 1")
+                        ->execute([(string) $prepared_order['delivery_type'], $order_id]);
+                }
+                admin_ecotrack_save_order_state($pdo, $order_id, [
+                    'reference' => $reference,
+                    'tracking' => $tracking,
+                    'status' => 'sent',
+                    'remote_status' => $remote_status,
+                    'last_error' => '',
+                    'last_payload' => $request_payload_text,
+                    'last_response' => $response_text
+                ], true);
+
+                return ['sent' => true, 'tracking' => $tracking];
+            }
+
+            $result_errors = $result_entry;
+            unset($result_errors['success'], $result_errors['tracking']);
+            $error_text = ecotrack_messages_to_text($result_errors);
+            if ($error_text === '') {
+                $error_text = trim((string) ($request['json']['message'] ?? ($request['error'] ?? 'تعذر إرسال الطلب إلى ECOTRACK.')));
+            }
+
+            admin_ecotrack_save_order_state($pdo, $order_id, [
+                'reference' => $reference,
+                'tracking' => '',
+                'status' => 'error',
+                'remote_status' => '',
+                'last_error' => $error_text,
+                'last_payload' => $request_payload_text,
+                'last_response' => $response_text
+            ], false);
+
+            return ['sent' => false, 'error' => $error_text];
+        } catch (\Throwable $e) {
+            error_log('admin_ecotrack_auto_dispatch failed for order ' . $order_id . ': ' . $e->getMessage());
+            return ['sent' => false, 'error' => $e->getMessage()];
+        }
+    }
+}
+
 if (!function_exists('ecotrack_status_meta')) {
     function ecotrack_status_meta($status)
     { global $dbRepo;

@@ -48,12 +48,26 @@ try {
     site_security_ensure_tables($pdo);
     site_security_ensure_order_columns($pdo);
 
-    $statement = $dbRepo->prepare('SELECT id, order_status, customer_name, customer_phone, product_name, quantity, total_price, wilaya, commune, address, delivery_type, customer_ip, device_id, employee_id, delivery_company_id, tracking_number FROM tbl_order WHERE id = ? LIMIT 1');
+    // NOTE: tbl_order has no employee_id column (assignments live in
+    // tbl_order_assignment). Selecting it here made this query fail with
+    // "Unknown column 'employee_id'", so every status change/confirm errored
+    // out. Fetch the assigned employee separately below instead.
+    $statement = $dbRepo->prepare('SELECT id, order_status, customer_name, customer_phone, product_name, quantity, total_price, wilaya, commune, address, delivery_type, customer_ip, device_id, manager_id, delivery_company_id, tracking_number FROM tbl_order WHERE id = ? LIMIT 1');
     $statement->execute([$order_id]);
     $order = $statement->fetch(PDO::FETCH_ASSOC);
 
     if (!$order) {
         throw new Exception('Ø§Ù„Ø·Ù„Ø¨ Ø§Ù„Ù…Ø·Ù„ÙˆØ¨ ØºÙŠØ± Ù…ÙˆØ¬ÙˆØ¯.');
+    }
+
+    // Resolve the currently-assigned employee (used by the Telegram notifier to
+    // ping the responsible employee about the status change).
+    try {
+        $asgStmt = $dbRepo->prepare("SELECT employee_id FROM tbl_order_assignment WHERE order_id = ? AND status = 'active' ORDER BY id DESC LIMIT 1");
+        $asgStmt->execute([$order_id]);
+        $order['employee_id'] = (int) ($asgStmt->fetchColumn() ?: 0);
+    } catch (Exception $e) {
+        $order['employee_id'] = 0;
     }
 
     // Ownership guard: a regular manager may only change/confirm their own team's
@@ -88,10 +102,17 @@ try {
     $statement = $dbRepo->prepare('UPDATE tbl_order SET order_status = ? WHERE id = ?');
     $statement->execute([$target_status, $order_id]);
 
+    // Actor id as a nullable int. For an employee the session id is the string
+    // "emp_<n>"; passing that raw string caused a TypeError in
+    // stock_handle_order_status_change() (which type-hints ?int) and a fatal
+    // that silently aborted the whole confirm. Resolve to a clean int or null.
+    $__actorRaw = (string) ($_SESSION['user']['id'] ?? '');
+    $actor_id = $__actorRaw === '' ? null : (int) preg_replace('/\D+/', '', $__actorRaw);
+    if ($actor_id === 0) { $actor_id = null; }
+
     // Phase 8: Log to permanent timeline
-    $admin_id = $_SESSION['user']['id'] ?? 0;
     $stmtTimeline = $dbRepo->prepare("INSERT INTO tbl_order_timeline (order_id, action, description, user_id) VALUES (?, ?, ?, ?)");
-    $stmtTimeline->execute([$order_id, 'تحديث الحالة يدوياً', "من {$current_status} إلى {$target_status}", $admin_id]);
+    $stmtTimeline->execute([$order_id, 'تحديث الحالة يدوياً', "من {$current_status} إلى {$target_status}", $actor_id]);
 
     admin_log_order_status_change($pdo, $order_id, $current_status, $target_status, $status_note, $changed_by);
     if ($target_status === 'Returned') {
@@ -101,12 +122,25 @@ try {
         performance_ensure_tables($pdo);
         performance_auto_record_commission($pdo, $order_id);
     }
-    
+
     // Automatically handle stock decrement/restoration based on order status
-    $admin_id = $_SESSION['user']['id'] ?? null;
-    stock_handle_order_status_change($pdo, $order, $current_status, $target_status, $admin_id);
+    stock_handle_order_status_change($pdo, $order, $current_status, $target_status, $actor_id);
 
     $pdo->commit();
+
+    // Auto-dispatch to the delivery company (ECOTRACK) the moment an order is
+    // confirmed. Best-effort and outside the status transaction: a delivery-side
+    // problem must never roll back the confirmation itself. Idempotent - skips
+    // if ECOTRACK isn't configured or the order was already sent.
+    $auto_dispatch_result = null;
+    if ($target_status === 'Completed' && function_exists('admin_ecotrack_auto_dispatch')) {
+        $auto_dispatch_result = admin_ecotrack_auto_dispatch($pdo, $order_id, $changed_by !== '' ? $changed_by : null);
+        if (!empty($auto_dispatch_result['sent'])) {
+            admin_set_flash_message('orders', 'success', 'تم إرسال الطلب تلقائيًا إلى شركة التوصيل. رقم التتبع: ' . ($auto_dispatch_result['tracking'] ?? ''));
+        } elseif (isset($auto_dispatch_result['sent']) && $auto_dispatch_result['sent'] === false) {
+            admin_set_flash_message('orders', 'warning', 'تم تأكيد الطلب، لكن تعذّر إرساله تلقائيًا لشركة التوصيل: ' . ($auto_dispatch_result['error'] ?? $auto_dispatch_result['reason'] ?? 'خطأ غير معروف') . '. يمكنك إرساله يدويًا من تبويب ECOTRACK.');
+        }
+    }
 
     if (function_exists('admin_send_order_status_telegram')) {
         admin_send_order_status_telegram($pdo, $order, $current_status, $target_status, ['note' => $status_note]);
