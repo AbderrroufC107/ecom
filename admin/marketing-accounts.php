@@ -67,6 +67,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Auto-sync pixels from Meta
                 $syncedPixels = 0;
                 try {
+                    // Ensure tbl_pixel exists
+                    $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_pixel (
+                        id INT AUTO_INCREMENT PRIMARY KEY,
+                        pixel_name VARCHAR(255) NOT NULL,
+                        pixel_network VARCHAR(100) NOT NULL,
+                        pixel_id VARCHAR(255) NOT NULL,
+                        pixel_script TEXT NULL
+                    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+
                     $metaPixels = $apiClient->getAdAccountPixels($accountId);
                     if (!empty($metaPixels)) {
                         $chkStmt = $pdo->prepare("SELECT id FROM tbl_pixel WHERE pixel_id = ? AND pixel_network = 'Facebook' LIMIT 1");
@@ -83,7 +92,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         }
                     }
                 } catch (Exception $pxEx) {
-                    // Pixel sync is non-critical, continue
+                    error_log("Pixel sync failed: " . $pxEx->getMessage());
                 }
 
                 $success = "✅ تم ربط حساب '{$info['name']}' بنجاح! العملة: {$info['currency']}.";

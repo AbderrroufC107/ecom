@@ -144,6 +144,17 @@ input:checked + .slider:before { transform: translateX(20px); }
                     </div>
 
                     <?php
+                    // Ensure tbl_pixel exists
+                    try {
+                        $pdo->exec("CREATE TABLE IF NOT EXISTS tbl_pixel (
+                            id INT AUTO_INCREMENT PRIMARY KEY,
+                            pixel_name VARCHAR(255) NOT NULL,
+                            pixel_network VARCHAR(100) NOT NULL,
+                            pixel_id VARCHAR(255) NOT NULL,
+                            pixel_script TEXT NULL
+                        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4");
+                    } catch (PDOException $e) {}
+
                     $pixels = $pdo->query("SELECT * FROM tbl_pixel ORDER BY pixel_network ASC, pixel_name ASC")->fetchAll(PDO::FETCH_ASSOC);
                     $networkColors = ['Facebook' => '#1877f2', 'TikTok' => '#000000', 'Snapchat' => '#FFFC00', 'Google' => '#4285f4'];
                     $networkIcons = ['Facebook' => 'fa-facebook', 'TikTok' => 'fa-music', 'Snapchat' => 'fa-ghost', 'Google' => 'fa-google'];
