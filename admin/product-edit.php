@@ -1128,17 +1128,29 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                         <div class="form-group">
                             <label class="col-sm-3 control-label">بكسلات التتبع (Pixels)</label>
                             <div class="col-sm-4">
-                                <select name="pixel[]" class="form-control select2" multiple="multiple">
-                                    <?php
-                                    $stmt = $dbRepo->prepare("SELECT * FROM tbl_pixel ORDER BY pixel_name ASC");
-                                    $stmt->execute();
-                                    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row):
-                                        $selected = in_array((int)$row['id'], $selected_pixels_for_form, true) ? 'selected' : '';
-                                        echo "<option value='{$row['id']}' {$selected}>{$row['pixel_name']} ({$row['pixel_network']})</option>";
-                                    endforeach;
-                                    ?>
-                                </select>
-                                <small style="color:#6b7280;margin-top:4px;display:block;">اضغط Ctrl/Cmd لاختيار أكثر من بكسل</small>
+                                <?php
+                                // Checkbox list instead of a native <select multiple>: select2 isn't
+                                // initialised here, so a native multi-select forced Ctrl+click and felt
+                                // like "only one pixel". Checkboxes make picking several obvious.
+                                $stmt = $dbRepo->prepare("SELECT * FROM tbl_pixel ORDER BY pixel_name ASC");
+                                $stmt->execute();
+                                $__all_pixels = $stmt->fetchAll(PDO::FETCH_ASSOC);
+                                if (empty($__all_pixels)):
+                                ?>
+                                    <p class="text-muted" style="margin:6px 0;">لا توجد بكسلات بعد. أضِفها من <a href="pixel-add.php" target="_blank">صفحة البكسلات</a>.</p>
+                                <?php else: ?>
+                                    <div style="border:1px solid #e2e8f0;border-radius:8px;padding:10px;max-height:220px;overflow:auto;">
+                                    <?php foreach ($__all_pixels as $row):
+                                        $checked = in_array((int)$row['id'], $selected_pixels_for_form, true) ? 'checked' : ''; ?>
+                                        <label style="display:block;padding:5px 4px;cursor:pointer;font-weight:normal;">
+                                            <input type="checkbox" name="pixel[]" value="<?= (int)$row['id']; ?>" <?= $checked; ?> style="margin-left:6px;">
+                                            <?= htmlspecialchars($row['pixel_name'], ENT_QUOTES, 'UTF-8'); ?>
+                                            <small style="color:#6b7280;">(<?= htmlspecialchars($row['pixel_network'], ENT_QUOTES, 'UTF-8'); ?><?= $row['pixel_id'] !== '' ? ' — ' . htmlspecialchars($row['pixel_id'], ENT_QUOTES, 'UTF-8') : ''; ?>)</small>
+                                        </label>
+                                    <?php endforeach; ?>
+                                    </div>
+                                    <small style="color:#6b7280;margin-top:4px;display:block;">اختر بكسلًا واحدًا أو أكثر لهذا المنتج.</small>
+                                <?php endif; ?>
                             </div>
                         </div>
 
