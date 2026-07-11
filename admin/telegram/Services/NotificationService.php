@@ -103,9 +103,35 @@ class NotificationService
     public static function handleOrderAssigned(PDO $pdo, int $orderId, int $employeeId): void
     { global $dbRepo;
         $order = self::getOrder($pdo, $orderId);
+        if (!$order) {
+            return;
+        }
+
+        // WRR may pick a tbl_employee OR a tbl_user (Manager/Admin who opted in).
+        // Try employee table first, fall back to user table.
         $employee = self::getEmployee($pdo, $employeeId);
-        
-        if (!$order || !$employee) {
+        $isUserPick = false;
+
+        if (!$employee && $employeeId > 0) {
+            // The assigned ID came from tbl_user — fetch their details.
+            try {
+                $stmt = $dbRepo->prepare("SELECT * FROM `tbl_user` WHERE `id` = ? AND `status` = 1 LIMIT 1");
+                $stmt->execute([$employeeId]);
+                $row = $stmt->fetch(PDO::FETCH_ASSOC);
+                if ($row) {
+                    // Normalize to the shape sendTaskNotification expects.
+                    $employee = [
+                        'telegram_chat_id'   => $row['telegram_chat_id'] ?? '',
+                        'telegram_is_linked' => $row['telegram_is_linked'] ?? 0,
+                        'telegram_lang'      => $row['telegram_lang'] ?? 'ar',
+                        'full_name'          => $row['full_name'] ?? '',
+                    ];
+                    $isUserPick = true;
+                }
+            } catch (Exception $e) {}
+        }
+
+        if (!$employee) {
             return;
         }
 

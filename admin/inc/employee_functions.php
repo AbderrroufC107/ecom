@@ -597,7 +597,9 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                         } elseif ($picked_user > 0) {
                             $dbRepo->prepare("UPDATE tbl_order SET manager_id = ? WHERE id = ? AND (manager_id IS NULL OR manager_id = 0)")->execute([$picked_user, $order_id]);
                         }
-                    } catch (\Throwable $e) {}
+                    } catch (\Throwable $e) {
+                        error_log("Order #{$order_id}: failed to stamp manager_id after WRR pick: " . $e->getMessage());
+                    }
                 }
 
                 if ($started_tx) {
