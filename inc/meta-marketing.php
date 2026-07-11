@@ -39,12 +39,91 @@ if (!function_exists('meta_marketing_normalize_graph_version')) {
     }
 }
 
+if (!function_exists('meta_marketing_resolve_access_token')) {
+    /**
+     * Resolve the Meta CAPI/Marketing access token from wherever it's stored.
+     *
+     * There are two configuration flows that save the token in different places:
+     *  1. The legacy meta-marketing.php page: a plain column
+     *     tbl_settings.meta_marketing_access_token.
+     *  2. The newer "Marketing Center" (marketing-accounts.php): the token is
+     *     stored ENCRYPTED via SecretManager, keyed per linked ad account
+     *     ("meta_marketing_{account}_{tenant}"), and tbl_settings only keeps the
+     *     ad account + pixel. This page never writes meta_marketing_access_token.
+     *
+     * The CAPI sender used to read only (1), so anyone who set things up through
+     * the Marketing Center had a "fully configured" UI but events silently never
+     * fired (no token found). This checks (1) then (2).
+     */
+    function meta_marketing_resolve_access_token(PDO $pdo, array $settings): string
+    {
+        $token = trim((string) ($settings['meta_marketing_access_token'] ?? ''));
+        if ($token !== '') {
+            return $token;
+        }
+
+        try {
+            $secretManagerPath = dirname(__DIR__) . '/admin/inc/Security/SecretManager.php';
+            if (!class_exists('\\Security\\SecretManager') && is_file($secretManagerPath)) {
+                require_once $secretManagerPath;
+            }
+            if (!class_exists('\\Security\\SecretManager') || !defined('APP_SECRET_KEY')) {
+                return '';
+            }
+
+            // Default to tenant 1 (single-store installs). TenantContext throws
+            // if it wasn't initialized (e.g. delivery-sync / cron contexts), so
+            // never let that abort token resolution.
+            $tenantId = 1;
+            if (class_exists('\\SaaS\\TenantContext') && method_exists('\\SaaS\\TenantContext', 'getTenantId')) {
+                try {
+                    $tenantId = (int) \SaaS\TenantContext::getTenantId();
+                } catch (Throwable $e) {
+                    $tenantId = 1;
+                }
+            }
+            if ($tenantId <= 0) {
+                $tenantId = 1;
+            }
+
+            $secretManager = new \Security\SecretManager($pdo);
+
+            // Prefer the token of a linked, active ad account.
+            $accountId = '';
+            try {
+                $stmt = $pdo->prepare("SELECT account_id FROM tbl_meta_ad_accounts WHERE tenant_id = ? AND (is_deleted IS NULL OR is_deleted = 0) AND (status IS NULL OR status = 'ACTIVE') ORDER BY id DESC LIMIT 1");
+                $stmt->execute([$tenantId]);
+                $accountId = (string) ($stmt->fetchColumn() ?: '');
+            } catch (Throwable $e) {
+                $accountId = '';
+            }
+
+            if ($accountId !== '') {
+                $t = $secretManager->getSecret("meta_marketing_{$accountId}_{$tenantId}");
+                if ($t) {
+                    return trim($t);
+                }
+            }
+
+            $t = $secretManager->getSecret("meta_marketing_{$tenantId}");
+            if ($t) {
+                return trim($t);
+            }
+        } catch (Throwable $e) {
+            error_log('meta_marketing_resolve_access_token: ' . $e->getMessage());
+        }
+
+        return '';
+    }
+}
+
 if (!function_exists('meta_marketing_is_configured')) {
     function meta_marketing_is_configured(array $settings): bool
     {
-        return !empty($settings['meta_marketing_enabled'])
-            && trim((string) ($settings['facebook_pixel_id'] ?? '')) !== ''
-            && trim((string) ($settings['meta_marketing_access_token'] ?? '')) !== '';
+        $enabled = !empty($settings['meta_marketing_enabled']) || !empty($settings['marketing_api_enabled']);
+        $hasPixel = trim((string) ($settings['facebook_pixel_id'] ?? '')) !== '';
+        $hasToken = trim((string) ($settings['meta_marketing_access_token'] ?? '')) !== '';
+        return $enabled && $hasPixel && $hasToken;
     }
 }
 
@@ -349,8 +428,12 @@ if (!function_exists('meta_marketing_send_event_for_product')) {
     function meta_marketing_send_event_for_product(PDO $pdo, int $productId, string $eventName, array $eventData): array
     {
         $settings = function_exists('front_get_settings') ? front_get_settings($pdo) : [];
-        $accessToken = trim((string) ($settings['meta_marketing_access_token'] ?? ''));
-        $graphVersion = meta_marketing_normalize_graph_version($settings['meta_marketing_graph_version'] ?? 'v25.0');
+        // Token may live in tbl_settings (legacy page) or in SecretManager per
+        // linked ad account (new Marketing Center) - resolve from both.
+        $accessToken = meta_marketing_resolve_access_token($pdo, $settings);
+        // Graph version: new Marketing Center saves graph_api_version; legacy saves
+        // meta_marketing_graph_version. Accept either.
+        $graphVersion = meta_marketing_normalize_graph_version($settings['meta_marketing_graph_version'] ?? ($settings['graph_api_version'] ?? 'v25.0'));
         $testCode = trim((string) ($settings['meta_marketing_test_event_code'] ?? ''));
 
         $pixelIds = [];
