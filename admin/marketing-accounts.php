@@ -23,7 +23,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $error = 'معرف الحساب وتوكن الوصول مطلوبان.';
         } else {
             // Validate token by calling Meta API
-            try {
+                try {
                 // Temporarily store token to validate
                 $secretName = "meta_marketing_{$accountId}_{$tenantId}";
                 $secretMgr->setSecret($secretName, 'meta_marketing', $token);
@@ -32,8 +32,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $apiClient = new \Marketing\MarketingApiClient($pdo, $accountId, $tenantId);
                 $info      = $apiClient->getAdAccount($accountId);
 
-                // Save to DB
+                // Check for existing record (including soft-deleted)
                 $existing = $accountRepo->findByMetaAccountId($accountId);
+                if (!$existing) {
+                    $stmtChk = $pdo->prepare("SELECT id FROM tbl_meta_ad_accounts WHERE account_id = ? AND tenant_id = ? LIMIT 1");
+                    $stmtChk->execute([$accountId, $tenantId]);
+                    $existing = $stmtChk->fetch(PDO::FETCH_ASSOC);
+                }
+
+                // Save to DB
                 $data = [
                     'account_id'    => $accountId,
                     'account_name'  => $info['name'] ?? $accountName,
@@ -42,6 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     'status'        => 'ACTIVE',
                     'graph_api_ver' => $apiVer,
                     'last_synced_at'=> date('Y-m-d H:i:s'),
+                    'is_deleted'    => 0,
                 ];
                 if ($existing) {
                     $accountRepo->update($existing['id'], $data);
