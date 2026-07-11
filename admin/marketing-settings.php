@@ -139,8 +139,45 @@ input:checked + .slider:before { transform: translateX(20px); }
                 </div>
                 <div class="mc-card-body">
                     <div class="form-group">
-                        <label class="form-label">Facebook Pixel ID</label>
+                        <label class="form-label">Facebook Pixel ID (الافتراضي)</label>
                         <input type="text" name="facebook_pixel_id" class="form-control" value="<?= htmlspecialchars($settings['facebook_pixel_id'] ?? '') ?>" placeholder="مثال: 1029384756">
+                    </div>
+
+                    <?php
+                    $pixels = $pdo->query("SELECT * FROM tbl_pixel ORDER BY pixel_network ASC, pixel_name ASC")->fetchAll(PDO::FETCH_ASSOC);
+                    $networkColors = ['Facebook' => '#1877f2', 'TikTok' => '#000000', 'Snapchat' => '#FFFC00', 'Google' => '#4285f4'];
+                    $networkIcons = ['Facebook' => 'fa-facebook', 'TikTok' => 'fa-music', 'Snapchat' => 'fa-ghost', 'Google' => 'fa-google'];
+                    ?>
+                    <div style="margin-top: 20px;">
+                        <label class="form-label" style="margin-bottom: 12px;">
+                            <i class="fa fa-list"></i> البكسلات المُضافة (<?= count($pixels) ?>)
+                            <a href="pixel-add.php" style="float:left;font-size:0.8rem;color:#1877f2;text-decoration:none;"><i class="fa fa-plus"></i> إضافة بكسل</a>
+                        </label>
+                        <?php if (empty($pixels)): ?>
+                            <div style="text-align:center;padding:24px;color:#94a3b8;background:#f8fafc;border-radius:10px;border:1px dashed #e2e8f0;">
+                                <i class="fa fa-crosshairs" style="font-size:2rem;opacity:0.3;display:block;margin-bottom:8px;"></i>
+                                لا توجد بكسلات مضافة بعد.
+                                <br><a href="pixel-add.php" style="color:#1877f2;">أضف أول بكسل</a> أو اربط حساب إعلاني من <a href="marketing-accounts.php" style="color:#1877f2;">صفحة الحسابات</a>.
+                            </div>
+                        <?php else: ?>
+                            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;">
+                            <?php foreach ($pixels as $px): ?>
+                                <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;">
+                                    <div style="width:36px;height:36px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:white;font-size:0.9rem;flex-shrink:0;background:<?= $networkColors[$px['pixel_network']] ?? '#64748b' ?>;">
+                                        <i class="fa <?= $networkIcons[$px['pixel_network']] ?? 'fa-tag' ?>"></i>
+                                    </div>
+                                    <div style="flex:1;min-width:0;">
+                                        <div style="font-weight:700;color:#0f172a;font-size:0.88rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><?= htmlspecialchars($px['pixel_name']) ?></div>
+                                        <div style="font-size:0.75rem;color:#94a3b8;font-family:monospace;"><?= htmlspecialchars($px['pixel_id']) ?></div>
+                                    </div>
+                                    <div style="flex-shrink:0;">
+                                        <a href="pixel-edit.php?id=<?= $px['id'] ?>" title="تعديل" style="color:#1877f2;font-size:0.85rem;margin-left:6px;"><i class="fa fa-pencil"></i></a>
+                                        <a href="pixel-delete.php?id=<?= $px['id'] ?>" title="حذف" style="color:#ef4444;font-size:0.85rem;" onclick="return confirm('حذف هذا البكسل؟')"><i class="fa fa-trash"></i></a>
+                                    </div>
+                                </div>
+                            <?php endforeach; ?>
+                            </div>
+                        <?php endif; ?>
                     </div>
 
                     <div class="form-group" style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px;">
