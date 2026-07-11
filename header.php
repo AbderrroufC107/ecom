@@ -524,8 +524,19 @@ $google_pixel_id = '';
 $snapchat_pixel_id = '';
 $product_pixels = [];
 $p_id_for_pixel = 0;
+
+if (!function_exists('decrypt_product_id')) {
+    require_once __DIR__ . '/inc/encryption.php';
+}
+
 if (isset($_REQUEST['id'])) {
-    $p_id_for_pixel = (int)$_REQUEST['id'];
+    $raw_id = $_REQUEST['id'];
+    if (is_numeric($raw_id)) {
+        $p_id_for_pixel = (int)$raw_id;
+    } else {
+        $decrypted = decrypt_product_id($raw_id);
+        $p_id_for_pixel = $decrypted !== false ? (int)$decrypted : 0;
+    }
 } elseif (isset($_SESSION['purchase_pixel_data']['content_ids'][0])) {
     $p_id_for_pixel = (int)$_SESSION['purchase_pixel_data']['content_ids'][0];
 }
