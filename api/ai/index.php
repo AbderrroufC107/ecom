@@ -231,8 +231,92 @@ try {
         }
     } elseif ($method === 'POST') {
         if (count($parts) === 2 && $parts[1] === 'sync') {
-            // POST /api/ai/products/sync (Batch sync)
-            echo json_encode(['status' => 'success', 'message' => 'Sync endpoint active (to be implemented fully)']);
+            // POST /api/ai/products/sync (Batch sync AI product data from n8n)
+            $body = json_decode(file_get_contents('php://input'), true);
+            if (!is_array($body) || empty($body['products'])) {
+                http_response_code(400);
+                echo json_encode(['error' => 'Missing "products" array in request body']);
+                exit;
+            }
+
+            $synced = 0;
+            $errors = [];
+            $pdo->beginTransaction();
+
+            try {
+                foreach ($body['products'] as $item) {
+                    $p_id = $item['p_id'] ?? null;
+                    if (!$p_id || !is_numeric($p_id)) {
+                        $errors[] = ['p_id' => $p_id ?? 'missing', 'error' => 'Invalid p_id'];
+                        continue;
+                    }
+
+                    // Upsert AI product data
+                    $stmt = $pdo->prepare("
+                        INSERT INTO tbl_ai_product (p_id, selling_title, short_pitch, long_pitch, cta, 
+                            negotiable, lowest_price, max_discount_pct, discount_conditions, ai_version, updated_at)
+                        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 1, NOW())
+                        ON DUPLICATE KEY UPDATE
+                            selling_title = VALUES(selling_title),
+                            short_pitch = VALUES(short_pitch),
+                            long_pitch = VALUES(long_pitch),
+                            cta = VALUES(cta),
+                            negotiable = VALUES(negotiable),
+                            lowest_price = VALUES(lowest_price),
+                            max_discount_pct = VALUES(max_discount_pct),
+                            discount_conditions = VALUES(discount_conditions),
+                            ai_version = ai_version + 1,
+                            updated_at = NOW()
+                    ");
+                    $stmt->execute([
+                        $p_id,
+                        $item['selling_title'] ?? null,
+                        $item['short_pitch'] ?? null,
+                        $item['long_pitch'] ?? null,
+                        $item['cta'] ?? null,
+                        $item['negotiable'] ?? 0,
+                        $item['lowest_price'] ?? null,
+                        $item['max_discount_pct'] ?? null,
+                        $item['discount_conditions'] ?? null,
+                    ]);
+
+                    // Sync keywords (replace all)
+                    if (isset($item['keywords']) && is_array($item['keywords'])) {
+                        $pdo->prepare("DELETE FROM tbl_ai_keyword WHERE p_id = ?")->execute([$p_id]);
+                        $kwStmt = $pdo->prepare("INSERT INTO tbl_ai_keyword (p_id, keyword, is_synonym) VALUES (?, ?, ?)");
+                        foreach ($item['keywords'] as $kw) {
+                            $kwStmt->execute([$p_id, $kw['keyword'] ?? $kw, $kw['is_synonym'] ?? 0]);
+                        }
+                    }
+
+                    // Sync FAQs (replace all)
+                    if (isset($item['faqs']) && is_array($item['faqs'])) {
+                        $pdo->prepare("DELETE FROM tbl_ai_faq WHERE p_id = ?")->execute([$p_id]);
+                        $faqStmt = $pdo->prepare("INSERT INTO tbl_ai_faq (p_id, question, answer) VALUES (?, ?, ?)");
+                        foreach ($item['faqs'] as $faq) {
+                            $faqStmt->execute([$p_id, $faq['question'] ?? '', $faq['answer'] ?? '']);
+                        }
+                    }
+
+                    // Sync objections (replace all)
+                    if (isset($item['objections']) && is_array($item['objections'])) {
+                        $pdo->prepare("DELETE FROM tbl_ai_objection WHERE p_id = ?")->execute([$p_id]);
+                        $objStmt = $pdo->prepare("INSERT INTO tbl_ai_objection (p_id, objection, best_reply, priority) VALUES (?, ?, ?, ?)");
+                        foreach ($item['objections'] as $idx => $obj) {
+                            $objStmt->execute([$p_id, $obj['objection'] ?? '', $obj['best_reply'] ?? '', $obj['priority'] ?? $idx]);
+                        }
+                    }
+
+                    $synced++;
+                }
+
+                $pdo->commit();
+                echo json_encode(['status' => 'success', 'synced' => $synced, 'errors' => $errors]);
+            } catch (Exception $e) {
+                $pdo->rollBack();
+                http_response_code(500);
+                echo json_encode(['error' => 'Sync failed', 'message' => $e->getMessage(), 'synced' => $synced, 'errors' => $errors]);
+            }
         } else {
             http_response_code(400);
             echo json_encode(['error' => 'Invalid POST route']);

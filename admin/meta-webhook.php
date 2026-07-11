@@ -1,5 +1,10 @@
 <?php
 declare(strict_types=1);
+/**
+ * DEPRECATED — This endpoint only logs webhook events to tbl_meta_webhook_log.
+ * Use api/meta_webhook.php (full) or api/omni/webhook.php (multi-channel) instead.
+ * This file is kept for backward compatibility with old Meta webhook registrations.
+ */
 
 require_once __DIR__ . '/inc/config.php';
 require_once __DIR__ . '/inc/functions.php';

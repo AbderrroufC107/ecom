@@ -24,9 +24,19 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && $provider === 'meta') {
         'status' => 'SUCCESS'
     ]);
 
-    if ($hub_mode === 'subscribe') {
-        echo $hub_challenge;
-        http_response_code(200);
+    if ($hub_mode === 'subscribe' && !empty($hub_verify_token)) {
+        $secretManager = new \Security\SecretManager($pdo);
+        $savedToken = $secretManager->getSecret('meta_verify_token') ?? '';
+
+        if ($hub_verify_token === $savedToken) {
+            header('Content-Type: text/plain; charset=utf-8');
+            echo $hub_challenge;
+            http_response_code(200);
+            exit;
+        }
+
+        http_response_code(403);
+        echo json_encode(['ok' => false, 'error' => 'Invalid verify token']);
         exit;
     }
 }

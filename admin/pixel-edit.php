@@ -1,6 +1,9 @@
 <?php require_once('header.php'); ?>
 
 <?php
+$error_message = '';
+$success_message = '';
+
 if(isset($_POST['form1'])) {
 	$valid = 1;
 
