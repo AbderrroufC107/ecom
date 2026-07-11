@@ -539,28 +539,52 @@ if ($p_id_for_pixel > 0) {
 }
 
 if (!empty($product_pixels)) {
+    $fb_pixel_ids = [];
+    $tt_pixel_ids = [];
+    $sc_pixel_ids = [];
+    $gg_pixel_ids = [];
+    $custom_scripts = [];
+
     foreach ($product_pixels as $px) {
         $network = strtolower($px['pixel_network']);
         $pid = addslashes($px['pixel_id']);
         if ($network === 'facebook') {
             $has_dynamic_facebook = true;
-            $adv_json = $meta_adv_match_json;
-            $adv_json = addslashes($adv_json);
-            echo "<!-- Facebook Pixel Dynamic -->\n<script>\n!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window, document,'script',\n'https://connect.facebook.net/en_US/fbevents.js');\nfbq('init', '{$pid}', {$adv_json});\nfbq('set', 'autoConfig', false, '{$pid}');\nfbq('track', 'PageView');\n</script>\n<noscript><img height=\"1\" width=\"1\" style=\"display:none\"\nsrc=\"https://www.facebook.com/tr?id={$pid}&amp;ev=PageView&amp;noscript=1\"\n/></noscript>\n<!-- End Facebook Pixel -->\n";
+            $fb_pixel_ids[] = $pid;
         } elseif ($network === 'tiktok') {
             $has_dynamic_tiktok = true;
-            echo "<!-- TikTok Pixel Dynamic -->\n<script>\n!function (w, d, t) {\n  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=[\"page\",\"track\",\"identify\",\"instances\",\"debug\",\"on\",\"off\",\"once\",\"ready\",\"alias\",\"group\",\"enableCookie\",\"disableCookie\",\"holdConsent\",\"revokeConsent\",\"grantConsent\"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(\nvar e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r=\"https://analytics.tiktok.com/i18n/pixel/events.js\",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement(\"script\")\n;n.type=\"text/javascript\",n.async=!0,n.src=r+\"?sdkid=\"+e+\"&lib=\"+t;e=document.getElementsByTagName(\"script\")[0];e.parentNode.insertBefore(n,e)};\n  ttq.load('{$pid}');\n  ttq.page();\n}(window, document, 'ttq');\n</script>\n<!-- End TikTok Pixel -->\n";
+            $tt_pixel_ids[] = $pid;
         } elseif ($network === 'snapchat') {
             $has_dynamic_snapchat = true;
-            $snapchat_pixel_id = $pid;
-            echo "<!-- Snapchat Pixel Dynamic -->\n<script>\n!function(e,t,n,u,s,a,r){e.trackerObject=s;e[s]=e[s]||function(){(e[s].q=e[s].q||[]).push(arguments)};a=t.createElement(n);a.async=!0;a.src=u;r=t.getElementsByTagName(n)[0];r.parentNode.insertBefore(a,r)}(window,document,'script','https://sc-static.net/scevt.min.js','trk');\nwindow.trk('init','{$pid}');\nwindow.trk('track','PAGE_VIEW');\n</script>\n<!-- End Snapchat Pixel -->\n";
+            $sc_pixel_ids[] = $pid;
         } elseif ($network === 'google') {
             $has_dynamic_google = true;
-            $google_pixel_id = $pid;
-            echo "<!-- Google Analytics Dynamic -->\n<script async src=\"https://www.googletagmanager.com/gtag/js?id={$pid}\"></script>\n<script>\nwindow.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', '{$pid}');\n</script>\n<!-- End Google Analytics -->\n";
+            $gg_pixel_ids[] = $pid;
         } elseif (!empty($px['pixel_script'])) {
-            echo "<!-- Custom Pixel Dynamic -->\n" . $px['pixel_script'] . "\n<!-- End Custom Pixel -->\n";
+            $custom_scripts[] = $px['pixel_script'];
         }
+    }
+
+    if (!empty($fb_pixel_ids)) {
+        $fb_ids_json = json_encode($fb_pixel_ids);
+        $adv_json = addslashes($meta_adv_match_json);
+        echo "<!-- Facebook Pixel Dynamic (multi) -->\n<script>\n!function(f,b,e,v,n,t,s)\n{if(f.fbq)return;n=f.fbq=function(){n.callMethod?\nn.callMethod.apply(n,arguments):n.queue.push(arguments)};\nif(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';\nn.queue=[];t=b.createElement(e);t.async=!0;\nt.src=v;s=b.getElementsByTagName(e)[0];\ns.parentNode.insertBefore(t,s)}(window, document,'script',\n'https://connect.facebook.net/en_US/fbevents.js');\nvar pixelIds = {$fb_ids_json};\npixelIds.forEach(function(id){\nfbq('init', id, {$adv_json});\nfbq('set', 'autoConfig', false, id);\n});\nfbq('track', 'PageView');\n</script>\n<!-- End Facebook Pixel Dynamic -->\n";
+    }
+
+    foreach ($tt_pixel_ids as $pid) {
+        echo "<!-- TikTok Pixel Dynamic -->\n<script>\n!function (w, d, t) {\n  w.TiktokAnalyticsObject=t;var ttq=w[t]=w[t]||[];ttq.methods=[\"page\",\"track\",\"identify\",\"instances\",\"debug\",\"on\",\"off\",\"once\",\"ready\",\"alias\",\"group\",\"enableCookie\",\"disableCookie\",\"holdConsent\",\"revokeConsent\",\"grantConsent\"],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};for(var i=0;i<ttq.methods.length;i++)ttq.setAndDefer(ttq,ttq.methods[i]);ttq.instance=function(t){for(\nvar e=ttq._i[t]||[],n=0;n<ttq.methods.length;n++)ttq.setAndDefer(e,ttq.methods[n]);return e},ttq.load=function(e,n){var r=\"https://analytics.tiktok.com/i18n/pixel/events.js\",o=n&&n.partner;ttq._i=ttq._i||{},ttq._i[e]=[],ttq._i[e]._u=r,ttq._t=ttq._t||{},ttq._t[e]=+new Date,ttq._o=ttq._o||{},ttq._o[e]=n||{};n=document.createElement(\"script\")\n;n.type=\"text/javascript\",n.async=!0,n.src=r+\"?sdkid=\"+e+\"&lib=\"+t;e=document.getElementsByTagName(\"script\")[0];e.parentNode.insertBefore(n,e)};\n  ttq.load('{$pid}');\n  ttq.page();\n}(window, document, 'ttq');\n</script>\n<!-- End TikTok Pixel -->\n";
+    }
+
+    foreach ($sc_pixel_ids as $pid) {
+        echo "<!-- Snapchat Pixel Dynamic -->\n<script>\n!function(e,t,n,u,s,a,r){e.trackerObject=s;e[s]=e[s]||function(){(e[s].q=e[s].q||[]).push(arguments)};a=t.createElement(n);a.async=!0;a.src=u;r=t.getElementsByTagName(n)[0];r.parentNode.insertBefore(a,r)}(window,document,'script','https://sc-static.net/scevt.min.js','trk');\nwindow.trk('init','{$pid}');\nwindow.trk('track','PAGE_VIEW');\n</script>\n<!-- End Snapchat Pixel -->\n";
+    }
+
+    foreach ($gg_pixel_ids as $pid) {
+        echo "<!-- Google Analytics Dynamic -->\n<script async src=\"https://www.googletagmanager.com/gtag/js?id={$pid}\"></script>\n<script>\nwindow.dataLayer = window.dataLayer || [];\nfunction gtag(){dataLayer.push(arguments);}\ngtag('js', new Date());\ngtag('config', '{$pid}');\n</script>\n<!-- End Google Analytics -->\n";
+    }
+
+    foreach ($custom_scripts as $script) {
+        echo "<!-- Custom Pixel Dynamic -->\n" . $script . "\n<!-- End Custom Pixel -->\n";
     }
 }
 ?>
