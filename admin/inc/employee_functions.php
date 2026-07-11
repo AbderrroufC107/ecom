@@ -667,7 +667,18 @@ if (!defined('EMPLOYEE_FUNCTIONS_LOADED')) {
                 // no row with that id).
                 if (($next['type'] ?? 'employee') === 'user') {
                     $picked_user_id = (int) $next['id'];
-                    $employee_id = null;
+                    // When a Manager/Admin is picked, also find one of their active
+                    // employees so the order is visible and confirmable by that employee.
+                    $emp_stmt = $dbRepo->prepare("
+                        SELECT e.id FROM tbl_employee e
+                        WHERE e.is_active = 1 AND e.availability_status = 'Available'
+                          AND e.manager_id = ?
+                        ORDER BY e.assignment_weight ASC, e.id ASC
+                        LIMIT 1
+                    ");
+                    $emp_stmt->execute([$picked_user_id]);
+                    $sub_emp = $emp_stmt->fetch(PDO::FETCH_ASSOC);
+                    $employee_id = $sub_emp ? (int) $sub_emp['id'] : null;
                 } else {
                     $employee_id = (int) $next['id'];
                 }
