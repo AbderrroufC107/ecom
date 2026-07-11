@@ -499,7 +499,7 @@ class MarketingApiClient
     public function getAdAccount(string $adAccountId): array
     {
         return $this->get("act_{$adAccountId}", [
-            'fields' => 'id,name,account_id,currency,timezone_name,account_status,business,amount_spent,balance,spend_cap'
+            'fields' => 'id,name,account_id,currency,timezone_name,account_status,amount_spent,balance,spend_cap'
         ]);
     }
 

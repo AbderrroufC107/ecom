@@ -121,7 +121,7 @@ require_once('header.php');
                     <ol>
                         <li>اذهب إلى <a href="https://developers.facebook.com" target="_blank">Meta for Developers</a></li>
                         <li>اختر تطبيقك ← Tools ← Graph API Explorer</li>
-                        <li>انسخ الـ Access Token مع صلاحية <code>ads_management</code></li>
+                        <li>انسخ الـ Access Token مع صلاحيات <code>ads_management</code> و <code>business_management</code></li>
                         <li>معرف الحساب: من Meta Business Manager ← حسابات الإعلانات</li>
                     </ol>
                 </div>
