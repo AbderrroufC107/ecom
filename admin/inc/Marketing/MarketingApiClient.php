@@ -518,6 +518,14 @@ class MarketingApiClient
         ]);
     }
 
+    public function getAdAccountPixels(string $adAccountId): array
+    {
+        $result = $this->get("act_{$adAccountId}", [
+            'fields' => 'adspixels{id,name,code}',
+        ]);
+        return $result['adspixels']['data'] ?? [];
+    }
+
     // ════════════════════════════════════════════════════
     // CONVERSIONS API (Server-Side Events)
     // ════════════════════════════════════════════════════

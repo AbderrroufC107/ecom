@@ -64,7 +64,32 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 // Create default automation rules
                 (new \Marketing\AutomationEngine($pdo))->createDefaultRules($tenantId);
 
+                // Auto-sync pixels from Meta
+                $syncedPixels = 0;
+                try {
+                    $metaPixels = $apiClient->getAdAccountPixels($accountId);
+                    if (!empty($metaPixels)) {
+                        $chkStmt = $pdo->prepare("SELECT id FROM tbl_pixel WHERE pixel_id = ? AND pixel_network = 'Facebook' LIMIT 1");
+                        $insStmt = $pdo->prepare("INSERT INTO tbl_pixel (pixel_name, pixel_network, pixel_id, pixel_script) VALUES (?, 'Facebook', ?, '')");
+                        foreach ($metaPixels as $px) {
+                            $pid = $px['id'] ?? '';
+                            $pname = $px['name'] ?? '';
+                            if (!$pid) continue;
+                            $chkStmt->execute([$pid]);
+                            if (!$chkStmt->fetch()) {
+                                $insStmt->execute([$pname, $pid]);
+                                $syncedPixels++;
+                            }
+                        }
+                    }
+                } catch (Exception $pxEx) {
+                    // Pixel sync is non-critical, continue
+                }
+
                 $success = "✅ تم ربط حساب '{$info['name']}' بنجاح! العملة: {$info['currency']}.";
+                if ($syncedPixels > 0) {
+                    $success .= " تم ربط {$syncedPixels} بكسل تلقائياً.";
+                }
 
             } catch (Exception $e) {
                 // Remove invalid secret
