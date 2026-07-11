@@ -898,7 +898,6 @@ foreach ($special_offer_slots as $slot) {
 $selected_pixels_for_form = array_map('intval', (array)($_POST['pixel'] ?? $pixel_id));
 $selected_sizes_for_form = array_map('intval', (array)($_POST['size'] ?? $size_id));
 $selected_colors_for_form = array_map('intval', (array)($_POST['color'] ?? $color_id));
-$selected_pixels_for_form = array_map('intval', (array)($_POST['pixel'] ?? $pixel_id));
 $posted_color_urls = $_POST['color_photo_urls'] ?? [];
 ?>
 
@@ -1139,22 +1138,7 @@ $posted_color_urls = $_POST['color_photo_urls'] ?? [];
                                     endforeach;
                                     ?>
                                 </select>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="col-sm-3 control-label">بكسلات التتبع (Pixels)</label>
-                            <div class="col-sm-4">
-                                <select name="pixel[]" class="form-control select2" multiple="multiple">
-                                    <?php
-                                    $stmt = $dbRepo->prepare("SELECT * FROM tbl_pixel ORDER BY pixel_name ASC");
-                                    $stmt->execute();
-                                    foreach ($stmt->fetchAll(PDO::FETCH_ASSOC) as $row):
-                                        $selected = in_array((int)$row['id'], $selected_pixels_for_form, true) ? 'selected' : '';
-                                        echo "<option value='{$row['id']}' {$selected}>{$row['pixel_name']} ({$row['pixel_network']})</option>";
-                                    endforeach;
-                                    ?>
-                                </select>
+                                <small style="color:#6b7280;margin-top:4px;display:block;">اضغط Ctrl/Cmd لاختيار أكثر من بكسل</small>
                             </div>
                         </div>
 
